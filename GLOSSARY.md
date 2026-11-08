@@ -28,6 +28,10 @@ _Avoid_: 변수, 디자인 변수
 Foundation을 조합해 만든, 재사용할 수 있는 UI 단위.
 _Avoid_: 위젯, 엘리먼트
 
+**접근성 동작 (Accessibility behavior)**:
+Component가 키보드, 포커스, 보조기술에 반응하는 방식. 예: Dialog를 열면 포커스가 안으로 들어가고 닫으면 원래 자리로 돌아간다. 생김새(시각 표현)와 구분한다.
+_Avoid_: a11y 로직, 인터랙션(시각 효과와 혼동)
+
 ## Token 종류
 
 **Primitive Token**:

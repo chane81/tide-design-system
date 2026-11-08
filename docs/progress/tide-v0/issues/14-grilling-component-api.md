@@ -14,3 +14,4 @@ Blocked by: 06, 03, 13
 - 「Token 네이밍과 Utility class 노출 규칙 결정」: tailwind-merge 설정(색이 아닌 커스텀 이름)은 Token TS 원본에서 생성한다. 이 티켓에서는 Component가 그 설정을 어떻게 쓰는지(`cn()` 헬퍼 등)를 정한다. 강도 이름 `solid`/`subtle`은 Token에서 쓰는 이름이므로 Component `variant` 값과 맞출지도 여기서 정한다.
 - 「타이포그래피 Foundation 결정」: Component 내부 텍스트는 텍스트 스타일 class(`text-label-md` 등)만 쓴다. Component `size`(sm/md/lg)와 `label-sm/md/lg`를 어떻게 짝지을지 여기서 정한다. 버튼과 입력창의 높이와 세로 정렬은 Pretendard 메트릭(hhea 1.19em) 기준으로 검증한다.
 - 「v0 Foundation 범위 결정」: radius(`sm`/`md`/`lg`/`xl`/`full`)와 shadow 이름을 교체하므로 `extendTailwindMerge`에 등록해야 한다. 이 설정도 Token TS 원본에서 생성한다.
+- 「접근성 동작 구현 방식 결정」: 접근성 동작은 React Aria hooks(`react-aria`, `react-stately`)로 가져오고 구조는 직접 만든다(ADR 0004). hook이 받는 이름(`isDisabled`, `onPress`, `selectedKey`)을 공개 API에 드러내지 않고 변환하는 규칙을 여기서 정한다. 조합 패턴(`asChild`/`render`/`as`)도 라이브러리 관례에 묶이지 않으므로 Tide가 직접 고른다.

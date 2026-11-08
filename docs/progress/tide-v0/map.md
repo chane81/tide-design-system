@@ -46,6 +46,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [Token 네이밍과 Utility class 노출 규칙 결정](issues/10-grilling-token-naming.md): Semantic 색은 Tailwind 속성별 namespace(`bg-primary-solid`, `text-muted`)로 노출하고 CI로 확인함. 공개 계약은 `--tide-*`. Primitive 계열은 색상 이름(blue/gray/green/amber/red/cyan). Theme은 `[data-theme]`. 원본은 TS 객체와 직접 만든 스크립트([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md))
 - [타이포그래피 Foundation 결정](issues/11-grilling-typography.md): Pretendard Variable을 우선하는 스택. 웹폰트 로드는 앱이 함. 단위는 rem이고 루트 16px 유지. class로는 텍스트 스타일 11개(heading, body, label, caption)만 노출하고, 스타일마다 크기·행간·굵기가 묶임. 굵기는 300~700의 5개, 자간 0, base CSS에 `keep-all`
 - [v0 Foundation 범위 결정](issues/12-grilling-foundation-scope.md): 간격과 breakpoint는 Tailwind 기본값 유지, radius(sm/md/lg/xl/full)와 그림자는 교체. focus ring 형태, motion(최소), z-index 층, 아이콘을 v0에 넣음. border width와 opacity는 Token을 두지 않음
+- [접근성 동작 구현 방식 결정](issues/13-grilling-headless.md): 구조와 스타일은 직접 구현하고, 접근성 동작은 React Aria hooks(`react-aria`, `react-stately`)로 가져옴. 네이티브 HTML로 완결되는 요소에는 hook을 쓰지 않음. 외부 컴포넌트 라이브러리는 기본적으로 쓰지 않고, 필요하면 사용자에게 물음([ADR 0004](../../decisions/0004-react-aria-hooks-own-markup.md))
 
 ## Not yet specified
 

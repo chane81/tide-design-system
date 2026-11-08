@@ -82,3 +82,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ③ 단순함: [ADR 0001 Token은 프레임워크 무관, v0 Component는 React 전용](../decisions/0001-framework-agnostic-tokens-react-components.md)
 - ④ 발견할 수 있음: [ADR 0002 pnpm 모노레포 + Tailwind](../decisions/0002-monorepo-tailwind.md)
 - ② 명확함, ③ 단순함, ④ 발견할 수 있음: [ADR 0003 Token 원본은 TS 객체, Semantic 색은 Tailwind 속성별 namespace로 노출](../decisions/0003-token-source-and-utility-namespaces.md)
+- ① 접근성, ③ 단순함: [ADR 0004 접근성 동작은 React Aria hooks, 구조와 스타일은 직접 구현](../decisions/0004-react-aria-hooks-own-markup.md)

@@ -11,3 +11,4 @@ Blocked by: 05, 03, 17, 19
 ### 참고 (다른 티켓에서 넘어온 것)
 
 - 「Token 네이밍과 Utility class 노출 규칙 결정」: Token 원본은 TS 객체이고, 직접 만든 빌드 스크립트가 CSS(`--tide-*`, `[data-theme]`, `@theme inline`, `@custom-variant dark`)와 tailwind-merge 설정을 만든다. 이 스크립트와 출력물을 어느 패키지에 두고 어떤 exports 경로로 내보낼지 여기서 정한다. 빌드한 CSS에 기대한 class가 있는지 확인하는 CI 테스트를 둘 위치도 정한다.
+- 「접근성 동작 구현 방식 결정」: `react-aria` 3.53.1과 `react-stately` 3.51.0을 dependencies로 둘지 peer로 둘지 정한다. hook을 쓰는 Component는 클라이언트 전용이라 `"use client"` 경계 안에 있어야 한다(ADR 0004).
