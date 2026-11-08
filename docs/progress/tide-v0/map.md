@@ -40,6 +40,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [모노레포 툴링 조사](issues/05-research-monorepo-tooling.md): 최신 버전끼리 충돌은 없음. TS 7에 프로그래밍 API가 없어 TS 6 병행 여부가 쟁점. d.ts 생성은 별도 도구가 필요함. oxfmt는 아직 beta
 - [레퍼런스 Component 구성과 공통 API 관례 조사](issues/06-research-component-conventions.md): 초기 버전 Component는 26~44개. 스타일 축은 `variant`가 가장 흔함. shadcn은 새 프로젝트 기본값을 Base UI로 바꿈. Radix에는 약 10개월 릴리스 공백이 있었음
 - [Tide 원칙 확정](issues/07-grilling-principles.md): 원칙 4개를 "A가 B보다" 형식으로 정함. ① 접근성 > ② 명확함 > ③ 단순함 > ④ 발견할 수 있음. WCAG는 Standard로 분리했고, ADR마다 근거 원칙을 적음
+- [컬러 스케일 후보 시각 비교](issues/08-prototype-color-scale.md): A(OKLCH L 계단, 50~950의 11단계, blue 500은 `#3183f5`로 고정)를 채택함. 모든 계열에서 흰 배경 4.5:1을 처음 넘는 단계는 600. gray 초안, 상태색 hue, dark 반전 매핑은 문제없다고 봄
 - [Next.js App Router 호환성 조사](issues/17-research-nextjs-consumption.md): Next.js 16.4.5. Vite 8 기본 빌드는 `"use client"`를 지우므로 `preserveModules` 등이 필요함. 컴파일된 ESM dist를 배포하면 `transpilePackages`가 필요 없음. 폰트는 앱이 로드함
 
 ## Not yet specified
