@@ -42,10 +42,11 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [Tide 원칙 확정](issues/07-grilling-principles.md): 원칙 4개를 "A가 B보다" 형식으로 정함. ① 접근성 > ② 명확함 > ③ 단순함 > ④ 발견할 수 있음. WCAG는 Standard로 분리했고, ADR마다 근거 원칙을 적음
 - [컬러 스케일 후보 시각 비교](issues/08-prototype-color-scale.md): A(OKLCH L 계단, 50~950의 11단계, blue 500은 `#3183f5`로 고정)를 채택함. 모든 계열에서 흰 배경 4.5:1을 처음 넘는 단계는 600. gray 초안, 상태색 hue, dark 반전 매핑은 문제없다고 봄
 - [Next.js App Router 호환성 조사](issues/17-research-nextjs-consumption.md): Next.js 16.4.5. Vite 8 기본 빌드는 `"use client"`를 지우므로 `preserveModules` 등이 필요함. 컴파일된 ESM dist를 배포하면 `transpilePackages`가 필요 없음. 폰트는 앱이 로드함
+- [컬러 Foundation 결정](issues/09-grilling-color-foundation.md): 역할 6개 × 속성 6개(bg, text, border, focus-ring, overlay, shadow). dark Theme은 같은 스케일 반전. solid는 두 Theme 모두 600, 역할 text는 800/200. Primitive 정본은 hex. 명시한 대비 쌍 128개를 WCAG 2.x 대비비로 CI에서 검사(APCA는 쓰지 않음)
 
 ## Not yet specified
 
-- **Foundation 세부 값**: 간격 기본 단위, radius, elevation/shadow, motion, breakpoint, z-index. 어떤 항목을 v0에 넣을지는 "v0 Foundation 범위" 티켓에서 정하고, 그 결과에 따라 항목별 티켓으로 나눔.
+- **Foundation 세부 값**: 간격 기본 단위, radius, elevation/shadow(그림자 색 Token은 「컬러 Foundation 결정」에서 정함, 형태와 단계는 여기서 정함), motion, breakpoint, z-index. 어떤 항목을 v0에 넣을지는 "v0 Foundation 범위" 티켓에서 정하고, 그 결과에 따라 항목별 티켓으로 나눔.
 - **아이콘 전략**: 직접 만들지, 외부 세트를 쓸지, 어떤 형식으로 배포할지.
 - **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것도 포함.
 - **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지.

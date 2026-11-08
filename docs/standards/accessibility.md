@@ -19,6 +19,8 @@ Tide의 최소 기준은 **WCAG 2.2 AA**다([W3C 권고안](https://www.w3.org/T
 다음은 AA 필수 항목이 아니지만 Tide가 스스로 정한 기준이다.
 
 - `prefers-reduced-motion: reduce` 설정을 존중한다. 이 설정이 켜져 있으면 장식 목적의 모션은 끈다(원칙 ②와도 이어짐).
-- 대비 검증은 손으로 하지 않고 자동으로 한다. 구체적인 방식은 컬러 Foundation 결정과 테스트 전략에서 정한다.
+- 대비 검증은 손으로 하지 않고 자동으로 한다. 기준은 WCAG 2.x 대비비 하나만 쓰고, APCA는 쓰지 않는다.
+- 검사 대상은 실제로 함께 쓰는 전경/배경 Token 쌍을 명시한 목록(대비 쌍)이다. light와 dark 모두에서 하나라도 기준에 못 미치면 CI가 실패한다. 세부 쌍 목록은 [컬러 Foundation 결정](../progress/tide-v0/issues/09-grilling-color-foundation.md)을 따른다.
+- 장식용 테두리(구분선 등), disabled 상태, overlay, shadow는 대비 검사에서 제외한다. disabled는 색 외에 `disabled`/`aria-disabled` 속성과 cursor로도 표현한다.
 
 > 이 표의 성공 기준 번호와 수준은 2026-11-08에 W3C 문서를 기준으로 작성했다. 실제 구현에 들어가기 전에 원문을 다시 확인한다.

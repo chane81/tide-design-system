@@ -42,6 +42,14 @@ _Avoid_: alias token, 의미 토큰
 Token에 연결된 Tailwind 클래스. 사용자가 `className`에 직접 쓴다. 예: `w-24`, `bg-primary`.
 _Avoid_: 헬퍼 클래스, 스타일 클래스
 
+**Role (역할)**:
+Semantic Token이 나타내는 의미 범주. `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다.
+_Avoid_: 컬러 그룹, intent, tone
+
+**대비 쌍 (Contrast pair)**:
+실제로 함께 쓰는 전경 Token과 배경 Token의 짝. 대비 검사는 모든 조합이 아니라 등록된 대비 쌍만 대상으로 한다.
+_Avoid_: 색 조합, 컬러 페어
+
 **Theme**:
 Semantic Token이 어떤 Primitive Token을 참조할지 정한 묶음. 예: light, dark.
 _Avoid_: 모드, 스킨
