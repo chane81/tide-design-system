@@ -61,3 +61,7 @@ _Avoid_: 색 조합, 컬러 페어
 **Theme**:
 Semantic Token이 어떤 Primitive Token을 참조할지 정한 묶음. 예: light, dark.
 _Avoid_: 모드, 스킨
+
+**텍스트 스타일 (Text style)**:
+글자 크기, 행간, 굵기를 용도에 맞게 하나로 묶은 Semantic Token. `heading`, `body`, `label`, `caption` 네 범주가 있다. 예: `text-body-md`, `text-label-sm`. `label`은 버튼이나 입력창처럼 한 줄로 쓰는 UI 텍스트이고, `body`는 읽는 글이다.
+_Avoid_: 타이포 토큰, font style, 텍스트 크기(크기 하나만 뜻하는 Primitive와 혼동)
