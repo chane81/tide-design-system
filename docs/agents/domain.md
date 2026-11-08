@@ -22,9 +22,14 @@
     ├── research/        ← 리서치 결과 (출처 인용)
     ├── progress/        ← wayfinder 지도, 스펙, 티켓 (이슈 트래커)
     ├── principles/      ← 산출물: 디자인 원칙
+    ├── standards/       ← 산출물: 측정 가능한 기준 (접근성 등)
     ├── foundations/     ← 산출물: 컬러, 타이포, 간격 등 파운데이션
     └── components/      ← 산출물: 컴포넌트 문서
 ```
+
+## ADR에는 근거 원칙을 적는다
+
+모든 ADR은 본문 위쪽에 `근거 원칙: ①` 형태로 `docs/principles/README.md`의 원칙 번호를 적는다. 그리고 원칙 문서의 "원칙에서 나온 결정" 목록에 그 ADR 링크를 추가한다.
 
 ## 용어집의 어휘를 쓴다
 

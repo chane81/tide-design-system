@@ -39,13 +39,14 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [한글 타이포그래피 조사](issues/04-research-korean-typography.md): 11,172자 전체와 동적 subset을 공식 제공하는 폰트는 Pretendard와 Noto Sans KR뿐. 본문 행간 약 1.5, 자간 0
 - [모노레포 툴링 조사](issues/05-research-monorepo-tooling.md): 최신 버전끼리 충돌은 없음. TS 7에 프로그래밍 API가 없어 TS 6 병행 여부가 쟁점. d.ts 생성은 별도 도구가 필요함. oxfmt는 아직 beta
 - [레퍼런스 Component 구성과 공통 API 관례 조사](issues/06-research-component-conventions.md): 초기 버전 Component는 26~44개. 스타일 축은 `variant`가 가장 흔함. shadcn은 새 프로젝트 기본값을 Base UI로 바꿈. Radix에는 약 10개월 릴리스 공백이 있었음
+- [Tide 원칙 확정](issues/07-grilling-principles.md): 원칙 4개를 "A가 B보다" 형식으로 정함. ① 접근성 > ② 명확함 > ③ 단순함 > ④ 발견할 수 있음. WCAG는 Standard로 분리했고, ADR마다 근거 원칙을 적음
 - [Next.js App Router 호환성 조사](issues/17-research-nextjs-consumption.md): Next.js 16.4.5. Vite 8 기본 빌드는 `"use client"`를 지우므로 `preserveModules` 등이 필요함. 컴파일된 ESM dist를 배포하면 `transpilePackages`가 필요 없음. 폰트는 앱이 로드함
 
 ## Not yet specified
 
 - **Foundation 세부 값**: 간격 기본 단위, radius, elevation/shadow, motion, breakpoint, z-index. 어떤 항목을 v0에 넣을지는 "v0 Foundation 범위" 티켓에서 정하고, 그 결과에 따라 항목별 티켓으로 나눔.
 - **아이콘 전략**: 직접 만들지, 외부 세트를 쓸지, 어떤 형식으로 배포할지.
-- **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식.
+- **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것도 포함.
 - **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지.
 - **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책.
 
