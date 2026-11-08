@@ -21,3 +21,10 @@ Component의 `variant` × `color` × `size` 클래스는 cva나 tailwind-variant
 - 여러 부분으로 된 Component는 tv의 slots 같은 기능 없이 부분마다 맵을 따로 둔다. 각 부분은 자기 `className`을 받는다.
 - 나중에 cva 1.0이 안정화되거나 tv의 병합이 tailwind-merge와 완전히 호환되면 도구를 다시 검토할 수 있다. 맵을 옮기는 작업은 기계적이고 공개 API에도 영향이 없다.
 - `render`를 쓰는 Component는 넘겨받은 요소와 props를 병합하는 유틸(이벤트 핸들러 연결, ref 합치기, `cn` 병합)을 하나 가진다. 이 유틸은 Tide가 직접 작성한다.
+
+## 정정 (2026-11-09)
+
+[v0 Component 목록과 우선순위 결정](../progress/tide-v0/issues/15-grilling-component-list.md)에서 다음 두 가지를 바꿨다.
+
+- `render`는 **루트가 DOM 요소 하나인 Component**에 둔다. 처음에는 "루트가 상호작용 요소 하나인 Component"로 한정했다. 그런데 Typography는 `<p>`, `<span>`, `<label>` 등으로 렌더할 수 있어야 한다. `as`를 따로 허용하면 조합 방식이 둘로 갈린다(③). 그래서 `render` 하나로 범위를 넓혔다.
+- 맵 타입 예시의 `Variant`는 채움 방식(`solid | subtle | outline | ghost`) 값 집합을 뜻한다. Variant가 "Component마다 정의되는 주된 스타일 축"으로 넓어졌으므로, 공통 타입 이름은 채움 방식을 드러내도록 바꾼다(GLOSSARY 참고).

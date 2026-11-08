@@ -118,6 +118,11 @@ Blocked by: 06, 03, 13
 - 「모노레포 패키지 구조와 빌드 결정」: `cn`과 공통 union 타입(`Variant`, `Color`, `Size`)을 어느 패키지에서 export할지 정한다. React peer 범위는 `^19`이다. 필요한 Component 파일에만 `"use client"`를 보존한다.
 - 「radius·elevation·focus ring 형태 결정」: Component 높이는 24/32/40/48px이다. radius 단계를 size와 짝지을지 볼 때 이 값을 참고한다.
 
+### 정정 (2026-11-09, 「v0 Component 목록과 우선순위 결정」)
+
+- **Variant의 뜻을 넓힌다.** 이제 `variant`는 "Component마다 정의되는 주된 스타일 축"이다. 위 2절의 `solid | subtle | outline | ghost`는 그중 Button류 Component가 쓰는 **채움 방식** 값 집합이다. Typography의 `variant`는 텍스트 스타일 이름을 값으로 받는다. 그래서 공통 union 타입 `Variant`는 채움 방식을 드러내는 이름으로 바꾼다(예: `FillVariant`, 확정은 spec 단계에서). GLOSSARY를 함께 고쳤다.
+- **`render` 범위를 넓힌다.** 6절의 "루트가 상호작용 요소 하나인 Component"를 "루트가 DOM 요소 하나인 Component"로 바꾼다. Typography가 `<p>`, `<span>`, `<label>` 등으로 렌더할 수 있어야 하기 때문이다. ADR 0005도 정정했다.
+
 ## Comments
 
 - 2026-11-09 grilling 진행. Q1~Q16의 추천안을 대부분 그대로 채택했다. 사용자가 size를 4단계로 늘려 sm보다 작은 xs를 추가했다. 이유는 "실무에서 sm만으로는 커버가 되지 않는다"였다. 이어서 다음 두 가지를 확인했다.

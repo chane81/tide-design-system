@@ -67,11 +67,23 @@ Semantic Token이 어떤 Primitive Token을 참조할지 정한 묶음. 예: lig
 _Avoid_: 모드, 스킨
 
 **텍스트 스타일 (Text style)**:
-글자 크기, 행간, 굵기를 용도에 맞게 하나로 묶은 Semantic Token. `heading`, `body`, `label`, `caption` 네 범주가 있다. 예: `text-body-md`, `text-label-sm`. `label`은 버튼이나 입력창처럼 한 줄로 쓰는 UI 텍스트이고, `body`는 읽는 글이다.
+글자 크기, 행간, 굵기를 용도에 맞게 하나로 묶은 Semantic Token. `display`, `heading`, `body`, `label`, `caption` 다섯 범주가 있다. 예: `text-body-md`, `text-label-sm`. `display`는 랜딩 페이지 같은 곳에 쓰는 가장 큰 제목이다. `label`은 버튼이나 입력창처럼 한 줄로 쓰는 UI 텍스트이고, `body`는 읽는 글이다.
 _Avoid_: 타이포 토큰, font style, 텍스트 크기(크기 하나만 뜻하는 Primitive와 혼동)
 
 ## Component API
 
-**Variant (채움 방식)**:
-Component의 생김새를 고르는 스타일 축. `solid`, `subtle`, `outline`, `ghost` 네 가지다. `solid`와 `subtle`은 강도와 이름이 같고, `outline`과 `ghost`는 Component에만 있다. 색은 Variant가 아니라 Role로 고른다.
+**Variant**:
+Component마다 정의되는 주된 스타일 축. 값 집합은 Component 종류마다 다르다. 예를 들어 Button은 채움 방식을, Typography는 텍스트 스타일을 값으로 쓴다. 값은 새로 만들지 않고 Foundation에 이미 있는 이름을 쓴다. 색은 Variant가 아니라 Role로 고른다.
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
+
+**채움 방식 (Fill)**:
+Button류 Component의 Variant 값 집합. `solid`, `subtle`, `outline`, `ghost` 네 가지다. `solid`와 `subtle`은 강도와 이름이 같고, `outline`과 `ghost`는 Component에만 있다.
+_Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
+
+**Badge (배지)**:
+상태나 분류를 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다.
+_Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
+
+**Tag (태그)**:
+사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
+_Avoid_: Chip(토글 칩과 혼동), Badge

@@ -73,6 +73,24 @@ Blocked by: 04, 10
 - 「Component 공통 API 규칙 결정」: Component 내부 텍스트는 텍스트 스타일 class만 쓴다. 예를 들어 버튼은 `label-*`을 쓴다.
 - Storybook 문서 구성(Not yet specified): 폰트 로드 가이드 페이지와 텍스트 스타일 시각화 페이지가 필요하다.
 
+### 정정 (2026-11-09, 「v0 Component 목록과 우선순위 결정」)
+
+[v0 Component 목록과 우선순위 결정](15-grilling-component-list.md)에서 사용자가 다음과 같이 바꿨다. 위 본문 중 이 정정과 어긋나는 부분은 이 절을 따른다.
+
+- **display를 추가한다.** 앞의 "display는 두지 않는다"를 뒤집는다. 포트폴리오와 랜딩 페이지에 쓸 대형 제목이 필요하다는 사용자 결정이다.
+- **heading을 5단계로 늘린다.** 맨 아래에 `heading-xs`를 추가했다.
+- 텍스트 스타일은 11개에서 **14개**가 된다(display 2, heading 5, body 3, label 3, caption 1). 이름은 기존 접미사 규칙을 따른다.
+- **Primitive 크기**에 48과 56을 더해 10개가 된다(12, 14, 16, 18, 20, 24, 32, 40, 48, 56px).
+- **CI**는 텍스트 스타일 class 14개를 확인한다.
+
+| 스타일 | 크기/행간 (px) | 굵기 | 용도 |
+| --- | --- | --- | --- |
+| `display-lg` | 56/64 | 700 | 랜딩, 히어로 |
+| `display-md` | 48/56 | 700 | |
+| `heading-xs` | 18/28 | 600 | 가장 작은 제목. `body-lg`와 크기는 같고 굵기만 다르다 |
+
+- Typography Component의 기본 요소 매핑(`display-*`와 `heading-xl`은 `h1`, `heading-lg`부터 `heading-xs`까지는 `h2`~`h5` 등)은 그 티켓의 Answer에 있다.
+
 ## Comments
 
 - 2026-11-08 grilling 진행. 굵기 Token은 처음에 3개(400/500/700)를 제안했으나, 사용자가 light 300부터 bold 700까지 5개로 바꿨다. 그에 맞춰 `heading-sm`을 600으로 조정했다.

@@ -44,10 +44,11 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [Next.js App Router 호환성 조사](issues/17-research-nextjs-consumption.md): Next.js 16.4.5. Vite 8 기본 빌드는 `"use client"`를 지우므로 `preserveModules` 등이 필요함. 컴파일된 ESM dist를 배포하면 `transpilePackages`가 필요 없음. 폰트는 앱이 로드함
 - [컬러 Foundation 결정](issues/09-grilling-color-foundation.md): 역할 6개 × 속성 6개(bg, text, border, focus-ring, overlay, shadow). dark Theme은 같은 스케일 반전. solid는 두 Theme 모두 600, 역할 text는 800/200. Primitive 정본은 hex. 명시한 대비 쌍 128개를 WCAG 2.x 대비비로 CI에서 검사(APCA는 쓰지 않음)
 - [Token 네이밍과 Utility class 노출 규칙 결정](issues/10-grilling-token-naming.md): Semantic 색은 Tailwind 속성별 namespace(`bg-primary-solid`, `text-muted`)로 노출하고 CI로 확인함. 공개 계약은 `--tide-*`. Primitive 계열은 색상 이름(blue/gray/green/amber/red/cyan). Theme은 `[data-theme]`. 원본은 TS 객체와 직접 만든 스크립트([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md))
-- [타이포그래피 Foundation 결정](issues/11-grilling-typography.md): Pretendard Variable을 우선하는 스택. 웹폰트 로드는 앱이 함. 단위는 rem이고 루트 16px 유지. class로는 텍스트 스타일 11개(heading, body, label, caption)만 노출하고, 스타일마다 크기·행간·굵기가 묶임. 굵기는 300~700의 5개, 자간 0, base CSS에 `keep-all`
+- [타이포그래피 Foundation 결정](issues/11-grilling-typography.md): Pretendard Variable을 우선하는 스택. 웹폰트 로드는 앱이 함. 단위는 rem이고 루트 16px 유지. class로는 텍스트 스타일 14개(display, heading, body, label, caption)만 노출하고, 스타일마다 크기·행간·굵기가 묶임. display와 heading-xs는 「v0 Component 목록과 우선순위 결정」에서 추가함. 굵기는 300~700의 5개, 자간 0, base CSS에 `keep-all`
 - [v0 Foundation 범위 결정](issues/12-grilling-foundation-scope.md): 간격과 breakpoint는 Tailwind 기본값 유지, radius(sm/md/lg/xl/full)와 그림자는 교체. focus ring 형태, motion(최소), z-index 층, 아이콘을 v0에 넣음. border width와 opacity는 Token을 두지 않음
 - [접근성 동작 구현 방식 결정](issues/13-grilling-headless.md): 구조와 스타일은 직접 구현하고, 접근성 동작은 React Aria hooks(`react-aria`, `react-stately`)로 가져옴. 네이티브 HTML로 완결되는 요소에는 hook을 쓰지 않음. 외부 컴포넌트 라이브러리는 기본적으로 쓰지 않고, 필요하면 사용자에게 물음([ADR 0004](../../decisions/0004-react-aria-hooks-own-markup.md))
 - [Component 공통 API 규칙 결정](issues/14-grilling-component-api.md): React 19 이상, `ref`는 일반 prop. 스타일 축은 `variant`(solid/subtle/outline/ghost) × `color`(Role 6개) × `size`(xs/sm/md/lg, 높이 24~48px)이고, Component마다 `Extract`로 필요한 값만 고름. 병합은 `cn`(clsx + 생성된 tailwind-merge 설정), variant 맵은 직접 작성(cva·tv 안 씀). 조합은 `render` prop([ADR 0005](../../decisions/0005-hand-written-variant-maps-and-render-prop.md)). 공개 API는 DOM 이름을 쓰고 콜백 인자는 값 하나
+- [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md): 33개를 의존 순서에 따라 5단계로 나눔(기반 → 액션·폼 → 표시·피드백 → hook 위젯 → Toast). Heading과 Text는 Typography 하나로 합침. Variant를 "Component마다 정의되는 스타일 축"으로 넓혔고, `render` 범위도 넓힘(ADR 0005 정정). 뺀 것은 모두 v0 이후 후보
 
 ## Not yet specified
 
@@ -60,3 +61,4 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - Vue, Svelte 등 React 외 프레임워크용 Component (ADR 0001)
 - Storybook 외 별도 문서 사이트
 - 특정 서비스 전용 Component
+- v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장, Slider, Drawer/Sheet, 토글 Chip. 이유는 [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md)에 있음
