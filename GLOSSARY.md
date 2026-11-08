@@ -47,7 +47,7 @@ Token에 연결된 Tailwind 클래스. 사용자가 `className`에 직접 쓴다
 _Avoid_: 헬퍼 클래스, 스타일 클래스
 
 **Role (역할)**:
-Semantic Token이 나타내는 의미 범주. `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다.
+Semantic Token이 나타내는 의미 범주. `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다. Component에서는 `color` prop으로 Role을 고른다.
 _Avoid_: 컬러 그룹, intent, tone
 
 **강도 (Emphasis)**:
@@ -69,3 +69,9 @@ _Avoid_: 모드, 스킨
 **텍스트 스타일 (Text style)**:
 글자 크기, 행간, 굵기를 용도에 맞게 하나로 묶은 Semantic Token. `heading`, `body`, `label`, `caption` 네 범주가 있다. 예: `text-body-md`, `text-label-sm`. `label`은 버튼이나 입력창처럼 한 줄로 쓰는 UI 텍스트이고, `body`는 읽는 글이다.
 _Avoid_: 타이포 토큰, font style, 텍스트 크기(크기 하나만 뜻하는 Primitive와 혼동)
+
+## Component API
+
+**Variant (채움 방식)**:
+Component의 생김새를 고르는 스타일 축. `solid`, `subtle`, `outline`, `ghost` 네 가지다. `solid`와 `subtle`은 강도와 이름이 같고, `outline`과 `ghost`는 Component에만 있다. 색은 Variant가 아니라 Role로 고른다.
+_Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)

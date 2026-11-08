@@ -17,3 +17,4 @@ Blocked by: 12
 - 「v0 Foundation 범위 결정」: radius와 그림자는 Tailwind 기본값을 지우고 Tide 단계만 둔다. 모든 그림자는 `--tide-shadow-color`를 쓴다.
 - 「컬러 Foundation 결정」: shadow 색의 alpha(light gray-950 12%, dark black 40%)는 여기서 다시 조정할 수 있다. dark에서 raised는 gray-900에 border를 더한다.
 - 값을 눈으로 비교해야 하면 prototype 티켓을 새로 만든다.
+- 「Component 공통 API 규칙 결정」: Component 높이는 size별로 xs 24, sm 32, md 40, lg 48px이다. radius 단계를 size와 짝지을지 볼 때 이 값을 참고한다.
