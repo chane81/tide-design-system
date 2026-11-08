@@ -45,11 +45,10 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [컬러 Foundation 결정](issues/09-grilling-color-foundation.md): 역할 6개 × 속성 6개(bg, text, border, focus-ring, overlay, shadow). dark Theme은 같은 스케일 반전. solid는 두 Theme 모두 600, 역할 text는 800/200. Primitive 정본은 hex. 명시한 대비 쌍 128개를 WCAG 2.x 대비비로 CI에서 검사(APCA는 쓰지 않음)
 - [Token 네이밍과 Utility class 노출 규칙 결정](issues/10-grilling-token-naming.md): Semantic 색은 Tailwind 속성별 namespace(`bg-primary-solid`, `text-muted`)로 노출하고 CI로 확인함. 공개 계약은 `--tide-*`. Primitive 계열은 색상 이름(blue/gray/green/amber/red/cyan). Theme은 `[data-theme]`. 원본은 TS 객체와 직접 만든 스크립트([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md))
 - [타이포그래피 Foundation 결정](issues/11-grilling-typography.md): Pretendard Variable을 우선하는 스택. 웹폰트 로드는 앱이 함. 단위는 rem이고 루트 16px 유지. class로는 텍스트 스타일 11개(heading, body, label, caption)만 노출하고, 스타일마다 크기·행간·굵기가 묶임. 굵기는 300~700의 5개, 자간 0, base CSS에 `keep-all`
+- [v0 Foundation 범위 결정](issues/12-grilling-foundation-scope.md): 간격과 breakpoint는 Tailwind 기본값 유지, radius(sm/md/lg/xl/full)와 그림자는 교체. focus ring 형태, motion(최소), z-index 층, 아이콘을 v0에 넣음. border width와 opacity는 Token을 두지 않음
 
 ## Not yet specified
 
-- **Foundation 세부 값**: 간격 기본 단위, radius, elevation/shadow(그림자 색 Token은 「컬러 Foundation 결정」에서 정함, 형태와 단계는 여기서 정함), motion, breakpoint, z-index. 어떤 항목을 v0에 넣을지는 "v0 Foundation 범위" 티켓에서 정하고, 그 결과에 따라 항목별 티켓으로 나눔.
-- **아이콘 전략**: 직접 만들지, 외부 세트를 쓸지, 어떤 형식으로 배포할지.
 - **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 폰트 로드 가이드(next/font/local, CDN 동적 subset)와 텍스트 스타일 시각화 페이지 포함. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것도 포함.
 - **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지.
 - **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책.
