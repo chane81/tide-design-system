@@ -43,6 +43,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [컬러 스케일 후보 시각 비교](issues/08-prototype-color-scale.md): A(OKLCH L 계단, 50~950의 11단계, blue 500은 `#3183f5`로 고정)를 채택함. 모든 계열에서 흰 배경 4.5:1을 처음 넘는 단계는 600. gray 초안, 상태색 hue, dark 반전 매핑은 문제없다고 봄
 - [Next.js App Router 호환성 조사](issues/17-research-nextjs-consumption.md): Next.js 16.4.5. Vite 8 기본 빌드는 `"use client"`를 지우므로 `preserveModules` 등이 필요함. 컴파일된 ESM dist를 배포하면 `transpilePackages`가 필요 없음. 폰트는 앱이 로드함
 - [컬러 Foundation 결정](issues/09-grilling-color-foundation.md): 역할 6개 × 속성 6개(bg, text, border, focus-ring, overlay, shadow). dark Theme은 같은 스케일 반전. solid는 두 Theme 모두 600, 역할 text는 800/200. Primitive 정본은 hex. 명시한 대비 쌍 128개를 WCAG 2.x 대비비로 CI에서 검사(APCA는 쓰지 않음)
+- [Token 네이밍과 Utility class 노출 규칙 결정](issues/10-grilling-token-naming.md): Semantic 색은 Tailwind 속성별 namespace(`bg-primary-solid`, `text-muted`)로 노출하고 CI로 확인함. 공개 계약은 `--tide-*`. Primitive 계열은 색상 이름(blue/gray/green/amber/red/cyan). Theme은 `[data-theme]`. 원본은 TS 객체와 직접 만든 스크립트([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md))
 
 ## Not yet specified
 
