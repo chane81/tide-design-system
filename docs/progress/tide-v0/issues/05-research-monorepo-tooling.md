@@ -1,7 +1,7 @@
 # 모노레포 툴링 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

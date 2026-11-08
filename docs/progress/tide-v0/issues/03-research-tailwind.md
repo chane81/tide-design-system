@@ -1,7 +1,7 @@
 # Tailwind theme 노출과 자동완성 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

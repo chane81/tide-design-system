@@ -1,7 +1,7 @@
 # 레퍼런스 Component 구성과 공통 API 관례 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

@@ -1,7 +1,7 @@
 # 컬러 시스템과 Token 구조 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

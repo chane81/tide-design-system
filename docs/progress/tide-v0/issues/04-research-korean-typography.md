@@ -1,7 +1,7 @@
 # 한글 타이포그래피 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

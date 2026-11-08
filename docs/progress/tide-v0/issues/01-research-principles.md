@@ -1,7 +1,7 @@
 # 레퍼런스 디자인 시스템의 원칙 조사
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: 없음
 
 ## Question

@@ -26,6 +26,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - `#3183f5`는 브랜드 기준색으로 스케일 안에 둠. 흰색 대비가 약 3.7:1이라 AA에 못 미치므로, 텍스트와 solid 배경에는 더 진한 단계를 씀
 - 공개 문서 사이트는 Storybook 하나로 함(MDX 사용)
 - Tailwind는 최신 안정 버전을 씀. className 충돌 처리는 Component 공통 API 규칙 티켓에서 다룸
+- **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지 이름 목록은 "모노레포 패키지 구조와 빌드 결정" 티켓에서 정함
 - 리서치 대상: Material 3, IBM Carbon, Atlassian, GitHub Primer, Radix Colors/Themes, 당근 SEED Design
 
 ## Decisions so far
