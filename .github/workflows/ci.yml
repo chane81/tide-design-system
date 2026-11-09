@@ -38,6 +38,10 @@ jobs:
             ${{ runner.os }}-turbo-
 
       - run: pnpm install --frozen-lockfile
+
+      # browser·storybook project가 쓰는 Chromium headless shell. 캐시하지 않고 매번 설치한다.
+      # Playwright 버전은 catalog로 고정되어 desktop과 docs가 같은 버전을 쓴다(1.65.0 `install --help`로 옵션 확인).
+      - run: pnpm --filter @tide-tds/desktop exec playwright install --with-deps --only-shell chromium
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm turbo run typecheck test build smoke --affected
