@@ -10,7 +10,7 @@ catalogMode: strict
 minimumReleaseAge: 1440
 
 # 의존성 버전은 기본 catalog 하나로 관리한다. peer 범위와 내부 패키지는 넣지 않는다.
-# 0.x인 패키지(oxfmt, publint)는 정확한 버전으로 고정한다.
+# 0.x인 패키지(oxfmt, publint, tsdown)는 정확한 버전으로 고정한다.
 catalog:
   "@storybook/addon-a11y": ^10.6.6
   "@storybook/addon-docs": ^10.6.6
@@ -37,6 +37,7 @@ catalog:
   storybook: ^10.6.6
   tailwind-merge: ^3.7.0
   tailwindcss: ^4.3.5
+  tsdown: 0.23.7
   turbo: ^2.11.10
   typescript: ^7.0.2
   vite: ^8.3.6
