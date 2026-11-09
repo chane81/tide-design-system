@@ -49,12 +49,13 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [접근성 동작 구현 방식 결정](issues/13-grilling-headless.md): 구조와 스타일은 직접 구현하고, 접근성 동작은 React Aria hooks(`react-aria`, `react-stately`)로 가져옴. 네이티브 HTML로 완결되는 요소에는 hook을 쓰지 않음. 외부 컴포넌트 라이브러리는 기본적으로 쓰지 않고, 필요하면 사용자에게 물음([ADR 0004](../../decisions/0004-react-aria-hooks-own-markup.md))
 - [Component 공통 API 규칙 결정](issues/14-grilling-component-api.md): React 19 이상, `ref`는 일반 prop. 스타일 축은 `variant`(solid/subtle/outline/ghost) × `color`(Role 6개) × `size`(xs/sm/md/lg, 높이 24~48px)이고, Component마다 `Extract`로 필요한 값만 고름. 병합은 `cn`(clsx + 생성된 tailwind-merge 설정), variant 맵은 직접 작성(cva·tv 안 씀). 조합은 `render` prop([ADR 0005](../../decisions/0005-hand-written-variant-maps-and-render-prop.md)). 공개 API는 DOM 이름을 쓰고 콜백 인자는 값 하나
 - [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md): 33개를 의존 순서에 따라 5단계로 나눔(기반 → 액션·폼 → 표시·피드백 → hook 위젯 → Toast). Heading과 Text는 Typography 하나로 합침. Variant를 "Component마다 정의되는 스타일 축"으로 넓혔고, `render` 범위도 넓힘(ADR 0005 정정). 뺀 것은 모두 v0 이후 후보
+- [npm scope @tide-tds 확보](issues/18-task-npm-scope.md): org `tide-tds`를 만들어 scope를 확보함(owner `charles-green`, 2FA 켜짐). 예비 org로 `tide-green`, `tide-factory`도 있음. `@tide`는 다른 사람이 쓰고 있어 쓸 수 없음
 
 ## Not yet specified
 
 - **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 폰트 로드 가이드(next/font/local, CDN 동적 subset)와 텍스트 스타일 시각화 페이지 포함. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것도 포함.
 - **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지.
-- **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책.
+- **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책. CI publish 인증(trusted publishing, 토큰)과 npm의 2FA 우회 토큰 제한에 대한 대응도 포함.
 
 ## Out of scope
 
