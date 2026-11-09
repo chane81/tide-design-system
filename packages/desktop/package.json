@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@tide-tds/foundation": "workspace:*",
+    "@tide-tds/icons": "workspace:*",
     "clsx": "catalog:",
     "react-aria": "catalog:",
     "react-stately": "catalog:",
