@@ -1,9 +1,23 @@
 {
   "name": "@tide-tds/icons",
   "version": "0.0.0",
+  "description": "Tide 디자인 시스템의 React 아이콘 Component",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "generate": "node scripts/generate.ts",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/node": "catalog:",

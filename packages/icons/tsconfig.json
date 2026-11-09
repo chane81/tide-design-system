@@ -1,4 +1,14 @@
 {
+  // 타입 검사용: src(생성 결과 포함)와 테스트·스크립트·설정 파일을 함께 본다.
+  // 배포 출력(d.ts)에 필요한 isolatedDeclarations는 tsconfig.build.json이 src에만 적용한다.
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "declaration": false,
+    "isolatedDeclarations": false
+  },
+  "include": ["src", "test", "scripts", "tsdown.config.ts", "vitest.config.ts"]
 }
