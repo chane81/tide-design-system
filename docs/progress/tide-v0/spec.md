@@ -176,6 +176,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - tokens CSS: `--tide-*` 변수와 `[data-theme]` 덮어쓰기만 담는다. Tailwind 없이 쓰는 사용자의 공개 계약이다.
   - tailwind CSS: tokens CSS를 import한다. 그 위에 Tailwind 기본값 제거(`initial`), `@theme inline` 연결, `@custom-variant dark`, `@utility focus-ring`/`focus-field`, base CSS를 담는다.
   - tailwind-merge 설정: 타입만 import하는 순수 객체다. 런타임에서는 tailwind-merge에 의존하지 않는다.
+  - internal(`@tide-tds/foundation/internal`): 문서 앱 Token 블록과 빌드 스크립트가 쓰는 내부 도우미(대비 계산 등)다. 앱 개발자용이 아니고 공개 계약이 아니다. d.ts에 `@internal`로 표시하고 문서에 싣지 않는다([컬러 Foundation](../tide-v0-impl/issues/04-color-foundation.md), 2026-11-10 사용자 결정).
 - **공개 계약**: `--tide-<Utility class 이름>`(kebab-case)이다. Tailwind 변수는 `--tide-*`를 가리키는 내부 연결이고 공개 계약이 아니다.
 - **컬러**:
   - Primitive 계열은 `blue`(primary), `gray`(neutral), `green`(success), `amber`(warning), `red`(danger), `cyan`(info)이고 단계는 50~950의 11단계다. 그 밖에 `white`, `black`이 있다.
@@ -186,6 +187,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - `text-<역할>`, `border-<역할>`. neutral은 이 둘을 두지 않는다.
   - 공통: `bg-canvas`, `bg-surface`, `bg-raised`, `bg-disabled`, `bg-overlay`, `text-default`, `text-muted`, `text-disabled`, `text-on-solid`, `border-default`, `border-strong`, `outline-focus`
   - shadow 색은 class로 노출하지 않는다. `--tide-shadow-color`만 둔다.
+  - 예외: Tailwind의 gradient stop(`from-`/`via-`/`to-`)도 `--background-color`를 읽어서(tailwindcss 4.3.5) `from-canvas`, `via-primary-solid` 같은 class가 생긴다. 배경색을 그대로 gradient에 쓰는 것이라 뜻이 어긋나지 않으므로 「의미 없는 조합」의 예외로 인정한다. 막는 테스트는 두지 않는다(2026-11-10 사용자 결정).
 - **매핑**([컬러 Foundation 결정](issues/09-grilling-color-foundation.md)):
   - solid / hover / active는 두 Theme 모두 600/700/800이다.
   - subtle은 light 50/100/200, dark 950/900/800이다. dark의 neutral만 900/800/700이다.
