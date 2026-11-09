@@ -1,5 +1,5 @@
 // 배포 tarball 소비 검사(seam ④). workspace 밖 임시 폴더에 실제 npm 사용자와 같은 구조로 설치한다.
-// 순서: pnpm pack → publint → 앱 설치 → next build → tsc(bundler) → tsc(nodenext) → 출력 CSS 확인.
+// 순서: pnpm pack → publint → 앱 설치 → next build → tsc(bundler) → tsc(nodenext) → 출력 CSS 확인 → 아이콘 tree-shaking 확인.
 // workspace symlink로 연결하면 transpilePackages가 필요해져 사용자 구조와 달라진다(tide-v0 티켓 19).
 import { spawnSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -11,7 +11,7 @@ const appDir = fileURLToPath(new URL("../", import.meta.url));
 const repoRoot = join(appDir, "../..");
 
 /** tarball로 만들 배포 패키지. 의존 순서와 무관하다. */
-const tidePackages = ["foundation", "desktop"] as const;
+const tidePackages = ["foundation", "icons", "desktop"] as const;
 
 /** 임시 앱에 설치할 외부 패키지. 버전은 workspace에 설치된 것(catalog)을 그대로 쓴다. */
 const appDependencies = ["next", "react", "react-dom"];
@@ -105,7 +105,7 @@ try {
     devDependencies: await versions(appDevDependencies),
   };
   await writeFile(join(consumerDir, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
-  // desktop tarball이 foundation을 정확한 버전으로 의존하므로, registry 대신 tarball로 연결한다.
+  // desktop tarball이 foundation·icons를 정확한 버전으로 의존하므로, registry 대신 tarball로 연결한다.
   const overrides = Object.entries(tarballs)
     .map(([name, spec]) => `  "${name}": "${spec}"`)
     .join("\n");
@@ -131,6 +131,33 @@ try {
     "desktop 내부 class(sr-only)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(!css.includes("--color-red-500"), "Tailwind 기본 팔레트가 남아 있다");
+
+  // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
+  // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
+  const builtJs = (
+    await Promise.all(
+      (await filesUnder(join(consumerDir, ".next"), ".js")).map((file) => readFile(file, "utf8")),
+    )
+  ).join("\n");
+  const iconShape = async (file: string): Promise<string> => {
+    const source = await readFile(
+      join(consumerDir, "node_modules/@tide-tds/icons/dist/generated", file),
+      "utf8",
+    );
+    const d = /d: "([^"]+)"/.exec(source)?.[1];
+    if (!d) {
+      throw new Error(`${file}에서 도형을 찾지 못했다.`);
+    }
+    return d;
+  };
+  if (!builtJs.includes(await iconShape("plus-icon.js"))) {
+    throw new Error("아이콘 확인 실패: 페이지가 쓴 PlusIcon의 도형이 빌드 결과에 없다");
+  }
+  if (builtJs.includes(await iconShape("house-icon.js"))) {
+    throw new Error(
+      "아이콘 확인 실패: 쓰지 않은 HouseIcon이 빌드 결과에 들어갔다(tree-shaking 실패)",
+    );
+  }
 
   console.log("\nsmoke 통과");
   await rm(workDir, { recursive: true, force: true });
