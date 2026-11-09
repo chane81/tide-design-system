@@ -48,3 +48,7 @@ catalog:
 allowBuilds:
   # 플랫폼 바이너리는 optionalDependencies로 설치되므로 postinstall(바이너리 확인)은 돌리지 않는다.
   esbuild: false
+
+permissions:
+  tsdown:
+    skills: true
