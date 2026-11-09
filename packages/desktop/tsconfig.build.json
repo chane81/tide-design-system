@@ -1,12 +1,9 @@
 {
-  // d.ts만 만든다. JS는 Vite가 만든다.
+  // 배포 빌드(tsdown)가 읽는다. isolatedDeclarations를 켠 채 src만 보고 oxc로 d.ts를 만든다.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["es2024", "dom", "dom.iterable"],
-    "jsx": "react-jsx",
-    "rootDir": "src",
-    "outDir": "dist",
-    "emitDeclarationOnly": true
+    "jsx": "react-jsx"
   },
   "include": ["src"],
   "exclude": ["src/**/*.test.tsx"]

@@ -7,5 +7,5 @@
     "declaration": false,
     "isolatedDeclarations": false
   },
-  "include": ["src", "scripts", "test", "vitest.config.ts", "../../scripts"]
+  "include": ["src", "scripts", "test", "tsdown.config.ts", "vitest.config.ts"]
 }

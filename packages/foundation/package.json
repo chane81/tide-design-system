@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-imports.ts dist && node scripts/build.ts",
+    "build": "tsdown && node scripts/build.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

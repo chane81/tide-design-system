@@ -27,7 +27,7 @@
     }
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-imports.ts dist && cp src/styles.css dist/styles.css",
+    "build": "tsdown && cp src/styles.css dist/styles.css",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

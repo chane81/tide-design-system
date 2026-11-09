@@ -9,5 +9,5 @@
     "declaration": false,
     "isolatedDeclarations": false
   },
-  "include": ["src", "test", "vite.config.ts", "vitest.config.ts"]
+  "include": ["src", "test", "tsdown.config.ts", "vitest.config.ts"]
 }
