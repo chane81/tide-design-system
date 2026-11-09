@@ -68,6 +68,23 @@ const preview: Preview = {
     theme: DEFAULT_THEME,
   },
   parameters: {
+    // 사이드바 순서(storybook 10.6.6 `parameters.options.storySort`). order에 없는 항목은 method로 정렬한다.
+    // method의 실제 기본값은 'configure'(파일 순서)라서(10.6.6 preview runtime `storySort`) 'alphabetical'을 명시한다.
+    // Component 아래는 order를 주지 않으므로 이름순이다. locales를 고정해 실행 환경의 언어 설정에 따라 순서가 바뀌지 않게 한다.
+    options: {
+      storySort: {
+        method: "alphabetical",
+        locales: "ko",
+        order: [
+          "시작하기",
+          ["설치", "폰트 로드", "Theme 전환"],
+          "원칙",
+          "기준",
+          "Foundation",
+          "Component",
+        ],
+      },
+    },
     // MDX의 Markdown 문법 링크도 외부 주소는 새 탭으로 연다(storybook 10.6.6 `parameters.docs.components`).
     docs: {
       components: { a: DocsAnchor },

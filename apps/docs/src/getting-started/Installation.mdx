@@ -1,0 +1,130 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="시작하기/설치" />
+
+# 설치
+
+Next.js App Router 앱에 Tide를 설치하는 방법입니다. 패키지 하나를 설치하고, 앱 CSS에 두 줄을 넣으면 Tide Utility class와 Component를 쓸 수 있습니다.
+
+## 준비
+
+- React 19
+- Tailwind CSS 4.3 이상과 `@tailwindcss/postcss`
+
+`create-next-app`에서 Tailwind CSS를 고르면 둘 다 준비되어 있습니다. Tailwind CSS가 없는 앱이라면 먼저 설치하고 PostCSS 설정을 둡니다.
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/postcss
+```
+
+```js
+// postcss.config.mjs
+export default { plugins: { "@tailwindcss/postcss": {} } };
+```
+
+## 1. 패키지 설치
+
+`@tide-tds/desktop` 하나만 설치합니다. Token과 CSS가 든 `@tide-tds/foundation`, 아이콘이 든 `@tide-tds/icons`는 desktop의 의존성으로 함께 설치됩니다.
+
+```sh
+pnpm add @tide-tds/desktop
+```
+
+## 2. 앱 CSS 두 줄
+
+앱의 전역 CSS에 아래 두 줄을 이 순서로 씁니다. 첫 줄은 Tailwind CSS, 둘째 줄은 Tide CSS입니다.
+
+```css
+/* app/globals.css */
+@import "tailwindcss";
+@import "@tide-tds/desktop/styles.css";
+```
+
+Tide CSS가 하는 일은 다음과 같습니다. 따로 설정할 것은 없습니다.
+
+- Tide Token을 Tailwind theme에 연결하고, Tailwind 기본 팔레트처럼 Tide 밖의 값은 지웁니다. 그래서 자동완성에 Tide class(`bg-primary-solid`)만 나옵니다.
+- Component가 쓰는 class를 Tailwind가 찾도록 패키지 폴더를 스캔 대상에 넣습니다.
+
+전역 CSS는 root layout에서 import합니다.
+
+```tsx
+// app/layout.tsx
+import type { ReactNode } from "react";
+
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="ko">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+## 3. 쓰기
+
+Component와 `cn`을 `@tide-tds/desktop`에서 import합니다. 서버 컴포넌트에서 바로 써도 됩니다. 상호작용하는 Component에는 `"use client"` 경계가 이미 들어 있습니다.
+
+```tsx
+// app/page.tsx
+import { cn, VisuallyHidden } from "@tide-tds/desktop";
+
+export default function Page() {
+  return (
+    <main>
+      <h1 className={cn("p-4", "bg-primary-solid")}>Tide</h1>
+      <VisuallyHidden>스크린 리더 전용 텍스트</VisuallyHidden>
+    </main>
+  );
+}
+```
+
+## `transpilePackages`는 필요 없습니다
+
+Tide는 컴파일된 ESM JavaScript와 타입 선언(`.d.ts`)을 배포합니다. 그래서 `next.config`의 `transpilePackages`에 Tide를 넣지 않아도 됩니다. 기본 Next.js 설정 그대로 씁니다.
+
+TypeScript는 `moduleResolution`이 `bundler`(Next.js 기본값)이든 `nodenext`이든 Tide 타입을 찾습니다.
+
+## 세 패키지는 같은 버전으로
+
+`@tide-tds/desktop`, `@tide-tds/foundation`, `@tide-tds/icons`는 언제나 같은 버전으로 함께 릴리스됩니다. desktop은 foundation과 icons를 정확히 같은 버전으로 의존합니다.
+
+foundation이나 icons를 앱에 직접 설치한다면 desktop과 같은 버전을 적습니다. 버전이 다르면 foundation이 두 벌 설치되어, Token CSS가 두 번 들어가거나 서로 다른 값이 섞일 수 있습니다.
+
+```sh
+# 예: 0.1.0을 쓰는 경우. 세 패키지의 버전을 맞춘다.
+pnpm add @tide-tds/desktop@0.1.0 @tide-tds/icons@0.1.0
+```
+
+foundation이 한 벌만 설치되었는지는 아래 명령으로 확인합니다.
+
+```sh
+pnpm why @tide-tds/foundation
+```
+
+## Tailwind CSS 없이 Token만 쓰기
+
+Tailwind CSS를 쓰지 않는 앱은 Token CSS만 가져다 쓸 수 있습니다. 이때는 `@tide-tds/foundation`을 설치하고 tokens CSS를 import합니다. tokens CSS에는 `--tide-*` CSS 변수와 Theme 덮어쓰기(`[data-theme]`)만 들어 있습니다.
+
+```sh
+pnpm add @tide-tds/foundation
+```
+
+```css
+/* app/globals.css */
+@import "@tide-tds/foundation/tokens.css";
+
+.call-to-action {
+  background-color: var(--tide-bg-primary-solid);
+}
+```
+
+변수 이름은 Utility class 이름 앞에 `--tide-`를 붙인 것입니다. `bg-primary-solid` class의 값은 `--tide-bg-primary-solid`입니다. 이 변수 이름이 Tailwind CSS 없이 쓰는 사용자와의 약속(공개 계약)입니다.
+
+`@tide-tds/desktop`의 Component는 Tailwind CSS로 스타일을 만들기 때문에, 이 방법으로는 Component를 쓸 수 없습니다.
+
+## 다음 단계
+
+- [폰트 로드](?path=/docs/시작하기-폰트-로드--docs): Tide의 기본 글꼴 Pretendard를 앱에서 불러옵니다.
+- [Theme 전환](?path=/docs/시작하기-theme-전환--docs): light와 dark Theme을 바꿉니다.
