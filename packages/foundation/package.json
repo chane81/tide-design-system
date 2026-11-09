@@ -1,11 +1,45 @@
 {
   "name": "@tide-tds/foundation",
   "version": "0.0.0",
+  "description": "Tide 디자인 시스템의 Token과 CSS",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./tailwind-merge": {
+      "types": "./dist/tailwind-merge.d.ts",
+      "default": "./dist/tailwind-merge.js"
+    }
+  },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "tsc -p tsconfig.build.json && node ../../scripts/rewrite-dts-imports.ts dist && node scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "typescript": "catalog:"
+    "@tailwindcss/node": "catalog:",
+    "@types/node": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "tailwind-merge": "^3"
+  },
+  "peerDependenciesMeta": {
+    "tailwind-merge": {
+      "optional": true
+    }
   }
 }
