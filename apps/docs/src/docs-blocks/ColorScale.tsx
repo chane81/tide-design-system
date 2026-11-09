@@ -1,0 +1,75 @@
+import {
+  color,
+  contrastRatio,
+  roleFamily,
+  semanticHex,
+  type ColorFamily,
+  type ColorStep,
+  type Role,
+} from "@tide-tds/foundation";
+import type { ReactElement } from "react";
+
+// 색 Token 블록: Primitive 스케일을 Token 원본에서 그린다(spec 「문서 앱」 Token 블록).
+// 각 단계 아래에 light canvas(흰색)와 dark canvas 위 대비비를 적는다. 값은 CSS가 아니라 원본 hex로 계산한다.
+
+const steps = Object.keys(color.blue).map(Number) as ColorStep[];
+const canvasLight = semanticHex("bg-canvas", "light");
+const canvasDark = semanticHex("bg-canvas", "dark");
+
+const familyRole = Object.fromEntries(
+  Object.entries(roleFamily).map(([role, family]) => [family, role]),
+) as Record<ColorFamily, Role>;
+const families = Object.values(roleFamily);
+
+function ratio(foreground: string, background: string): string {
+  return contrastRatio(foreground, background).toFixed(2);
+}
+
+function Swatch({ name, hex }: { name: string; hex: string }): ReactElement {
+  return (
+    <li className="flex min-w-0 flex-col gap-1">
+      <div
+        aria-hidden="true"
+        className="h-12 rounded-md border border-default"
+        style={{ backgroundColor: hex }}
+      />
+      <span className="font-mono">{name}</span>
+      <span className="font-mono text-muted">{hex}</span>
+      <span className="font-mono text-muted">
+        <abbr title="light canvas 위 대비비">L</abbr> {ratio(hex, canvasLight)}
+      </span>
+      <span className="font-mono text-muted">
+        <abbr title="dark canvas 위 대비비">D</abbr> {ratio(hex, canvasDark)}
+      </span>
+    </li>
+  );
+}
+
+/** Primitive 색 스케일. 계열마다 쓰는 Role을 함께 적는다. */
+export function ColorScale(): ReactElement {
+  return (
+    <div className="flex flex-col gap-6 bg-canvas p-4 text-default">
+      {families.map((family) => (
+        <section key={family} aria-labelledby={`color-scale-${family}`}>
+          <h3 id={`color-scale-${family}`} className="mb-2">
+            {family} <span className="text-muted">({familyRole[family]})</span>
+          </h3>
+          <ul className="grid grid-cols-11 gap-2">
+            {steps.map((step) => (
+              <Swatch key={step} name={`${family}-${step}`} hex={color[family][step]} />
+            ))}
+          </ul>
+        </section>
+      ))}
+      <section aria-labelledby="color-scale-base">
+        <h3 id="color-scale-base" className="mb-2">
+          white, black
+        </h3>
+        <ul className="grid grid-cols-11 gap-2">
+          <Swatch name="white" hex={color.white} />
+          <Swatch name="black" hex={color.black} />
+        </ul>
+      </section>
+    </div>
+  );
+}

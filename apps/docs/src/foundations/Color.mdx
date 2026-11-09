@@ -1,0 +1,54 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ColorStories from "./Color.stories.tsx";
+
+<Meta of={ColorStories} />
+
+# 컬러
+
+Tide의 색은 두 층입니다. **Primitive Token**은 색 자체(`blue-600`)이고, **Semantic Token**은 용도(`bg-primary-solid`)입니다. Component와 앱은 Semantic Token을 씁니다. Theme(light, dark)이 바뀌면 Semantic Token이 가리키는 Primitive만 바뀝니다.
+
+## Semantic Token
+
+Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 강도(`solid`, `subtle`)로 고릅니다. 속성마다 쓸 수 있는 이름만 class로 생깁니다. `text-bg-primary` 같은 조합은 생기지 않습니다.
+
+- 배경: `bg-<역할>-<solid|subtle>[-hover|-active]`. 예: `bg-primary-solid`, `bg-danger-subtle-hover`
+- 글자: `text-<역할>`. 예: `text-success`. neutral은 없습니다.
+- 테두리: `border-<역할>`. 예: `border-warning`. neutral은 없습니다.
+
+- 강도는 생략하지 않습니다. `bg-primary`는 없습니다.
+- `solid` 배경 위 글자는 모든 Role에서 `text-on-solid`입니다. `subtle` 배경 위 글자는 같은 Role의 `text-<역할>`이고, neutral은 `text-default`입니다.
+- hover와 active 색도 Token입니다. `hover:bg-primary-solid-hover active:bg-primary-solid-active`처럼 씁니다.
+
+공통 Token은 다음과 같습니다.
+
+- 표면 층: `bg-canvas`(페이지), `bg-surface`(카드, 패널), `bg-raised`(popover, modal)
+- 글자: `text-default`, `text-muted`, `text-disabled`, `text-on-solid`
+- 테두리: `border-default`(장식용 구분선), `border-strong`(입력창 등 UI 경계)
+- 기타: `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(포커스 표시)
+
+그림자 색은 class가 없고 CSS 변수 `--tide-shadow-color`만 있습니다. 그림자 단계는 Elevation에서 다룹니다.
+
+Tailwind 없이 쓸 때는 `@tide-tds/foundation/tokens.css`를 불러와 `--tide-<class 이름>` 변수를 씁니다. 예: `var(--tide-bg-primary-solid)`, Primitive는 `var(--tide-color-blue-600)`.
+
+## 색 스케일
+
+계열 6개(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)가 50~950의 11단계이고, 그 밖에 `white`, `black`이 있습니다. 계열 이름은 색상으로 짓고, 괄호 안은 그 계열을 쓰는 Role입니다. `blue-500`은 Tide의 기준색 `#3183f5`입니다. 각 단계 아래의 L, D는 light canvas(흰색)와 dark canvas(`gray-950`) 위 대비비입니다.
+
+Tailwind 기본 팔레트는 지웠습니다. `bg-blue-500`은 Tide 값이고 `bg-slate-500` 같은 class는 없습니다. Primitive class는 브랜드 색처럼 Semantic Token으로 표현할 수 없는 곳에만 씁니다.
+
+<Canvas of={ColorStories.Scale} sourceState="none" />
+
+## 대비
+
+기준은 WCAG 2.x 대비비입니다. 글자는 4.5:1, UI 경계와 포커스 표시는 3:1 이상입니다. 모든 조합이 아니라 실제로 함께 쓰는 **대비 쌍**만 검사하고, light와 dark 모두에서 CI가 확인합니다. Semantic Token을 더하면서 대비 쌍이나 제외 사유를 등록하지 않으면 CI가 실패합니다.
+
+<Canvas of={ColorStories.LightPairs} sourceState="none" />
+
+<Canvas of={ColorStories.DarkPairs} sourceState="none" />
+
+### 검사에서 뺀 Token
+
+비활성 상태는 색만으로 나타내지 않습니다. Component는 `disabled`/`aria-disabled` 속성과 cursor로도 비활성을 표현합니다.
+
+<Canvas of={ColorStories.Exclusions} sourceState="none" />

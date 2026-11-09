@@ -33,6 +33,8 @@ Tide의 Theme은 light와 dark 둘입니다. `data-theme` 속성 하나로 바�
 
 영역에는 배경과 글자색 class(`bg-canvas text-default`)를 함께 줍니다. 속성만 주면 영역 안의 Component와 Token class는 바뀌지만, 바깥에서 물려받은 배경과 글자색은 그대로 남습니다.
 
+`dark:` variant는 조상 중 하나라도 `data-theme="dark"`이면 적용됩니다. 그래서 dark 페이지 안에 둔 light 영역에서도 `dark:` class가 적용됩니다. 영역 단위로 Theme을 섞는다면 `dark:` 대신 Semantic Token class를 씁니다. Semantic Token은 가장 가까운 `data-theme`을 따릅니다.
+
 ## OS 설정을 따를지는 앱이 정합니다
 
 Tide는 OS의 다크 모드 설정(`prefers-color-scheme`)을 읽지 않습니다. `data-theme`이 없으면 OS가 dark여도 light입니다. OS 설정을 따를지, 사용자가 고른 Theme을 기억할지는 앱이 정합니다.
