@@ -1,7 +1,7 @@
 # 08: 아이콘 패키지
 
 Status: ready-for-agent
-Blocked by: 03 (Storybook과 브라우저 테스트 골격)
+Blocked by: 03 (Storybook과 브라우저 테스트 골격), 36 (패키지 빌드를 tsdown으로 전환)
 
 ## What to build
 

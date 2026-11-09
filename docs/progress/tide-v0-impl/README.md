@@ -2,7 +2,7 @@
 
 근거 spec: [Tide v0 spec](../tide-v0/spec.md). 결정 기록은 [Tide v0 지도](../tide-v0/map.md)와 그 티켓에 있다.
 
-> **상태: 발행됨 (2026-11-10).** `issues/01~35` 티켓 파일을 만들었다. 프런티어는 「실행 규칙」대로 계산한다.
+> **상태: 발행됨 (2026-11-10). 36은 2026-11-10 추가(사용자 결정: 패키지 번들러를 tsdown으로).** `issues/01~35` 티켓 파일을 만들었다. 프런티어는 「실행 규칙」대로 계산한다.
 
 ## 실행 규칙 (멀티 에이전트)
 
@@ -22,11 +22,11 @@
 | 01  | 저장소 골격                              | —              | workspace, catalog strict, turbo 태스크 5개, 공통 tsconfig, oxlint/oxfmt, Node·pnpm 고정, PR CI(typecheck·lint)가 빈 패키지로 통과                                                                                                                                                                              | agent    |
 | 02  | Token에서 Next 앱까지 관통               | 01             | foundation에 Token 하나(`blue` 일부와 `bg-primary-solid`)를 원본 → tokens/tailwind CSS → tailwind-merge 설정으로 생성. desktop은 `cn`과 VisuallyHidden으로 빌드(preserveModules, tsc d.ts, styles CSS). Vitest `unit` project(class 생성 검사)와 `smoke` 앱(tarball → next build → tsc nodenext → publint) 통과 | agent    |
 | 03  | Storybook과 브라우저 테스트 골격         | 02             | 문서 앱(react-docgen, Tailwind vite, desktop 원본 조건), Theme 툴바와 채널 구독(transition 끄기 포함), VisuallyHidden story와 MDX. `browser` project(+forcedColors·reducedMotion instance)와 `storybook` project(a11y `error`, `wcag22aa`) 동작                                                                 | agent    |
-| 04  | 컬러 Foundation                          | 03             | Primitive 6계열 11단계, Semantic 전체(namespace 노출), 표면 층, light/dark `[data-theme]`, `dark:` variant, 대비 쌍 전체 검사와 미등록 Token 검출, Tailwind 기본 팔레트 제거, 색 Token 블록                                                                                                                     | agent    |
+| 04  | 컬러 Foundation                          | 03, 36         | Primitive 6계열 11단계, Semantic 전체(namespace 노출), 표면 층, light/dark `[data-theme]`, `dark:` variant, 대비 쌍 전체 검사와 미등록 Token 검출, Tailwind 기본 팔레트 제거, 색 Token 블록                                                                                                                     | agent    |
 | 05  | 타이포그래피 Foundation과 Typography     | 04             | font-family 2개, 텍스트 스타일 14개, 굵기 5개, Tailwind 기본값 제거, base CSS(`keep-all`), merge 설정, Typography Component(기본 요소, `level`, `render`), 텍스트 스타일 블록                                                                                                                                   | agent    |
 | 06  | radius·Elevation·포커스 표시 Foundation  | 05             | radius 5단계, shadow 3단계(2레이어, `--tide-shadow-color`), light raised 투명 border, `focus-ring`/`focus-field` utility(error+focus 우선), merge 설정, radius·그림자 블록, forced-colors 계산값 테스트                                                                                                         | agent    |
 | 07  | motion·z-index Foundation                | 06             | duration `fast`/`normal`, easing `out`, 기본 transition 값, 쌓임 단계 5개, merge 설정, motion 블록                                                                                                                                                                                                              | agent    |
-| 08  | 아이콘 패키지                            | 03             | 이름표(정식 Lucide 이름으로 초기화), 생성 스크립트(원본 없음 → 실패, 새 SVG → 출력), 공통 틀, `unit` 테스트(이름표와 export 일치, 대표 아이콘 렌더), LICENSE 고지, desktop 의존 연결, 아이콘 검색 페이지                                                                                                        | agent    |
+| 08  | 아이콘 패키지                            | 03, 36         | 이름표(정식 Lucide 이름으로 초기화), 생성 스크립트(원본 없음 → 실패, 새 SVG → 출력), 공통 틀, `unit` 테스트(이름표와 export 일치, 대표 아이콘 렌더), LICENSE 고지, desktop 의존 연결, 아이콘 검색 페이지                                                                                                        | agent    |
 | 09  | Spinner                                  | 07             | 1단계의 마지막 Component(접근 가능한 이름, reduced-motion에서도 회전 유지)                                                                                                                                                                                                                                      | agent    |
 | 10  | 문서: 시작하기·원칙·기준                 | 03             | 사이드바 순서, 설치(Next App Router)·폰트 로드·Theme 전환 페이지, 원칙·기준 `.md` 원문 불러오기와 상대 링크 변환                                                                                                                                                                                                | agent    |
 | 11  | 릴리스 파이프라인                        | 02, 08         | changesets 3 fixed + changelog-github, Version PR workflow, changeset 필수 검사, 이름표 키 제거 시 minor 요구 검사, OIDC publish job(`id-token: write`는 이 job만), GitHub Release 하나로 합치기, Dokploy Dockerfile과 배포 단계(publish 후에만)                                                                | agent    |
@@ -54,8 +54,9 @@
 | 33  | Tag                                      | 19~24          | `useTagGroup`, Delete 제거, 닫기 IconButton                                                                                                                                                                                                                                                                     | agent    |
 | 34  | Toast                                    | 25~33          | `useToast`, 아래 오른쪽·폭 제한, 5초 이상·hover/focus 정지·액션/오류는 자동 닫힘 없음                                                                                                                                                                                                                           | agent    |
 | 35  | Windows 고대비 수동 확인과 0.5.0 릴리스  | 34             | 실제 Windows 고대비 테마에서 확인 후 v0 완료 릴리스                                                                                                                                                                                                                                                             | **HITL** |
+| 36  | 패키지 빌드를 tsdown으로 전환            | 03             | foundation·desktop(이후 icons도) 빌드를 tsdown(unbundle, oxc d.ts)으로 통일. Vite 라이브러리 빌드와 d.ts 후처리를 걷어 내고 smoke·publint·"use client" 보존 유지. spec과 tide-v0 티켓 16 기록 정정                                                                                                              | agent    |
 
-병렬로 열리는 곳: 03 뒤의 [04→05→06→07] ‖ 08 ‖ 10, 08 뒤의 11 / 2단계의 [13→14] ‖ [15→16, 17] / 3단계 19~24 전부 / 4단계 [25→26, 27→28→29, 30] ‖ 31 ‖ 32 ‖ 33.
+병렬로 열리는 곳: 03 뒤의 36 ‖ 10, 36 뒤의 [04→05→06→07] ‖ 08, 08 뒤의 11 / 2단계의 [13→14] ‖ [15→16, 17] / 3단계 19~24 전부 / 4단계 [25→26, 27→28→29, 30] ‖ 31 ‖ 32 ‖ 33.
 
 단계 경계: 12(0.1.0) → 2단계 → 18(0.2.0) → 3단계 → 사람이 Version PR 머지(0.3.0) → 4단계 → Version PR 머지(0.4.0) → 34 → 35(0.5.0).
 
