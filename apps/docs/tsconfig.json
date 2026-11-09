@@ -1,4 +1,13 @@
 {
+  // 타입 검사 전용(배포 출력 없음). desktop은 `@tide-tds/source` 조건으로 원본 타입을 읽는다.
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"],
+    "customConditions": ["@tide-tds/source"],
+    "declaration": false,
+    "isolatedDeclarations": false
+  },
+  "include": ["src", ".storybook", "vitest.config.ts"]
 }

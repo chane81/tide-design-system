@@ -1,0 +1,10 @@
+/*
+ * 문서 앱 전용 CSS. 배포 사용자 경로(`@import "@tide-tds/desktop/styles.css"`, 빌드 결과를 스캔)와 다르다.
+ * 문서 앱은 desktop 원본을 직접 읽으므로(`@tide-tds/source` 조건) 원본 폴더를 스캔해야
+ * 원본을 고쳤을 때 새 class가 HMR로 반영된다.
+ */
+@import "tailwindcss";
+@import "@tide-tds/foundation/tailwind.css";
+
+/* desktop 원본. 경로는 이 CSS 파일 위치 기준이다. */
+@source "../../../packages/desktop/src";

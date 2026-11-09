@@ -5,7 +5,7 @@
   "compilerOptions": {
     "lib": ["es2024", "dom", "dom.iterable"],
     "jsx": "react-jsx",
-    "types": ["node"],
+    "types": ["node", "vite/client", "@vitest/browser-playwright"],
     "declaration": false,
     "isolatedDeclarations": false
   },
