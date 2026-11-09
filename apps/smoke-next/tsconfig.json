@@ -1,4 +1,10 @@
 {
+  // workspace 안에서는 smoke 스크립트만 검사한다. template은 smoke 실행 때 workspace 밖에서 검사한다.
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "types": ["node"],
+    "declaration": false,
+    "isolatedDeclarations": false
+  },
+  "include": ["scripts"]
 }

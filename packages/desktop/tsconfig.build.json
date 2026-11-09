@@ -1,0 +1,12 @@
+{
+  // d.ts만 만든다. JS는 Vite가 만든다.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "rootDir": "src",
+    "outDir": "dist",
+    "emitDeclarationOnly": true
+  },
+  "include": ["src"]
+}
