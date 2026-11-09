@@ -50,6 +50,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [Component 공통 API 규칙 결정](issues/14-grilling-component-api.md): React 19 이상, `ref`는 일반 prop. 스타일 축은 `variant`(solid/subtle/outline/ghost) × `color`(Role 6개) × `size`(xs/sm/md/lg, 높이 24~48px)이고, Component마다 `Extract`로 필요한 값만 고름. 병합은 `cn`(clsx + 생성된 tailwind-merge 설정), variant 맵은 직접 작성(cva·tv 안 씀). 조합은 `render` prop([ADR 0005](../../decisions/0005-hand-written-variant-maps-and-render-prop.md)). 공개 API는 DOM 이름을 쓰고 콜백 인자는 값 하나
 - [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md): 33개를 의존 순서에 따라 5단계로 나눔(기반 → 액션·폼 → 표시·피드백 → hook 위젯 → Toast). Heading과 Text는 Typography 하나로 합침. Variant를 "Component마다 정의되는 스타일 축"으로 넓혔고, `render` 범위도 넓힘(ADR 0005 정정). 뺀 것은 모두 v0 이후 후보
 - [npm scope @tide-tds 확보](issues/18-task-npm-scope.md): org `tide-tds`를 만들어 scope를 확보함(owner `charles-green`, 2FA 켜짐). 예비 org로 `tide-green`, `tide-factory`도 있음. `@tide`는 다른 사람이 쓰고 있어 쓸 수 없음
+- [Next.js 소비 흐름 end-to-end 검증](issues/19-prototype-nextjs-consumption.md): `preserveModules` 빌드에서 `"use client"`가 남음. 패키지 CSS 안의 `@source "./"`와 `exports` 경로 `@import`가 pnpm에서 동작하고, IntelliSense에도 뜸. d.ts는 TS 7 `tsc`로 만들 수 있음(`vite-plugin-dts`는 TS 6이 필요함). workspace symlink로 연결한 앱에만 `transpilePackages`가 필요함
 
 ## Not yet specified
 
