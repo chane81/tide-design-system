@@ -6,6 +6,7 @@
     "jsx": "react-jsx",
     "types": ["node", "vite/client"],
     "customConditions": ["@tide-tds/source"],
+    "resolveJsonModule": true,
     "declaration": false,
     "isolatedDeclarations": false
   },
