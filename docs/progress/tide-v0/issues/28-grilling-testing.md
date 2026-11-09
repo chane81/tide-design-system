@@ -23,3 +23,4 @@ Blocked by: 26, 27
 - 「Token 네이밍과 Utility class 노출 규칙 결정」: Semantic 색이 Tailwind 속성별 namespace로 노출되는지 CI로 확인한다.
 - 「radius·elevation·focus ring 형태 결정」: error 입력창에서 field 포커스가 error보다 우선하는지 확인해야 한다(24번 prototype에서 실제로 깨졌던 부분).
 - 「그림자·포커스 표시·motion 시각 비교」: forced-colors 모드는 확인하지 못했다.
+- 「Storybook 문서 구성 결정」: 렌더링되는 예시(Do/Don't 포함)는 모두 CSF story로 만든다. 의도적으로 잘못된 Don't story만 개별로 a11y 검사를 끈다. a11y 검사를 CI 실패로 다룰지(`parameters.a11y.test` 수준), `runOnly`에 `wcag22aa`를 넣을지는 이 티켓에서 정한다.

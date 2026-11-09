@@ -22,3 +22,4 @@ Blocked by: 29
 - 「버전 관리와 npm 배포 흐름 조사」(29번)의 결과를 근거로 쓴다.
 - 「npm scope @tide-tds 확보」: org `tide-tds`, owner `charles-green`, 2FA 켜짐.
 - 의존성 버전은 pnpm catalog로 관리한다(지도 Notes).
+- 「Storybook 문서 구성 결정」: 문서는 릴리스(npm publish)마다 Dokploy(`tide-tds.lakegreen.net`)에 배포한다. 릴리스 workflow 마지막 단계에서 Dokploy API를 호출한다. 문서 배포는 저장소 공개 여부와 상관없다. 아이콘 페이지에 alias를 보여 줄지는 이 티켓의 alias 결정을 따른다.
