@@ -12,7 +12,9 @@ Blocked by: 18 (trusted publisher 설정과 0.2.0 CI 릴리스)
 - [ ] 이미지에 대체 텍스트를 줄 수 있다. 장식용일 때는 읽히지 않는다.
 - [ ] 이미지가 없거나 로드에 실패하면 fallback 아이콘(아이콘 패키지)을 보인다.
 - [ ] radius는 `full`이다. size 축은 공통 규칙 안에서 정한다.
-- [ ] 이미지 로드 상태 처리 때문에 `"use client"`가 필요한지 판단하고 근거를 Comments에 남긴다.
+- [ ] hook, state, 이벤트 처리 없이 만들어 서버 컴포넌트로 남긴다(`"use client"` 없음). smoke 앱의 서버 컴포넌트에서 렌더된다.
+- [ ] 로드 실패 fallback도 JS 없이 처리한다(예: fallback 아이콘을 이미지 아래 층에 깔아 두기). JS 없이는 불가능하다고 판단되면 구현을 멈추고 근거를 들고 사용자에게 묻는다.
+- [ ] 클릭이 필요하면 Avatar 루트에 `onClick`을 다는 대신 Button이나 IconButton 안에 Avatar를 넣는다. MDX의 Do/Don't에 두 예시를 둔다(Do: Button·IconButton으로 감싸기, Don't: Avatar에 `onClick`만 달기. Don't story는 a11y 검사를 끈다).
 - [ ] `browser`: 이미지 대체 텍스트, 로드 실패 시 fallback 전환을 단언한다.
 
 ### 공통 API 규칙
