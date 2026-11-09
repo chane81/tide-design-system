@@ -8,4 +8,4 @@ Tide는 pnpm workspace 모노레포로 구성한다. Token 패키지(프레임�
 
 - Tide Component를 쓰는 앱도 Tailwind를 peer 의존성으로 설치해야 한다. 앱은 Tide의 theme CSS를 import한다.
 - Tailwind 기본 컬러 팔레트는 제거하고 Tide 컬러로 교체한다. 간격은 Tailwind 숫자 규칙(`w-24` 형태)을 그대로 쓴다.
-- 패키지 이름, npm scope, Tailwind 버전과 theme 노출 방식은 리서치로 확인한 뒤 확정한다.
+- 패키지 이름, npm scope, Tailwind 버전과 theme 노출 방식은 리서치로 확인한 뒤 확정한다. → 패키지 이름은 [ADR 0006](0006-foundation-and-target-packages.md)에서 `@tide-tds/foundation`과 `@tide-tds/desktop`으로 정했다(2026-11-09).

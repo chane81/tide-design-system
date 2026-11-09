@@ -28,6 +28,10 @@ _Avoid_: 변수, 디자인 변수
 Foundation을 조합해 만든, 재사용할 수 있는 UI 단위.
 _Avoid_: 위젯, 엘리먼트
 
+**Target (대상 환경)**:
+Component 묶음이 겨냥하는 사용 환경. 밀도, 크기, 상호작용 방식(포인터, 터치)이 달라진다. 예: desktop, mobile. 같은 Foundation을 공유한다. Target은 "어디서만 동작하는가"가 아니라 "어디에 최적화되었는가"를 뜻한다. desktop Component도 모바일 브라우저에서 동작한다.
+_Avoid_: 플랫폼(React Native 같은 렌더링 대상과 혼동), 디바이스, 모드
+
 **접근성 동작 (Accessibility behavior)**:
 Component가 키보드, 포커스, 보조기술에 반응하는 방식. 예: Dialog를 열면 포커스가 안으로 들어가고 닫으면 원래 자리로 돌아간다. 생김새(시각 표현)와 구분한다.
 _Avoid_: a11y 로직, 인터랙션(시각 효과와 혼동)
