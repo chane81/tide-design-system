@@ -71,9 +71,11 @@ Blocked by: 29
 - 문서 배포가 실패해도 npm 릴리스는 되돌리지 않는다. job은 실패로 남기고 `workflow_dispatch`로 다시 돌린다.
 - Dokploy 토큰은 GitHub Environment secret에 둔다.
 
-### 아이콘 alias
+### 아이콘 이름 (2026-11-09 정정)
 
-- `lucide-static`의 alias 293개도 생성한다. Component를 새로 만들지 않고 정식 Component를 다른 이름으로 다시 export한다(`export { HouseIcon as HomeIcon }`). `@deprecated` JSDoc을 붙인다.
-- 업스트림 alias가 사라지면 Tide export도 지우고 breaking(0.x minor)으로 낸다. `lucide-static` 업그레이드로 아이콘이 추가되기만 하면 patch.
-- Storybook 아이콘 페이지에는 정식 2,029개만 보이고, alias는 상세 정보에 텍스트로 보여 준다.
-- ADR 0007의 "SVG 2,322개"를 "정식 2,029 + alias 293"으로 정정했다.
+처음에는 Lucide alias 293개를 다른 이름 export로 만들기로 했다. spec을 쓰는 중에 사용자가 이름을 Tide가 소유하는 방식으로 바꿨다([ADR 0007](../../../decisions/0007-lucide-generated-icons-package.md) 「정정」 절).
+
+- `@tide-tds/icons`의 이름표(`Tide 이름 → lucide-static 원본 SVG`)가 이름의 정본이다. Lucide alias는 만들지 않는다.
+- 이름표에서 키를 빼거나 키 이름을 바꾸면 breaking(0.x minor)이다. 키를 추가하면 patch다. 원본 SVG 경로만 고치는 것(Lucide가 이름을 바꾼 경우)이나 `lucide-static` 업그레이드로 모양이 바뀌는 것은 patch다.
+- CI는 이름표에서 키가 빠졌는데 changeset이 minor가 아니면 실패시킨다.
+- Storybook 아이콘 페이지는 이름표의 이름으로 보여 주고, 검색에는 Lucide `tags.json`을 함께 쓴다.
