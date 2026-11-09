@@ -26,3 +26,7 @@
 - 나중에 React 외 프레임워크(Vue 등)를 지원한다면 `<target>-<framework>`처럼 이름 규칙을 새로 정해야 한다. 지금은 Out of scope다(ADR 0001).
 - npm에 배포한 이름은 바꾸기 어렵다. 이름을 바꾸려면 새 패키지를 내고 이전 패키지는 deprecate해야 한다.
 - foundation 패키지는 React에 의존하지 않는다(ADR 0001). 이것을 패키지 경계로 강제한다(ADR 0002).
+
+## 정정 (2026-11-09)
+
+[ADR 0007](0007-lucide-generated-icons-package.md)에 따라 배포 패키지에 **`@tide-tds/icons`** 가 더해져 세 개가 되었다. icons는 Target과 무관한 React 아이콘 패키지이고, `@tide-tds/desktop`이 dependency로 쓴다.
