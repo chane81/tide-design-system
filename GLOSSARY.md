@@ -62,6 +62,14 @@ _Avoid_: variant(Component 스타일 축과 혼동), weight, tone
 요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다.
 _Avoid_: elevation(그림자 형태 Foundation과 혼동), layer(Layer와 혼동)
 
+**Elevation**:
+그림자로 나타내는 깊이 단계. `sm`, `md`, `lg` 세 단계이고 `raised` 표면 층에서만 쓴다. 표면 층은 "어느 바닥에 놓이는가", Elevation은 "그 바닥이 얼마나 떠 보이는가"다.
+_Avoid_: 표면 층, z-index(겹치는 순서와 혼동)
+
+**포커스 표시 (Focus indicator)**:
+포커스가 어느 요소에 있는지 보여주는 시각 표시. 두 종류다. **ring**은 요소 바깥에 간격을 두고 선을 그린다. **field**는 입력창의 테두리 색과 두께를 바꾼다. 입력창은 field, 나머지는 ring을 쓴다.
+_Avoid_: focus ring(ring 한 종류만 가리킬 때만 씀), 포커스 테두리
+
 **대비 쌍 (Contrast pair)**:
 실제로 함께 쓰는 전경 Token과 배경 Token의 짝. 대비 검사는 모든 조합이 아니라 등록된 대비 쌍만 대상으로 한다.
 _Avoid_: 색 조합, 컬러 페어

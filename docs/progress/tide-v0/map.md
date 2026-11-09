@@ -54,6 +54,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [npm scope @tide-tds 확보](issues/18-task-npm-scope.md): org `tide-tds`를 만들어 scope를 확보함(owner `charles-green`, 2FA 켜짐). 예비 org로 `tide-green`, `tide-factory`도 있음. `@tide`는 다른 사람이 쓰고 있어 쓸 수 없음
 - [Next.js 소비 흐름 end-to-end 검증](issues/19-prototype-nextjs-consumption.md): `preserveModules` 빌드에서 `"use client"`가 남음. 패키지 CSS 안의 `@source "./"`와 `exports` 경로 `@import`가 pnpm에서 동작하고, IntelliSense에도 뜸. d.ts는 TS 7 `tsc`로 만들 수 있음(`vite-plugin-dts`는 TS 6이 필요함). workspace symlink로 연결한 앱에만 `transpilePackages`가 필요함
 - [모노레포 패키지 구조와 빌드 결정](issues/16-grilling-monorepo-structure.md): 배포 패키지는 `@tide-tds/foundation`(Token, `tokens.css`, `tailwind.css`, tailwind-merge 설정)과 `@tide-tds/desktop`(desktop Target React Component, `styles.css`) 두 개이고, Storybook은 private `apps/docs`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)). TS 7.0.2 단독(Storybook은 `react-docgen` 기본값 고정). desktop은 Vite `preserveModules` + `tsc` d.ts, ESM 전용. react-aria는 dependencies, React·Tailwind는 peer. turbo 태스크는 build, typecheck, test, dev. catalog는 기본 하나에 `strict`
+- [radius·elevation·focus ring 형태 결정](issues/20-grilling-shape-radius-elevation-focus.md): radius는 Tailwind 기본값과 같은 4/6/8/12px/full이고 size와 짝짓지 않음(조작 요소는 모두 `md`). 그림자는 raised에서만 쓰는 sm/md/lg 3단계, 2레이어, dark에서도 그림. 포커스 표시는 입력창용 field(테두리 색 + 2px, `:focus`)와 나머지용 ring(outline 2px, offset 2px, `:focus-visible`)으로 나눔(토스증권 참고). `focus-ring`, `focus-field` Utility class 제공. 그림자 숫자는 24번 prototype에서 확정
 
 ## Not yet specified
 
