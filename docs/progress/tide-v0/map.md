@@ -20,6 +20,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 
 - [ADR 0001](../../decisions/0001-framework-agnostic-tokens-react-components.md): Token/CSS는 프레임워크 무관, v0 Component는 React 전용
 - [ADR 0002](../../decisions/0002-monorepo-tailwind.md): pnpm workspace 모노레포와 Tailwind. Component를 쓰는 앱도 Tailwind가 peer로 필요함. 기본 컬러 팔레트는 교체하고, 간격은 Tailwind 숫자 규칙을 유지함
+- 모노레포 태스크 러너는 Turborepo(pnpm workspace 위에 얹음). 구성은 "모노레포 패키지 구조와 빌드 결정" 티켓에서 정함
 - Token은 Primitive와 Semantic 두 층으로 나눔. light와 dark Theme 모두 v0에 포함함
 - Component 내부의 색은 Semantic Token만 씀
 - 접근성은 WCAG 2.2 AA를 최소 기준으로 삼음
