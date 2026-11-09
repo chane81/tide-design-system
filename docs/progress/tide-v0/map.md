@@ -63,6 +63,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [테스트 도구와 방식 조사](issues/27-research-testing.md): Vitest 5.1.0 Browser Mode(Playwright)는 실제 브라우저라 jsdom·happy-dom에서 판정하지 못하는 axe 대비 검사까지 됨. 반면 React Aria 테스트 도구는 jsdom을 전제로 함. axe는 WCAG 2.2 규칙이 `target-size` 하나뿐이고 키보드·포커스는 못 잡음. Playwright `forcedColors`는 Chromium·Firefox에서 렌더링까지 바꿈(24번 미확인 항목 해결). 대비 128쌍은 Node 스크립트 + Vitest로 충분
 - [버전 관리와 npm 배포 흐름 조사](issues/29-research-release.md): changesets 3.0.3은 pnpm에 publish를 맡겨 `workspace:`·`catalog:`가 치환됨. pnpm도 자체 릴리스 관리를 가짐. trusted publishing은 새 설정 기본이 stage만 허용이고 changesets는 stage를 아직 못 씀. 2FA 우회 토큰 publish는 2027-01 제거 목표. 저장소가 PRIVATE이라 provenance가 없음. `lucide-static` SVG 2,322개 중 293개는 alias
 - [Storybook 문서 구성 결정](issues/26-grilling-storybook.md): 사이드바는 시작하기 → 원칙 → 기준 → Foundation → Component, v0는 한글만. Component당 MDX 한 페이지(섹션 순서 고정). 렌더링되는 예시는 모두 CSF story. 원칙·기준 원문은 `docs/`의 `.md`를 `<Markdown>`으로 불러옴. Theme은 addon-themes와 채널 구독, 기본 light. Token 블록은 Token 원본에서 직접 생성. 릴리스마다 Dokploy(`tide-tds.lakegreen.net`)에 배포
+- [테스트 전략 결정](issues/28-grilling-testing.md): Vitest projects 4층(Node `unit`, Browser Mode `browser`, `storybook`, `smoke`). jsdom은 안 씀. Chromium만. 동작 단언은 `*.test.tsx`에만 둠(`play` 안 씀). a11y는 `'error'` + `wcag22aa`. forced-colors·reduced-motion은 계산값 단언으로 자동화. 시각 회귀는 v0에서 뺌. `apps/smoke-next` + turbo `smoke`. PR은 `--affected`, 릴리스 전 전체. Component 완료 기준 6개
 
 ## Not yet specified
 
@@ -79,4 +80,5 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - 특정 서비스 전용 Component
 - mobile Target Component(`@tide-tds/mobile`, 터치 중심 모바일 웹). 이름 공간만 정해 둠. 이유는 [ADR 0006](../../decisions/0006-foundation-and-target-packages.md)
 - v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장, Slider, Drawer/Sheet, 토글 Chip. 이유는 [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md)에 있음
+- 시각 회귀 테스트(스크린샷 비교)와 Firefox·WebKit 테스트. 이유는 [테스트 전략 결정](issues/28-grilling-testing.md)에 있음
 - 오버레이의 top-layer(`<dialog>`, popover API) 전환. 이유는 [z-index 층 결정](issues/22-grilling-z-index.md)에 있음

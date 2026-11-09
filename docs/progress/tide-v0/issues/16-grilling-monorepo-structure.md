@@ -111,3 +111,4 @@ apps/docs             → Storybook 10.6.6 (private, 배포 안 함)
 
 - 2026-11-09 grilling 진행. 사실 확인(Storybook과 TS 7 빌드 실측, pnpm `catalogMode`, turbo 문법, Node type stripping, tailwind-merge 순수 객체)은 서브에이전트가 맡았다. Storybook 실측 프로젝트는 scratchpad에 두었고 저장소에는 넣지 않았다.
 - 패키지 이름: `tokens`에서 `foundation`으로, `react`에서 `desktop`으로 바꿨다. 둘 다 사용자 결정이다.
+- 2026-11-09 보완(「테스트 전략 결정」): private app `apps/smoke-next`(Next.js App Router, tarball smoke test용)와 turbo task `smoke`(`dependsOn: ["^build"]`)를 더함. turbo task는 build, typecheck, test, smoke, dev 다섯 개가 됨.
