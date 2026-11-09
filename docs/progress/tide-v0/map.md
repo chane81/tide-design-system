@@ -62,9 +62,11 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 
 ## Not yet specified
 
-- **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 폰트 로드 가이드(next/font/local, CDN 동적 subset)와 텍스트 스타일 시각화 페이지 포함. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것과, Theme 전환 시 transition을 끄는 가이드(motion Foundation 결정), sticky 헤더용 `scroll-padding-top` 가이드(z-index 층 결정), 아이콘 목록 검색 페이지와 사용 가이드(아이콘 전략 결정)도 포함.
-- **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지. `pnpm pack` tarball을 Next 앱에 설치하는 smoke test(`"use client"` 보존, d.ts의 nodenext 해석 확인 포함)를 어디서 언제 돌릴지도 포함. forced-colors 모드에서 raised 경계·field·highlight가 보이는지 확인하는 방법도 포함(24번에서 확인하지 못함).
-- **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책. CI publish 인증(trusted publishing, 토큰)과 npm의 2FA 우회 토큰 제한에 대한 대응도 포함. Lucide가 아이콘 이름을 바꾸거나 지울 때 `@tide-tds/icons`의 semver 처리도 포함.
+세 항목 모두 티켓으로 나눴다. 세부 질문은 각 티켓에 옮겼다.
+
+- **Storybook 문서 구성**: [25 조사](issues/25-research-storybook.md) → [26 결정](issues/26-grilling-storybook.md)
+- **테스트 전략**: [27 조사](issues/27-research-testing.md) → [28 결정](issues/28-grilling-testing.md) (26에도 막힘)
+- **버전과 배포 정책**: [29 조사](issues/29-research-release.md) → [30 결정](issues/30-grilling-release.md)
 
 ## Out of scope
 
