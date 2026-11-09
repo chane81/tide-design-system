@@ -2,8 +2,8 @@
 // - 원본 SVG가 없으면 실패한다. 업스트림이 파일 이름을 바꾸면 이름표의 원본 쪽만 고친다.
 // - 이름표에 없는 원본 SVG는 목록만 출력한다. 넣을지는 사람이 정한다.
 // - 업스트림 alias는 만들지 않는다. 이름표에 있는 이름만 export한다.
-// - 결과(src/generated/, LICENSE)는 커밋하지 않는다.
-import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+// - 결과(src/generated/, LICENSE)는 커밋하지 않는다. LICENSE는 Tide MIT 고지 → 업스트림 고지 순서다.
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { namesFile, packageDir, svgDir, svgNames, upstreamDir } from "./upstream.ts";
@@ -131,8 +131,22 @@ await writeFile(
     .join("\n")}\n`,
 );
 
-// 업스트림 LICENSE(ISC 전문 + Feather 유래 아이콘 목록과 MIT 전문)를 그대로 패키지에 둔다.
-await copyFile(join(upstreamDir, "LICENSE"), join(packageDir, "LICENSE"));
+// 패키지 LICENSE: Tide MIT 고지(저장소 루트 LICENSE, 2026-11-10 사용자 결정) 다음에
+// 업스트림 LICENSE(ISC 전문 + Feather 유래 아이콘 목록과 MIT 전문)를 그대로 붙인다(ADR 0007).
+const tideLicense = await readFile(join(packageDir, "../../LICENSE"), "utf8");
+const upstreamLicense = await readFile(join(upstreamDir, "LICENSE"), "utf8");
+await writeFile(
+  join(packageDir, "LICENSE"),
+  `${tideLicense.trimEnd()}
+
+---
+
+The icons in this package are generated from Lucide (https://lucide.dev).
+The Lucide license and the Feather license below apply to those icons.
+
+${upstreamLicense.trimEnd()}
+`,
+);
 
 // 이름표에 없는 원본 SVG는 알리기만 한다(업스트림 alias SVG도 여기에 나온다).
 const used = new Set(Object.values(table));
