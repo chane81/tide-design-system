@@ -2,6 +2,7 @@
   "name": "@tide-tds/icons",
   "version": "0.0.0",
   "description": "Tide 디자인 시스템의 React 아이콘 Component",
+  "license": "MIT",
   "files": [
     "dist"
   ],

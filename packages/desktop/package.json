@@ -2,6 +2,7 @@
   "name": "@tide-tds/desktop",
   "version": "0.0.0",
   "description": "Tide 디자인 시스템의 desktop React Component",
+  "license": "MIT",
   "files": [
     "dist"
   ],
