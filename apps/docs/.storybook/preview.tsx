@@ -5,6 +5,8 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events";
 import { addons, useEffect } from "storybook/preview-api";
 
+import { DocsAnchor } from "../src/docs-blocks/DocsAnchor.tsx";
+
 // Theme은 `<html data-theme>`로 적용한다. 기본은 light이고 OS 설정(prefers-color-scheme)은 따르지 않는다.
 const THEMES = ["light", "dark"] as const;
 type ThemeName = (typeof THEMES)[number];
@@ -66,6 +68,10 @@ const preview: Preview = {
     theme: DEFAULT_THEME,
   },
   parameters: {
+    // MDX의 Markdown 문법 링크도 외부 주소는 새 탭으로 연다(storybook 10.6.6 `parameters.docs.components`).
+    docs: {
+      components: { a: DocsAnchor },
+    },
     // 모든 story에 axe 검사를 돌리고 위반을 테스트 실패로 다룬다(storybook 10.6.6 A11yParameters).
     // 의도적으로 잘못된 Don't story만 story parameters에서 `a11y: { test: "off" }`로 끈다.
     a11y: {
