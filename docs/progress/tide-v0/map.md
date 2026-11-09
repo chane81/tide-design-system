@@ -60,6 +60,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [아이콘 전략 결정](issues/23-grilling-icon-strategy.md): Lucide. `lucide-static`에서 React Component를 생성해 `@tide-tds/icons`로 배포하고 desktop 내부 아이콘도 여기서 가져옴(런타임 외부 의존성 0, [ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 이름은 `PlusIcon`처럼 `Icon` 접미사(Tide `Menu`·`Table`과 충돌 방지). 기본 16px, 렌더 기준 선 두께 2px, `aria-label`이 없으면 장식용. size별 크기는 xs 14 ~ lg 20px(IconButton 16~24px). LICENSE는 ISC와 Feather MIT 고지를 통째로 포함
 - [그림자·포커스 표시·motion 시각 비교](issues/24-prototype-shadow-focus.md): 그림자는 옅은 안(alpha light 8%, dark 30%), 등장 이동 4px, sm 아이콘 14px로 확정. 목록 안 항목(Menu·Select 옵션)은 ring 대신 배경 강조(highlight)를 쓰고, 버튼류 ring은 유지(2.4.7 AA). forced-colors는 확인하지 못해 테스트 전략으로 넘김
 - [Storybook 문서 사이트 구성 조사](issues/25-research-storybook.md): Storybook 10.6.6은 TS 7 단독으로 빌드됨(`react-docgen` 기본값). Tailwind는 `@tailwindcss/vite`로 연결. Typeset은 텍스트 스타일 14개를 표현하지 못해 Token 블록은 직접 만듦. story가 없는 MDX 페이지에는 addon-themes와 a11y 검사가 적용되지 않음. 레퍼런스 중 공개 문서를 Storybook으로 운영하는 곳은 없음
+- [테스트 도구와 방식 조사](issues/27-research-testing.md): Vitest 5.1.0 Browser Mode(Playwright)는 실제 브라우저라 jsdom·happy-dom에서 판정하지 못하는 axe 대비 검사까지 됨. 반면 React Aria 테스트 도구는 jsdom을 전제로 함. axe는 WCAG 2.2 규칙이 `target-size` 하나뿐이고 키보드·포커스는 못 잡음. Playwright `forcedColors`는 Chromium·Firefox에서 렌더링까지 바꿈(24번 미확인 항목 해결). 대비 128쌍은 Node 스크립트 + Vitest로 충분
 
 ## Not yet specified
 
