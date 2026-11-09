@@ -26,13 +26,13 @@ v0는 top-layer를 쓰지 않고, 모든 오버레이를 React Aria portal과 z-
 
 ### 2. 쌓임 단계
 
-| 이름 | 값 | 쓰는 곳 |
-|---|---|---|
-| `sticky` | 100 | 앱의 sticky 헤더·사이드바. v0 Tide Component는 쓰지 않음 |
-| `modal` | 200 | Dialog·AlertDialog와 그 backdrop |
-| `popover` | 300 | Popover, Menu, Select·Combobox 목록 |
-| `toast` | 400 | Toast 영역 |
-| `tooltip` | 500 | Tooltip |
+| 이름      | 값  | 쓰는 곳                                                  |
+| --------- | --- | -------------------------------------------------------- |
+| `sticky`  | 100 | 앱의 sticky 헤더·사이드바. v0 Tide Component는 쓰지 않음 |
+| `modal`   | 200 | Dialog·AlertDialog와 그 backdrop                         |
+| `popover` | 300 | Popover, Menu, Select·Combobox 목록                      |
+| `toast`   | 400 | Toast 영역                                               |
+| `tooltip` | 500 | Tooltip                                                  |
 
 - `popover`가 `modal`보다 위다. Dialog 안에서 연 Select 목록이 Dialog 위에 보여야 하기 때문이다. 반대 경우(Dialog 뒤 페이지의 Popover가 Dialog 위로 올라옴)는 생기지 않는다. modal이 열려 있으면 뒤 페이지를 조작할 수 없다.
 - Dialog 위에 AlertDialog를 띄우면 둘 다 `modal`이고, 나중에 portal된 쪽이 DOM 순서상 위에 온다.

@@ -25,11 +25,11 @@ Blocked by: 없음
 
 ### 1. `"use client"`가 빌드 결과에 남는가
 
-| 빌드 방식 | `Button.js`의 지시어 |
-| --- | --- |
-| 단일 entry 기본 빌드(대조군) | **사라진다**. 모든 코드가 `index.js` 하나로 합쳐진다 |
-| A. 단일 entry + `preserveModules`(`preserveModulesRoot: "src"`, `entryFileNames: "[name].js"`) | 남는다. 원본 파일마다 `dist/Button.js`, `dist/Badge.js`, `dist/index.js`가 생긴다 |
-| B. 경계마다 entry 분리(`index`, `Button`) | 이번 구성에서는 남는다. 다만 공유 모듈이 있으면 지시어가 없는 chunk로 코드가 빠진다(「Next.js App Router 호환성 조사」의 실험) |
+| 빌드 방식                                                                                      | `Button.js`의 지시어                                                                                                           |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 단일 entry 기본 빌드(대조군)                                                                   | **사라진다**. 모든 코드가 `index.js` 하나로 합쳐진다                                                                           |
+| A. 단일 entry + `preserveModules`(`preserveModulesRoot: "src"`, `entryFileNames: "[name].js"`) | 남는다. 원본 파일마다 `dist/Button.js`, `dist/Badge.js`, `dist/index.js`가 생긴다                                              |
+| B. 경계마다 entry 분리(`index`, `Button`)                                                      | 이번 구성에서는 남는다. 다만 공유 모듈이 있으면 지시어가 없는 chunk로 코드가 빠진다(「Next.js App Router 호환성 조사」의 실험) |
 
 - 서버 컴포넌트인 `page.tsx`가 래퍼 없이 `import { Badge, Button } from "@tide-tds/react"`로 가져와도 빌드와 prerender가 통과했다.
 - **대조 실험**: 설치된 `Button.js`에서 지시어를 지우면 prerender가 `TypeError: (0 , c.useState) is not a function`으로 실패한다. 지시어가 실제로 클라이언트 경계 역할을 한다는 뜻이다.

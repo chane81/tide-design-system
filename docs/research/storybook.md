@@ -6,21 +6,21 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 ## 조사 기준 버전 (2026-11-09, `npm view`로 확인)
 
-| 패키지 | 최신 안정 버전 | 비고 |
-| --- | --- | --- |
-| `storybook` | 10.6.6 | 2026-11-05 배포. `next` 태그는 11.0.0-beta.0 |
-| `@storybook/react-vite` | 10.6.6 | peer `vite ^5 \|\| ^6 \|\| ^7 \|\| ^8`, `react ^16.8 ~ ^19`, `typescript >= 4.9.x`. dependency로 `react-docgen ^8.0.2`, `@joshwooding/vite-plugin-react-docgen-typescript ^0.7.0` |
-| `@storybook/addon-docs` | 10.6.6 | dependency `@mdx-js/react ^3.0.0`. Doc Block은 `@storybook/addon-docs/blocks`에서 import |
-| `@storybook/addon-themes` | 10.6.6 | |
-| `@storybook/addon-a11y` | 10.6.6 | dependency `axe-core ^4.2.0` |
-| `@storybook/addon-vitest` | 10.6.6 | 테스트 전략 티켓(27) 범위 |
-| `@storybook/blocks`, `@storybook/addon-essentials` | 8.6.14 | **10에서는 쓰지 않는 옛 패키지**. 9.0 alpha에서 멈춤. 블록은 `@storybook/addon-docs/blocks`로, essentials는 core로 들어갔다 |
-| `axe-core` | 4.14.0 | 실험 설치에서도 4.14.0으로 풀림 |
-| `react-docgen` | 8.0.4 | 실험 설치에서 8.0.4로 풀림 |
-| `typescript` | 7.0.2 | |
-| `tailwindcss` / `@tailwindcss/vite` | 4.3.5 / 4.3.5 | `@tailwindcss/vite` peer `vite ^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8` |
-| `vite` | 8.3.6 | |
-| `react` | 19.3.1 | |
+| 패키지                                             | 최신 안정 버전 | 비고                                                                                                                                                                              |
+| -------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `storybook`                                        | 10.6.6         | 2026-11-05 배포. `next` 태그는 11.0.0-beta.0                                                                                                                                      |
+| `@storybook/react-vite`                            | 10.6.6         | peer `vite ^5 \|\| ^6 \|\| ^7 \|\| ^8`, `react ^16.8 ~ ^19`, `typescript >= 4.9.x`. dependency로 `react-docgen ^8.0.2`, `@joshwooding/vite-plugin-react-docgen-typescript ^0.7.0` |
+| `@storybook/addon-docs`                            | 10.6.6         | dependency `@mdx-js/react ^3.0.0`. Doc Block은 `@storybook/addon-docs/blocks`에서 import                                                                                          |
+| `@storybook/addon-themes`                          | 10.6.6         |                                                                                                                                                                                   |
+| `@storybook/addon-a11y`                            | 10.6.6         | dependency `axe-core ^4.2.0`                                                                                                                                                      |
+| `@storybook/addon-vitest`                          | 10.6.6         | 테스트 전략 티켓(27) 범위                                                                                                                                                         |
+| `@storybook/blocks`, `@storybook/addon-essentials` | 8.6.14         | **10에서는 쓰지 않는 옛 패키지**. 9.0 alpha에서 멈춤. 블록은 `@storybook/addon-docs/blocks`로, essentials는 core로 들어갔다                                                       |
+| `axe-core`                                         | 4.14.0         | 실험 설치에서도 4.14.0으로 풀림                                                                                                                                                   |
+| `react-docgen`                                     | 8.0.4          | 실험 설치에서 8.0.4로 풀림                                                                                                                                                        |
+| `typescript`                                       | 7.0.2          |                                                                                                                                                                                   |
+| `tailwindcss` / `@tailwindcss/vite`                | 4.3.5 / 4.3.5  | `@tailwindcss/vite` peer `vite ^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8`                                                                                                                    |
+| `vite`                                             | 8.3.6          |                                                                                                                                                                                   |
+| `react`                                            | 19.3.1         |                                                                                                                                                                                   |
 
 **1차 출처**: GitHub `storybookjs/storybook`의 **`v10.6.6` 태그**(커밋 `a3bc279`, 2026-11-05)를 받아 `docs/`와 `code/` 원문을 직접 읽었다. 아래에서 "문서 `docs/...`"는 이 태그 안의 경로이고, 공개 사이트에서는 `https://storybook.js.org/docs/<같은 경로>`로 보인다. 소스 코드 인용도 같은 태그 기준이다.
 
@@ -65,9 +65,9 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 ```css
 /* apps/docs/.storybook/tide.css — preview.ts에서 import */
 @import "tailwindcss";
-@import "@tide-tds/foundation/tailwind.css";   /* @theme + tokens.css */
-@import "@tide-tds/desktop/styles.css";        /* 안에 @source "./src" */
-@source "../src";                               /* docs 앱의 MDX·블록 */
+@import "@tide-tds/foundation/tailwind.css"; /* @theme + tokens.css */
+@import "@tide-tds/desktop/styles.css"; /* 안에 @source "./src" */
+@source "../src"; /* docs 앱의 MDX·블록 */
 ```
 
 - `vite.config.ts`: `plugins: [react(), tailwindcss()]`, `resolve.conditions: ['@tide-tds/source']`(16번 결정의 개발용 exports 조건). desktop은 dist 없이 `src/index.ts`로 연결됐다.
@@ -83,11 +83,11 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 문서 `docs/writing-docs/doc-blocks.mdx`의 "Available blocks"에 **ArgTypes, Canvas, ColorPalette(+ColorItem), Controls, Description, IconGallery(+IconItem), Markdown, Meta, Primary, Source, Stories, Story, Subtitle, TableOfContents, Title, Typeset, Unstyled**가 있다. `useOf` hook으로 직접 블록을 만드는 방법도 공식으로 안내한다("Make your own Doc Blocks").
 
-| 블록 | props(문서 기준) | Tide 요구와 맞는지 |
-| --- | --- | --- |
-| `ColorPalette` / `ColorItem` | `ColorItem`: `title`, `subtitle`, `colors: string[] \| {[key]: string}` | 문자열을 CSS 값으로 그대로 쓴다. 실험에서 `'var(--tide-color-bg-primary-solid)'`도 swatch로 그려졌다. 대비비, 짝이 되는 text 색, light/dark 나란히 보기 같은 표시는 없다 |
-| `Typeset` | `fontFamily`, `fontSizes: (string\|number)[]`, `fontWeight: number`, `sampleText` | **행간 prop이 없고 굵기는 하나뿐이다.** 크기·행간·굵기가 묶인 텍스트 스타일 14개를 그대로 보여 줄 수 없다 |
-| `IconGallery` / `IconItem` | `IconItem`: `name`, `children` | 소스(`components/IconGallery.tsx`, 80행)는 CSS grid(`minmax(140px, 1fr)`)일 뿐이다. 검색, 가상화, 지연 렌더링이 없다. 문서는 많은 아이콘을 `Object.keys(icons).map(...)`으로 반복하라고 안내한다 |
+| 블록                         | props(문서 기준)                                                                  | Tide 요구와 맞는지                                                                                                                                                                               |
+| ---------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ColorPalette` / `ColorItem` | `ColorItem`: `title`, `subtitle`, `colors: string[] \| {[key]: string}`           | 문자열을 CSS 값으로 그대로 쓴다. 실험에서 `'var(--tide-color-bg-primary-solid)'`도 swatch로 그려졌다. 대비비, 짝이 되는 text 색, light/dark 나란히 보기 같은 표시는 없다                         |
+| `Typeset`                    | `fontFamily`, `fontSizes: (string\|number)[]`, `fontWeight: number`, `sampleText` | **행간 prop이 없고 굵기는 하나뿐이다.** 크기·행간·굵기가 묶인 텍스트 스타일 14개를 그대로 보여 줄 수 없다                                                                                        |
+| `IconGallery` / `IconItem`   | `IconItem`: `name`, `children`                                                    | 소스(`components/IconGallery.tsx`, 80행)는 CSS grid(`minmax(140px, 1fr)`)일 뿐이다. 검색, 가상화, 지연 렌더링이 없다. 문서는 많은 아이콘을 `Object.keys(icons).map(...)`으로 반복하라고 안내한다 |
 
 - 그림자, radius, motion 전용 블록은 없다(위 목록 기준).
 - MDX는 React로만 렌더링한다(문서 `docs/writing-docs/mdx.mdx` "Known limitations"). Tide는 React 전용이라 제약이 없다.
@@ -117,11 +117,11 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 ### 실험 결과
 
-| 페이지 | 결과 |
-| --- | --- |
-| CSF story (`viewMode=story`, `globals=theme:dark`) | `html[data-theme="dark"]` 적용됨 |
-| autodocs 페이지(story를 포함한 docs) | `data-theme="light"` 적용됨 |
-| **story가 없는 MDX 페이지** | **`data-theme`이 설정되지 않음**(`null`). `globals=theme:dark`를 줘도 마찬가지 |
+| 페이지                                             | 결과                                                                           |
+| -------------------------------------------------- | ------------------------------------------------------------------------------ |
+| CSF story (`viewMode=story`, `globals=theme:dark`) | `html[data-theme="dark"]` 적용됨                                               |
+| autodocs 페이지(story를 포함한 docs)               | `data-theme="light"` 적용됨                                                    |
+| **story가 없는 MDX 페이지**                        | **`data-theme`이 설정되지 않음**(`null`). `globals=theme:dark`를 줘도 마찬가지 |
 
 - decorator는 story를 렌더링할 때만 실행된다. 원칙·Foundation처럼 story가 없는 MDX 페이지에는 decorator 방식만으로 Theme이 적용되지 않는다.
 - 대안으로 `preview.ts` 최상위에서 `addons.getChannel()`(`storybook/preview-api`)로 `SET_GLOBALS`·`GLOBALS_UPDATED`(`storybook/internal/core-events`) 이벤트를 구독해 `html`에 속성을 붙여 봤다. **story 없는 MDX 페이지에서도, manager URL로 열었을 때도 `dark`가 적용됐다.** `storybook/internal/core-events`는 이름에 internal이 들어 있지만 Storybook 문서의 addon API 예시(`docs/_snippets/storybook-addons-api-getchannel.md`)와 마이그레이션 표가 이 경로를 쓴다.
@@ -194,12 +194,12 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 2026-11-09에 각 사이트를 헤드리스 브라우저로 렌더링해 navigation 링크를 뽑았고, GitHub 저장소 트리를 확인했다.
 
-| 시스템 | 공개 문서 사이트 | 최상위 구성 | Component 페이지 구성 | Storybook 위치 |
-| --- | --- | --- | --- | --- |
-| **Primer** | [primer.style/product](https://primer.style/product/) (Storybook 아님) | Getting started(Foundations: Color usage, Content, Icons, Layout, Responsive, Typography / React·Rails별 안내) → Primitives(Color, Size, Typography, Token Names) → UI Patterns → Scenario Patterns → Components. 상단에 Product UI, Brand UI, Octicons, Accessibility가 따로 있음 | Overview / Guidelines / Accessibility 하위 페이지([button](https://primer.style/product/components/button/)) | `primer/react`의 `packages/react/.storybook`. stories에 `src/**/*.mdx`도 포함. [primer.style/react/storybook](https://primer.style/react/storybook/)에 공개 |
-| **Atlassian** | [atlassian.design](https://atlassian.design/) (Storybook 아님) | Get started(Design, Develop, With AI, Content design, About the design system — 원칙은 About에 있음) → Foundations(Tokens, Accessibility, Content, Spacing, Grid, Color, Typography, Motion, Iconography, Illustrations, Logos, Elevation, Border, Radius) → Components → Tools 등 | Examples / Code / Usage / Changelog 하위 경로([button](https://atlassian.design/components/button)) | 공개 Storybook은 **확인 불가** |
-| **Radix Themes** | [radix-ui.com/themes/docs](https://www.radix-ui.com/themes/docs/overview/getting-started) (Next.js, `radix-ui/website` 저장소의 `data/themes/docs`) | Overview(Getting started, Styling, Layout, Releases) → Theme(Overview, Color, Dark mode, Typography, Spacing, Breakpoints, Radius, Shadows, Cursors) → Components(70여 개) | 한 페이지 안에 API Reference와 Examples | `radix-ui/themes` 저장소에는 Storybook이 없고 `apps/playground`만 있음 |
-| **SEED** | [seed-design.io](https://seed-design.io/) (Next.js + Sanity, `daangn/seed-design`의 `docs/`) | Get Started → Foundations(Design token, Color, Typography, Iconography, Elevation, Gradient, Inclusive design, International design, Layout, Motion, Radius, Spacing, State, Voice and tone, Writing, Feedback) → Components → Patterns → AI & Tools → Updates. 원칙은 홈 섹션 | (세부 탭 구성은 확인하지 않음) | `docs/.storybook`(`@storybook/nextjs-vite`, `stories/**/*.stories.*`만, MDX 없음) + `chromatic.config.json` → 시각 회귀 테스트용 |
+| 시스템           | 공개 문서 사이트                                                                                                                                    | 최상위 구성                                                                                                                                                                                                                                                                        | Component 페이지 구성                                                                                        | Storybook 위치                                                                                                                                              |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primer**       | [primer.style/product](https://primer.style/product/) (Storybook 아님)                                                                              | Getting started(Foundations: Color usage, Content, Icons, Layout, Responsive, Typography / React·Rails별 안내) → Primitives(Color, Size, Typography, Token Names) → UI Patterns → Scenario Patterns → Components. 상단에 Product UI, Brand UI, Octicons, Accessibility가 따로 있음 | Overview / Guidelines / Accessibility 하위 페이지([button](https://primer.style/product/components/button/)) | `primer/react`의 `packages/react/.storybook`. stories에 `src/**/*.mdx`도 포함. [primer.style/react/storybook](https://primer.style/react/storybook/)에 공개 |
+| **Atlassian**    | [atlassian.design](https://atlassian.design/) (Storybook 아님)                                                                                      | Get started(Design, Develop, With AI, Content design, About the design system — 원칙은 About에 있음) → Foundations(Tokens, Accessibility, Content, Spacing, Grid, Color, Typography, Motion, Iconography, Illustrations, Logos, Elevation, Border, Radius) → Components → Tools 등 | Examples / Code / Usage / Changelog 하위 경로([button](https://atlassian.design/components/button))          | 공개 Storybook은 **확인 불가**                                                                                                                              |
+| **Radix Themes** | [radix-ui.com/themes/docs](https://www.radix-ui.com/themes/docs/overview/getting-started) (Next.js, `radix-ui/website` 저장소의 `data/themes/docs`) | Overview(Getting started, Styling, Layout, Releases) → Theme(Overview, Color, Dark mode, Typography, Spacing, Breakpoints, Radius, Shadows, Cursors) → Components(70여 개)                                                                                                         | 한 페이지 안에 API Reference와 Examples                                                                      | `radix-ui/themes` 저장소에는 Storybook이 없고 `apps/playground`만 있음                                                                                      |
+| **SEED**         | [seed-design.io](https://seed-design.io/) (Next.js + Sanity, `daangn/seed-design`의 `docs/`)                                                        | Get Started → Foundations(Design token, Color, Typography, Iconography, Elevation, Gradient, Inclusive design, International design, Layout, Motion, Radius, Spacing, State, Voice and tone, Writing, Feedback) → Components → Patterns → AI & Tools → Updates. 원칙은 홈 섹션     | (세부 탭 구성은 확인하지 않음)                                                                               | `docs/.storybook`(`@storybook/nextjs-vite`, `stories/**/*.stories.*`만, MDX 없음) + `chromatic.config.json` → 시각 회귀 테스트용                            |
 
 - 공통점: 네 곳 모두 **원칙 → Foundation → Component** 순서다. 원칙은 독립 최상위 섹션이 아니라 Get started나 홈 안에 들어 있다(Atlassian은 Get started의 About, SEED는 홈 섹션, Primer는 [principles-reference-systems.md](./principles-reference-systems.md)에서 본 `primer.style/guides/introduction`. 현재 Product UI nav에서 그 페이지의 위치는 확인하지 않았다). Foundation에 Token, Color, Typography, Motion, Radius, Elevation(그림자), Iconography가 공통으로 있다.
 - 네 곳 모두 공개 문서 사이트는 Storybook이 아니다. Storybook은 개발·예제(Primer)나 시각 테스트(SEED)에 쓴다. **Storybook 하나로 공개 문서를 운영하는 Tide 구성과 같은 사례는 이 네 곳에 없다.**
@@ -209,14 +209,14 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 ## 참고 항목 (다른 티켓에서 넘어온 가이드)
 
-| 항목 | 확인한 사실 |
-| --- | --- |
-| 폰트 로드 | `@storybook/react-vite`에는 `next/font`가 없다. `next/font/local`·`next/font/google`은 `@storybook/nextjs`·`nextjs-vite` 프레임워크에서만 "부분 지원"된다(문서 `docs/get-started/frameworks/nextjs-vite.mdx`). Storybook 안에서는 `.storybook/preview-head.html`에 `<link>`(CDN 동적 subset)를 넣거나, `staticDirs`로 폰트 파일을 서빙하고 `preview-head.html`에서 참조한다(문서 `docs/configure/story-rendering.mdx`, `docs/configure/integration/images-and-assets.mdx`). `next/font/local` 사용법은 Storybook 안에서 렌더링할 수 없으므로 MDX에 코드 예시로만 보여 줄 수 있다 |
-| 텍스트 스타일 시각화 | `Typeset`은 행간·스타일별 굵기를 표현하지 못한다(3절). 14개 스타일은 직접 만든 블록이 필요하다 |
-| 원칙별 Do/Don't를 실제 Component로 | MDX에 Component를 직접 렌더링할 수 있지만 `<Unstyled>`가 필요하고, Theme decorator와 a11y 자동 검사는 story에만 적용된다(4·5절). Do/Don't를 CSF story로 만들고 MDX에서 `<Canvas of={...}>`로 불러오면 둘 다 적용된다(추론: 블록과 decorator 동작에서 나온 결론, 따로 실험하지 않음). Don't 예시에는 `parameters.a11y.test: 'off'`를 쓰라고 문서가 안내한다 |
-| Theme 전환 시 transition 끄기 | 4절 |
-| sticky 헤더용 `scroll-padding-top` | Storybook 문서에서 관련 기능이나 안내를 찾지 못했다. 가이드는 MDX 본문에 예시 코드로 둘 수 있다. Storybook 문서 UI 자체의 앵커 이동이 sticky 요소에 가리는지는 확인하지 않았다(**확인 불가**) |
-| 아이콘 목록 검색과 사용 가이드 | 6절 |
+| 항목                               | 확인한 사실                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 폰트 로드                          | `@storybook/react-vite`에는 `next/font`가 없다. `next/font/local`·`next/font/google`은 `@storybook/nextjs`·`nextjs-vite` 프레임워크에서만 "부분 지원"된다(문서 `docs/get-started/frameworks/nextjs-vite.mdx`). Storybook 안에서는 `.storybook/preview-head.html`에 `<link>`(CDN 동적 subset)를 넣거나, `staticDirs`로 폰트 파일을 서빙하고 `preview-head.html`에서 참조한다(문서 `docs/configure/story-rendering.mdx`, `docs/configure/integration/images-and-assets.mdx`). `next/font/local` 사용법은 Storybook 안에서 렌더링할 수 없으므로 MDX에 코드 예시로만 보여 줄 수 있다 |
+| 텍스트 스타일 시각화               | `Typeset`은 행간·스타일별 굵기를 표현하지 못한다(3절). 14개 스타일은 직접 만든 블록이 필요하다                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| 원칙별 Do/Don't를 실제 Component로 | MDX에 Component를 직접 렌더링할 수 있지만 `<Unstyled>`가 필요하고, Theme decorator와 a11y 자동 검사는 story에만 적용된다(4·5절). Do/Don't를 CSF story로 만들고 MDX에서 `<Canvas of={...}>`로 불러오면 둘 다 적용된다(추론: 블록과 decorator 동작에서 나온 결론, 따로 실험하지 않음). Don't 예시에는 `parameters.a11y.test: 'off'`를 쓰라고 문서가 안내한다                                                                                                                                                                                                                       |
+| Theme 전환 시 transition 끄기      | 4절                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| sticky 헤더용 `scroll-padding-top` | Storybook 문서에서 관련 기능이나 안내를 찾지 못했다. 가이드는 MDX 본문에 예시 코드로 둘 수 있다. Storybook 문서 UI 자체의 앵커 이동이 sticky 요소에 가리는지는 확인하지 않았다(**확인 불가**)                                                                                                                                                                                                                                                                                                                                                                                    |
+| 아이콘 목록 검색과 사용 가이드     | 6절                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ---
 

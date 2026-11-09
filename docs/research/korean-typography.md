@@ -13,25 +13,25 @@
 
 ## 1. 폰트 비교표
 
-| 항목 | Pretendard | SUIT | Spoqa Han Sans Neo | Noto Sans KR |
-| --- | --- | --- | --- | --- |
-| 최신 버전 | v1.3.9 (폰트 내부 버전 1.309) | v2.0.5 (폰트 내부 버전 2.040) | v3.3.0 (폰트 내부 버전 1.100) | Sans 2.004 (Google Fonts 배포본 내부 버전 2.004-H2) |
-| 릴리스 날짜 | 2023-11-05 | 2024-07-24 | 2021-06-07 | 원본 저장소 Sans2.004: 2022-01-27 |
-| 저장소 마지막 커밋 | 2025-06-28 | 2024-07-13 | 2021-06-07 | 2024-09-19 |
-| 라이선스 | SIL OFL 1.1 | SIL OFL 1.1 | SIL OFL 1.1 | SIL OFL 1.1 |
-| Reserved Font Name | Pretendard (+ 원천 서체의 Source, Inter, M PLUS 1) | SUIT | Spoqa Han Sans, Spoqa Han Sans JP, Spoqa Han Sans Neo | Source (Adobe) |
-| 한글 원천 | 본고딕(Source Han Sans) + Inter + M PLUS 1p | 본고딕(Source Han Sans) | 확인 불가 (저장소에 명시 없음) | Source Han Sans와 같은 원본(Adobe 저작권 표기) |
-| 굵기 | 9단계 | 9단계 (Thin–Heavy) | 5단계 (Thin, Light, Regular, Medium, Bold) | 가변 100–900 |
-| 가변 폰트 | 있음. `wght` 45–930 (CSS는 `45 920`로 선언) | 있음. `wght` 100–900 | 없음 | 있음. `wght` 100–900 |
-| 한글 음절 수(풀 버전) | 11,172 | 해당 없음 (풀 버전 배포 없음) | 11,172 (Original OTF/TTF에만 있음, woff2 없음) | 11,172 |
-| 한글 음절 수(subset 버전) | 2,780 (KS X 1001 2,350 + 430) | 2,668 (KS X 1001 2,350 + 318). 배포본 전체가 이 버전 | 2,574 (KS X 1001 2,350 + 224) | 해당 없음 (unicode-range 분할로 대체) |
-| 웹폰트 1개 굵기 용량 (Regular woff2) | 풀 766KB, subset 267KB | 168KB | subset 181KB | 해당 없음 |
-| 가변 woff2 단일 파일 | 2.06MB (풀 글자) | 625KB | 없음 | 단일 파일 배포 없음 (원본 TTF 10.4MB) |
-| 동적 subset (unicode-range 분할) | 있음. 가변 기준 92조각, 조각당 8–44KB, 전체 합 2.96MB | 없음 | 없음 | 있음. Google Fonts가 124조각 제공, 조각당 8–65KB, 전체 합 3.51MB |
-| 공식 배포 경로 | GitHub 릴리스, npm `pretendard`, jsDelivr/cdnjs/UNPKG | GitHub 릴리스, npm `@sun-typeface/suit`, jsDelivr | GitHub 릴리스, npm `spoqa-han-sans`, GitHub Pages CSS | Google Fonts, GitHub `notofonts/noto-cjk` |
-| npm 패키지 압축 해제 크기 | 97.7MB (`pretendard@1.3.9`) | 12.2MB (`@sun-typeface/suit@2.0.5`) | 확인하지 않음 | 해당 없음 |
-| 주요 OpenType 기능(실측 GSUB) | `tnum`, `case`, `frac`, `zero`, `ss01`–`ss16`, `cv01`–`cv13`, `calt`, `locl` 등 | `tnum`, `pnum`, `ss01`, `ss17`, `ss18`, `sups`, `subs` | GSUB 기능 없음 | `locl`, `vert`, `vrt2` (조각 하나 기준) |
-| hhea ascent/descent (UPM) | 1950 / -494 (2048) → 합 1.19em | 988 / -260 (1000) → 합 1.25em | 970 / -282 (1000) → 합 1.25em | 1160 / -288 (1000) → 합 1.45em |
+| 항목                                 | Pretendard                                                                      | SUIT                                                   | Spoqa Han Sans Neo                                    | Noto Sans KR                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| 최신 버전                            | v1.3.9 (폰트 내부 버전 1.309)                                                   | v2.0.5 (폰트 내부 버전 2.040)                          | v3.3.0 (폰트 내부 버전 1.100)                         | Sans 2.004 (Google Fonts 배포본 내부 버전 2.004-H2)              |
+| 릴리스 날짜                          | 2023-11-05                                                                      | 2024-07-24                                             | 2021-06-07                                            | 원본 저장소 Sans2.004: 2022-01-27                                |
+| 저장소 마지막 커밋                   | 2025-06-28                                                                      | 2024-07-13                                             | 2021-06-07                                            | 2024-09-19                                                       |
+| 라이선스                             | SIL OFL 1.1                                                                     | SIL OFL 1.1                                            | SIL OFL 1.1                                           | SIL OFL 1.1                                                      |
+| Reserved Font Name                   | Pretendard (+ 원천 서체의 Source, Inter, M PLUS 1)                              | SUIT                                                   | Spoqa Han Sans, Spoqa Han Sans JP, Spoqa Han Sans Neo | Source (Adobe)                                                   |
+| 한글 원천                            | 본고딕(Source Han Sans) + Inter + M PLUS 1p                                     | 본고딕(Source Han Sans)                                | 확인 불가 (저장소에 명시 없음)                        | Source Han Sans와 같은 원본(Adobe 저작권 표기)                   |
+| 굵기                                 | 9단계                                                                           | 9단계 (Thin–Heavy)                                     | 5단계 (Thin, Light, Regular, Medium, Bold)            | 가변 100–900                                                     |
+| 가변 폰트                            | 있음. `wght` 45–930 (CSS는 `45 920`로 선언)                                     | 있음. `wght` 100–900                                   | 없음                                                  | 있음. `wght` 100–900                                             |
+| 한글 음절 수(풀 버전)                | 11,172                                                                          | 해당 없음 (풀 버전 배포 없음)                          | 11,172 (Original OTF/TTF에만 있음, woff2 없음)        | 11,172                                                           |
+| 한글 음절 수(subset 버전)            | 2,780 (KS X 1001 2,350 + 430)                                                   | 2,668 (KS X 1001 2,350 + 318). 배포본 전체가 이 버전   | 2,574 (KS X 1001 2,350 + 224)                         | 해당 없음 (unicode-range 분할로 대체)                            |
+| 웹폰트 1개 굵기 용량 (Regular woff2) | 풀 766KB, subset 267KB                                                          | 168KB                                                  | subset 181KB                                          | 해당 없음                                                        |
+| 가변 woff2 단일 파일                 | 2.06MB (풀 글자)                                                                | 625KB                                                  | 없음                                                  | 단일 파일 배포 없음 (원본 TTF 10.4MB)                            |
+| 동적 subset (unicode-range 분할)     | 있음. 가변 기준 92조각, 조각당 8–44KB, 전체 합 2.96MB                           | 없음                                                   | 없음                                                  | 있음. Google Fonts가 124조각 제공, 조각당 8–65KB, 전체 합 3.51MB |
+| 공식 배포 경로                       | GitHub 릴리스, npm `pretendard`, jsDelivr/cdnjs/UNPKG                           | GitHub 릴리스, npm `@sun-typeface/suit`, jsDelivr      | GitHub 릴리스, npm `spoqa-han-sans`, GitHub Pages CSS | Google Fonts, GitHub `notofonts/noto-cjk`                        |
+| npm 패키지 압축 해제 크기            | 97.7MB (`pretendard@1.3.9`)                                                     | 12.2MB (`@sun-typeface/suit@2.0.5`)                    | 확인하지 않음                                         | 해당 없음                                                        |
+| 주요 OpenType 기능(실측 GSUB)        | `tnum`, `case`, `frac`, `zero`, `ss01`–`ss16`, `cv01`–`cv13`, `calt`, `locl` 등 | `tnum`, `pnum`, `ss01`, `ss17`, `ss18`, `sups`, `subs` | GSUB 기능 없음                                        | `locl`, `vert`, `vrt2` (조각 하나 기준)                          |
+| hhea ascent/descent (UPM)            | 1950 / -494 (2048) → 합 1.19em                                                  | 988 / -260 (1000) → 합 1.25em                          | 970 / -282 (1000) → 합 1.25em                         | 1160 / -288 (1000) → 합 1.45em                                   |
 
 ### 출처
 
@@ -82,12 +82,12 @@
 
 ### 디자인 시스템이 실제로 쓰는 값
 
-| 출처 | 본문 행간 | 제목 행간 | 자간 |
-| --- | --- | --- | --- |
-| SEED Design (`@seed-design/rootage` 3.2.0) | 16px/24px = 1.5 (articleBody), 14px/19px ≈ 1.36 (t4) | 26px/35px ≈ 1.35 (screenTitle, t10), 48px/60px = 1.25 (t14) | 현행 토큰에는 자간 항목 없음. 구버전 `@seed-design/stylesheet` 1.1.2는 Android에서만 h1 -0.04em, title -0.03em, subtitle -0.02em을 쓰고 iOS는 0 |
-| Toss TDS Mobile | 17px/25.5px = 1.5 (Typography 5), 15px/22.5px = 1.5 (Typography 6) | 30px/40px ≈ 1.33 (Typography 1), 22px/31px ≈ 1.41 (Typography 3) | 문서에 명시 없음 |
-| KRDS (`krds-uiux` 1.1.0) | 기본 `line-height: 1.5` (`$font-line-height-base`) | 별도 토큰 확인 못 함 | `letter-spacing` 토큰은 0과 0.1rem 두 개뿐 |
-| W3C klreq | 예시 160% (권장값 아님) | 해당 없음 | 기본 0 |
+| 출처                                       | 본문 행간                                                          | 제목 행간                                                        | 자간                                                                                                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| SEED Design (`@seed-design/rootage` 3.2.0) | 16px/24px = 1.5 (articleBody), 14px/19px ≈ 1.36 (t4)               | 26px/35px ≈ 1.35 (screenTitle, t10), 48px/60px = 1.25 (t14)      | 현행 토큰에는 자간 항목 없음. 구버전 `@seed-design/stylesheet` 1.1.2는 Android에서만 h1 -0.04em, title -0.03em, subtitle -0.02em을 쓰고 iOS는 0 |
+| Toss TDS Mobile                            | 17px/25.5px = 1.5 (Typography 5), 15px/22.5px = 1.5 (Typography 6) | 30px/40px ≈ 1.33 (Typography 1), 22px/31px ≈ 1.41 (Typography 3) | 문서에 명시 없음                                                                                                                                |
+| KRDS (`krds-uiux` 1.1.0)                   | 기본 `line-height: 1.5` (`$font-line-height-base`)                 | 별도 토큰 확인 못 함                                             | `letter-spacing` 토큰은 0과 0.1rem 두 개뿐                                                                                                      |
+| W3C klreq                                  | 예시 160% (권장값 아님)                                            | 해당 없음                                                        | 기본 0                                                                                                                                          |
 
 정리하면, 확인한 국내 시스템의 본문 행간은 1.5 근처이고 제목은 1.25–1.4로 더 좁다. 크기가 커질수록 비율이 줄어든다. 음수 자간을 시스템 전체에 기본으로 거는 사례는 확인하지 못했다. SEED 구버전이 Android 제목에만 음수 자간을 걸었던 것이 유일하다.
 
@@ -98,10 +98,10 @@
 - 버전: `@seed-design/rootage` 3.2.0, `@seed-design/css` 3.2.0, `@seed-design/react` 3.2.0 (2026-11-05 릴리스). 저장소 라이선스 Apache-2.0.
 - 출처: https://github.com/daangn/seed-design/blob/main/packages/rootage/font-size.yaml, https://github.com/daangn/seed-design/blob/main/packages/rootage/line-height.yaml, https://github.com/daangn/seed-design/blob/main/packages/rootage/font-weight.yaml, https://github.com/daangn/seed-design/blob/main/packages/rootage/components/typography.yaml, https://github.com/daangn/seed-design/blob/main/docs/content/foundations/typography.mdx
 
-| 토큰 | t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8 | t9 | t10 | t11* | t12* | t13* | t14* |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| font-size(px) | 11 | 12 | 13 | 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28 | 32 | 40 | 48 |
-| line-height(px) | 15 | 16 | 18 | 19 | 22 | 24 | 27 | 30 | 32 | 35 | 38 | 42 | 52 | 60 |
+| 토큰            | t1  | t2  | t3  | t4  | t5  | t6  | t7  | t8  | t9  | t10 | t11* | t12* | t13* | t14* |
+| --------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---- | ---- | ---- | ---- |
+| font-size(px)   | 11  | 12  | 13  | 14  | 16  | 18  | 20  | 22  | 24  | 26  | 28   | 32   | 40   | 48   |
+| line-height(px) | 15  | 16  | 18  | 19  | 22  | 24  | 27  | 30  | 32  | 35  | 38   | 42   | 52   | 60   |
 
 \* t11–t14는 `sm` breakpoint 이상에서만 쓰도록 권장한다.
 
@@ -118,11 +118,11 @@
 - 출처: https://tossmini-docs.toss.im/tds-mobile/foundation/typography/ (문서에 버전과 날짜 표기 없음, 2026-11-08 조회)
 - 주 단계 7개(Typography 1–7)와 보조 단계 13개(sub Typography 1–13)가 11–30px를 1px 간격으로 채운다.
 
-| 토큰 | Typography 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| font-size(px) | 30 | 26 | 22 | 20 | 17 | 15 | 13 |
-| line-height(px) | 40 | 35 | 31 | 29 | 25.5 | 22.5 | 19.5 |
-| 용도 | 매우 큰 제목 | 큰 제목 | 일반 제목 | 작은 제목 | 일반 본문 | 작은 본문 | 읽지 않아도 되는 글 |
+| 토큰            | Typography 1 | 2       | 3         | 4         | 5         | 6         | 7                   |
+| --------------- | ------------ | ------- | --------- | --------- | --------- | --------- | ------------------- |
+| font-size(px)   | 30           | 26      | 22        | 20        | 17        | 15        | 13                  |
+| line-height(px) | 40           | 35      | 31        | 29        | 25.5      | 22.5      | 19.5                |
+| 용도            | 매우 큰 제목 | 큰 제목 | 일반 제목 | 작은 제목 | 일반 본문 | 작은 본문 | 읽지 않아도 되는 글 |
 
 - 각 토큰을 Light, Regular, Medium, Semibold, Bold 다섯 굵기로 보여준다. 자간과 서체는 문서에 명시가 없다.
 - 큰 글씨 설정을 지원한다. iOS는 Large(100%)부터 A11y_xxxLarge(310%)까지 단계마다 토큰 크기가 정해져 있다. Android는 100% 이상 어떤 배율이든 "기본 크기 × 배율"로 계산하되 토큰마다 최대 크기가 있다(예: Typography 1은 최대 42). 값을 하드코딩하지 말고 토큰을 그대로 쓰라고 안내한다.
@@ -134,9 +134,9 @@
 - 서체: Pretendard GOV (`--krds-typo-font-type`)
 - 루트 `font-size: 62.5%`로 1rem = 10px다. 본문 기본은 17px(body-medium)이다.
 
-| 토큰 (PC) | display L/M/S | heading XL/L/M/S/XS/XXS | body L/M/S/XS |
-| --- | --- | --- | --- |
-| font-size(px) | 60 / 44 / 36 | 40 / 32 / 24 / 19 / 17 / 15 | 19 / 17 / 15 / 13 |
+| 토큰 (PC)     | display L/M/S | heading XL/L/M/S/XS/XXS     | body L/M/S/XS     |
+| ------------- | ------------- | --------------------------- | ----------------- |
+| font-size(px) | 60 / 44 / 36  | 40 / 32 / 24 / 19 / 17 / 15 | 19 / 17 / 15 / 13 |
 
 - 모바일은 display 44/32/28, heading 28/24/22/19/17/15이고, body는 PC와 같다.
 - 기본 `line-height: 1.5`, `word-break: keep-all`을 `html, body`에 건다.

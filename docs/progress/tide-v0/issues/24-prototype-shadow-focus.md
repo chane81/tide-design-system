@@ -28,14 +28,14 @@ Blocked by: 20, 21, 23
 
 light·dark에서 실제로 렌더링해 비교하고 아래 값을 확정했다. 확정한 값은 각 결정 티켓(20, 21, 23, 09)의 Answer에 반영했다.
 
-| 항목 | 비교한 안 | 확정 |
-|---|---|---|
-| 그림자 | A 초안 / B 옅게 / C 진하게 | **B**. sm `0 1px 1px` 60% + `0 1px 2px`, md `0 1px 3px` 50% + `0 4px 12px -2px`, lg `0 2px 6px -1px` 50% + `0 12px 24px -6px` |
-| shadow 색 alpha | 12%·40% / 8%·30% / 16%·50% | **light gray-950 8%, dark black 30%** (B에 딸린 값) |
-| Popover·Toast 등장 이동 거리 | 4 / 8 / 12px | **4px** |
-| sm 버튼 텍스트 옆 아이콘 | 14 / 16px | **14px** |
-| 목록 안 항목 포커스 표시 | 바깥 ring / 안쪽 ring / 배경 강조 | **배경 강조(highlight)**: primary subtle 배경 + primary text 글자. hover도 같은 모양 |
-| 버튼류 ring | 유지(offset 2px) / offset 1px / 없앰 | **유지(outline 2px, offset 2px, `:focus-visible`)**. 없애는 안은 WCAG 2.4.7(AA) 위반이라 후보에서 뺐다 |
+| 항목                         | 비교한 안                            | 확정                                                                                                                          |
+| ---------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| 그림자                       | A 초안 / B 옅게 / C 진하게           | **B**. sm `0 1px 1px` 60% + `0 1px 2px`, md `0 1px 3px` 50% + `0 4px 12px -2px`, lg `0 2px 6px -1px` 50% + `0 12px 24px -6px` |
+| shadow 색 alpha              | 12%·40% / 8%·30% / 16%·50%           | **light gray-950 8%, dark black 30%** (B에 딸린 값)                                                                           |
+| Popover·Toast 등장 이동 거리 | 4 / 8 / 12px                         | **4px**                                                                                                                       |
+| sm 버튼 텍스트 옆 아이콘     | 14 / 16px                            | **14px**                                                                                                                      |
+| 목록 안 항목 포커스 표시     | 바깥 ring / 안쪽 ring / 배경 강조    | **배경 강조(highlight)**: primary subtle 배경 + primary text 글자. hover도 같은 모양                                          |
+| 버튼류 ring                  | 유지(offset 2px) / offset 1px / 없앰 | **유지(outline 2px, offset 2px, `:focus-visible`)**. 없애는 안은 WCAG 2.4.7(AA) 위반이라 후보에서 뺐다                        |
 
 - 사람이 보고 어색하다고 하지 않아 그대로 둔 것: Dialog scale 0.96, press 축소 0.96, field 모양, blur 4px, 24px(xs) 조작 요소의 `md` radius, Menu 목록의 동심원 radius(8 = 4 + 3 + 1).
 - **확인하지 못한 것**: forced-colors 모드(light raised의 투명 border, field의 투명 outline, highlight의 투명 outline). 페이지 안에서 흉내 낼 수 없어 DevTools 에뮬레이션이 필요하다. 구현 후 테스트 전략에서 다룬다.

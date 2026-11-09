@@ -201,22 +201,22 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - Primitive 크기는 12/14/16/18/20/24/32/40/48/56px이고 rem으로 쓴다. class로 노출하지 않는다.
   - 텍스트 스타일 14개를 `--text-<이름>`과 그 `--line-height`, `--font-weight` 하위 변수로 정의한다.
 
-    | 스타일 | 크기/행간 (px) | 굵기 |
-    | --- | --- | --- |
-    | `display-lg` | 56/64 | 700 |
-    | `display-md` | 48/56 | 700 |
-    | `heading-xl` | 40/48 | 700 |
-    | `heading-lg` | 32/40 | 700 |
-    | `heading-md` | 24/32 | 700 |
-    | `heading-sm` | 20/28 | 600 |
-    | `heading-xs` | 18/28 | 600 |
-    | `body-lg` | 18/28 | 400 |
-    | `body-md` | 16/24 | 400 |
-    | `body-sm` | 14/20 | 400 |
-    | `label-lg` | 16/20 | 500 |
-    | `label-md` | 14/20 | 500 |
-    | `label-sm` | 12/16 | 500 |
-    | `caption` | 12/16 | 400 |
+    | 스타일       | 크기/행간 (px) | 굵기 |
+    | ------------ | -------------- | ---- |
+    | `display-lg` | 56/64          | 700  |
+    | `display-md` | 48/56          | 700  |
+    | `heading-xl` | 40/48          | 700  |
+    | `heading-lg` | 32/40          | 700  |
+    | `heading-md` | 24/32          | 700  |
+    | `heading-sm` | 20/28          | 600  |
+    | `heading-xs` | 18/28          | 600  |
+    | `body-lg`    | 18/28          | 400  |
+    | `body-md`    | 16/24          | 400  |
+    | `body-sm`    | 14/20          | 400  |
+    | `label-lg`   | 16/20          | 500  |
+    | `label-md`   | 14/20          | 500  |
+    | `label-sm`   | 12/16          | 500  |
+    | `caption`    | 12/16          | 400  |
 
   - 굵기는 300/400/500/600/700의 5개만 둔다. 자간은 0이다. Tailwind 기본 `text-*` 크기, `font-weight`, `font-serif`는 지운다. `leading-*`와 `tracking-*`는 남긴다.
   - base CSS에 `word-break: keep-all`과 `overflow-wrap: break-word`를 넣는다. 루트 font-size는 바꾸지 않는다.
@@ -226,13 +226,13 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - 중첩 규칙: 바깥 radius = 안쪽 radius + padding + border. 그래서 목록 padding은 3px다.
 - **Elevation**: `shadow-sm`/`md`/`lg`이고 raised 표면에서만 쓴다. 단계마다 2레이어이고, 두 레이어 모두 `--tide-shadow-color`를 `color-mix`로 낮춰 쓴다.
 
-  | 단계 | 가까운 레이어 | 먼 레이어 | 쓰는 곳 |
-  | --- | --- | --- | --- |
-  | `sm` | `0 1px 1px` 60% | `0 1px 2px` 100% | Switch thumb |
-  | `md` | `0 1px 3px` 50% | `0 4px 12px -2px` 100% | Popover, 목록, Tooltip, Toast |
-  | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% | Dialog류 |
-
+  | 단계 | 가까운 레이어        | 먼 레이어               | 쓰는 곳                       |
+  | ---- | -------------------- | ----------------------- | ----------------------------- |
+  | `sm` | `0 1px 1px` 60%      | `0 1px 2px` 100%        | Switch thumb                  |
+  | `md` | `0 1px 3px` 50%      | `0 4px 12px -2px` 100%  | Popover, 목록, Tooltip, Toast |
+  | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% | Dialog류                      |
   - dark에서도 그림자를 그린다. light raised에도 투명 border 1px를 둔다(forced-colors에서 경계가 남게 하려고).
+
 - **포커스 표시**:
   - ring: `outline` 2px, offset 2px, `:focus-visible`. 버튼류와 나머지 전부에 쓴다.
   - field: border를 focus-ring 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다. 투명 outline을 함께 둔다. `:focus`(클릭 포함). 입력창과 Select·Combobox 트리거에 쓴다.
@@ -267,13 +267,13 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **크기 규칙**(Component 안에서 쓸 때):
 
   | Component size | 텍스트 옆 아이콘 | IconButton 아이콘 |
-  | --- | --- | --- |
-  | `xs` | 14px | 16px |
-  | `sm` | 14px | 16px |
-  | `md` | 16px | 20px |
-  | `lg` | 20px | 24px |
-
+  | -------------- | ---------------- | ----------------- |
+  | `xs`           | 14px             | 16px              |
+  | `sm`           | 14px             | 16px              |
+  | `md`           | 16px             | 20px              |
+  | `lg`           | 20px             | 24px              |
   - 선 두께는 label 옆에서 2px, body 옆에서 1.5px다.
+
 - Tide Component 내부 아이콘은 항상 장식용이다.
 - 상태 아이콘(info, success, warning, danger)은 모양으로도 서로 구분되어야 한다.
 
@@ -301,13 +301,13 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **size 표**:
 
   | size | 높이 | 텍스트 스타일 |
-  | --- | --- | --- |
-  | `xs` | 24px | `label-sm` |
-  | `sm` | 32px | `label-sm` |
-  | `md` | 40px | `label-md` |
-  | `lg` | 48px | `label-lg` |
-
+  | ---- | ---- | ------------- |
+  | `xs` | 24px | `label-sm`    |
+  | `sm` | 32px | `label-sm`    |
+  | `md` | 40px | `label-md`    |
+  | `lg` | 48px | `label-lg`    |
   - 높이는 24px 밑으로 내려가지 않는다. 같은 size의 컨트롤은 높이가 같다. 세로 정렬은 고정 높이와 `items-center`로 한다.
+
 - **variant 정의**: 타입이 붙은 객체 맵과 `cn`으로 직접 쓴다. cva와 tailwind-variants는 쓰지 않는다. 모든 조합을 채웠는지는 타입 검사가 확인한다.
 - **className 병합**: `cn` = clsx + 생성된 설정으로 확장한 tailwind-merge. 사용자의 `className`은 항상 마지막에 넣는다.
 - **`render` prop**:
@@ -334,12 +334,11 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - Component 내부의 겹침은 루트 `isolate`와 `z-0`/`z-1`로만 처리한다.
 - **motion 적용**:
 
-  | 구분 | Component | 나타날 때 | 사라질 때 |
-  | --- | --- | --- | --- |
-  | 자주 씀 | Menu, Select·Combobox 목록, Tooltip | 바로 | opacity `fast` |
-  | 가끔 씀 | Popover, Toast | opacity + blur 4px + translate 4px, `normal` | 같은 조합을 절반 세기로, `fast` |
-  | 가끔 씀 | Dialog류 | opacity + scale 0.96 → 1, `normal` | 같은 조합을 약하게, `fast` |
-
+  | 구분    | Component                           | 나타날 때                                    | 사라질 때                       |
+  | ------- | ----------------------------------- | -------------------------------------------- | ------------------------------- |
+  | 자주 씀 | Menu, Select·Combobox 목록, Tooltip | 바로                                         | opacity `fast`                  |
+  | 가끔 씀 | Popover, Toast                      | opacity + blur 4px + translate 4px, `normal` | 같은 조합을 절반 세기로, `fast` |
+  | 가끔 씀 | Dialog류                            | opacity + scale 0.96 → 1, `normal`           | 같은 조합을 약하게, `fast`      |
   - 반복되는 목록 항목의 hover는 바로 바뀐다. 혼자 있는 조작 요소는 `transition-colors` `fast`다.
   - `transition-all`은 쓰지 않는다. keyframe은 Spinner·Skeleton에만 쓴다.
   - reduced-motion에서는 이동·확대·blur를 opacity로 바꾸고 Skeleton을 멈춘다.
@@ -349,26 +348,26 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
 단계는 의존 순서다. 33개가 모두 끝나야 v0가 완료된다. 단계 하나가 끝날 때마다 minor 릴리스를 한 번 낸다.
 
-| 단계 | Component | 방식 |
-| --- | --- | --- |
-| 1 기반 | VisuallyHidden, Typography, Spinner | 네이티브 |
-| 2 액션·폼 | Button → IconButton → Link, Field → Input → Textarea → Checkbox → Radio → Switch | 네이티브, `render` |
-| 3 표시·피드백 | Badge, Alert, Card, Separator, Avatar, Skeleton, Progress, Table, Breadcrumb, Pagination | 네이티브 |
-| 4 hook 위젯 | Popover → Tooltip → Menu → Select → Combobox → Dialog → AlertDialog → Tabs → Accordion → Tag | React Aria hooks |
-| 5 | Toast | `useToast` |
+| 단계          | Component                                                                                    | 방식               |
+| ------------- | -------------------------------------------------------------------------------------------- | ------------------ |
+| 1 기반        | VisuallyHidden, Typography, Spinner                                                          | 네이티브           |
+| 2 액션·폼     | Button → IconButton → Link, Field → Input → Textarea → Checkbox → Radio → Switch             | 네이티브, `render` |
+| 3 표시·피드백 | Badge, Alert, Card, Separator, Avatar, Skeleton, Progress, Table, Breadcrumb, Pagination     | 네이티브           |
+| 4 hook 위젯   | Popover → Tooltip → Menu → Select → Combobox → Dialog → AlertDialog → Tabs → Accordion → Tag | React Aria hooks   |
+| 5             | Toast                                                                                        | `useToast`         |
 
 Component별로 이미 정한 범위:
 
 - **Typography**: `variant`는 텍스트 스타일 이름이다. 기본 요소는 다음과 같다.
 
-  | 스타일 | 기본 요소 |
-  | --- | --- |
-  | `display-*`, `heading-xl` | `h1` |
+  | 스타일                                                    | 기본 요소                 |
+  | --------------------------------------------------------- | ------------------------- |
+  | `display-*`, `heading-xl`                                 | `h1`                      |
   | `heading-lg` / `heading-md` / `heading-sm` / `heading-xs` | `h2` / `h3` / `h4` / `h5` |
-  | `body-*`, `caption` | `p` |
-  | `label-*` | `span` |
-
+  | `body-*`, `caption`                                       | `p`                       |
+  | `label-*`                                                 | `span`                    |
   - heading·display는 `level`(1~6)을 선택적으로 받고, 항상 `<h*>`로 렌더된다. 다른 요소가 필요하면 `render`를 쓴다.
+
 - **Field**: label, 설명, 오류 메시지를 붙이고 `id`, `aria-describedby`, `aria-invalid`를 자동으로 연결한다.
 - **Select**: `useSelect`로 만든다.
 - **Combobox**: 클라이언트 필터링, 단일 선택(`useComboBox`). 비동기, 다중 선택, 가상화, 자유 입력은 없다.
@@ -435,12 +434,12 @@ Component별로 이미 정한 범위:
 
 ### seam (Vitest projects 4층 + smoke)
 
-| seam | 환경 | 대상 |
-| --- | --- | --- |
-| ① 패키지 출력 (`unit`) | Node | foundation: 대비 쌍 전체(light/dark)와 미등록 Semantic Token 검출, 컴파일한 CSS에 기대한 class가 있는지와 없어야 할 class가 없는지(Semantic namespace, 텍스트 스타일 14개, 굵기 5개, radius, shadow, z-index, duration, `focus-ring`/`focus-field`), Tailwind 기본값 제거, `--tide-*` 공개 계약 목록, `cn`·tailwind-merge 충돌 해결. icons: 이름표 키와 실제 export 목록 일치, 이름표에서 키가 빠졌을 때 minor changeset 요구, 대표 아이콘 몇 개를 서버 렌더해 `aria-hidden`/`role="img"`/기본 크기/선 두께 확인 |
-| ② Component 동작 (`browser`) | Vitest Browser Mode + Playwright Chromium | 키보드, ARIA, 포커스 이동·가두기·복귀, 제어/비제어, `data-*` 상태, `render` 병합, disabled 처리. 두 번째 instance(`forcedColors: 'active'`, `reducedMotion: 'reduce'`)에서 투명 border·outline이 보이는지, opacity 전환으로 바뀌는지를 계산값으로 단언 |
-| ③ story (`storybook`) | addon-vitest + Chromium | 모든 story 렌더 smoke. a11y는 `test: 'error'`, `runOnly`는 `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`. 의도적으로 잘못된 Don't story만 끈다 |
-| ④ 배포 tarball (`smoke`) | private Next.js App Router 앱 | tarball 설치 → `next build`(`"use client"` 경계, prerender) → `tsc`(nodenext d.ts 해석) → publint → CSS import와 `@source` 동작 |
+| seam                         | 환경                                      | 대상                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ---------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ① 패키지 출력 (`unit`)       | Node                                      | foundation: 대비 쌍 전체(light/dark)와 미등록 Semantic Token 검출, 컴파일한 CSS에 기대한 class가 있는지와 없어야 할 class가 없는지(Semantic namespace, 텍스트 스타일 14개, 굵기 5개, radius, shadow, z-index, duration, `focus-ring`/`focus-field`), Tailwind 기본값 제거, `--tide-*` 공개 계약 목록, `cn`·tailwind-merge 충돌 해결. icons: 이름표 키와 실제 export 목록 일치, 이름표에서 키가 빠졌을 때 minor changeset 요구, 대표 아이콘 몇 개를 서버 렌더해 `aria-hidden`/`role="img"`/기본 크기/선 두께 확인 |
+| ② Component 동작 (`browser`) | Vitest Browser Mode + Playwright Chromium | 키보드, ARIA, 포커스 이동·가두기·복귀, 제어/비제어, `data-*` 상태, `render` 병합, disabled 처리. 두 번째 instance(`forcedColors: 'active'`, `reducedMotion: 'reduce'`)에서 투명 border·outline이 보이는지, opacity 전환으로 바뀌는지를 계산값으로 단언                                                                                                                                                                                                                                                           |
+| ③ story (`storybook`)        | addon-vitest + Chromium                   | 모든 story 렌더 smoke. a11y는 `test: 'error'`, `runOnly`는 `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`. 의도적으로 잘못된 Don't story만 끈다                                                                                                                                                                                                                                                                                                                                                          |
+| ④ 배포 tarball (`smoke`)     | private Next.js App Router 앱             | tarball 설치 → `next build`(`"use client"` 경계, prerender) → `tsc`(nodenext d.ts 해석) → publint → CSS import와 `@source` 동작                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ### Component 완료 기준 (6개)
 
@@ -488,6 +487,7 @@ Component 하나는 다음을 모두 만족해야 완료다.
   6. Component 1~5단계
 
   1단계 Component까지 끝나면 0.1.0을 로컬에서 publish한다.
+
 - **문서 언어**: 문서, 주석, CHANGELOG는 한글로 쓴다. 변수명과 함수명은 영문이다.
 - **용어**: GLOSSARY의 용어를 쓴다. 특히 Role(`color` prop), 강도(Token의 solid/subtle), 채움 방식(Component `variant`), 표면 층, Elevation, 쌓임 단계, 포커스 표시(ring/field/highlight), 공개 계약, 릴리스를 구분한다.
 - **ADR**: 새 결정이 되돌리기 어렵고, 맥락 없이는 놀랍고, 실제로 trade-off가 있었다면 ADR로 남긴다. ADR에는 `근거 원칙:` 줄을 둔다.

@@ -6,13 +6,13 @@
 
 ## 조사 기준 버전 (2026-11-08, `npm view`로 확인)
 
-| 패키지 | 최신 안정 버전 | 비고 |
-| --- | --- | --- |
-| `next` | 16.4.5 | `engines.node >=20.9.0`, peer `react ^18.2.0 \|\| ^19.0.0` |
-| `react` | 19.3.1 | |
-| `vite` | 8.3.6 | 번들러로 `rolldown ~1.2.16`을 씀(Rollup이 아님). 실험할 때 설치된 버전은 rolldown 1.2.16 |
-| `rolldown` | 1.3.0 | |
-| `tailwindcss` / `@tailwindcss/postcss` | 4.3.5 / 4.3.5 | |
+| 패키지                                 | 최신 안정 버전 | 비고                                                                                     |
+| -------------------------------------- | -------------- | ---------------------------------------------------------------------------------------- |
+| `next`                                 | 16.4.5         | `engines.node >=20.9.0`, peer `react ^18.2.0 \|\| ^19.0.0`                               |
+| `react`                                | 19.3.1         |                                                                                          |
+| `vite`                                 | 8.3.6          | 번들러로 `rolldown ~1.2.16`을 씀(Rollup이 아님). 실험할 때 설치된 버전은 rolldown 1.2.16 |
+| `rolldown`                             | 1.3.0          |                                                                                          |
+| `tailwindcss` / `@tailwindcss/postcss` | 4.3.5 / 4.3.5  |                                                                                          |
 
 Next.js 문서는 nextjs.org(페이지에 "Latest Version 16.4.5"로 표시됨)와 GitHub `vercel/next.js` 저장소의 `v16.4.5` 태그에 있는 `docs/` 원문을 함께 봤다. context7(`/vercel/next.js/v16.2.9`, 등록된 버전 중 가장 최신)은 교차 확인용으로만 썼다.
 
@@ -52,10 +52,10 @@ Vite 8.3.6의 `build.rolldownOptions`는 Rolldown에 그대로 전달된다([Vit
 
 `button.js`(`"use client"`, `shared.js` import), `hook.js`(`"use client"`), `shared.js`(지시어 없음), 그리고 셋을 다시 export하는 `index.js`를 만들어 빌드했다.
 
-| 설정 | 결과 |
-| --- | --- |
-| 단일 entry(`index.js`) | 출력 `index.js`에서 **`"use client"`가 모두 사라짐**. 세 모듈이 한 파일로 합쳐짐. 빌드할 때 `module level directive may not be preserved` 경고가 나옴 |
-| 다중 entry(`button`, `index`) | entry 파일 `button.js`에는 `"use client"`가 남음. 다만 실제 코드는 지시어가 없는 공유 chunk(`button-xxxx.js`)로 빠지고, `button.js`는 그 chunk를 다시 export하는 얇은 파일이 됨. `index.js`는 공유 chunk를 직접 import하므로 **`index`로 import하면 클라이언트 경계가 없음** |
+| 설정                                                        | 결과                                                                                                                                                                                                                                                                                                       |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 단일 entry(`index.js`)                                      | 출력 `index.js`에서 **`"use client"`가 모두 사라짐**. 세 모듈이 한 파일로 합쳐짐. 빌드할 때 `module level directive may not be preserved` 경고가 나옴                                                                                                                                                      |
+| 다중 entry(`button`, `index`)                               | entry 파일 `button.js`에는 `"use client"`가 남음. 다만 실제 코드는 지시어가 없는 공유 chunk(`button-xxxx.js`)로 빠지고, `button.js`는 그 chunk를 다시 export하는 얇은 파일이 됨. `index.js`는 공유 chunk를 직접 import하므로 **`index`로 import하면 클라이언트 경계가 없음**                               |
 | 단일 entry + `rolldownOptions.output.preserveModules: true` | 원본 파일마다 출력 파일이 하나씩 생김. `button`·`hook`에 해당하는 파일에는 `"use client"`가 남고 `shared`·`index`에는 없음. **원본의 경계가 그대로 유지됨**. 다만 기본 파일 이름이 `<패키지명>N.js` 형태로 바뀌므로 `entryFileNames`나 `preserveModulesRoot`를 따로 설정해야 할 것으로 보임(실험하지 않음) |
 
 **결론**: Vite 8의 기본 라이브러리 빌드는 `"use client"`를 보존하지 않는다. `preserveModules`를 켜거나, 클라이언트 경계마다 entry를 따로 두되 barrel이 그 entry 파일을 거쳐 가게 하거나, `output.banner`로 지시어를 붙이는 방법이 필요하다. `banner`를 쓰면 모든 출력 파일이 클라이언트 경계가 되므로 서버 컴포넌트로 쓸 수 있는 순수 컴포넌트까지 클라이언트로 넘어간다. 이건 문서 내용에서 추론한 것이고 실험하지 않았다.
@@ -180,7 +180,7 @@ export default {
 - `variable: '--font-xxx'` 옵션으로 CSS 변수를 선언하고, `font.variable` className을 `<html>`이나 `<body>`에 붙인다.
 - **Tailwind v4 연동 공식 예시**:
   ```css
-  @import 'tailwindcss';
+  @import "tailwindcss";
   @theme inline {
     --font-sans: var(--font-inter);
     --font-mono: var(--font-roboto-mono);
@@ -199,7 +199,7 @@ import "./globals.css";
 
 const sans = localFont({
   src: "./fonts/PretendardVariable.woff2", // 폰트 선정은 다른 티켓의 범위
-  variable: "--font-tide-sans",            // 변수 이름은 미정
+  variable: "--font-tide-sans", // 변수 이름은 미정
   display: "swap",
 });
 

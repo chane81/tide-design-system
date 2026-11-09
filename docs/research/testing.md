@@ -6,28 +6,28 @@
 
 ## 조사 기준 버전 (2026-11-09, `npm view`로 확인)
 
-| 패키지 | 최신 안정 버전 | 비고 |
-| --- | --- | --- |
-| `vitest` | 5.1.0 | `engines.node ^22.12.0 \|\| ^24.0.0 \|\| >=26.0.0`, peer `vite ^6.4.0 \|\| ^7.0.0 \|\| ^8.0.0` |
-| `@vitest/browser-playwright` | 5.1.0 | peer `playwright: *`. `@vitest/browser`는 provider 패키지에 포함됨(Vitest 4부터) |
-| `@vitest/browser-webdriverio` / `@vitest/browser-preview` | 5.0.0 / 5.1.0 | |
-| `vitest-browser-react` | 2.3.0 | peer `vitest ^4 \|\| ^5`, `react ^18 \|\| ^19` |
-| `playwright` / `@playwright/test` | 1.65.0 | 2026-11-09 배포. 번들 브라우저: Chromium 158.0.8127.18, Firefox 159.0, WebKit 27.2(실험에서 `browser.version()`으로 확인) |
-| `axe-core` | 4.14.0 | 2026-10-05 배포 |
-| `@axe-core/playwright` | 4.14.0 | |
-| `storybook` / `@storybook/react-vite` | 10.6.6 | |
-| `@storybook/addon-vitest` | 10.6.6 | peer `vitest ^4.0.0 \|\| ^5.0.0`, `@vitest/browser-playwright ^4 \|\| ^5` |
-| `@storybook/addon-a11y` | 10.6.6 | 의존성 `axe-core ^4.2.0`(설치하면 4.14.0으로 해석됨) |
-| `@storybook/test-runner` | 0.26.0 | Jest 30 기반 |
-| `chromatic` / `@chromatic-com/storybook` | 18.14.2 / 5.6.0 | |
-| `jsdom` / `happy-dom` | 31.0.0 / 21.0.4 | |
-| `@testing-library/react` / `user-event` / `dom` | 16.3.3 / 14.6.8 / 10.4.2 | |
-| `@react-aria/test-utils` | 1.0.0-rc.1 | 정식 버전 아님. peer `@testing-library/dom ^10`, `user-event ^14` |
-| `react-aria` | 3.53.1 | |
-| `turbo` | 2.11.10 | |
-| `next` | 16.4.5 | |
-| `@arethetypeswrong/cli` / `publint` | 0.18.5 / 0.3.25 | attw의 core는 `typescript 5.6.1-rc`를 자체 의존성으로 고정함 |
-| `culori` / `colorjs.io` / `wcag-contrast` | 4.0.2 / 0.7.1 / 3.0.0 | `wcag-contrast`는 2022-06 이후 갱신 없음 |
+| 패키지                                                    | 최신 안정 버전           | 비고                                                                                                                      |
+| --------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `vitest`                                                  | 5.1.0                    | `engines.node ^22.12.0 \|\| ^24.0.0 \|\| >=26.0.0`, peer `vite ^6.4.0 \|\| ^7.0.0 \|\| ^8.0.0`                            |
+| `@vitest/browser-playwright`                              | 5.1.0                    | peer `playwright: *`. `@vitest/browser`는 provider 패키지에 포함됨(Vitest 4부터)                                          |
+| `@vitest/browser-webdriverio` / `@vitest/browser-preview` | 5.0.0 / 5.1.0            |                                                                                                                           |
+| `vitest-browser-react`                                    | 2.3.0                    | peer `vitest ^4 \|\| ^5`, `react ^18 \|\| ^19`                                                                            |
+| `playwright` / `@playwright/test`                         | 1.65.0                   | 2026-11-09 배포. 번들 브라우저: Chromium 158.0.8127.18, Firefox 159.0, WebKit 27.2(실험에서 `browser.version()`으로 확인) |
+| `axe-core`                                                | 4.14.0                   | 2026-10-05 배포                                                                                                           |
+| `@axe-core/playwright`                                    | 4.14.0                   |                                                                                                                           |
+| `storybook` / `@storybook/react-vite`                     | 10.6.6                   |                                                                                                                           |
+| `@storybook/addon-vitest`                                 | 10.6.6                   | peer `vitest ^4.0.0 \|\| ^5.0.0`, `@vitest/browser-playwright ^4 \|\| ^5`                                                 |
+| `@storybook/addon-a11y`                                   | 10.6.6                   | 의존성 `axe-core ^4.2.0`(설치하면 4.14.0으로 해석됨)                                                                      |
+| `@storybook/test-runner`                                  | 0.26.0                   | Jest 30 기반                                                                                                              |
+| `chromatic` / `@chromatic-com/storybook`                  | 18.14.2 / 5.6.0          |                                                                                                                           |
+| `jsdom` / `happy-dom`                                     | 31.0.0 / 21.0.4          |                                                                                                                           |
+| `@testing-library/react` / `user-event` / `dom`           | 16.3.3 / 14.6.8 / 10.4.2 |                                                                                                                           |
+| `@react-aria/test-utils`                                  | 1.0.0-rc.1               | 정식 버전 아님. peer `@testing-library/dom ^10`, `user-event ^14`                                                         |
+| `react-aria`                                              | 3.53.1                   |                                                                                                                           |
+| `turbo`                                                   | 2.11.10                  |                                                                                                                           |
+| `next`                                                    | 16.4.5                   |                                                                                                                           |
+| `@arethetypeswrong/cli` / `publint`                       | 0.18.5 / 0.3.25          | attw의 core는 `typescript 5.6.1-rc`를 자체 의존성으로 고정함                                                              |
+| `culori` / `colorjs.io` / `wcag-contrast`                 | 4.0.2 / 0.7.1 / 3.0.0    | `wcag-contrast`는 2022-06 이후 갱신 없음                                                                                  |
 
 문서는 각 도구의 GitHub 저장소에서 위 버전 태그의 원문을 봤다(Vitest `v5.1.0`, Storybook `v10.6.6`, axe-core `v4.14.0`, Playwright `v1.65.0`, Turborepo `v2.11.10`). context7(`/vitest-dev/vitest/v5.0.3`, 등록된 버전 중 가장 최신)은 교차 확인용으로만 썼다. 가격은 각 서비스의 공식 가격 페이지를 2026-11-09에 확인한 값이다.
 
@@ -61,15 +61,15 @@
 
 버튼 두 개, `role="button"`인 `div`(tabindex 없음), 흰 배경 위 `#3183f5` 글자(대비 3.69:1), box-shadow가 있는 요소를 넣고 같은 검사를 돌렸다.
 
-| 항목 | jsdom 31.0.0 | happy-dom 21.0.4 | Browser Mode(Chromium 158) |
-| --- | --- | --- | --- |
-| `window.matchMedia` | **없음**(`undefined`) | 있음 | 있음 |
-| `getBoundingClientRect().width` | 0 | 0 | 실제 값 |
-| `PointerEvent` | 있음 | 있음 | 있음 |
-| Tab 두 번으로 포커스 이동(`a` → `b`) | 됨(user-event) | 됨(user-event) | 됨(CDP `userEvent.tab`) |
-| axe `color-contrast` | **`incomplete`**(판정 못 함) | **`incomplete`** | **`violations`**(잡아냄) |
-| `role="button"` div의 키보드 접근 불가 | axe가 잡지 못함 | 잡지 못함 | 잡지 못함 |
-| 실행 시간(파일 1개) | 약 50ms | 약 30ms | 프로젝트 2개 합쳐 약 0.85~1.0s |
+| 항목                                   | jsdom 31.0.0                 | happy-dom 21.0.4 | Browser Mode(Chromium 158)     |
+| -------------------------------------- | ---------------------------- | ---------------- | ------------------------------ |
+| `window.matchMedia`                    | **없음**(`undefined`)        | 있음             | 있음                           |
+| `getBoundingClientRect().width`        | 0                            | 0                | 실제 값                        |
+| `PointerEvent`                         | 있음                         | 있음             | 있음                           |
+| Tab 두 번으로 포커스 이동(`a` → `b`)   | 됨(user-event)               | 됨(user-event)   | 됨(CDP `userEvent.tab`)        |
+| axe `color-contrast`                   | **`incomplete`**(판정 못 함) | **`incomplete`** | **`violations`**(잡아냄)       |
+| `role="button"` div의 키보드 접근 불가 | axe가 잡지 못함              | 잡지 못함        | 잡지 못함                      |
+| 실행 시간(파일 1개)                    | 약 50ms                      | 약 30ms          | 프로젝트 2개 합쳐 약 0.85~1.0s |
 
 - 시뮬레이션 환경에서는 레이아웃과 색 계산이 없으므로 axe의 대비 규칙이 판정을 미룬다. 실제 브라우저에서만 위반으로 나온다.
 - jsdom에는 `matchMedia`가 없어서 `prefers-reduced-motion`이나 `forced-colors` 분기를 테스트하려면 직접 mock해야 한다. mock은 CSS 적용 결과까지 바꾸지 못한다.
@@ -95,14 +95,14 @@
 
 **test-runner와 비교** (같은 문서의 비교표)
 
-| 기능 | Vitest addon | test-runner |
-| --- | --- | --- |
-| interaction test / a11y test | 지원 | 지원 |
-| 시각 테스트 | 지원(Chromatic) | 미지원 |
-| snapshot test | 미지원 | 지원 |
-| 실행 엔진 | Vitest | Jest |
-| Storybook 실행 필요 | 없음 | 필요 |
-| 모든 프레임워크 지원 | 아님(Vite 필요) | 지원 |
+| 기능                         | Vitest addon    | test-runner |
+| ---------------------------- | --------------- | ----------- |
+| interaction test / a11y test | 지원            | 지원        |
+| 시각 테스트                  | 지원(Chromatic) | 미지원      |
+| snapshot test                | 미지원          | 지원        |
+| 실행 엔진                    | Vitest          | Jest        |
+| Storybook 실행 필요          | 없음            | 필요        |
+| 모든 프레임워크 지원         | 아님(Vite 필요) | 지원        |
 
 ### interaction test
 
@@ -117,11 +117,11 @@
 - **기본 ruleset은 WCAG 2.0, 2.1 A/AA와 best practice다.** WCAG 2.2 AA를 검사하려면 axe의 `runOnly`로 태그를 직접 지정해야 한다. 기본 설정에서는 `region` 규칙이 꺼져 있다(story에는 보통 맞지 않으므로).
 - `parameters.a11y.test`가 CI 동작을 정한다.
 
-| 값 | 동작 |
-| --- | --- |
-| `'off'` | 실행하지 않음 |
-| `'todo'` | 실행하고, 위반은 Storybook UI에 경고로만 표시. **CI에는 아무 출력도 없음** |
-| `'error'` | 실행하고, 위반이면 UI와 CLI/CI에서 테스트 실패 |
+| 값        | 동작                                                                       |
+| --------- | -------------------------------------------------------------------------- |
+| `'off'`   | 실행하지 않음                                                              |
+| `'todo'`  | 실행하고, 위반은 Storybook UI에 경고로만 표시. **CI에는 아무 출력도 없음** |
+| `'error'` | 실행하고, 위반이면 UI와 CLI/CI에서 테스트 실패                             |
 
 - 프로젝트(`preview`), Component(meta), story 단위로 지정할 수 있다. 문서는 전체를 `'error'`로 두고 문제 있는 Component만 잠시 `'todo'`로 내리는 진행 방식을 소개한다.
 - a11y 검사는 Component 테스트와 **함께** 실행된다(별도 실행 불가).
@@ -160,14 +160,14 @@
 
 규칙 표의 태그로 확인했다. 아래 기준에 해당하는 태그를 가진 규칙이 **하나도 없다**.
 
-| 기준 | 내용 | Tide와의 관련 |
-| --- | --- | --- |
+| 기준   | 내용                                | Tide와의 관련                             |
+| ------ | ----------------------------------- | ----------------------------------------- |
 | 1.4.11 | 비텍스트 대비(경계, 포커스 표시 색) | ring, field, highlight 포커스 표시의 대비 |
-| 2.4.7 | 포커스가 보임 | ring을 유지한 근거(24번) |
-| 2.4.11 | 포커스가 가려지지 않음(최소) | sticky 헤더와 `scroll-padding-top`(22번) |
-| 2.4.3 | 포커스 순서 | Dialog, Menu 포커스 이동 |
-| 2.1.2 | 키보드 트랩 없음 | Dialog 포커스 가두기와 탈출 |
-| 1.4.13 | hover/focus로 나타나는 콘텐츠 | Tooltip, Popover |
+| 2.4.7  | 포커스가 보임                       | ring을 유지한 근거(24번)                  |
+| 2.4.11 | 포커스가 가려지지 않음(최소)        | sticky 헤더와 `scroll-padding-top`(22번)  |
+| 2.4.3  | 포커스 순서                         | Dialog, Menu 포커스 이동                  |
+| 2.1.2  | 키보드 트랩 없음                    | Dialog 포커스 가두기와 탈출               |
+| 1.4.13 | hover/focus로 나타나는 콘텐츠       | Tooltip, Popover                          |
 
 - 2.1.1(키보드) 관련 규칙은 `frame-focusable-content`, `scrollable-region-focusable`, `server-side-image-map`뿐이다. 정적 검사라서 실제로 키보드로 조작되는지는 보지 않는다.
 - `focus-order-semantics`는 experimental 규칙이며 기본으로 꺼져 있다.
@@ -186,12 +186,12 @@
 
 ### 선택지 비교
 
-| 선택지 | 방식 | 비용 | 기준 이미지 위치 |
-| --- | --- | --- | --- |
-| **Chromatic** | story를 클라우드에서 촬영해 비교. `@chromatic-com/storybook` addon으로 Storybook UI에서 실행 | Free: 월 5,000 billed snapshot, Chrome만. Starter $179/월(35,000, Safari·Firefox·Edge). Pro $399/월(85,000). 초과분 $0.008 | Chromatic 클라우드 |
-| **Argos** | 스크린샷을 업로드해 비교(Storybook, Playwright 등). OSS | Hobby $0: 월 5,000 스크린샷, 개인 개발자, 상업 이용과 private 저장소 가능. Pro $100/월부터(35,000 포함) | Argos 클라우드 |
-| **Vitest `toMatchScreenshot`** | Browser Mode에서 요소를 찍어 저장소의 기준 이미지와 비교. Vitest 4부터 | 무료(CI 시간만) | 저장소 `__screenshots__/`(커밋) |
-| **Playwright `toHaveScreenshot`** | Playwright Test에서 페이지나 요소를 비교 | 무료 | 저장소 `*-snapshots/`(커밋) |
+| 선택지                            | 방식                                                                                         | 비용                                                                                                                       | 기준 이미지 위치                |
+| --------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| **Chromatic**                     | story를 클라우드에서 촬영해 비교. `@chromatic-com/storybook` addon으로 Storybook UI에서 실행 | Free: 월 5,000 billed snapshot, Chrome만. Starter $179/월(35,000, Safari·Firefox·Edge). Pro $399/월(85,000). 초과분 $0.008 | Chromatic 클라우드              |
+| **Argos**                         | 스크린샷을 업로드해 비교(Storybook, Playwright 등). OSS                                      | Hobby $0: 월 5,000 스크린샷, 개인 개발자, 상업 이용과 private 저장소 가능. Pro $100/월부터(35,000 포함)                    | Argos 클라우드                  |
+| **Vitest `toMatchScreenshot`**    | Browser Mode에서 요소를 찍어 저장소의 기준 이미지와 비교. Vitest 4부터                       | 무료(CI 시간만)                                                                                                            | 저장소 `__screenshots__/`(커밋) |
+| **Playwright `toHaveScreenshot`** | Playwright Test에서 페이지나 요소를 비교                                                     | 무료                                                                                                                       | 저장소 `*-snapshots/`(커밋)     |
 
 출처: [Chromatic Pricing](https://www.chromatic.com/pricing), [Chromatic Billing](https://www.chromatic.com/docs/billing/), [Argos Pricing](https://argos-ci.com/pricing), [Vitest Visual Regression Testing](https://github.com/vitest-dev/vitest/blob/v5.1.0/docs/guide/browser/visual-regression-testing.md), [Playwright Visual comparisons](https://github.com/microsoft/playwright/blob/v1.65.0/docs/src/test-snapshots-js.md), [Storybook Visual tests](https://github.com/storybookjs/storybook/blob/v10.6.6/docs/writing-tests/visual-testing.mdx)
 
@@ -232,16 +232,16 @@
 
 24번에서 미뤘던 패턴을 그대로 만들었다. light raised(`border: 1px solid transparent` + 2레이어 box-shadow), field(`outline: 2px solid transparent` + inset box-shadow), 버튼 ring(`outline: 2px solid #3183f5`, offset 2px).
 
-| 항목 | 기본 | Chromium 158 `forcedColors: 'active'` | Firefox 159 | WebKit 27.2 |
-| --- | --- | --- | --- | --- |
-| `matchMedia('(forced-colors: active)')` | false | true | true | true |
-| raised 투명 border의 계산값 | `rgba(0,0,0,0)` | **`rgb(0,0,0)`**(보임) | **`rgb(0,0,0)`** | `rgba(0,0,0,0)`(변화 없음) |
-| raised box-shadow | 2레이어 | **`none`** | **`none`** | 그대로 |
-| field 투명 outline | 투명 | **`rgb(0,0,0)`** | **`rgb(0,0,0)`** | 투명 그대로 |
-| field inset box-shadow | 파랑 | `none` | `none` | 그대로 |
-| 버튼 ring outline | `#3183f5` | `rgb(0,0,0)` | `rgb(0,0,0)` | 그대로 |
-| 버튼 배경 | `#1f6fe0` | `rgb(255,255,255)` | `rgb(233,233,237)` | 그대로 |
-| `page.emulateMedia({ forcedColors: 'active' })`로 런타임 전환 | — | 렌더링까지 바뀜 | 렌더링까지 바뀜 | 미디어 쿼리만 바뀜 |
+| 항목                                                          | 기본            | Chromium 158 `forcedColors: 'active'` | Firefox 159        | WebKit 27.2                |
+| ------------------------------------------------------------- | --------------- | ------------------------------------- | ------------------ | -------------------------- |
+| `matchMedia('(forced-colors: active)')`                       | false           | true                                  | true               | true                       |
+| raised 투명 border의 계산값                                   | `rgba(0,0,0,0)` | **`rgb(0,0,0)`**(보임)                | **`rgb(0,0,0)`**   | `rgba(0,0,0,0)`(변화 없음) |
+| raised box-shadow                                             | 2레이어         | **`none`**                            | **`none`**         | 그대로                     |
+| field 투명 outline                                            | 투명            | **`rgb(0,0,0)`**                      | **`rgb(0,0,0)`**   | 투명 그대로                |
+| field inset box-shadow                                        | 파랑            | `none`                                | `none`             | 그대로                     |
+| 버튼 ring outline                                             | `#3183f5`       | `rgb(0,0,0)`                          | `rgb(0,0,0)`       | 그대로                     |
+| 버튼 배경                                                     | `#1f6fe0`       | `rgb(255,255,255)`                    | `rgb(233,233,237)` | 그대로                     |
+| `page.emulateMedia({ forcedColors: 'active' })`로 런타임 전환 | —               | 렌더링까지 바뀜                       | 렌더링까지 바뀜    | 미디어 쿼리만 바뀜         |
 
 - **Chromium과 Firefox는 forced colors 렌더링까지 적용한다.** Chromium 스크린샷에서도 raised의 경계선, field의 굵은 테두리, 버튼 테두리가 검은 선으로 보였다.
 - **WebKit은 미디어 쿼리만 true가 되고 색 강제는 하지 않는다.** WebKit으로는 forced-colors 시각 검증을 할 수 없다.
@@ -279,11 +279,11 @@
 
 ### 실험: 직접 계산과 라이브러리 비교 (`#3183f5` 대 `#ffffff`)
 
-| 방식 | 결과 |
-| --- | --- |
-| 직접 작성(위 공식, 약 10줄) | 3.6870386333147316 |
-| `culori` 4.0.2 `wcagContrast()` | 3.6870386333147316 |
-| `wcag-contrast` 3.0.0 `hex()` | 3.6870386333147316 |
+| 방식                                         | 결과                                            |
+| -------------------------------------------- | ----------------------------------------------- |
+| 직접 작성(위 공식, 약 10줄)                  | 3.6870386333147316                              |
+| `culori` 4.0.2 `wcagContrast()`              | 3.6870386333147316                              |
+| `wcag-contrast` 3.0.0 `hex()`                | 3.6870386333147316                              |
 | `colorjs.io` 0.7.1 `contrast(..., 'WCAG21')` | 3.6872060144019243(**소수 넷째 자리부터 다름**) |
 
 - 128쌍을 계산하는 데 약 0.2ms가 걸렸다. 브라우저도 DOM도 필요 없다.
@@ -302,12 +302,12 @@
 
 ### 공개 저장소 사례 (GitHub 코드 검색, 2026-11-09)
 
-| 저장소 | 하는 일 |
-| --- | --- |
-| [sachinchoolur/lightGallery `ci.yml`](https://github.com/sachinchoolur/lightGallery/blob/main/.github/workflows/ci.yml) | `pnpm pack` → tarball마다 `publint --strict` → 임시 consumer 앱(Vite build + `vue-tsc`, Nuxt SSR prerender, Angular AOT+SSR)에 설치 |
-| [zanreal-labs/nemo `nextjs-compat.yml`](https://github.com/zanreal-labs/nemo/blob/canary/.github/workflows/nextjs-compat.yml) | `npm pack` → `next@latest`와 `next@preview` matrix에서 `next build` |
-| [nextlyhq/nextly `package-smoke.yml`](https://github.com/nextlyhq/nextly/blob/main/.github/workflows/package-smoke.yml) | tarball 설치 후 Next.js가 서브패스를 다루는 방식과 `"use client"` 배너를 검사 |
-| [MoleCare/react-body-map `ci.yml`](https://github.com/MoleCare/react-body-map/blob/main/.github/workflows/ci.yml) | peer 범위의 가장 낮은 React로 server render, `"use client"`, 타입을 tarball consumer에서 검사 |
+| 저장소                                                                                                                        | 하는 일                                                                                                                             |
+| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [sachinchoolur/lightGallery `ci.yml`](https://github.com/sachinchoolur/lightGallery/blob/main/.github/workflows/ci.yml)       | `pnpm pack` → tarball마다 `publint --strict` → 임시 consumer 앱(Vite build + `vue-tsc`, Nuxt SSR prerender, Angular AOT+SSR)에 설치 |
+| [zanreal-labs/nemo `nextjs-compat.yml`](https://github.com/zanreal-labs/nemo/blob/canary/.github/workflows/nextjs-compat.yml) | `npm pack` → `next@latest`와 `next@preview` matrix에서 `next build`                                                                 |
+| [nextlyhq/nextly `package-smoke.yml`](https://github.com/nextlyhq/nextly/blob/main/.github/workflows/package-smoke.yml)       | tarball 설치 후 Next.js가 서브패스를 다루는 방식과 `"use client"` 배너를 검사                                                       |
+| [MoleCare/react-body-map `ci.yml`](https://github.com/MoleCare/react-body-map/blob/main/.github/workflows/ci.yml)             | peer 범위의 가장 낮은 React로 server render, `"use client"`, 타입을 tarball consumer에서 검사                                       |
 
 이 저장소들의 품질은 평가하지 않았다. 구성 방식의 예로만 든다.
 
@@ -315,13 +315,13 @@
 
 ESM `dist`(`Button.js`에 `"use client"`와 `useState`, `index.js` 재export), d.ts(`./Button.js` 확장자 포함)를 담은 `@tide-tds/desktop` 흉내 패키지를 `pnpm pack`했다. 그리고 workspace 밖의 Next 16.4.5 앱(TS 7.0.2)에 `file:` tarball로 설치했다.
 
-| 단계 | 결과 | 시간 |
-| --- | --- | --- |
-| `pnpm install`(store가 이미 채워진 상태) | 통과 | 1.2s |
-| `tsc -p`(TS 7.0.2, `moduleResolution: nodenext`, `skipLibCheck: false`, Tide d.ts만 대상) | 통과 | 0.5s |
-| `next build`(Turbopack, TS 검사 포함, 서버 컴포넌트 `page.tsx`에서 import) | 통과, `/` 정적 prerender | 2.8s(컴파일 1.0s, TypeScript 0.2s) |
-| `attw <tgz> --profile esm-only` | `node16 (from ESM)`과 `bundler` 🟢 | 0.6s |
-| `publint` | All good | 1s 미만 |
+| 단계                                                                                      | 결과                               | 시간                               |
+| ----------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
+| `pnpm install`(store가 이미 채워진 상태)                                                  | 통과                               | 1.2s                               |
+| `tsc -p`(TS 7.0.2, `moduleResolution: nodenext`, `skipLibCheck: false`, Tide d.ts만 대상) | 통과                               | 0.5s                               |
+| `next build`(Turbopack, TS 검사 포함, 서버 컴포넌트 `page.tsx`에서 import)                | 통과, `/` 정적 prerender           | 2.8s(컴파일 1.0s, TypeScript 0.2s) |
+| `attw <tgz> --profile esm-only`                                                           | `node16 (from ESM)`과 `bundler` 🟢 | 0.6s                               |
+| `publint`                                                                                 | All good                           | 1s 미만                            |
 
 **대조 실험**(각 검사가 실제로 문제를 잡는지)
 

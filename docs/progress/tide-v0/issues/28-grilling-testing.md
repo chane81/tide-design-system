@@ -33,12 +33,12 @@ Blocked by: 26, 27
 
 Vitest `projects`로 층을 나눈다. jsdom과 happy-dom은 쓰지 않는다.
 
-| project | 환경 | 대상 |
-| --- | --- | --- |
-| `unit` | Node | Token 대비 쌍 128개(「컬러 Foundation 결정」, `focus-ring` 쌍 포함), Semantic 색 Utility namespace 노출(생성된 CSS 검사), `cn`과 tailwind-merge 설정, variant 맵 |
-| `browser` | Vitest Browser Mode + Playwright Chromium | Component 동작 `*.test.tsx`: 키보드, ARIA, 포커스 |
-| `browser`의 두 번째 instance | Chromium + `contextOptions` `forcedColors: 'active'`, `reducedMotion: 'reduce'` | forced-colors와 reduced-motion 계산값 단언 |
-| `storybook` | `@storybook/addon-vitest` + Chromium | 모든 story 렌더 smoke와 a11y 검사 |
+| project                      | 환경                                                                            | 대상                                                                                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `unit`                       | Node                                                                            | Token 대비 쌍 128개(「컬러 Foundation 결정」, `focus-ring` 쌍 포함), Semantic 색 Utility namespace 노출(생성된 CSS 검사), `cn`과 tailwind-merge 설정, variant 맵 |
+| `browser`                    | Vitest Browser Mode + Playwright Chromium                                       | Component 동작 `*.test.tsx`: 키보드, ARIA, 포커스                                                                                                                |
+| `browser`의 두 번째 instance | Chromium + `contextOptions` `forcedColors: 'active'`, `reducedMotion: 'reduce'` | forced-colors와 reduced-motion 계산값 단언                                                                                                                       |
+| `storybook`                  | `@storybook/addon-vitest` + Chromium                                            | 모든 story 렌더 smoke와 a11y 검사                                                                                                                                |
 
 - **Browser Mode를 고른 이유**: jsdom에는 `matchMedia`가 없고, jsdom·happy-dom 모두 레이아웃 크기가 0이다. 실제 브라우저에서는 React Aria의 포커스·위치 계산을 mock으로 메울 필요가 없다. 대가로 React Aria 공식 테스트 예시와 `@react-aria/test-utils`(jsdom 전제)는 쓰지 않는다.
 - **interaction test 위치**: 동작 단언은 모두 `*.test.tsx`에 둔다. Vitest `userEvent`는 CDP로 실제 이벤트를 보낸다. story는 문서, 렌더 smoke, a11y만 맡고 `play` 함수는 쓰지 않는다.

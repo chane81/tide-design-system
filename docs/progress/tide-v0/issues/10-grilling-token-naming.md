@@ -28,24 +28,24 @@ Semantic 색은 **Tailwind 속성별 namespace**로 노출하고, Token 원본�
 
 색상 이름을 쓴다. 역할 이름은 Semantic에서만 쓴다.
 
-| 계열 | 대응 Role | hue |
-|---|---|---|
-| `blue` | primary | 257.8 |
-| `gray` | neutral | 257.8 |
-| `green` | success | 150 |
-| `amber` | warning | 75 |
-| `red` | danger | 27 |
-| `cyan` | info | 225 |
+| 계열    | 대응 Role | hue   |
+| ------- | --------- | ----- |
+| `blue`  | primary   | 257.8 |
+| `gray`  | neutral   | 257.8 |
+| `green` | success   | 150   |
+| `amber` | warning   | 75    |
+| `red`   | danger    | 27    |
+| `cyan`  | info      | 225   |
 
 그 외에 `white`, `black`을 둔다. 단계는 `50`~`950`(11단계)이다. 「컬러 스케일 후보 시각 비교」의 초안 표에 있는 `success`/`warning`/`danger`/`info` 계열은 각각 위 이름으로 바꾼다.
 
 ### Semantic 이름 문법
 
-| 형태 | 예 |
-|---|---|
+| 형태                                         | 예                                           |
+| -------------------------------------------- | -------------------------------------------- |
 | `bg-<역할>-<solid\|subtle>[-hover\|-active]` | `bg-primary-solid`, `bg-danger-subtle-hover` |
-| `text-<역할>` (neutral 제외) | `text-primary`, `text-danger` |
-| `border-<역할>` (neutral 제외) | `border-success` |
+| `text-<역할>` (neutral 제외)                 | `text-primary`, `text-danger`                |
+| `border-<역할>` (neutral 제외)               | `border-success`                             |
 
 - 강도(`solid`/`subtle`)는 생략하지 않는다. 강도 없는 `bg-primary`는 없다.
 - 상태 접미사는 CSS 의사 클래스 이름을 따라 `-hover`, `-active`로 한다. 실제 사용 예: `hover:bg-primary-solid-hover`.

@@ -34,11 +34,11 @@ apps/docs             → Storybook 10.6.6 (private, 배포 안 함)
 
 ### `@tide-tds/foundation`
 
-| exports | 내용 |
-| --- | --- |
-| `.` | Token TS 객체(Primitive, Semantic, 타이포그래피, radius, shadow 등)를 컴파일한 JS와 d.ts |
-| `./tokens.css` | `--tide-*` 변수와 `[data-theme]` 덮어쓰기만 담는다. Tailwind 문법은 쓰지 않는다. Tailwind 없이 쓰는 사용자의 공개 계약이다(ADR 0003) |
-| `./tailwind.css` | `tokens.css`를 `@import`하고, `--color-*: initial`, `@theme inline`, `@custom-variant dark`, base CSS(`keep-all`)를 담는다 |
+| exports            | 내용                                                                                                                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `.`                | Token TS 객체(Primitive, Semantic, 타이포그래피, radius, shadow 등)를 컴파일한 JS와 d.ts                                                                                                                                 |
+| `./tokens.css`     | `--tide-*` 변수와 `[data-theme]` 덮어쓰기만 담는다. Tailwind 문법은 쓰지 않는다. Tailwind 없이 쓰는 사용자의 공개 계약이다(ADR 0003)                                                                                     |
+| `./tailwind.css`   | `tokens.css`를 `@import`하고, `--color-*: initial`, `@theme inline`, `@custom-variant dark`, base CSS(`keep-all`)를 담는다                                                                                               |
 | `./tailwind-merge` | 생성된 tailwind-merge 설정 객체. `import type { ConfigExtension }`만 쓰고 런타임에서는 tailwind-merge에 의존하지 않는다(tailwind-merge 3.7.0 타입 선언으로 확인). 내장 `validators`가 필요하면 직접 만든 함수로 대체한다 |
 
 - 원본은 `src/`, 생성 스크립트는 `scripts/build-css.ts`에 둔다. 스크립트는 Node 26에서 `.ts` 파일을 바로 실행한다(type stripping은 v22.18.0, v23.6.0부터 플래그 없이 동작). JS와 d.ts는 TS 7 `tsc`로 만든다. 번들러는 쓰지 않는다.
@@ -85,10 +85,10 @@ apps/docs             → Storybook 10.6.6 (private, 배포 안 함)
 {
   "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
-    "build":     { "dependsOn": ["^build"], "outputs": ["dist/**", "storybook-static/**"] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "storybook-static/**"] },
     "typecheck": { "dependsOn": ["^build"] },
-    "test":      { "dependsOn": ["^build"] },
-    "dev":       { "dependsOn": ["^build"], "cache": false, "persistent": true }
+    "test": { "dependsOn": ["^build"] },
+    "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true }
   }
 }
 ```

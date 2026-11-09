@@ -19,11 +19,11 @@ motion은 **적게, 자주 쓰는 곳일수록 더 적게** 쓴다. 참고 자�
 
 ### 1. Token
 
-| 종류 | 이름 | 값 | 쓰는 곳 |
-|---|---|---|---|
-| duration | `fast` | 150ms | hover·press, 색 전환, Switch thumb, 오버레이가 사라질 때 |
-| duration | `normal` | 300ms | 가끔 쓰는 오버레이가 나타날 때 |
-| easing | `out` | `cubic-bezier(0, 0, 0.2, 1)` (Tailwind `ease-out`과 같음) | Tide Component 전부. 나타날 때와 사라질 때 모두 |
+| 종류     | 이름     | 값                                                        | 쓰는 곳                                                  |
+| -------- | -------- | --------------------------------------------------------- | -------------------------------------------------------- |
+| duration | `fast`   | 150ms                                                     | hover·press, 색 전환, Switch thumb, 오버레이가 사라질 때 |
+| duration | `normal` | 300ms                                                     | 가끔 쓰는 오버레이가 나타날 때                           |
+| easing   | `out`    | `cubic-bezier(0, 0, 0.2, 1)` (Tailwind `ease-out`과 같음) | Tide Component 전부. 나타날 때와 사라질 때 모두          |
 
 - 들어올 때는 길게, 나갈 때는 짧게만 구분한다. Dialog만 따로 느리게 둘 근거가 없다(③ 단순함).
 - easing은 하나다. Tailwind의 `ease-in`, `ease-in-out`은 지우지 않고 남겨 앱 코드가 쓸 수 있게 한다.
@@ -39,11 +39,11 @@ motion은 **적게, 자주 쓰는 곳일수록 더 적게** 쓴다. 참고 자�
 
 하루에 수백 번 여닫는 UI에 300ms 애니메이션을 넣으면, 사용자는 1년에 몇 시간을 애니메이션을 기다리는 데 쓴다(jakub.kr 「Less is more」의 macOS 우클릭 메뉴 예). 그래서 자주 쓰는 UI는 바로 반응하게 한다(② 명확함).
 
-| 구분 | Component | 나타날 때 | 사라질 때 |
-|---|---|---|---|
-| 자주 씀 | Menu, Select·Combobox 목록, Tooltip | 바로(애니메이션 없음) | opacity만, `fast` |
-| 가끔 씀 | Popover, Toast | opacity + blur 4px + translate **4px**, `normal` | 같은 조합을 약하게(거리·blur 절반), `fast` |
-| 가끔 씀 | Dialog, AlertDialog | opacity + scale 0.96 → 1, `normal`. 큰 면적이라 blur는 넣지 않음 | 같은 조합을 약하게, `fast` |
+| 구분    | Component                           | 나타날 때                                                        | 사라질 때                                  |
+| ------- | ----------------------------------- | ---------------------------------------------------------------- | ------------------------------------------ |
+| 자주 씀 | Menu, Select·Combobox 목록, Tooltip | 바로(애니메이션 없음)                                            | opacity만, `fast`                          |
+| 가끔 씀 | Popover, Toast                      | opacity + blur 4px + translate **4px**, `normal`                 | 같은 조합을 약하게(거리·blur 절반), `fast` |
+| 가끔 씀 | Dialog, AlertDialog                 | opacity + scale 0.96 → 1, `normal`. 큰 면적이라 blur는 넣지 않음 | 같은 조합을 약하게, `fast`                 |
 
 - Popover는 트리거에서 멀어지는 방향으로, Toast는 아래에서 위로 움직인다.
 - 구현은 CSS transition, `@starting-style`, `transition-behavior: allow-discrete`로 한다. 지원하지 않는 브라우저에서는 그냥 바로 나타나고 사라진다(jakub 문서 기준 `@starting-style`·discrete transition은 Baseline 2024, `overlay` 속성은 Chromium 전용).

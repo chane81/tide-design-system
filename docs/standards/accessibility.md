@@ -4,15 +4,15 @@
 
 Tide의 최소 기준은 **WCAG 2.2 AA**다([W3C 권고안](https://www.w3.org/TR/WCAG22/)). 아래 표는 Tide의 Foundation과 Component에 직접 영향을 주는 항목만 골라 정리한 것이다. 세부 판정은 원문을 따른다.
 
-| 항목 | WCAG 성공 기준 | 수준 | Tide에서 지킬 것 |
-| --- | --- | --- | --- |
-| 텍스트 대비 | [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum) | AA | 일반 텍스트는 4.5:1 이상, 큰 텍스트는 3:1 이상. 텍스트용 Semantic Token 조합은 모두 이 기준을 통과해야 한다 |
-| UI 요소 대비 | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast) | AA | 입력 테두리, 아이콘, 포커스 표시는 인접한 색과 3:1 이상 |
-| 색에만 의존하지 않기 | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color) | A | error, success 같은 상태는 색과 함께 아이콘이나 텍스트로도 표시한다 |
-| 키보드 | [2.1.1 Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard) | A | 모든 상호작용 Component는 키보드만으로 조작할 수 있어야 한다 |
-| 포커스 표시 | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible) | AA | 포커스 링을 제거하지 않는다 |
-| 포커스 가림 | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum) | AA | sticky 영역이나 overlay가 포커스된 요소를 완전히 가리지 않는다 |
-| 터치 영역 | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum) | AA | 클릭 대상은 24×24 CSS px 이상(예외 조건은 원문 참고) |
+| 항목                 | WCAG 성공 기준                                                                                                | 수준 | Tide에서 지킬 것                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| 텍스트 대비          | [1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum)                      | AA   | 일반 텍스트는 4.5:1 이상, 큰 텍스트는 3:1 이상. 텍스트용 Semantic Token 조합은 모두 이 기준을 통과해야 한다 |
+| UI 요소 대비         | [1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast)                     | AA   | 입력 테두리, 아이콘, 포커스 표시는 인접한 색과 3:1 이상                                                     |
+| 색에만 의존하지 않기 | [1.4.1 Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color)                                | A    | error, success 같은 상태는 색과 함께 아이콘이나 텍스트로도 표시한다                                         |
+| 키보드               | [2.1.1 Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard)                                        | A    | 모든 상호작용 Component는 키보드만으로 조작할 수 있어야 한다                                                |
+| 포커스 표시          | [2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible)                              | AA   | 포커스 링을 제거하지 않는다                                                                                 |
+| 포커스 가림          | [2.4.11 Focus Not Obscured (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum) | AA   | sticky 영역이나 overlay가 포커스된 요소를 완전히 가리지 않는다                                              |
+| 터치 영역            | [2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum)                | AA   | 클릭 대상은 24×24 CSS px 이상(예외 조건은 원문 참고)                                                        |
 
 ## Tide가 덧붙이는 규칙
 

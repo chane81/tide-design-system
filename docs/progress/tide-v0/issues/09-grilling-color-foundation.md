@@ -28,22 +28,22 @@ Semantic 색은 **역할(Role) 6개 × 속성 6개**로 구성한다. dark Theme
 
 ### 표면(surface) 계층
 
-| 층 | 용도 | light | dark |
-|---|---|---|---|
-| canvas | 페이지 배경 | white | gray-950 |
-| surface | 카드, 패널 | white(+border) | gray-950(+border) |
-| raised | popover, dropdown, modal | white(+shadow) | gray-900(+border) |
+| 층      | 용도                     | light          | dark              |
+| ------- | ------------------------ | -------------- | ----------------- |
+| canvas  | 페이지 배경              | white          | gray-950          |
+| surface | 카드, 패널               | white(+border) | gray-950(+border) |
+| raised  | popover, dropdown, modal | white(+shadow) | gray-900(+border) |
 
 dark에서는 그림자가 잘 보이지 않으므로, 높이를 주로 표면 밝기로 표현한다. dark에서 표면으로 쓰는 가장 밝은 단계는 900이다. 800을 표면으로 쓰면 역할 text와 muted text가 4.5:1에 못 미친다.
 
 ### 역할별 Token
 
-| Token(가칭) | light | dark |
-|---|---|---|
-| bg solid / hover / active | 600 / 700 / 800 | 600 / 700 / 800 (light와 같음) |
-| bg subtle / hover / active | 50 / 100 / 200 | 950 / 900 / 800 · **neutral만** 900 / 800 / 700 |
-| text (역할색 글자) | 800 | 200 · neutral은 아래 `default`를 씀 |
-| border (역할색 테두리) | 600 | 400 |
+| Token(가칭)                | light           | dark                                            |
+| -------------------------- | --------------- | ----------------------------------------------- |
+| bg solid / hover / active  | 600 / 700 / 800 | 600 / 700 / 800 (light와 같음)                  |
+| bg subtle / hover / active | 50 / 100 / 200  | 950 / 900 / 800 · **neutral만** 900 / 800 / 700 |
+| text (역할색 글자)         | 800             | 200 · neutral은 아래 `default`를 씀             |
+| border (역할색 테두리)     | 600             | 400                                             |
 
 - solid는 두 Theme 모두 600을 쓴다. 흰 글자 대비가 5.05:1이기 때문이다. dark에서 hover를 밝은 쪽(500)으로 가면 흰 글자 대비가 3.69가 되므로, hover와 active는 두 Theme 모두 **진해지는 방향**으로 간다.
 - blue 600과 dark canvas의 대비는 2.88이다. 버튼은 글자 라벨로 식별되므로 WCAG 1.4.11상 배경 경계에는 대비 요건이 없다.
@@ -52,18 +52,18 @@ dark에서는 그림자가 잘 보이지 않으므로, 높이를 주로 표면 �
 
 ### 공통 Token
 
-| Token(가칭) | light | dark | 대비 검사 |
-|---|---|---|---|
-| text default | gray-900 | gray-50 | 4.5:1 |
-| text muted | gray-600 | gray-300 | 4.5:1 |
-| text disabled | gray-400 | gray-600 | 제외 |
-| on-solid (solid 위 글자, 모든 역할 공통) | white | white | 4.5:1 |
-| border default (구분선, 장식용) | gray-200 | gray-800 | 제외 |
-| border strong (입력창 등 UI 식별용) | gray-500 | gray-400 | 3:1 |
-| focus-ring | blue-600 | blue-400 | canvas, raised 위 3:1 |
-| bg disabled | gray-100 | gray-900 | 제외 |
-| overlay (modal 배경) | gray-950, alpha 50% | gray-950, alpha 70% | — |
-| shadow 색 | gray-950, alpha 12% | black, alpha 40% | — |
+| Token(가칭)                              | light               | dark                | 대비 검사             |
+| ---------------------------------------- | ------------------- | ------------------- | --------------------- |
+| text default                             | gray-900            | gray-50             | 4.5:1                 |
+| text muted                               | gray-600            | gray-300            | 4.5:1                 |
+| text disabled                            | gray-400            | gray-600            | 제외                  |
+| on-solid (solid 위 글자, 모든 역할 공통) | white               | white               | 4.5:1                 |
+| border default (구분선, 장식용)          | gray-200            | gray-800            | 제외                  |
+| border strong (입력창 등 UI 식별용)      | gray-500            | gray-400            | 3:1                   |
+| focus-ring                               | blue-600            | blue-400            | canvas, raised 위 3:1 |
+| bg disabled                              | gray-100            | gray-900            | 제외                  |
+| overlay (modal 배경)                     | gray-950, alpha 50% | gray-950, alpha 70% | —                     |
+| shadow 색                                | gray-950, alpha 12% | black, alpha 40%    | —                     |
 
 - focus-ring은 요소에서 offset을 두고 그려서 canvas나 surface와 맞닿게 한다. 오류 상태에서도 색을 바꾸지 않는다.
 - alpha는 overlay와 shadow 두 Token에서만 쓴다. 값은 8자리 hex로 쓴다. Primitive에는 alpha 스케일을 두지 않는다.

@@ -40,12 +40,12 @@ v0 Component 안에서 쓸 아이콘과, 사용자에게 제공할 아이콘을 
 
 ### 3. 크기와 선 두께
 
-| Component size | 텍스트 스타일 | 텍스트 옆 아이콘 | IconButton 아이콘 |
-|---|---|---|---|
-| xs (24px) | `label-sm` 12px | 14px | 16px |
-| sm (32px) | `label-sm` 12px | 14px | 16px |
-| md (40px) | `label-md` 14px | 16px | 20px |
-| lg (48px) | `label-lg` 16px | 20px | 24px |
+| Component size | 텍스트 스타일   | 텍스트 옆 아이콘 | IconButton 아이콘 |
+| -------------- | --------------- | ---------------- | ----------------- |
+| xs (24px)      | `label-sm` 12px | 14px             | 16px              |
+| sm (32px)      | `label-sm` 12px | 14px             | 16px              |
+| md (40px)      | `label-md` 14px | 16px             | 20px              |
+| lg (48px)      | `label-lg` 16px | 20px             | 24px              |
 
 - 선 두께는 렌더 기준으로 label(굵기 500) 옆에서 2px, body(굵기 400) 옆에서 1.5px다.
 - sm 텍스트 옆 아이콘은 24번에서 14px와 16px를 Pretendard와 나란히 놓고 비교해 **14px**로 정했다(1.17em, jakub 범위 1~1.25em 안).

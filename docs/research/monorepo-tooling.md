@@ -7,39 +7,39 @@
 
 ## 1. 최신 안정 버전 (npm `latest` 태그, 2026-11-08 기준)
 
-| 패키지 | latest | 배포일 | 참고 (다른 dist-tag) |
-| --- | --- | --- | --- |
-| `vite` | 8.3.6 | 2026-11-05 | beta 8.3.0-beta.1 |
-| `vitest` | 5.1.0 | 2026-11-02 | V4 4.1.12, V3 3.2.7 |
-| `storybook` / `@storybook/react-vite` | 10.6.6 | 2026-11-05 | next 11.0.0-beta.0 |
-| `typescript` | 7.0.2 | 2026-07-08 | beta 7.1.0-beta |
-| `oxlint` | 1.92.0 | 2026-11-06 | |
-| `oxfmt` | 0.77.0 | 2026-11-06 | 0.x 계열(1.0 미만) |
-| `pnpm` | 12.18.0 | 2026-11-05 | latest-11 11.28.9, latest-10 10.34.9 |
-| `@changesets/cli` | 3.0.3 | 2026-09-14 | maintenance-v2 2.31.1 |
-| `tailwindcss` / `@tailwindcss/vite` | 4.3.5 | 2026-11-06 | v3-lts 3.4.19 |
-| `@vitejs/plugin-react` | 6.2.1 | | |
-| `vite-plugin-dts` | 5.1.2 | 2026-10-03 | |
-| `tsdown` | 0.23.7 | 2026-11-06 | |
-| `@storybook/addon-vitest` | 10.6.6 | | |
-| `@vitest/browser-playwright` | 5.1.0 | | |
-| `oxlint-tsgolint` | 7.0.2006 | | |
-| `@typescript/typescript6` | 6.0.2 | | |
+| 패키지                                | latest   | 배포일     | 참고 (다른 dist-tag)                 |
+| ------------------------------------- | -------- | ---------- | ------------------------------------ |
+| `vite`                                | 8.3.6    | 2026-11-05 | beta 8.3.0-beta.1                    |
+| `vitest`                              | 5.1.0    | 2026-11-02 | V4 4.1.12, V3 3.2.7                  |
+| `storybook` / `@storybook/react-vite` | 10.6.6   | 2026-11-05 | next 11.0.0-beta.0                   |
+| `typescript`                          | 7.0.2    | 2026-07-08 | beta 7.1.0-beta                      |
+| `oxlint`                              | 1.92.0   | 2026-11-06 |                                      |
+| `oxfmt`                               | 0.77.0   | 2026-11-06 | 0.x 계열(1.0 미만)                   |
+| `pnpm`                                | 12.18.0  | 2026-11-05 | latest-11 11.28.9, latest-10 10.34.9 |
+| `@changesets/cli`                     | 3.0.3    | 2026-09-14 | maintenance-v2 2.31.1                |
+| `tailwindcss` / `@tailwindcss/vite`   | 4.3.5    | 2026-11-06 | v3-lts 3.4.19                        |
+| `@vitejs/plugin-react`                | 6.2.1    |            |                                      |
+| `vite-plugin-dts`                     | 5.1.2    | 2026-10-03 |                                      |
+| `tsdown`                              | 0.23.7   | 2026-11-06 |                                      |
+| `@storybook/addon-vitest`             | 10.6.6   |            |                                      |
+| `@vitest/browser-playwright`          | 5.1.0    |            |                                      |
+| `oxlint-tsgolint`                     | 7.0.2006 |            |                                      |
+| `@typescript/typescript6`             | 6.0.2    |            |                                      |
 
 출처: `npm view <pkg> version`, `npm view <pkg> dist-tags`, `npm view <pkg> time`.
 
 ## 2. 서로의 호환성 (peerDependencies / engines)
 
-| 패키지 | 요구 사항 | 출처 |
-| --- | --- | --- |
-| `@storybook/react-vite@10.6.6` | `vite ^5 \|\| ^6 \|\| ^7 \|\| ^8`, `react ^16.8 ~ ^19`, `typescript >= 4.9.x` | `npm view @storybook/react-vite peerDependencies` |
-| `vitest@5.1.0` | `vite ^6.4.0 \|\| ^7 \|\| ^8` | `npm view vitest peerDependencies` |
-| `@tailwindcss/vite@4.3.5` | `vite ^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8` | `npm view @tailwindcss/vite peerDependencies` |
-| `@vitejs/plugin-react@6.2.1` | `vite ^8.0.0` (Vite 8 전용) | `npm view @vitejs/plugin-react peerDependencies` |
-| `@storybook/addon-vitest@10.6.6` | `vitest ^4 \|\| ^5`, `@vitest/browser-playwright ^4 \|\| ^5` | `npm view @storybook/addon-vitest peerDependencies` |
-| `@changesets/cli@3.0.3` | engines: node `^22.11 \|\| ^24 \|\| >=26`, pnpm `>=10.0.0` | `npm view @changesets/cli engines` |
-| `storybook@10.6.6` | engines: node `^22.12.0 \|\| ^24 \|\| >=26` | `npm view storybook engines` |
-| `vite@8.3.6`, `vitest@5.1.0` | engines: node `^20.19.0 \|\| >=22.12.0` | `npm view vite engines` |
+| 패키지                           | 요구 사항                                                                     | 출처                                                |
+| -------------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------- |
+| `@storybook/react-vite@10.6.6`   | `vite ^5 \|\| ^6 \|\| ^7 \|\| ^8`, `react ^16.8 ~ ^19`, `typescript >= 4.9.x` | `npm view @storybook/react-vite peerDependencies`   |
+| `vitest@5.1.0`                   | `vite ^6.4.0 \|\| ^7 \|\| ^8`                                                 | `npm view vitest peerDependencies`                  |
+| `@tailwindcss/vite@4.3.5`        | `vite ^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8`                                         | `npm view @tailwindcss/vite peerDependencies`       |
+| `@vitejs/plugin-react@6.2.1`     | `vite ^8.0.0` (Vite 8 전용)                                                   | `npm view @vitejs/plugin-react peerDependencies`    |
+| `@storybook/addon-vitest@10.6.6` | `vitest ^4 \|\| ^5`, `@vitest/browser-playwright ^4 \|\| ^5`                  | `npm view @storybook/addon-vitest peerDependencies` |
+| `@changesets/cli@3.0.3`          | engines: node `^22.11 \|\| ^24 \|\| >=26`, pnpm `>=10.0.0`                    | `npm view @changesets/cli engines`                  |
+| `storybook@10.6.6`               | engines: node `^22.12.0 \|\| ^24 \|\| >=26`                                   | `npm view storybook engines`                        |
+| `vite@8.3.6`, `vitest@5.1.0`     | engines: node `^20.19.0 \|\| >=22.12.0`                                       | `npm view vite engines`                             |
 
 정리: 위 최신 버전끼리는 peer 범위상 충돌이 없다. Node는 가장 엄격한 쪽(Storybook 10, changesets 3)에 맞춰 **22.12 이상**이 필요하다. `@vitejs/plugin-react` 6은 Vite 8만 지원한다.
 
@@ -56,20 +56,22 @@
 - **타입 선언(`.d.ts`)은 Vite가 만들지 않는다.** Vite 문서의 라이브러리 모드 절에는 d.ts 생성 기능이 없다. 별도 도구가 필요하다(4절).
 
 출처:
+
 - https://vite.dev/guide/build.html#library-mode
 - https://github.com/vitejs/vite/blob/v8.3.5/docs/config/build-options.md (context7 `/vitejs/vite/v8.3.5`)
 
 ## 4. 타입 선언 생성 방식
 
-| 방법 | 버전 | 동작 | TS 7과의 관계 |
-| --- | --- | --- | --- |
-| `vite-plugin-dts` | 5.1.2 | `unplugin-dts@1.1.2`의 Vite용 래퍼다. `bundleTypes` 옵션으로 선언 파일을 하나로 묶을 수 있다(peer: `@microsoft/api-extractor >=7`, 선택). | 의존성에 `@volar/typescript`가 있어 TypeScript 프로그래밍 API를 쓰는 구조다. TS 7.0은 API를 제공하지 않으므로(6절) TS 6 API가 필요할 것으로 **추론**한다. TS 7 지원 여부를 밝힌 공식 문서는 **확인 불가**. |
-| `tsdown` (+ `rolldown-plugin-dts`) | tsdown 0.23.7 / rolldown-plugin-dts 0.30.0 | `tsconfig`의 `isolatedDeclarations`가 켜져 있으면 **oxc-transform**으로 d.ts를 만든다(매우 빠름). 꺼져 있으면 TypeScript 컴파일러를 쓴다. | `rolldown-plugin-dts` README의 생성기 표: `tsc`는 TS 5.x/6.x, `oxc`는 `isolatedDeclarations` 호환 코드, `tsgo`는 TS 7.1 이상(실험적, 7.0에서는 CLI로 폴백하며 deprecated). peer `typescript ^5 \|\| ^6 \|\| ~7.0 \|\| ~7.1.0-0`. |
-| `tsc` 단독 (`--emitDeclarationOnly`) | TS 7.0.2 | 번들 없이 파일별 d.ts를 낸다. | TS 7의 `tsc` 자체는 CLI로 동작한다. 번들 결과와 경로를 맞추는 일은 직접 해야 한다. |
+| 방법                                 | 버전                                       | 동작                                                                                                                                      | TS 7과의 관계                                                                                                                                                                                                                    |
+| ------------------------------------ | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vite-plugin-dts`                    | 5.1.2                                      | `unplugin-dts@1.1.2`의 Vite용 래퍼다. `bundleTypes` 옵션으로 선언 파일을 하나로 묶을 수 있다(peer: `@microsoft/api-extractor >=7`, 선택). | 의존성에 `@volar/typescript`가 있어 TypeScript 프로그래밍 API를 쓰는 구조다. TS 7.0은 API를 제공하지 않으므로(6절) TS 6 API가 필요할 것으로 **추론**한다. TS 7 지원 여부를 밝힌 공식 문서는 **확인 불가**.                       |
+| `tsdown` (+ `rolldown-plugin-dts`)   | tsdown 0.23.7 / rolldown-plugin-dts 0.30.0 | `tsconfig`의 `isolatedDeclarations`가 켜져 있으면 **oxc-transform**으로 d.ts를 만든다(매우 빠름). 꺼져 있으면 TypeScript 컴파일러를 쓴다. | `rolldown-plugin-dts` README의 생성기 표: `tsc`는 TS 5.x/6.x, `oxc`는 `isolatedDeclarations` 호환 코드, `tsgo`는 TS 7.1 이상(실험적, 7.0에서는 CLI로 폴백하며 deprecated). peer `typescript ^5 \|\| ^6 \|\| ~7.0 \|\| ~7.1.0-0`. |
+| `tsc` 단독 (`--emitDeclarationOnly`) | TS 7.0.2                                   | 번들 없이 파일별 d.ts를 낸다.                                                                                                             | TS 7의 `tsc` 자체는 CLI로 동작한다. 번들 결과와 경로를 맞추는 일은 직접 해야 한다.                                                                                                                                               |
 
 `isolatedDeclarations`를 켜면 내보내는 선언에 명시적 타입 표기가 필요하다(rolldown-plugin-dts README "Oxc" 절).
 
 출처:
+
 - https://github.com/qmhc/unplugin-dts (README), `npm view vite-plugin-dts dependencies`, `npm view unplugin-dts dependencies`
 - https://tsdown.dev/options/dts
 - `npm view rolldown-plugin-dts readme`, `npm view rolldown-plugin-dts peerDependencies`
@@ -85,6 +87,7 @@
 - **oxfmt의 Tailwind 클래스 정렬**: `.oxfmtrc.json`의 `sortTailwindcss`(기본은 꺼짐) 옵션이 `prettier-plugin-tailwindcss`를 대신한다. `stylesheet`, `functions: ["clsx", "cn"]` 같은 옵션이 있다.
 
 출처:
+
 - https://tailwindcss.com/docs/installation/using-vite
 - https://tailwindcss.com/docs/theme (Overriding the default theme, Referencing other variables, Sharing across projects)
 - https://tailwindcss.com/docs/detecting-classes-in-source-files (Explicitly registering sources)
@@ -99,6 +102,7 @@
 - `@storybook/react-vite`의 peer는 `typescript >= 4.9.x`라 7도 범위에 들어간다. 다만 react-docgen 등 Storybook 내부 도구가 TS API를 쓰는지는 **확인 불가**.
 
 출처:
+
 - https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/
 - https://oxc.rs/docs/guide/usage/linter/type-aware.html
 
@@ -112,6 +116,7 @@
 - Storybook 10의 Node 요구는 `^22.12.0 || ^24 || >=26`이다.
 
 출처:
+
 - https://storybook.js.org/docs/builders/vite
 - https://storybook.js.org/recipes/tailwindcss
 - https://github.com/storybookjs/storybook/blob/v10.6.5/code/addons/themes/docs/getting-started/tailwind.md (context7 `/storybookjs/storybook/v10.6.5`)
@@ -125,6 +130,7 @@
 - 브라우저 모드는 `@vitest/browser-playwright`의 `playwright()` provider와 `instances: [{ browser: 'chromium' }]`로 설정한다. Node(unit) 프로젝트와 browser 프로젝트를 나란히 둘 수 있다.
 
 출처:
+
 - https://github.com/vitest-dev/vitest/blob/v5.0.3/docs/guide/projects.md
 - https://github.com/vitest-dev/vitest/blob/v5.0.3/docs/guide/migration/index.md
 - https://github.com/vitest-dev/vitest/blob/v5.0.3/docs/guide/browser/index.md
@@ -133,10 +139,12 @@
 ## 9. oxlint / oxfmt 성숙도
 
 ### oxlint (1.92.0)
+
 - 2025-06에 v1.0 stable을 발표했다. 1.x 계열이다.
 - 기본 규칙 872개, 자동 수정, multi-file 분석(`import/no-cycle` 등)을 지원한다. type-aware 린팅은 `oxlint-tsgolint`로 하며 TS 7.0 이상이 필요하다. ESLint 플러그인 호환용 JS plugins는 **alpha**다.
 
 ### oxfmt (0.77.0)
+
 - 2025-12 alpha, 2026-02 **beta**를 발표했다. beta 발표 글 기준으로 Prettier의 JS/TS conformance 테스트를 100% 통과한다. Tailwind 클래스 정렬과 import 정렬이 내장되어 있고, JS/TS 외에 JSON, YAML, CSS, Markdown, **MDX** 등도 포맷한다.
 - beta 글에 적힌 stable까지 남은 일: Prettier 플러그인 지원, xxx-in-js 포맷 개선, 안정성, 성능.
 - 현재 포맷터 문서는 "Prettier v3.9.9와 다수 설정에서 호환"되며 기본 `printWidth`가 100(Prettier는 80)이라고 적는다. 예상과 다른 차이는 버그로 다룬다. Prettier 플러그인은 지원하지 않는다(인기 플러그인 일부는 네이티브로 구현했다). `oxfmt --migrate prettier`로 설정을 옮길 수 있다.
@@ -144,6 +152,7 @@
 - `@changesets/cli` 3의 `format` 옵션이 `"oxfmt"`를 지원한다(10절).
 
 출처:
+
 - https://oxc.rs/docs/guide/usage/linter.html, https://oxc.rs/blog/2025-06-10-oxlint-stable
 - https://oxc.rs/docs/guide/usage/formatter.html
 - https://oxc.rs/docs/guide/usage/formatter/migrate-from-prettier.html
@@ -156,6 +165,7 @@
 - **catalog**: `pnpm-workspace.yaml`의 `catalog:`(이름 있는 catalog도 가능)에 버전 범위를 한 번만 적고, 각 `package.json`에서 `"react": "catalog:"`로 참조한다. `dependencies`, `devDependencies`, **`peerDependencies`**에서 쓸 수 있고 publish 때 실제 범위로 바뀐다. v12.2.0부터 catalog 항목에 `workspace:^`를 넣을 수 있다.
 
 출처:
+
 - https://pnpm.io/workspaces
 - https://pnpm.io/catalogs
 

@@ -21,25 +21,25 @@ v0 Component는 **33개**다. 단계는 구현 순서이고 v0 포함 조건이 
 
 먼저 **의존 순서**로 단계를 나누고, 같은 단계 안에서는 사용 빈도 순으로 둔다. 2단계에서 `variant × color × size`, `cn`, `render` 규칙을 먼저 검증한다. hook 위젯은 z-index와 portal 문제가 걸려 있어서 뒤로 미룬다. 화살표(→)는 앞의 Component가 뒤의 Component 안에서 쓰이거나, 뒤의 Component가 앞의 규칙을 그대로 따른다는 뜻이다.
 
-| 단계 | Component | 구현 방식 | 의존 |
-| --- | --- | --- | --- |
-| 1 기반 | VisuallyHidden, Typography, Spinner | 네이티브 | IconButton과 Button 로딩 상태가 Spinner와 VisuallyHidden을 쓴다 |
-| 2 액션·폼 | Button → IconButton → Link | 네이티브, `render` | IconButton은 Button 규칙 위에 만들고 `aria-label`이 필수다 |
-| 2 액션·폼 | Field → Input → Textarea → Checkbox → Radio → Switch | 네이티브 | Field가 label, 설명, 에러 메시지와 `aria-*` 연결을 맡는다 |
-| 3 표시·피드백 | Badge, Alert, Card, Separator, Avatar, Skeleton, Progress, Table, Breadcrumb, Pagination | 네이티브 | Pagination은 IconButton을 쓴다 |
-| 4 hook 위젯 | Popover → Tooltip → Menu → Select → Combobox → Dialog → AlertDialog → Tabs → Accordion → Tag | React Aria hooks | Menu, Select, Combobox는 Popover 위에 만든다. Select와 Combobox는 Field를 쓴다. AlertDialog는 Dialog 위에 만든다. Tag는 IconButton을 쓴다 |
-| 5 | Toast | React Aria hooks(`useToast`) | IconButton, Alert의 스타일, 오버레이 층을 쓴다 |
+| 단계          | Component                                                                                    | 구현 방식                    | 의존                                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 기반        | VisuallyHidden, Typography, Spinner                                                          | 네이티브                     | IconButton과 Button 로딩 상태가 Spinner와 VisuallyHidden을 쓴다                                                                           |
+| 2 액션·폼     | Button → IconButton → Link                                                                   | 네이티브, `render`           | IconButton은 Button 규칙 위에 만들고 `aria-label`이 필수다                                                                                |
+| 2 액션·폼     | Field → Input → Textarea → Checkbox → Radio → Switch                                         | 네이티브                     | Field가 label, 설명, 에러 메시지와 `aria-*` 연결을 맡는다                                                                                 |
+| 3 표시·피드백 | Badge, Alert, Card, Separator, Avatar, Skeleton, Progress, Table, Breadcrumb, Pagination     | 네이티브                     | Pagination은 IconButton을 쓴다                                                                                                            |
+| 4 hook 위젯   | Popover → Tooltip → Menu → Select → Combobox → Dialog → AlertDialog → Tabs → Accordion → Tag | React Aria hooks             | Menu, Select, Combobox는 Popover 위에 만든다. Select와 Combobox는 Field를 쓴다. AlertDialog는 Dialog 위에 만든다. Tag는 IconButton을 쓴다 |
+| 5             | Toast                                                                                        | React Aria hooks(`useToast`) | IconButton, Alert의 스타일, 오버레이 층을 쓴다                                                                                            |
 
 ### Component별 범위
 
 - **Typography**: Heading과 Text를 하나로 합쳤다. `variant` 값은 텍스트 스타일 이름과 같다(`variant="body-md"`는 `text-body-md`와 같다). 스타일마다 기본 요소가 정해져 있다(아래 표). heading·display 스타일은 `level`(1~6)을 선택형으로 받는다. 그래서 "h2처럼 보이는 h3"는 `<Typography variant="heading-lg" level={3}>`처럼 쓴다. 다른 요소로 바꿀 때는 `render`를 쓴다(예: `render={<label />}`). heading·display 스타일은 항상 `<h*>`로 렌더되므로 "보이기만 하는 제목"이 생기지 않는다(원칙 ①).
 
-  | 스타일 | 기본 요소 |
-  | --- | --- |
-  | `display-lg`, `display-md`, `heading-xl` | `h1` |
+  | 스타일                                                    | 기본 요소                 |
+  | --------------------------------------------------------- | ------------------------- |
+  | `display-lg`, `display-md`, `heading-xl`                  | `h1`                      |
   | `heading-lg` / `heading-md` / `heading-sm` / `heading-xs` | `h2` / `h3` / `h4` / `h5` |
-  | `body-lg`, `body-md`, `body-sm`, `caption` | `p` |
-  | `label-lg`, `label-md`, `label-sm` | `span` |
+  | `body-lg`, `body-md`, `body-sm`, `caption`                | `p`                       |
+  | `label-lg`, `label-md`, `label-sm`                        | `span`                    |
 
 - **Field**: Input, Textarea, Select, Combobox, Checkbox 그룹에 label, 설명, 에러 메시지를 붙인다. `id`, `aria-describedby`, `aria-invalid`도 자동으로 연결한다. label이 없는 입력창을 쓰기 어렵게 만드는 장치다(원칙 ①).
 - **Select**: React Aria `useSelect`로 직접 만든다(ADR 0004).
@@ -56,15 +56,15 @@ v0 Component는 **33개**다. 단계는 구현 순서이고 v0 포함 조건이 
 
 모두 **v0 이후 후보**다. 영구 제외한 것은 없다.
 
-| Component | 뺀 이유 |
-| --- | --- |
-| Box, Stack, Flex, Grid | Tailwind Utility class와 할 일이 겹친다. 사용자가 "일단 빼자"고 해서 후보로 남긴다 |
-| DatePicker, Calendar | ADR 0004에 따라 외부 라이브러리를 먼저 검토해야 한다. hook으로 만들어도 Calendar 그리드, 한글 로케일, `@internationalized/date`까지 범위가 크다. 그동안 앱은 `<input type="date">`를 Input 스타일로 쓸 수 있다 |
-| DataTable(정렬, 선택, 그리드 탐색) | spec 하나로 끝나지 않을 만큼 크다. v0는 정적 Table만 둔다 |
-| Combobox 확장(비동기, 다중 선택, 가상화) | 그것만으로 spec 하나가 된다 |
-| Slider | 범용 웹 앱에서 쓰는 빈도가 낮다 |
-| Drawer, Sheet | Dialog의 위치 변형으로 나중에 추가할 수 있다 |
-| 토글 Chip(필터 칩) | 사실상 toggle button이다. v0의 Tag는 제거할 수 있는 형태만 둔다 |
+| Component                                | 뺀 이유                                                                                                                                                                                                        |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Box, Stack, Flex, Grid                   | Tailwind Utility class와 할 일이 겹친다. 사용자가 "일단 빼자"고 해서 후보로 남긴다                                                                                                                             |
+| DatePicker, Calendar                     | ADR 0004에 따라 외부 라이브러리를 먼저 검토해야 한다. hook으로 만들어도 Calendar 그리드, 한글 로케일, `@internationalized/date`까지 범위가 크다. 그동안 앱은 `<input type="date">`를 Input 스타일로 쓸 수 있다 |
+| DataTable(정렬, 선택, 그리드 탐색)       | spec 하나로 끝나지 않을 만큼 크다. v0는 정적 Table만 둔다                                                                                                                                                      |
+| Combobox 확장(비동기, 다중 선택, 가상화) | 그것만으로 spec 하나가 된다                                                                                                                                                                                    |
+| Slider                                   | 범용 웹 앱에서 쓰는 빈도가 낮다                                                                                                                                                                                |
+| Drawer, Sheet                            | Dialog의 위치 변형으로 나중에 추가할 수 있다                                                                                                                                                                   |
+| 토글 Chip(필터 칩)                       | 사실상 toggle button이다. v0의 Tag는 제거할 수 있는 형태만 둔다                                                                                                                                                |
 
 ### 다른 문서에 준 영향
 

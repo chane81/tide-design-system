@@ -5,12 +5,12 @@
 
 ## 확인한 버전
 
-| 패키지 | 최신 안정 버전 | 확인 방법 |
-| --- | --- | --- |
-| `tailwindcss` | **4.3.5** (`latest`; v3는 `v3-lts` 태그로 3.4.19) | `npm view tailwindcss dist-tags` |
-| `@tailwindcss/vite`, `@tailwindcss/postcss`, `@tailwindcss/node` | 4.3.5 | `npm view <pkg> version` |
-| `tailwind-merge` | **3.7.0** (`latest`; v2 계열은 2.6.1) | `npm view tailwind-merge dist-tags` |
-| Tailwind CSS IntelliSense (VS Code) | v0.16.0 (2026-07-17 릴리스) | GitHub releases API |
+| 패키지                                                           | 최신 안정 버전                                    | 확인 방법                           |
+| ---------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------- |
+| `tailwindcss`                                                    | **4.3.5** (`latest`; v3는 `v3-lts` 태그로 3.4.19) | `npm view tailwindcss dist-tags`    |
+| `@tailwindcss/vite`, `@tailwindcss/postcss`, `@tailwindcss/node` | 4.3.5                                             | `npm view <pkg> version`            |
+| `tailwind-merge`                                                 | **3.7.0** (`latest`; v2 계열은 2.6.1)             | `npm view tailwind-merge dist-tags` |
+| Tailwind CSS IntelliSense (VS Code)                              | v0.16.0 (2026-07-17 릴리스)                       | GitHub releases API                 |
 
 공식 문서 사이트(tailwindcss.com)의 버전 표시는 **v4.3**이다. context7에서는 `/tailwindlabs/tailwindcss.com`(main 브랜치 docs)을 조회했다. 두 출처의 내용은 일치했다.
 
@@ -45,7 +45,7 @@
 
 @theme {
   --color-mint-500: oklch(0.72 0.11 178); /* bg-mint-500, text-mint-500 생성 */
-  --font-script: Great Vibes, cursive;    /* font-script 생성 */
+  --font-script: Great Vibes, cursive; /* font-script 생성 */
 }
 ```
 
@@ -61,10 +61,10 @@
 
 ```css
 @theme {
-  --color-*: initial;          /* 기본 팔레트 전부 제거 */
+  --color-*: initial; /* 기본 팔레트 전부 제거 */
   --color-white: #fff;
   --color-black: #000;
-  --color-blue-500: #3183f5;   /* 이후 Tide Primitive Token으로 채움 */
+  --color-blue-500: #3183f5; /* 이후 Tide Primitive Token으로 채움 */
   /* --spacing은 건드리지 않음 → w-24 = calc(0.25rem * 24) 유지 */
 }
 ```
@@ -133,7 +133,7 @@
 {
   "tailwindCSS.experimental.configFile": "src/app.css",
   "tailwindCSS.classFunctions": ["cn", "clsx"],
-  "editor.quickSuggestions": { "strings": "on" }
+  "editor.quickSuggestions": { "strings": "on" },
 }
 ```
 
@@ -158,8 +158,12 @@
 **(b) CSS 변수 값을 Theme별로 바꾸고 `@theme inline`으로 연결하기.** 공식 [colors] 문서의 예시다. 선택자(`:root`, `[data-theme="dark"]`)에서 변수 값을 바꾸고, `@theme inline`으로 Utility class를 그 변수에 연결한다. 그러면 `bg-canvas` 하나가 Theme에 따라 자동으로 바뀐다. `inline`이 필요한 이유는 1번에서 설명한 변수 해석 위치 문제 때문이다.
 
 ```css
-:root              { --tide-bg-primary: var(--color-blue-600); }
-[data-theme="dark"] { --tide-bg-primary: var(--color-blue-400); }
+:root {
+  --tide-bg-primary: var(--color-blue-600);
+}
+[data-theme="dark"] {
+  --tide-bg-primary: var(--color-blue-400);
+}
 
 @theme inline {
   --color-bg-primary: var(--tide-bg-primary); /* → bg-bg-primary */
@@ -181,17 +185,17 @@
 - 주의: `text-*`는 색과 font size가 같은 prefix를 쓴다. 커스텀 font size를 등록하지 않으면 tailwind-merge가 그것을 색으로 판단할 수 있다. 그러면 `text-<커스텀 size> text-<색>`이 충돌로 처리된다([twm-limits]의 heuristic 항목).
 
 ```ts
-import { extendTailwindMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from "tailwind-merge";
 
 export const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      text: ['body-md', 'heading-lg'], // --text-* 커스텀 크기
-      radius: ['card'],                // --radius-card
+      text: ["body-md", "heading-lg"], // --text-* 커스텀 크기
+      radius: ["card"], // --radius-card
       // color는 등록 불필요
     },
   },
-})
+});
 ```
 
 ---

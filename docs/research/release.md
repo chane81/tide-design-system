@@ -8,18 +8,18 @@
 
 ## 조사 기준 버전 (2026-11-09, `npm view`, GitHub Releases로 확인)
 
-| 도구 | 최신 안정 버전 | 비고 |
-| --- | --- | --- |
-| `@changesets/cli` | 3.0.3 (2026-09-14) | 3.0.0은 2026-08-11. `engines`: node `^22.11 \|\| ^24 \|\| >=26`, pnpm `>=10.0.0`, npm `>=10.9.0`. v2 유지보수 태그 `maintenance-v2`는 2.31.1 |
-| `changesets/action` | v2.1.2 (2026-09-07) | v2.0.0은 2026-08-11. v2는 Changesets v3 전용이고, v2 CLI는 `changesets/action@v1`을 써야 함 |
-| `@changesets/changelog-github` | 1.0.1 | |
-| `release-please` | 17.11.2 (2026-08-24) | GitHub Action `googleapis/release-please-action`은 v5.0.0(2026-04-22) |
-| `semantic-release` | 25.0.9 | `engines.node`: `^22.14.0 \|\| >= 24.10.0`. `@semantic-release/npm` 13.2.0 |
-| `pnpm` | 12.18.0 (2026-11-05) | 12.0.0은 2026-08-26. 로컬 설치는 12.11.2였고, 실험은 `npx pnpm@12.18.0`으로 함 |
-| `npm` | 12.2.2 | npm 12는 2026-07-08에 GA |
-| `turbo` | 2.11.10 | 배포 흐름과 직접 관계는 없음 |
-| `lucide-static` / `lucide-react` | 1.70.0 | Q8 분석용 |
-| Node.js(실험 환경) | 26.12.1 | |
+| 도구                             | 최신 안정 버전       | 비고                                                                                                                                         |
+| -------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@changesets/cli`                | 3.0.3 (2026-09-14)   | 3.0.0은 2026-08-11. `engines`: node `^22.11 \|\| ^24 \|\| >=26`, pnpm `>=10.0.0`, npm `>=10.9.0`. v2 유지보수 태그 `maintenance-v2`는 2.31.1 |
+| `changesets/action`              | v2.1.2 (2026-09-07)  | v2.0.0은 2026-08-11. v2는 Changesets v3 전용이고, v2 CLI는 `changesets/action@v1`을 써야 함                                                  |
+| `@changesets/changelog-github`   | 1.0.1                |                                                                                                                                              |
+| `release-please`                 | 17.11.2 (2026-08-24) | GitHub Action `googleapis/release-please-action`은 v5.0.0(2026-04-22)                                                                        |
+| `semantic-release`               | 25.0.9               | `engines.node`: `^22.14.0 \|\| >= 24.10.0`. `@semantic-release/npm` 13.2.0                                                                   |
+| `pnpm`                           | 12.18.0 (2026-11-05) | 12.0.0은 2026-08-26. 로컬 설치는 12.11.2였고, 실험은 `npx pnpm@12.18.0`으로 함                                                               |
+| `npm`                            | 12.2.2               | npm 12는 2026-07-08에 GA                                                                                                                     |
+| `turbo`                          | 2.11.10              | 배포 흐름과 직접 관계는 없음                                                                                                                 |
+| `lucide-static` / `lucide-react` | 1.70.0               | Q8 분석용                                                                                                                                    |
+| Node.js(실험 환경)               | 26.12.1              |                                                                                                                                              |
 
 npm 정책은 docs.npmjs.com 현재 문서와 GitHub Changelog 원문 날짜로 확인했다. 도구 문서는 changesets.dev, pnpm.io, 각 GitHub 저장소의 원문(README, CHANGELOG, 소스)을 봤다.
 
@@ -51,11 +51,11 @@ scratchpad에 Tide와 같은 모양의 workspace를 만들었다(저장소 밖, 
 - pnpm 공식 문서: `pnpm pack`이나 `pnpm publish`로 묶을 때 `workspace:` 의존성을 실제 버전으로 바꾼다. `workspace:*`는 정확한 버전, `workspace:^`는 `^버전`, `workspace:~`는 `~버전`이 된다([pnpm Workspace — Publishing workspace packages](https://pnpm.io/workspaces#publishing-workspace-packages)). `catalog:`도 `pnpm publish`·`pnpm pack`에서 제거되고 catalog에 적힌 범위로 바뀐다([pnpm Catalogs — Publishing](https://pnpm.io/catalogs#publishing)).
 - **실험**: `pnpm pack`(12.18.0) 결과물의 `package.json`
 
-  | 원본 | pack 결과 |
-  | --- | --- |
-  | `"@tide-tds/foundation": "workspace:^"` | `"^0.1.0"` |
-  | `"@tide-tds/icons": "workspace:*"` | `"0.1.0"` |
-  | `"clsx": "catalog:"` | `"^2.1.1"` |
+  | 원본                                         | pack 결과  |
+  | -------------------------------------------- | ---------- |
+  | `"@tide-tds/foundation": "workspace:^"`      | `"^0.1.0"` |
+  | `"@tide-tds/icons": "workspace:*"`           | `"0.1.0"`  |
+  | `"clsx": "catalog:"`                         | `"^2.1.1"` |
   | `"react": "catalog:strict"`(devDependencies) | `"19.3.1"` |
 
 - **실험**: 같은 패키지를 `npm pack`(12.x)으로 묶으면 `workspace:^`, `catalog:`가 **그대로 남는다**. npm CLI로 publish하면 안 되고 pnpm을 거쳐야 한다.
@@ -80,16 +80,16 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 조사 중에 **pnpm 자체 릴리스 관리**가 있다는 것을 확인해서 선택지에 넣었다.
 
-| | changesets 3 | pnpm 자체 릴리스 관리 | release-please | semantic-release | 수동 `pnpm publish -r` |
-| --- | --- | --- | --- | --- | --- |
-| 변경 기록 방식 | `.changeset/*.md` 파일(사람이 bump 종류와 요약을 씀) | 같은 `.changeset/*.md` 형식(`pnpm change`) | Conventional Commits 메시지 | Conventional Commits 메시지 | 없음(직접 버전 수정) |
-| 모노레포 | 기본 지원 | 기본 지원 | manifest 모드 + `node-workspace` 플러그인 | 공식 미지원(이슈 #193, 2016년부터 open) | `-r`로 전체 |
-| 버전 올리는 PR | `changesets/action`이 "Version Packages" PR을 만듦 | 없음. `pnpm version -r` 후 직접 커밋 | Release PR을 만듦 | 없음(push 시 바로 릴리스) | 없음 |
-| npm publish | 함(pnpm 경유) | 함(`pnpm publish -r`) | **하지 않음**. 별도 단계 필요 | 함(`@semantic-release/npm`) | 함 |
-| `workspace:`·`catalog:` 치환 | pnpm이 함(실험 확인) | pnpm이 함 | publish를 하지 않으므로 해당 없음. publish를 pnpm으로 하면 됨 | `@semantic-release/npm`은 npm CLI를 씀. 치환되지 않을 것으로 보이지만 **직접 확인하지 않음** | pnpm이 함 |
-| fixed / linked | `fixed`, `linked` | `versioning.fixed` | `linked-versions` 플러그인 | 해당 없음 | 해당 없음 |
-| prerelease | `pre enter <tag>`, `--snapshot` | `lanes`(패키지별 prerelease 트랙) | `prerelease` 버전 전략 | branch 설정 | 직접 |
-| CHANGELOG | 패키지마다 CHANGELOG.md 커밋 | 기본은 커밋하지 않고 tarball 안에 넣음(`changelog.storage: registry`). `repository`로 바꿀 수 있음 | CHANGELOG.md 커밋 | 플러그인 | 없음 |
+|                              | changesets 3                                         | pnpm 자체 릴리스 관리                                                                              | release-please                                                | semantic-release                                                                             | 수동 `pnpm publish -r` |
+| ---------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------- |
+| 변경 기록 방식               | `.changeset/*.md` 파일(사람이 bump 종류와 요약을 씀) | 같은 `.changeset/*.md` 형식(`pnpm change`)                                                         | Conventional Commits 메시지                                   | Conventional Commits 메시지                                                                  | 없음(직접 버전 수정)   |
+| 모노레포                     | 기본 지원                                            | 기본 지원                                                                                          | manifest 모드 + `node-workspace` 플러그인                     | 공식 미지원(이슈 #193, 2016년부터 open)                                                      | `-r`로 전체            |
+| 버전 올리는 PR               | `changesets/action`이 "Version Packages" PR을 만듦   | 없음. `pnpm version -r` 후 직접 커밋                                                               | Release PR을 만듦                                             | 없음(push 시 바로 릴리스)                                                                    | 없음                   |
+| npm publish                  | 함(pnpm 경유)                                        | 함(`pnpm publish -r`)                                                                              | **하지 않음**. 별도 단계 필요                                 | 함(`@semantic-release/npm`)                                                                  | 함                     |
+| `workspace:`·`catalog:` 치환 | pnpm이 함(실험 확인)                                 | pnpm이 함                                                                                          | publish를 하지 않으므로 해당 없음. publish를 pnpm으로 하면 됨 | `@semantic-release/npm`은 npm CLI를 씀. 치환되지 않을 것으로 보이지만 **직접 확인하지 않음** | pnpm이 함              |
+| fixed / linked               | `fixed`, `linked`                                    | `versioning.fixed`                                                                                 | `linked-versions` 플러그인                                    | 해당 없음                                                                                    | 해당 없음              |
+| prerelease                   | `pre enter <tag>`, `--snapshot`                      | `lanes`(패키지별 prerelease 트랙)                                                                  | `prerelease` 버전 전략                                        | branch 설정                                                                                  | 직접                   |
+| CHANGELOG                    | 패키지마다 CHANGELOG.md 커밋                         | 기본은 커밋하지 않고 tarball 안에 넣음(`changelog.storage: registry`). `repository`로 바꿀 수 있음 | CHANGELOG.md 커밋                                             | 플러그인                                                                                     | 없음                   |
 
 ### 도구별 근거
 
@@ -103,12 +103,12 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 레퍼런스 시스템이 쓰는 도구 (저장소 파일로 확인)
 
-| 저장소 | 도구 |
-| --- | --- |
-| primer/react | changesets(`linked: []`, 독립 버전) |
-| daangn/seed-design | changesets(일부 패키지 쌍만 `linked`) |
-| tabler/tabler-icons | changesets(`fixed: [["@tabler/icons*"]]`) |
-| carbon-design-system/carbon, adobe/react-spectrum | lerna(`lerna.json` 있음. carbon은 `"version": "independent"`) |
+| 저장소                                                   | 도구                                                                                                          |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| primer/react                                             | changesets(`linked: []`, 독립 버전)                                                                           |
+| daangn/seed-design                                       | changesets(일부 패키지 쌍만 `linked`)                                                                         |
+| tabler/tabler-icons                                      | changesets(`fixed: [["@tabler/icons*"]]`)                                                                     |
+| carbon-design-system/carbon, adobe/react-spectrum        | lerna(`lerna.json` 있음. carbon은 `"version": "independent"`)                                                 |
 | radix-ui/themes, lucide-icons/lucide, mantinedev/mantine | `.changeset`, `release-please-config.json`, `lerna.json` 모두 없음(자체 스크립트로 보임, **세부 확인 안 함**) |
 
 ### 시사점
@@ -130,13 +130,13 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 2026년에 바뀐 것 (GitHub Changelog 날짜순)
 
-| 날짜 | 변경 |
-| --- | --- |
-| 2026-05-22 | staged publishing(`npm stage publish` → 2FA로 승인) 도입([changelog](https://github.blog/changelog/2026-05-22-staged-publishing-and-new-install-time-controls-for-npm/)) |
+| 날짜       | 변경                                                                                                                                                                                                                                                                                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-22 | staged publishing(`npm stage publish` → 2FA로 승인) 도입([changelog](https://github.blog/changelog/2026-05-22-staged-publishing-and-new-install-time-controls-for-npm/))                                                                                                                                                                               |
 | 2026-09-03 | 패키지당 trusted publisher 설정을 여러 개(최대 10개) 둘 수 있음. **2026-09-03 이후 만든 설정은 기본으로 `npm stage publish`만 허용**하고, 직접 `npm publish`는 설정마다 따로 켜야 함. 악성코드 검사가 끝나야 staged 패키지를 승인할 수 있음([changelog](https://github.blog/changelog/2026-09-03-multiple-trusted-publishing-configurations-for-npm/)) |
-| 2026-09-30 | trusted publishing으로 dist-tag를 다루는 권한(Allow npm dist-tag)이 opt-in으로 추가됨([changelog](https://github.blog/changelog/2026-09-30-opt-in-dist-tag-permissions-for-npm-trusted-publishing/)) |
-| 2026-10-02 | 새로 만든 설정은 **48시간 안에 첫 publish로 검증하지 않으면 만료**됨. GitHub Actions의 `issue_comment` 이벤트에서 온 OIDC 토큰은 거부(`pull_request_target`은 원래 거부)([changelog](https://github.blog/changelog/2026-10-02-unvalidated-npm-trusted-publishing-configurations-now-expire/)) |
-| 2026-10-02 | `npm stage publish`로 **새 패키지를 만들 수 있음**(로컬 세션이나 granular token). 첫 버전은 승인 대기열에 들어감. "After package creation, you can manage its settings and configure trusted publishing"([changelog](https://github.blog/changelog/2026-10-02-npm-staged-publishing-now-supports-creating-new-packages/)) |
+| 2026-09-30 | trusted publishing으로 dist-tag를 다루는 권한(Allow npm dist-tag)이 opt-in으로 추가됨([changelog](https://github.blog/changelog/2026-09-30-opt-in-dist-tag-permissions-for-npm-trusted-publishing/))                                                                                                                                                   |
+| 2026-10-02 | 새로 만든 설정은 **48시간 안에 첫 publish로 검증하지 않으면 만료**됨. GitHub Actions의 `issue_comment` 이벤트에서 온 OIDC 토큰은 거부(`pull_request_target`은 원래 거부)([changelog](https://github.blog/changelog/2026-10-02-unvalidated-npm-trusted-publishing-configurations-now-expire/))                                                          |
+| 2026-10-02 | `npm stage publish`로 **새 패키지를 만들 수 있음**(로컬 세션이나 granular token). 첫 버전은 승인 대기열에 들어감. "After package creation, you can manage its settings and configure trusted publishing"([changelog](https://github.blog/changelog/2026-10-02-npm-staged-publishing-now-supports-creating-new-packages/))                              |
 
 ### 설정 방법 (npm 공식 문서 기준)
 
@@ -172,14 +172,14 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 지금까지의 변경 (GitHub Changelog 원문)
 
-| 날짜 | 변경 |
-| --- | --- |
-| 2025-09-29 발표 | 새 write granular token은 기본 만료 7일, 최대 90일(이전엔 무제한). 새 TOTP 2FA 설정 중단 예고([changelog](https://github.blog/changelog/2025-09-29-strengthening-npm-security-important-changes-to-authentication-and-token-management/)) |
-| 2025-11-05 | classic token 생성 중단. write granular token은 기본으로 2FA를 요구하고 "Bypass 2FA" 옵션(기본 꺼짐)이 생김. 기존 write granular token도 90일로 제한([changelog](https://github.blog/changelog/2025-11-05-npm-security-update-classic-token-creation-disabled-and-granular-token-changes/)) |
-| 2025-12-09 | classic token 전부 영구 폐기. `npm login`은 2시간짜리 세션 토큰을 줌. 새 패키지는 패키지 설정에서 2FA가 기본으로 켜짐([changelog](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/)) |
-| 2026-07-08 | npm 12 GA. 2FA 우회 토큰의 민감한 사용을 단계적으로 막기 시작([changelog](https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/)) |
-| 2026-07-31 | 2FA 우회 토큰으로 토큰 생성·삭제, 패키지 access·maintainer·**trusted publishing 설정 변경**, org/team 관리를 할 수 없음. 대화형 2FA 필요. **2FA 우회 토큰의 직접 publish 제거를 2027년 1월 목표로 함**([changelog](https://github.blog/changelog/2026-07-31-restricting-npm-bypass-2fa-granular-access-tokens/)) |
-| 2026-09-18 | "Read and write (stage only)" 토큰 추가. 이 토큰은 `npm stage publish`만 되고 직접 publish는 `E_STAGE_REQUIRED`로 거부됨([changelog](https://github.blog/changelog/2026-09-18-stage-only-npm-tokens-for-safer-automation/)) |
+| 날짜            | 변경                                                                                                                                                                                                                                                                                                             |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2025-09-29 발표 | 새 write granular token은 기본 만료 7일, 최대 90일(이전엔 무제한). 새 TOTP 2FA 설정 중단 예고([changelog](https://github.blog/changelog/2025-09-29-strengthening-npm-security-important-changes-to-authentication-and-token-management/))                                                                        |
+| 2025-11-05      | classic token 생성 중단. write granular token은 기본으로 2FA를 요구하고 "Bypass 2FA" 옵션(기본 꺼짐)이 생김. 기존 write granular token도 90일로 제한([changelog](https://github.blog/changelog/2025-11-05-npm-security-update-classic-token-creation-disabled-and-granular-token-changes/))                      |
+| 2025-12-09      | classic token 전부 영구 폐기. `npm login`은 2시간짜리 세션 토큰을 줌. 새 패키지는 패키지 설정에서 2FA가 기본으로 켜짐([changelog](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/))                                               |
+| 2026-07-08      | npm 12 GA. 2FA 우회 토큰의 민감한 사용을 단계적으로 막기 시작([changelog](https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/))                                                                                                                                    |
+| 2026-07-31      | 2FA 우회 토큰으로 토큰 생성·삭제, 패키지 access·maintainer·**trusted publishing 설정 변경**, org/team 관리를 할 수 없음. 대화형 2FA 필요. **2FA 우회 토큰의 직접 publish 제거를 2027년 1월 목표로 함**([changelog](https://github.blog/changelog/2026-07-31-restricting-npm-bypass-2fa-granular-access-tokens/)) |
+| 2026-09-18      | "Read and write (stage only)" 토큰 추가. 이 토큰은 `npm stage publish`만 되고 직접 publish는 `E_STAGE_REQUIRED`로 거부됨([changelog](https://github.blog/changelog/2026-09-18-stage-only-npm-tokens-for-safer-automation/))                                                                                      |
 
 현재 문서([About access tokens](https://docs.npmjs.com/about-access-tokens), 2026-09-10 수정)에도 "The ability to publish new package versions directly with a granular access token will be removed in **January 2027**"라고 적혀 있다. 목표 시점이고 확정 날짜는 아니다.
 
@@ -214,27 +214,27 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 도구별 0.x 처리
 
-| 도구 | 0.x에서 breaking(major) 요청 시 |
-| --- | --- |
-| changesets 3.0.3 | **실험**: icons 0.1.0에 `major` changeset → **1.0.0**. 0.x 전용 옵션은 config 문서에서 찾지 못함([config](https://changesets.dev/guide/config)). 0.x 동안 breaking을 minor로 내려면 changeset에 `minor`라고 직접 써야 함 |
-| pnpm 자체 릴리스 관리 | 0.x 전용 규칙은 문서에 없음. `versioning.maxBump: minor`로 한 릴리스의 bump를 minor까지로 제한할 수 있음. 제한을 넘는 요청을 낮추는지 거부하는지는 **확인 불가**(registry에 배포된 패키지가 있어야 실험 가능) |
-| release-please | `bump-minor-pre-major`(BREAKING CHANGE가 1.0.0 전에는 minor만 올림), `bump-patch-for-minor-pre-major`(feat가 1.0.0 전에는 patch만 올림). 둘 다 기본 false([manifest-releaser.md](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md)) |
-| semantic-release | 0.x 시작 자체를 지원하지 않음(FAQ) |
+| 도구                  | 0.x에서 breaking(major) 요청 시                                                                                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| changesets 3.0.3      | **실험**: icons 0.1.0에 `major` changeset → **1.0.0**. 0.x 전용 옵션은 config 문서에서 찾지 못함([config](https://changesets.dev/guide/config)). 0.x 동안 breaking을 minor로 내려면 changeset에 `minor`라고 직접 써야 함                                            |
+| pnpm 자체 릴리스 관리 | 0.x 전용 규칙은 문서에 없음. `versioning.maxBump: minor`로 한 릴리스의 bump를 minor까지로 제한할 수 있음. 제한을 넘는 요청을 낮추는지 거부하는지는 **확인 불가**(registry에 배포된 패키지가 있어야 실험 가능)                                                       |
+| release-please        | `bump-minor-pre-major`(BREAKING CHANGE가 1.0.0 전에는 minor만 올림), `bump-patch-for-minor-pre-major`(feat가 1.0.0 전에는 patch만 올림). 둘 다 기본 false([manifest-releaser.md](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md)) |
+| semantic-release      | 0.x 시작 자체를 지원하지 않음(FAQ)                                                                                                                                                                                                                                  |
 
 ### 레퍼런스 시스템의 초기 버전 (npm `time` 기록으로 확인)
 
-| 패키지 | 첫 안정판 | 0.x 기간 | 1.0.0 | 현재 |
-| --- | --- | --- | --- | --- |
-| `@radix-ui/themes` | 0.0.0 (2023-06-15) | 0.0.x 49개, 약 2개월 | 2023-08-08 | 3.3.0 |
-| `@carbon/react` | 0.1.0 (2021-07-30) | 0.1~0.17, 27개, 약 8개월 | 2022-03-31(직전 `1.0.0-rc.0`) | 1.120.0 |
-| `@seed-design/react` | 0.0.1 (2025-02-24) | 0.0.1~0.2.5, 54개, 약 7개월 | 2025-09-25 | 3.2.0 |
-| `@mantine/core` | 0.1.0 (2021-01-07) | 0.1~0.9, 28개, 약 4개월 | 2021-05-03 | 9.7.5 |
-| `@material/web` | 0.x 안정판 없음(`0.1.0-alpha.0` 2022-08) | prerelease만 | 2023-09-26(직전 `1.0.0-pre.*`) | 2.5.0 |
-| `react-aria-components` | 0.0.x 4개(2018) | 이후 오래 `nightly` prerelease | 2023-12-20 | 1.22.1 |
-| `@base-ui/react` | `1.0.0-rc.1`로 시작(이전 이름 `@base-ui-components/react`는 `1.0.0-alpha.*`) | 0.x 없음 | 2025-12-11 | 1.9.0 |
-| `@chakra-ui/react`, `@atlaskit/button` | 1.0.0으로 시작 | 없음 | | 3.38.0 / 25.7.1 |
-| `@primer/react` | 이전 이름 `@primer/components`가 10.0.0부터 기록됨 | 확인 안 함 | | 38.45.0 |
-| `lucide-react` | 0.11.0 (2020-12) | **0.x 634개, 5년 넘게** | 2026-03-23 | 1.70.0 |
+| 패키지                                 | 첫 안정판                                                                    | 0.x 기간                       | 1.0.0                          | 현재            |
+| -------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------ | ------------------------------ | --------------- |
+| `@radix-ui/themes`                     | 0.0.0 (2023-06-15)                                                           | 0.0.x 49개, 약 2개월           | 2023-08-08                     | 3.3.0           |
+| `@carbon/react`                        | 0.1.0 (2021-07-30)                                                           | 0.1~0.17, 27개, 약 8개월       | 2022-03-31(직전 `1.0.0-rc.0`)  | 1.120.0         |
+| `@seed-design/react`                   | 0.0.1 (2025-02-24)                                                           | 0.0.1~0.2.5, 54개, 약 7개월    | 2025-09-25                     | 3.2.0           |
+| `@mantine/core`                        | 0.1.0 (2021-01-07)                                                           | 0.1~0.9, 28개, 약 4개월        | 2021-05-03                     | 9.7.5           |
+| `@material/web`                        | 0.x 안정판 없음(`0.1.0-alpha.0` 2022-08)                                     | prerelease만                   | 2023-09-26(직전 `1.0.0-pre.*`) | 2.5.0           |
+| `react-aria-components`                | 0.0.x 4개(2018)                                                              | 이후 오래 `nightly` prerelease | 2023-12-20                     | 1.22.1          |
+| `@base-ui/react`                       | `1.0.0-rc.1`로 시작(이전 이름 `@base-ui-components/react`는 `1.0.0-alpha.*`) | 0.x 없음                       | 2025-12-11                     | 1.9.0           |
+| `@chakra-ui/react`, `@atlaskit/button` | 1.0.0으로 시작                                                               | 없음                           |                                | 3.38.0 / 25.7.1 |
+| `@primer/react`                        | 이전 이름 `@primer/components`가 10.0.0부터 기록됨                           | 확인 안 함                     |                                | 38.45.0         |
+| `lucide-react`                         | 0.11.0 (2020-12)                                                             | **0.x 634개, 5년 넘게**        | 2026-03-23                     | 1.70.0          |
 
 0.x를 쓴 시스템도 대부분 수개월 안에 1.0.0으로 갔다. Lucide는 0.x로 오래 있으면서 minor를 매우 자주 올렸다.
 
@@ -249,25 +249,25 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### changesets의 세 방식 (**실험**: foundation에만 `minor` changeset, 모두 0.1.0에서 시작)
 
-| 설정 | foundation | icons | desktop | 설명 |
-| --- | --- | --- | --- | --- |
-| 독립(기본) | 0.2.0 | 0.1.0 | **0.1.1** | desktop의 `workspace:^`(배포 시 `^0.1.0`) 범위를 0.2.0이 벗어나므로 desktop이 patch로 올라감(`updateInternalDependencies: "patch"`) |
-| `linked: [["@tide-tds/*"]]` | 0.2.0 | 0.1.0 | **0.2.0** | 올라가는 패키지만 그룹의 가장 높은 버전에 맞춤. icons는 변경이 없어 그대로 |
-| `fixed: [["@tide-tds/*"]]` | 0.2.0 | **0.2.0** | **0.2.0** | 변경이 없어도 모두 같은 버전으로 올리고 함께 publish |
+| 설정                        | foundation | icons     | desktop   | 설명                                                                                                                                |
+| --------------------------- | ---------- | --------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 독립(기본)                  | 0.2.0      | 0.1.0     | **0.1.1** | desktop의 `workspace:^`(배포 시 `^0.1.0`) 범위를 0.2.0이 벗어나므로 desktop이 patch로 올라감(`updateInternalDependencies: "patch"`) |
+| `linked: [["@tide-tds/*"]]` | 0.2.0      | 0.1.0     | **0.2.0** | 올라가는 패키지만 그룹의 가장 높은 버전에 맞춤. icons는 변경이 없어 그대로                                                          |
+| `fixed: [["@tide-tds/*"]]`  | 0.2.0      | **0.2.0** | **0.2.0** | 변경이 없어도 모두 같은 버전으로 올리고 함께 publish                                                                                |
 
 공식 설명: fixed는 "versioned and published together even when some of them have no changes", linked는 "share a version"이지만 바뀐 패키지만 올린다([Fixed Packages](https://changesets.dev/guide/fixed-packages), [config — linked](https://changesets.dev/guide/config#linked)). pnpm 자체 방식에는 `versioning.fixed`가 있다(fixed와 같은 뜻). release-please에는 `linked-versions` 플러그인이 있다(이름은 linked지만 설명은 "update all group components to the same version", 즉 fixed에 가깝다).
 
 ### 레퍼런스 시스템의 관례
 
-| 시스템 | 버전 묶음 | 내부 의존 방식 |
-| --- | --- | --- |
-| Primer | 독립(`linked: []`) | `@primer/react`가 `@primer/octicons-react`를 `dependencies` `^19.28.1`로, `@primer/primitives`를 `10.x \|\| 11.x`로 둠 |
-| Carbon | 독립(lerna `independent`) | `@carbon/react`가 `@carbon/icons-react`·`@carbon/styles`를 `dependencies` `^`로 둠 |
-| Atlassian | 독립 | `@atlaskit/button`이 `@atlaskit/icon`·`@atlaskit/tokens`를 `dependencies` `^`로 둠 |
-| SEED | 대부분 독립, 일부 쌍만 linked | `@seed-design/react`가 `@seed-design/css`를 **peerDependencies** `^3.2.0`으로 둠 |
-| Mantine | 모든 패키지가 같은 버전(9.7.5) | `@mantine/core`가 `@mantine/hooks`를 **peer로 정확한 버전**(`9.7.5`) 고정 |
-| Tabler Icons | `fixed: [["@tabler/icons*"]]` | 아이콘 패키지끼리 같은 버전 |
-| Lucide | 모든 패키지가 같은 버전(`lucide-react`, `lucide-static` 모두 1.70.0) | |
+| 시스템       | 버전 묶음                                                            | 내부 의존 방식                                                                                                         |
+| ------------ | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Primer       | 독립(`linked: []`)                                                   | `@primer/react`가 `@primer/octicons-react`를 `dependencies` `^19.28.1`로, `@primer/primitives`를 `10.x \|\| 11.x`로 둠 |
+| Carbon       | 독립(lerna `independent`)                                            | `@carbon/react`가 `@carbon/icons-react`·`@carbon/styles`를 `dependencies` `^`로 둠                                     |
+| Atlassian    | 독립                                                                 | `@atlaskit/button`이 `@atlaskit/icon`·`@atlaskit/tokens`를 `dependencies` `^`로 둠                                     |
+| SEED         | 대부분 독립, 일부 쌍만 linked                                        | `@seed-design/react`가 `@seed-design/css`를 **peerDependencies** `^3.2.0`으로 둠                                       |
+| Mantine      | 모든 패키지가 같은 버전(9.7.5)                                       | `@mantine/core`가 `@mantine/hooks`를 **peer로 정확한 버전**(`9.7.5`) 고정                                              |
+| Tabler Icons | `fixed: [["@tabler/icons*"]]`                                        | 아이콘 패키지끼리 같은 버전                                                                                            |
+| Lucide       | 모든 패키지가 같은 버전(`lucide-react`, `lucide-static` 모두 1.70.0) |                                                                                                                        |
 
 desktop처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `dependencies` + `^` 범위가 가장 흔하다(Primer, Carbon, Atlassian). 스타일·Token 패키지는 dependency로 두는 곳(Carbon, Atlassian)과 peer로 두는 곳(SEED)이 나뉜다.
 
@@ -304,15 +304,15 @@ desktop처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `de
 
 ### 레퍼런스 시스템의 dist-tag (2026-11-09 `npm view <pkg> dist-tags`)
 
-| 패키지 | dist-tag |
-| --- | --- |
-| `@primer/react` | `latest` 38.45.0, `next` `38.46.0-rc.e10581db0`, `canary` `0.0.0-20261108050529` |
-| `@carbon/react` | `latest`, `next` `1.120.0-rc.0`, `v12-alpha` `2.0.0-alpha.5` |
-| `@radix-ui/themes` | `latest` 3.3.0, `next` `3.2.0-rc.8`(latest보다 낮은 오래된 rc) |
-| `@mantine/core` | `latest`, `next` `9.5.1-alpha.1`, `legacy` 7.17.8 |
-| `@seed-design/react` | `latest`, `alpha` `0.0.0-alpha-…`, 이전 major 유지보수용 `react-v1.0`·`react-v2` 등 |
-| `react-aria-components` | `latest`, `nightly` `3.0.0-nightly-…` |
-| `lucide-react` | `latest` 1.70.0, `next` 1.3.0(오래됨), `beta`, `dev` |
+| 패키지                  | dist-tag                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| `@primer/react`         | `latest` 38.45.0, `next` `38.46.0-rc.e10581db0`, `canary` `0.0.0-20261108050529`    |
+| `@carbon/react`         | `latest`, `next` `1.120.0-rc.0`, `v12-alpha` `2.0.0-alpha.5`                        |
+| `@radix-ui/themes`      | `latest` 3.3.0, `next` `3.2.0-rc.8`(latest보다 낮은 오래된 rc)                      |
+| `@mantine/core`         | `latest`, `next` `9.5.1-alpha.1`, `legacy` 7.17.8                                   |
+| `@seed-design/react`    | `latest`, `alpha` `0.0.0-alpha-…`, 이전 major 유지보수용 `react-v1.0`·`react-v2` 등 |
+| `react-aria-components` | `latest`, `nightly` `3.0.0-nightly-…`                                               |
+| `lucide-react`          | `latest` 1.70.0, `next` 1.3.0(오래됨), `beta`, `dev`                                |
 
 Primer의 [release.yml](https://github.com/primer/react/blob/main/.github/workflows/release.yml)이 구체적인 예다. `id-token: write`(OIDC)를 쓰고, `changeset-release/main` 브랜치(버전 PR)에서는 `changeset version --snapshot` 후 버전을 `<다음버전>-rc.<sha>`로 고쳐 `--tag next`로 내고, 다른 브랜치에서는 가짜 patch changeset을 만들어 `--snapshot`으로 `--tag canary`를 낸다.
 
@@ -334,11 +334,11 @@ Primer의 [release.yml](https://github.com/primer/react/blob/main/.github/workfl
 
 ### 다른 아이콘 패키지
 
-| 패키지 | 이름 변경 처리 | 근거 |
-| --- | --- | --- |
-| Tabler Icons 3.51.0 | 저장소 루트 `aliases.json`(outline 63개, filled 3개)에 옛 이름 → 새 이름을 두고, React 패키지가 alias export를 냄(예: `IconPackage as IconBoxSeam`). changesets `fixed`로 모든 패키지를 같은 버전으로 냄 | [aliases.json](https://github.com/tabler/tabler-icons/blob/main/aliases.json), `@tabler/icons-react` 3.51.0 d.ts |
-| Heroicons | v2.0.0(major)에서 아이콘 세트를 새로 그리면서 이름을 대량으로 바꿈(`mail` → `envelope`, `search` → `magnifying-glass`). release note에 이름 대응표를 실음. alias는 두지 않음 | [v2.0.0 release](https://github.com/tailwindlabs/heroicons/releases/tag/v2.0.0) |
-| Phosphor, Primer Octicons, Carbon Icons | 이번 조사에서는 확인하지 않음 | |
+| 패키지                                  | 이름 변경 처리                                                                                                                                                                                           | 근거                                                                                                             |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Tabler Icons 3.51.0                     | 저장소 루트 `aliases.json`(outline 63개, filled 3개)에 옛 이름 → 새 이름을 두고, React 패키지가 alias export를 냄(예: `IconPackage as IconBoxSeam`). changesets `fixed`로 모든 패키지를 같은 버전으로 냄 | [aliases.json](https://github.com/tabler/tabler-icons/blob/main/aliases.json), `@tabler/icons-react` 3.51.0 d.ts |
+| Heroicons                               | v2.0.0(major)에서 아이콘 세트를 새로 그리면서 이름을 대량으로 바꿈(`mail` → `envelope`, `search` → `magnifying-glass`). release note에 이름 대응표를 실음. alias는 두지 않음                             | [v2.0.0 release](https://github.com/tailwindlabs/heroicons/releases/tag/v2.0.0)                                  |
+| Phosphor, Primer Octicons, Carbon Icons | 이번 조사에서는 확인하지 않음                                                                                                                                                                            |                                                                                                                  |
 
 ### 시사점
 

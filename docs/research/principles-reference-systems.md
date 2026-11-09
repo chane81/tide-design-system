@@ -7,14 +7,14 @@
 
 ## 한눈에 보기
 
-| 시스템 | 원칙 이름 | 개수 | 형식 | 우선순위 문장("A가 B보다 우선") | 결정과의 연결 |
-| --- | --- | --- | --- | --- | --- |
-| Material 3 | 시스템 전체 원칙 페이지 없음. 접근성 원칙과 Expressive 전술이 따로 있음 | 접근성 원칙 3, Expressive 전술 7 | 짧은 제목과 설명 문단. 전술에는 Do/Caution 예시가 붙음 | 없음 | 전술 아래 Do/Caution 예시와 스스로 묻는 질문 |
-| IBM Carbon | Our guiding principles | 5 | "Carbon is ~." 굵은 선언문과 한두 문장 설명 | 없음 | 확인 불가 |
-| Atlassian | Values 3 + Principles 3 | 3 + 3 | 원칙 제목이 모두 "A before B" 형식. 원칙마다 "We ~" 문장 3개 | 있음 (3개 모두) | 가치 문장 안에 반례가 들어 있음("consistency for the sake of consistency"를 피함) |
-| GitHub Primer | 소개 페이지의 세 섹션 + Zen of GitHub | 3 + 14 | 섹션 제목과 설명 문단, 그리고 14개 경구 | 있음 (Zen 14개 중 5개) | 원칙에서 바로 나온 설계 판단(예: 데스크톱을 모바일 우선으로 축소하지 않음). ADR은 원칙을 인용하지 않음 |
-| Radix | Themes에는 원칙 페이지 없음. Primitives에 Key Features | Primitives 6 | 한 단어 제목과 설명 문단 | 없음 | 특징이 곧 API 결정(asChild, uncontrolled 기본값 등) |
-| 당근 SEED | SEED의 디자인 원칙 | 3 | "A & B" 영문 쌍 제목과 한글 두 줄 | 없음 | 업데이트 글에서 결정과 결과(지표)를 함께 서술 |
+| 시스템        | 원칙 이름                                                               | 개수                             | 형식                                                         | 우선순위 문장("A가 B보다 우선") | 결정과의 연결                                                                                          |
+| ------------- | ----------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Material 3    | 시스템 전체 원칙 페이지 없음. 접근성 원칙과 Expressive 전술이 따로 있음 | 접근성 원칙 3, Expressive 전술 7 | 짧은 제목과 설명 문단. 전술에는 Do/Caution 예시가 붙음       | 없음                            | 전술 아래 Do/Caution 예시와 스스로 묻는 질문                                                           |
+| IBM Carbon    | Our guiding principles                                                  | 5                                | "Carbon is ~." 굵은 선언문과 한두 문장 설명                  | 없음                            | 확인 불가                                                                                              |
+| Atlassian     | Values 3 + Principles 3                                                 | 3 + 3                            | 원칙 제목이 모두 "A before B" 형식. 원칙마다 "We ~" 문장 3개 | 있음 (3개 모두)                 | 가치 문장 안에 반례가 들어 있음("consistency for the sake of consistency"를 피함)                      |
+| GitHub Primer | 소개 페이지의 세 섹션 + Zen of GitHub                                   | 3 + 14                           | 섹션 제목과 설명 문단, 그리고 14개 경구                      | 있음 (Zen 14개 중 5개)          | 원칙에서 바로 나온 설계 판단(예: 데스크톱을 모바일 우선으로 축소하지 않음). ADR은 원칙을 인용하지 않음 |
+| Radix         | Themes에는 원칙 페이지 없음. Primitives에 Key Features                  | Primitives 6                     | 한 단어 제목과 설명 문단                                     | 없음                            | 특징이 곧 API 결정(asChild, uncontrolled 기본값 등)                                                    |
+| 당근 SEED     | SEED의 디자인 원칙                                                      | 3                                | "A & B" 영문 쌍 제목과 한글 두 줄                            | 없음                            | 업데이트 글에서 결정과 결과(지표)를 함께 서술                                                          |
 
 ## 1. Material 3
 

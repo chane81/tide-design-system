@@ -25,13 +25,13 @@ radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자
 
 ### 1. radius
 
-| 단계 | 값 | 쓰는 곳 |
-|---|---|---|
-| `sm` | 0.25rem (4px) | Checkbox, Badge, Tag, Tooltip, Skeleton(텍스트 줄), Table 안 작은 요소, Menu 항목·Select 옵션(목록 안) |
-| `md` | 0.375rem (6px) | Button, IconButton, Input, Textarea, Select·Combobox 트리거, Tabs 항목 |
-| `lg` | 0.5rem (8px) | Card, Alert, Popover, Menu·Select 목록, Toast, Accordion |
-| `xl` | 0.75rem (12px) | Dialog, AlertDialog |
-| `full` | 9999px | Avatar, Radio, Switch, Progress 막대, Spinner |
+| 단계   | 값             | 쓰는 곳                                                                                                |
+| ------ | -------------- | ------------------------------------------------------------------------------------------------------ |
+| `sm`   | 0.25rem (4px)  | Checkbox, Badge, Tag, Tooltip, Skeleton(텍스트 줄), Table 안 작은 요소, Menu 항목·Select 옵션(목록 안) |
+| `md`   | 0.375rem (6px) | Button, IconButton, Input, Textarea, Select·Combobox 트리거, Tabs 항목                                 |
+| `lg`   | 0.5rem (8px)   | Card, Alert, Popover, Menu·Select 목록, Toast, Accordion                                               |
+| `xl`   | 0.75rem (12px) | Dialog, AlertDialog                                                                                    |
+| `full` | 9999px         | Avatar, Radio, Switch, Progress 막대, Spinner                                                          |
 
 - 값은 Tailwind 기본값과 같다(④ 발견할 수 있음). 이름은 Tide 5단계만 남기고 나머지 기본값은 지운다(「v0 Foundation 범위 결정」).
 - 규칙 문장: 작은 표시 요소는 `sm`, 조작 요소는 `md`, 담는 요소는 `lg`, 화면을 덮는 요소는 `xl`, 원·알약형은 `full`. 안쪽 요소가 바깥 컨테이너보다 더 둥글지 않게 한다.
@@ -50,21 +50,21 @@ radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자
 - light의 raised에도 `border: 1px solid transparent`를 둔다. forced-colors 모드는 box-shadow를 모두 지우는데, 투명 border는 이 모드에서 시스템 색으로 그려져 경계가 남는다. 두 Theme 모두 border 1px라 크기도 같다. border 대신 `0 0 0 1px` 그림자를 테두리로 쓰는 방식은 이 이유로 쓰지 않는다.
 - 확정 값(24번에서 3안 중 "옅게" 안을 골랐다). shadow 색의 alpha도 컬러 결정의 12%/40%에서 **light gray-950 8%, dark black 30%** 로 낮췄다. 아래 100%는 이 alpha 그대로라는 뜻이다:
 
-  | 단계 | 가까운 레이어 | 먼 레이어 |
-  |---|---|---|
-  | `sm` | `0 1px 1px` 60% | `0 1px 2px` 100% |
-  | `md` | `0 1px 3px` 50% | `0 4px 12px -2px` 100% |
+  | 단계 | 가까운 레이어        | 먼 레이어               |
+  | ---- | -------------------- | ----------------------- |
+  | `sm` | `0 1px 1px` 60%      | `0 1px 2px` 100%        |
+  | `md` | `0 1px 3px` 50%      | `0 4px 12px -2px` 100%  |
   | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% |
 
 ### 3. 포커스 표시
 
 토스증권 로그인 화면(입력창 포커스 시 offset 없이 테두리 색만 파랑으로 바뀜)을 참고해 나눴다. 처음에는 field와 ring 두 종류였고, 24번에서 목록 안 항목용 **highlight**를 더해 세 종류가 되었다. 용어는 GLOSSARY의 「포커스 표시」.
 
-| 종류 | 대상 | 모양 | 언제 |
-|---|---|---|---|
-| **field** | Input, Textarea, Select·Combobox 트리거 | offset 없이 border를 focus-ring 색으로 바꾸고 두께를 1px → 2px로 늘린다. 늘어난 1px은 `inset` box-shadow로 그려 레이아웃이 흔들리지 않게 한다. `outline: 2px solid transparent`를 함께 둔다 | `:focus` (마우스 클릭 포함) |
-| **ring** | Button, IconButton, Link, Checkbox, Radio, Switch, Tabs 항목 등 나머지 전부 | `outline` 2px, offset 2px. 요소의 radius를 따른다 | `:focus-visible` (키보드) |
-| **highlight** | Menu 항목, Select·Combobox 옵션(목록 안 항목) | ring 없이 배경을 primary subtle, 글자를 primary text로 바꾼다. hover도 같은 모양이다. forced-colors 대비로 `outline: 2px solid transparent`를 둔다 | 키보드로 옮긴 항목(React Aria가 관리) + hover |
+| 종류          | 대상                                                                        | 모양                                                                                                                                                                                        | 언제                                          |
+| ------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **field**     | Input, Textarea, Select·Combobox 트리거                                     | offset 없이 border를 focus-ring 색으로 바꾸고 두께를 1px → 2px로 늘린다. 늘어난 1px은 `inset` box-shadow로 그려 레이아웃이 흔들리지 않게 한다. `outline: 2px solid transparent`를 함께 둔다 | `:focus` (마우스 클릭 포함)                   |
+| **ring**      | Button, IconButton, Link, Checkbox, Radio, Switch, Tabs 항목 등 나머지 전부 | `outline` 2px, offset 2px. 요소의 radius를 따른다                                                                                                                                           | `:focus-visible` (키보드)                     |
+| **highlight** | Menu 항목, Select·Combobox 옵션(목록 안 항목)                               | ring 없이 배경을 primary subtle, 글자를 primary text로 바꾼다. hover도 같은 모양이다. forced-colors 대비로 `outline: 2px solid transparent`를 둔다                                          | 키보드로 옮긴 항목(React Aria가 관리) + hover |
 
 - 색은 컬러 결정 그대로다(light blue-600, dark blue-400). error 상태 입력창도 포커스를 받으면 focus-ring 색으로 바뀐다. error는 메시지, 아이콘, `aria-invalid`가 계속 알린다(색만으로 알리지 않음, WCAG 1.4.1).
 - 두 종류로 나눈 이유:

@@ -17,19 +17,19 @@
 
 ## 1. 유지보수 상태 요약 (npm 기준, 2026-11-08)
 
-| 패키지 | 최신 버전 | 최신 릴리스 | 최초 publish | React peer | 주간 다운로드 |
-|---|---|---|---|---|---|
-| `radix-ui` (Radix Primitives 통합 패키지) | 1.8.1 | 2026-10-12 | 2022-08-01 | `^16.8 \|\| ^17 \|\| ^18 \|\| ^19` | 약 2,678만 |
-| `@radix-ui/react-dialog` | 1.3.1 | 2026-10-12 | 2020-12-15 | 위와 같음 | 약 9,271만 |
-| `@radix-ui/themes` | 3.3.0 | 2026-01-31 | 2023-06-15 | `16.8 \|\| ^17 \|\| ^18 \|\| ^19` | 약 146만 |
-| `react-aria-components` | 1.22.1 | 2026-10-09 | (1.0.0: 2023-12-20) | `^16.8 \|\| ^17 \|\| ^18 \|\| ^19.0.0-rc.1` | 약 898만 |
-| `@base-ui/react` | 1.9.0 | 2026-10-09 | 2025-12-11 (1.0.0) | `^17 \|\| ^18 \|\| ^19` | 약 2,836만 |
-| `@ark-ui/react` | 5.40.0 | 2026-10-29 | 2022-11-06 | `>=18.0.0` | 약 141만 |
-| `shadcn` (CLI) | 4.23.0 | 2026-10-27 | 2024-07-09 | (없음) | - |
-| `@primer/react` | 38.45.0 | 2026-11-06 | 2021-12-08 | `18.x \|\| 19.x` | 약 7.3만 |
-| `@carbon/react` | 1.120.0 | 2026-11-04 | 2021-07-30 (1.0.0: 2022-03-31) | `^16.8.6 \|\| ^17 \|\| ^18.2 \|\| ^19` | 약 20만 |
-| `@atlaskit/button` | 25.7.1 | 2026-11-06 | 2017-01-29 | `^18.2.0 \|\| ^19.0.0` | - |
-| `@seed-design/react` | 3.2.0 | 2026-11-05 | 2025-02-10 (0.0.1: 2025-02-24) | `>=18.0.0` | 약 4.6만 |
+| 패키지                                    | 최신 버전 | 최신 릴리스 | 최초 publish                   | React peer                                  | 주간 다운로드 |
+| ----------------------------------------- | --------- | ----------- | ------------------------------ | ------------------------------------------- | ------------- |
+| `radix-ui` (Radix Primitives 통합 패키지) | 1.8.1     | 2026-10-12  | 2022-08-01                     | `^16.8 \|\| ^17 \|\| ^18 \|\| ^19`          | 약 2,678만    |
+| `@radix-ui/react-dialog`                  | 1.3.1     | 2026-10-12  | 2020-12-15                     | 위와 같음                                   | 약 9,271만    |
+| `@radix-ui/themes`                        | 3.3.0     | 2026-01-31  | 2023-06-15                     | `16.8 \|\| ^17 \|\| ^18 \|\| ^19`           | 약 146만      |
+| `react-aria-components`                   | 1.22.1    | 2026-10-09  | (1.0.0: 2023-12-20)            | `^16.8 \|\| ^17 \|\| ^18 \|\| ^19.0.0-rc.1` | 약 898만      |
+| `@base-ui/react`                          | 1.9.0     | 2026-10-09  | 2025-12-11 (1.0.0)             | `^17 \|\| ^18 \|\| ^19`                     | 약 2,836만    |
+| `@ark-ui/react`                           | 5.40.0    | 2026-10-29  | 2022-11-06                     | `>=18.0.0`                                  | 약 141만      |
+| `shadcn` (CLI)                            | 4.23.0    | 2026-10-27  | 2024-07-09                     | (없음)                                      | -             |
+| `@primer/react`                           | 38.45.0   | 2026-11-06  | 2021-12-08                     | `18.x \|\| 19.x`                            | 약 7.3만      |
+| `@carbon/react`                           | 1.120.0   | 2026-11-04  | 2021-07-30 (1.0.0: 2022-03-31) | `^16.8.6 \|\| ^17 \|\| ^18.2 \|\| ^19`      | 약 20만       |
+| `@atlaskit/button`                        | 25.7.1    | 2026-11-06  | 2017-01-29                     | `^18.2.0 \|\| ^19.0.0`                      | -             |
+| `@seed-design/react`                      | 3.2.0     | 2026-11-05  | 2025-02-10 (0.0.1: 2025-02-24) | `>=18.0.0`                                  | 약 4.6만      |
 
 - `@base-ui-components/react`는 npm에서 deprecated 상태다. 메시지는 "Package was renamed to @base-ui/react"이고, 1.0.0에서 이름이 바뀌었다([Base UI v1.0.0 릴리스 노트](https://base-ui.com/react/overview/releases/v1-0-0), 2025-12-11).
 - 다운로드 수는 다른 라이브러리가 의존성으로 끌어온 수까지 포함한다. 채택도를 대략 보는 지표로만 쓴다.
@@ -91,42 +91,42 @@
 
 ○ = 있음, × = 없음, △ = 비슷한 것이 다른 이름으로 있음. "초기" 열은 위에서 확인한 시점 기준이다. Primer, Carbon, Atlassian은 초기 목록을 확인하지 못해 현재 기준이다.
 
-| 범주 | Component | shadcn 초기 (2023-01) | shadcn 현재 | Radix Themes 1.0 | Primer (현재) | Carbon (현재) | Atlassian (현재) | SEED 0.0.1 | SEED 현재 |
-|---|---|---|---|---|---|---|---|---|---|
-| 액션 | Button | ○ | ○ | ○ | ○ | ○ | ○ | ○ ActionButton | ○ ActionButton |
-| | IconButton | × (size=icon은 이후) | △ size=`icon` | ○ | ○ | ○ | ○ IconButton | △ layout=iconOnly | △ layout=iconOnly |
-| | Link | × | × | ○ | ○ | ○ | ○ | △ LinkContent | × |
-| 입력 | Input/TextField | ○ | ○ | ○ | ○ TextInput | ○ | ○ textfield | ○ | ○ |
-| | Textarea | ○ | ○ | ○ | ○ | ○ | ○ | △ TextField | ○ |
-| | Checkbox | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
-| | Radio | ○ | ○ | ○ | ○ | ○ | ○ | × | ○ |
-| | Switch | ○ | ○ | ○ | ○ ToggleSwitch | ○ Toggle | ○ toggle | ○ | ○ |
-| | Select | ○ | ○ | ○ | ○ | ○ (+Dropdown) | ○ | △ SelectBox | ○ |
-| | Combobox/Autocomplete | × | ○ | × | ○ Autocomplete | ○ ComboBox | 확인 불가 | × | × |
-| | Slider | ○ | ○ | ○ | × | ○ | ○ range | × | ○ |
-| | Label/Field | ○ Label | ○ Field | × | ○ FormControl | ○ FormLabel 등 | ○ form | × | △ Field 계열 |
-| 오버레이 | Dialog/Modal | ○ | ○ | ○ | ○ | ○ Modal | ○ modal-dialog | ○ | ○ |
-| | AlertDialog | ○ | ○ | ○ | ○ ConfirmationDialog | × (Modal의 danger) | 확인 불가 | △ Dialog | ○ |
-| | Popover | ○ | ○ | ○ | ○ | ○ | ○ popup | × | ○ |
-| | Tooltip | ○ | ○ | ○ | ○ | ○ | ○ | △ HelpBubble | ○ |
-| | Menu/Dropdown | ○ | ○ | ○ | ○ ActionMenu | ○ Menu/OverflowMenu | ○ dropdown-menu | △ ActionSheet | ○ |
-| | BottomSheet/Drawer | × | ○ Drawer/Sheet | × | × | △ SidePanel | 확인 불가 | ○ | ○ |
-| 내비게이션 | Tabs | ○ | ○ | ○ | △ UnderlineNav 등 | ○ | ○ | ○ | ○ |
-| | Accordion | ○ | ○ | × | × | ○ | × | × | ○ |
-| | Breadcrumb | × | ○ | × | ○ | ○ | ○ | × | × |
-| | Pagination | × | ○ | × | ○ | ○ | ○ | × | ○ |
-| 피드백 | Toast/Snackbar | × | ○ (sonner 기반) | × | × | ○ Notification | ○ flag | ○ Snackbar | ○ Snackbar |
-| | Alert/Callout/Banner | × | ○ Alert | ○ Callout | ○ Banner | ○ Notification | ○ section-message | ○ Callout/InlineBanner | ○ |
-| | Spinner/Loading | × | ○ | × | ○ | ○ Loading | ○ | △ ProgressCircle | ○ ProgressCircle |
-| | Progress | ○ | ○ | × | ○ ProgressBar | ○ ProgressBar | ○ progress-bar | ○ ProgressCircle | ○ |
-| | Skeleton | × | ○ | × | ○ | ○ | ○ | ○ | ○ |
-| 표시 | Avatar | ○ | ○ | ○ | ○ | ○ UserAvatar | ○ | ○ | ○ |
-| | Badge/Tag | × | ○ | ○ | ○ Label/CounterLabel | ○ Tag | ○ badge/lozenge/tag | ○ | ○ |
-| | Card | × | ○ | ○ | × (draft) | ○ Tile/Card | × | × | × |
-| | Table | × | ○ | ○ | ○ DataTable | ○ DataTable | ○ dynamic-table | × | × |
-| | Separator/Divider | ○ | ○ | ○ | × | × | × | × | ○ Divider |
-| 레이아웃·글자 | Box/Stack/Flex | × | × | ○ | ○ Stack/PageLayout | ○ Stack/Grid | ○ primitives | ○ | ○ |
-| | Text/Heading | × | △ Typography | ○ | ○ | ○ | ○ heading | ○ Text | ○ Text |
+| 범주          | Component             | shadcn 초기 (2023-01) | shadcn 현재     | Radix Themes 1.0 | Primer (현재)        | Carbon (현재)       | Atlassian (현재)    | SEED 0.0.1             | SEED 현재         |
+| ------------- | --------------------- | --------------------- | --------------- | ---------------- | -------------------- | ------------------- | ------------------- | ---------------------- | ----------------- |
+| 액션          | Button                | ○                     | ○               | ○                | ○                    | ○                   | ○                   | ○ ActionButton         | ○ ActionButton    |
+|               | IconButton            | × (size=icon은 이후)  | △ size=`icon`   | ○                | ○                    | ○                   | ○ IconButton        | △ layout=iconOnly      | △ layout=iconOnly |
+|               | Link                  | ×                     | ×               | ○                | ○                    | ○                   | ○                   | △ LinkContent          | ×                 |
+| 입력          | Input/TextField       | ○                     | ○               | ○                | ○ TextInput          | ○                   | ○ textfield         | ○                      | ○                 |
+|               | Textarea              | ○                     | ○               | ○                | ○                    | ○                   | ○                   | △ TextField            | ○                 |
+|               | Checkbox              | ○                     | ○               | ○                | ○                    | ○                   | ○                   | ○                      | ○                 |
+|               | Radio                 | ○                     | ○               | ○                | ○                    | ○                   | ○                   | ×                      | ○                 |
+|               | Switch                | ○                     | ○               | ○                | ○ ToggleSwitch       | ○ Toggle            | ○ toggle            | ○                      | ○                 |
+|               | Select                | ○                     | ○               | ○                | ○                    | ○ (+Dropdown)       | ○                   | △ SelectBox            | ○                 |
+|               | Combobox/Autocomplete | ×                     | ○               | ×                | ○ Autocomplete       | ○ ComboBox          | 확인 불가           | ×                      | ×                 |
+|               | Slider                | ○                     | ○               | ○                | ×                    | ○                   | ○ range             | ×                      | ○                 |
+|               | Label/Field           | ○ Label               | ○ Field         | ×                | ○ FormControl        | ○ FormLabel 등      | ○ form              | ×                      | △ Field 계열      |
+| 오버레이      | Dialog/Modal          | ○                     | ○               | ○                | ○                    | ○ Modal             | ○ modal-dialog      | ○                      | ○                 |
+|               | AlertDialog           | ○                     | ○               | ○                | ○ ConfirmationDialog | × (Modal의 danger)  | 확인 불가           | △ Dialog               | ○                 |
+|               | Popover               | ○                     | ○               | ○                | ○                    | ○                   | ○ popup             | ×                      | ○                 |
+|               | Tooltip               | ○                     | ○               | ○                | ○                    | ○                   | ○                   | △ HelpBubble           | ○                 |
+|               | Menu/Dropdown         | ○                     | ○               | ○                | ○ ActionMenu         | ○ Menu/OverflowMenu | ○ dropdown-menu     | △ ActionSheet          | ○                 |
+|               | BottomSheet/Drawer    | ×                     | ○ Drawer/Sheet  | ×                | ×                    | △ SidePanel         | 확인 불가           | ○                      | ○                 |
+| 내비게이션    | Tabs                  | ○                     | ○               | ○                | △ UnderlineNav 등    | ○                   | ○                   | ○                      | ○                 |
+|               | Accordion             | ○                     | ○               | ×                | ×                    | ○                   | ×                   | ×                      | ○                 |
+|               | Breadcrumb            | ×                     | ○               | ×                | ○                    | ○                   | ○                   | ×                      | ×                 |
+|               | Pagination            | ×                     | ○               | ×                | ○                    | ○                   | ○                   | ×                      | ○                 |
+| 피드백        | Toast/Snackbar        | ×                     | ○ (sonner 기반) | ×                | ×                    | ○ Notification      | ○ flag              | ○ Snackbar             | ○ Snackbar        |
+|               | Alert/Callout/Banner  | ×                     | ○ Alert         | ○ Callout        | ○ Banner             | ○ Notification      | ○ section-message   | ○ Callout/InlineBanner | ○                 |
+|               | Spinner/Loading       | ×                     | ○               | ×                | ○                    | ○ Loading           | ○                   | △ ProgressCircle       | ○ ProgressCircle  |
+|               | Progress              | ○                     | ○               | ×                | ○ ProgressBar        | ○ ProgressBar       | ○ progress-bar      | ○ ProgressCircle       | ○                 |
+|               | Skeleton              | ×                     | ○               | ×                | ○                    | ○                   | ○                   | ○                      | ○                 |
+| 표시          | Avatar                | ○                     | ○               | ○                | ○                    | ○ UserAvatar        | ○                   | ○                      | ○                 |
+|               | Badge/Tag             | ×                     | ○               | ○                | ○ Label/CounterLabel | ○ Tag               | ○ badge/lozenge/tag | ○                      | ○                 |
+|               | Card                  | ×                     | ○               | ○                | × (draft)            | ○ Tile/Card         | ×                   | ×                      | ×                 |
+|               | Table                 | ×                     | ○               | ○                | ○ DataTable          | ○ DataTable         | ○ dynamic-table     | ×                      | ×                 |
+|               | Separator/Divider     | ○                     | ○               | ○                | ×                    | ×                   | ×                   | ×                      | ○ Divider         |
+| 레이아웃·글자 | Box/Stack/Flex        | ×                     | ×               | ○                | ○ Stack/PageLayout   | ○ Stack/Grid        | ○ primitives        | ○                      | ○                 |
+|               | Text/Heading          | ×                     | △ Typography    | ○                | ○                    | ○                   | ○ heading           | ○ Text                 | ○ Text            |
 
 출처: 위 각 시스템 절의 링크. "×"는 확인한 목록에 그 이름이나 비슷한 이름이 없다는 뜻이다.
 
@@ -134,15 +134,15 @@
 
 ### 3.1 Button으로 본 variant와 size 이름
 
-| 시스템 | 스타일 축 prop 이름과 값 | 크기 prop 이름과 값(기본값) | 출처 |
-|---|---|---|---|
-| shadcn 초기 | `variant`: default, destructive, outline, subtle, ghost, link | `size`: default, sm, lg | [2023-01 button.tsx](https://github.com/shadcn-ui/ui/blob/7b121b10abf2f67daf716f32cd6a8266ce3151ed/apps/www/components/ui/button.tsx) |
-| shadcn 현재 (Radix base) | `variant`: default, destructive, outline, secondary, ghost, link | `size`: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg | [new-york-v4 button.tsx](https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/button.tsx) |
-| Radix Themes | `variant`: classic, solid, soft, surface, outline, ghost-offset, ghost (기본 solid) + `color`, `highContrast`, `radius` | `size`: "1"~"4" (기본 "2", 반응형 객체 가능) | [base-button.props.ts](https://github.com/radix-ui/themes/blob/main/packages/radix-ui-themes/src/components/_internal/base-button.props.ts), [Button 문서](https://www.radix-ui.com/themes/docs/components/button) |
-| Primer | `variant`: default, primary, danger, invisible, link (기본 default) | `size`: small, medium, large (기본 medium) | [Button.docs.json](https://github.com/primer/react/blob/main/packages/react/src/Button/Button.docs.json) |
-| Carbon | `kind`: primary, secondary, tertiary, ghost, danger, danger--primary, danger--ghost, danger--tertiary (기본 primary) | `size`: xs, sm, md, lg, xl, 2xl | [Button.tsx](https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Button/Button.tsx) |
-| Atlassian | `appearance`: default, primary, subtle, warning, danger, discovery, rovo | `spacing`: compact, default (size가 아닌 padding 축) | `@atlaskit/button` 25.7.1 `dist/types`, [llms-components.txt](https://atlassian.design/llms-components.txt) |
-| SEED | `variant`: brandSolid, neutralSolid, neutralWeak, criticalSolid, brandOutline, neutralOutline, ghost (기본 brandSolid) + `layout`: withText, iconOnly | `size`: xsmall, small, medium, large (기본 medium) | [action-button.d.ts](https://github.com/daangn/seed-design/blob/dev/packages/css/recipes/action-button.d.ts) |
+| 시스템                   | 스타일 축 prop 이름과 값                                                                                                                              | 크기 prop 이름과 값(기본값)                                  | 출처                                                                                                                                                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| shadcn 초기              | `variant`: default, destructive, outline, subtle, ghost, link                                                                                         | `size`: default, sm, lg                                      | [2023-01 button.tsx](https://github.com/shadcn-ui/ui/blob/7b121b10abf2f67daf716f32cd6a8266ce3151ed/apps/www/components/ui/button.tsx)                                                                              |
+| shadcn 현재 (Radix base) | `variant`: default, destructive, outline, secondary, ghost, link                                                                                      | `size`: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg | [new-york-v4 button.tsx](https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/button.tsx)                                                                                                     |
+| Radix Themes             | `variant`: classic, solid, soft, surface, outline, ghost-offset, ghost (기본 solid) + `color`, `highContrast`, `radius`                               | `size`: "1"~"4" (기본 "2", 반응형 객체 가능)                 | [base-button.props.ts](https://github.com/radix-ui/themes/blob/main/packages/radix-ui-themes/src/components/_internal/base-button.props.ts), [Button 문서](https://www.radix-ui.com/themes/docs/components/button) |
+| Primer                   | `variant`: default, primary, danger, invisible, link (기본 default)                                                                                   | `size`: small, medium, large (기본 medium)                   | [Button.docs.json](https://github.com/primer/react/blob/main/packages/react/src/Button/Button.docs.json)                                                                                                           |
+| Carbon                   | `kind`: primary, secondary, tertiary, ghost, danger, danger--primary, danger--ghost, danger--tertiary (기본 primary)                                  | `size`: xs, sm, md, lg, xl, 2xl                              | [Button.tsx](https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Button/Button.tsx)                                                                                             |
+| Atlassian                | `appearance`: default, primary, subtle, warning, danger, discovery, rovo                                                                              | `spacing`: compact, default (size가 아닌 padding 축)         | `@atlaskit/button` 25.7.1 `dist/types`, [llms-components.txt](https://atlassian.design/llms-components.txt)                                                                                                        |
+| SEED                     | `variant`: brandSolid, neutralSolid, neutralWeak, criticalSolid, brandOutline, neutralOutline, ghost (기본 brandSolid) + `layout`: withText, iconOnly | `size`: xsmall, small, medium, large (기본 medium)           | [action-button.d.ts](https://github.com/daangn/seed-design/blob/dev/packages/css/recipes/action-button.d.ts)                                                                                                       |
 
 관찰한 내용:
 
@@ -156,14 +156,14 @@
 
 ### 3.2 `className` 병합
 
-| 시스템 | 방식 | 출처 |
-|---|---|---|
-| shadcn | `cn(buttonVariants({ variant, size, className }))`. cva 결과와 사용자 `className`을 tailwind-merge로 합쳐 충돌하는 Tailwind 클래스는 뒤의 것이 이긴다. 2026-09부터 `cn`은 `twMerge(clsx(...))`를 대신하는 npm 패키지다. | [button.tsx](https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/button.tsx), [changelog cn](https://ui.shadcn.com/docs/changelog/2026-09-cn) |
-| Carbon | `classnames(className, { 'cds--btn': true, ... })`. 이어 붙이기만 하고 충돌은 해소하지 않는다. 접두사는 `usePrefix()`로 바꿀 수 있다. | [ButtonBase.tsx](https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Button/ButtonBase.tsx) |
-| Atlassian | 새 Button 타입이 `className`과 `style`을 **Omit**한다. 대신 primitives에 `xcss`(cssMap)를 쓴다. | `@atlaskit/button` 25.7.1 `dist/types/new-button/variants/types.d.ts`, [llms-components.txt](https://atlassian.design/llms-components.txt) |
-| Primer | v38에서 `sx`를 제거하고 styled-components 의존성을 뺐다. 이후 스타일 확장은 `className` 중심이다(병합 방식 세부는 확인 불가). | [CHANGELOG 38.0.0](https://github.com/primer/react/blob/main/packages/react/CHANGELOG.md) |
-| Base UI | `className`에 문자열 또는 `(state) => string` 함수를 받는다. `render` 요소와 병합할 때 class 이름은 합쳐지고, render 요소 쪽이 앞에 온다. | context7 `/mui/base-ui/v1.9.0` (handbook/styling, checkbox types), [Composition](https://base-ui.com/react/handbook/composition) |
-| React Aria | `className`과 `style`에 상태를 받는 함수를 넣을 수 있다. 기본 클래스(`react-aria-Tabs` 등)가 있고 `defaultClassName`으로 접근한다. 상태는 `data-*` 속성으로 노출해 Tailwind `data-[selected]:` 같은 변형으로 쓴다. Tailwind v4용 플러그인 `tailwindcss-react-aria-components` 2.x가 있다. | [Styling](https://react-spectrum.adobe.com/react-aria/styling.html) |
+| 시스템     | 방식                                                                                                                                                                                                                                                                                      | 출처                                                                                                                                                                |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| shadcn     | `cn(buttonVariants({ variant, size, className }))`. cva 결과와 사용자 `className`을 tailwind-merge로 합쳐 충돌하는 Tailwind 클래스는 뒤의 것이 이긴다. 2026-09부터 `cn`은 `twMerge(clsx(...))`를 대신하는 npm 패키지다.                                                                   | [button.tsx](https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/button.tsx), [changelog cn](https://ui.shadcn.com/docs/changelog/2026-09-cn) |
+| Carbon     | `classnames(className, { 'cds--btn': true, ... })`. 이어 붙이기만 하고 충돌은 해소하지 않는다. 접두사는 `usePrefix()`로 바꿀 수 있다.                                                                                                                                                     | [ButtonBase.tsx](https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Button/ButtonBase.tsx)                                      |
+| Atlassian  | 새 Button 타입이 `className`과 `style`을 **Omit**한다. 대신 primitives에 `xcss`(cssMap)를 쓴다.                                                                                                                                                                                           | `@atlaskit/button` 25.7.1 `dist/types/new-button/variants/types.d.ts`, [llms-components.txt](https://atlassian.design/llms-components.txt)                          |
+| Primer     | v38에서 `sx`를 제거하고 styled-components 의존성을 뺐다. 이후 스타일 확장은 `className` 중심이다(병합 방식 세부는 확인 불가).                                                                                                                                                             | [CHANGELOG 38.0.0](https://github.com/primer/react/blob/main/packages/react/CHANGELOG.md)                                                                           |
+| Base UI    | `className`에 문자열 또는 `(state) => string` 함수를 받는다. `render` 요소와 병합할 때 class 이름은 합쳐지고, render 요소 쪽이 앞에 온다.                                                                                                                                                 | context7 `/mui/base-ui/v1.9.0` (handbook/styling, checkbox types), [Composition](https://base-ui.com/react/handbook/composition)                                    |
+| React Aria | `className`과 `style`에 상태를 받는 함수를 넣을 수 있다. 기본 클래스(`react-aria-Tabs` 등)가 있고 `defaultClassName`으로 접근한다. 상태는 `data-*` 속성으로 노출해 Tailwind `data-[selected]:` 같은 변형으로 쓴다. Tailwind v4용 플러그인 `tailwindcss-react-aria-components` 2.x가 있다. | [Styling](https://react-spectrum.adobe.com/react-aria/styling.html)                                                                                                 |
 
 ### 3.3 ref 전달
 
@@ -177,12 +177,12 @@
 
 ### 3.4 `asChild`와 polymorphic 패턴
 
-| 방식 | 쓰는 곳 | 형태 |
-|---|---|---|
-| `asChild` (Slot) | Radix Primitives, Radix Themes, shadcn(Radix base), Ark UI, SEED | `<Tooltip.Trigger asChild><a href="…" /></Tooltip.Trigger>`. 기본 요소를 렌더하지 않고 자식을 복제해 props와 동작을 합친다. |
-| `render` prop | Base UI, shadcn(Base UI base), React Aria(일부) | Base UI: `<Menu.Trigger render={<MyButton />} />`, 또는 `(props, state) => …` 함수. React Aria: `<Link render={props => <NextLink {...props} />}>`처럼 라우터 링크 연동용이다. |
-| `as` prop (polymorphic) | Primer(`as: React.ElementType`, 기본 'button'), Carbon(`PolymorphicComponentPropWithRef`) | 렌더할 요소 타입을 직접 넘긴다. |
-| 별도 컴포넌트 | Atlassian(Button, LinkButton, IconButton 분리) | 요소별로 컴포넌트를 나눈다. |
+| 방식                    | 쓰는 곳                                                                                   | 형태                                                                                                                                                                           |
+| ----------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `asChild` (Slot)        | Radix Primitives, Radix Themes, shadcn(Radix base), Ark UI, SEED                          | `<Tooltip.Trigger asChild><a href="…" /></Tooltip.Trigger>`. 기본 요소를 렌더하지 않고 자식을 복제해 props와 동작을 합친다.                                                    |
+| `render` prop           | Base UI, shadcn(Base UI base), React Aria(일부)                                           | Base UI: `<Menu.Trigger render={<MyButton />} />`, 또는 `(props, state) => …` 함수. React Aria: `<Link render={props => <NextLink {...props} />}>`처럼 라우터 링크 연동용이다. |
+| `as` prop (polymorphic) | Primer(`as: React.ElementType`, 기본 'button'), Carbon(`PolymorphicComponentPropWithRef`) | 렌더할 요소 타입을 직접 넘긴다.                                                                                                                                                |
+| 별도 컴포넌트           | Atlassian(Button, LinkButton, IconButton 분리)                                            | 요소별로 컴포넌트를 나눈다.                                                                                                                                                    |
 
 출처: [Radix Composition](https://www.radix-ui.com/primitives/docs/guides/composition), [Ark Composition](https://ark-ui.com/docs/guides/composition), [Base UI Composition](https://base-ui.com/react/handbook/composition), context7 `/websites/react-aria_adobe`(Link, ListBox, Tabs의 `render`), [Primer Button.docs.json](https://github.com/primer/react/blob/main/packages/react/src/Button/Button.docs.json), [Carbon Button.tsx](https://github.com/carbon-design-system/carbon/blob/main/packages/react/src/components/Button/Button.tsx), [llms-components.txt](https://atlassian.design/llms-components.txt).
 
@@ -192,12 +192,12 @@
 
 ### 3.5 controlled / uncontrolled 이름
 
-| 라이브러리 | 열림 상태 | 값 상태 | 콜백 인자 |
-|---|---|---|---|
-| Radix Primitives | `open` / `defaultOpen` / `onOpenChange` | `value` / `defaultValue` / `onValueChange` | 값 그대로 |
-| Base UI 1.9.0 | `open` / `defaultOpen` / `onOpenChange` | `value` / `defaultValue` / `onValueChange(value, eventDetails)` | 값과 eventDetails |
-| Ark UI 5.x | `open` / `defaultOpen` / `onOpenChange(details)` | 같은 패턴 | 객체(`e.open`) |
-| React Aria Components | 확인 불가 (이번 조회 결과에 Modal과 DialogTrigger의 열림 prop이 없음) | 선택 상태는 `selectedKey` / `defaultSelectedKey` / `onSelectionChange` | 값(Key) |
+| 라이브러리            | 열림 상태                                                             | 값 상태                                                                | 콜백 인자         |
+| --------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------- |
+| Radix Primitives      | `open` / `defaultOpen` / `onOpenChange`                               | `value` / `defaultValue` / `onValueChange`                             | 값 그대로         |
+| Base UI 1.9.0         | `open` / `defaultOpen` / `onOpenChange`                               | `value` / `defaultValue` / `onValueChange(value, eventDetails)`        | 값과 eventDetails |
+| Ark UI 5.x            | `open` / `defaultOpen` / `onOpenChange(details)`                      | 같은 패턴                                                              | 객체(`e.open`)    |
+| React Aria Components | 확인 불가 (이번 조회 결과에 Modal과 DialogTrigger의 열림 prop이 없음) | 선택 상태는 `selectedKey` / `defaultSelectedKey` / `onSelectionChange` | 값(Key)           |
 
 출처: context7 `/websites/radix-ui_primitives`(Tabs.Root, Dialog.Root), `/mui/base-ui/v1.9.0`(Field.Control), `/llmstxt/ark-ui_llms_txt`(Dialog.Root, Controlled Dialog), `/websites/react-aria_adobe`(Tabs, selection).
 
@@ -206,20 +206,21 @@
 
 ## 4. headless 라이브러리 비교
 
-| 항목 | Radix Primitives | React Aria Components | Base UI | Ark UI |
-|---|---|---|---|---|
-| 만든 곳 | Radix(WorkOS) | Adobe (React Spectrum) | MUI. 문서 표현으로는 "Radix, Floating UI, Material UI를 만든 팀" | Chakra UI 팀 |
-| 최신 버전 / 날짜 | `radix-ui` 1.8.1 / 2026-10-12 | 1.22.1 / 2026-10-09 | 1.9.0 / 2026-10-09 | 5.40.0 / 2026-10-29 |
-| 안정 버전 시점 | 개별 패키지 1.0: 2022-07(`@radix-ui/react-dialog`) | 1.0.0: 2023-12-20 | 1.0.0: 2025-12-11 | 1.0.0: 2023-11-09, 5.0.0: 2025-03-06 |
-| 릴리스 주기 | 2025-08-13 다음 릴리스가 2026-06-06이었다(약 10개월 공백, 공식 Releases 기준). 그 뒤 6~7월에 연속 릴리스. | 대략 월 1회 minor(2026-02~10 매달) | 2025-12 1.0 이후 1.9까지 minor가 잦음 | minor가 잦음(5.x 40번째 minor) |
-| React 19 | 2024-06 "Full React 19 compatibility". 이후 19.2 관련 수정 계속 | peer `^19.0.0-rc.1` 포함 | peer `^19` | peer `>=18`. Dialog `hideMode: 'activity'`는 React 19 `<Activity>` 필요 |
-| 조합 API | `asChild` (Slot) | `render` prop(링크와 라우터 연동), children 함수 | `render` prop (요소 또는 함수) | `asChild`, `ark` factory |
-| 스타일 훅 | `data-state` 등 data 속성 | `className`/`style` 함수, data 속성, 기본 className, Tailwind 플러그인 | `className`/`style` 함수, data 속성(`data-checked` 등) | data 속성 (세부 확인 불가) |
-| 컴포넌트 범위 | 약 30개. Accordion부터 Tooltip까지 일반 위젯, OTP Field, Password Toggle Field. Combobox와 DatePicker는 없음 | 가장 넓음. DatePicker, Calendar, ComboBox, Table, Tree, ColorPicker, DnD, Toast, NavigationTree, Sheet와 날짜·숫자 국제화 | 약 37개. Combobox, Autocomplete, Number Field, OTP Field, Drawer, Toast, Meter. DatePicker는 목록에 없음 | 약 50개. DatePicker, ColorPicker, FileUpload, TagsInput, Tour, Splitter 등 |
-| 추가 특징 | 통합 패키지 `radix-ui`(2025-01)와 서브패스 import `radix-ui/accordion`(2026-07) | 훅(`react-aria`)과 컴포넌트 두 층. 테스트 유틸 문서 제공 | shadcn 새 프로젝트 기본값(2026-07) | Zag.js 상태 머신 기반(`@zag-js/*` 의존성 68개). React, Vue, Svelte, Solid 공통 |
-| 주간 다운로드 | 약 2,678만(`radix-ui`) | 약 898만 | 약 2,836만 | 약 141만 |
+| 항목             | Radix Primitives                                                                                             | React Aria Components                                                                                                     | Base UI                                                                                                  | Ark UI                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| 만든 곳          | Radix(WorkOS)                                                                                                | Adobe (React Spectrum)                                                                                                    | MUI. 문서 표현으로는 "Radix, Floating UI, Material UI를 만든 팀"                                         | Chakra UI 팀                                                                   |
+| 최신 버전 / 날짜 | `radix-ui` 1.8.1 / 2026-10-12                                                                                | 1.22.1 / 2026-10-09                                                                                                       | 1.9.0 / 2026-10-09                                                                                       | 5.40.0 / 2026-10-29                                                            |
+| 안정 버전 시점   | 개별 패키지 1.0: 2022-07(`@radix-ui/react-dialog`)                                                           | 1.0.0: 2023-12-20                                                                                                         | 1.0.0: 2025-12-11                                                                                        | 1.0.0: 2023-11-09, 5.0.0: 2025-03-06                                           |
+| 릴리스 주기      | 2025-08-13 다음 릴리스가 2026-06-06이었다(약 10개월 공백, 공식 Releases 기준). 그 뒤 6~7월에 연속 릴리스.    | 대략 월 1회 minor(2026-02~10 매달)                                                                                        | 2025-12 1.0 이후 1.9까지 minor가 잦음                                                                    | minor가 잦음(5.x 40번째 minor)                                                 |
+| React 19         | 2024-06 "Full React 19 compatibility". 이후 19.2 관련 수정 계속                                              | peer `^19.0.0-rc.1` 포함                                                                                                  | peer `^19`                                                                                               | peer `>=18`. Dialog `hideMode: 'activity'`는 React 19 `<Activity>` 필요        |
+| 조합 API         | `asChild` (Slot)                                                                                             | `render` prop(링크와 라우터 연동), children 함수                                                                          | `render` prop (요소 또는 함수)                                                                           | `asChild`, `ark` factory                                                       |
+| 스타일 훅        | `data-state` 등 data 속성                                                                                    | `className`/`style` 함수, data 속성, 기본 className, Tailwind 플러그인                                                    | `className`/`style` 함수, data 속성(`data-checked` 등)                                                   | data 속성 (세부 확인 불가)                                                     |
+| 컴포넌트 범위    | 약 30개. Accordion부터 Tooltip까지 일반 위젯, OTP Field, Password Toggle Field. Combobox와 DatePicker는 없음 | 가장 넓음. DatePicker, Calendar, ComboBox, Table, Tree, ColorPicker, DnD, Toast, NavigationTree, Sheet와 날짜·숫자 국제화 | 약 37개. Combobox, Autocomplete, Number Field, OTP Field, Drawer, Toast, Meter. DatePicker는 목록에 없음 | 약 50개. DatePicker, ColorPicker, FileUpload, TagsInput, Tour, Splitter 등     |
+| 추가 특징        | 통합 패키지 `radix-ui`(2025-01)와 서브패스 import `radix-ui/accordion`(2026-07)                              | 훅(`react-aria`)과 컴포넌트 두 층. 테스트 유틸 문서 제공                                                                  | shadcn 새 프로젝트 기본값(2026-07)                                                                       | Zag.js 상태 머신 기반(`@zag-js/*` 의존성 68개). React, Vue, Svelte, Solid 공통 |
+| 주간 다운로드    | 약 2,678만(`radix-ui`)                                                                                       | 약 898만                                                                                                                  | 약 2,836만                                                                                               | 약 141만                                                                       |
 
 출처:
+
 - Radix: [Releases](https://www.radix-ui.com/primitives/docs/overview/releases), [Composition](https://www.radix-ui.com/primitives/docs/guides/composition), [저장소 packages/react](https://github.com/radix-ui/primitives/tree/main/packages/react)
 - React Aria: [Releases](https://react-spectrum.adobe.com/react-aria/releases/index.html), [Styling](https://react-spectrum.adobe.com/react-aria/styling.html), [llms.txt](https://react-aria.adobe.com/llms.txt)
 - Base UI: [Releases](https://base-ui.com/react/overview/releases), [llms.txt](https://base-ui.com/llms.txt), [Composition](https://base-ui.com/react/handbook/composition)

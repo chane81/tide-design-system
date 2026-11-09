@@ -6,16 +6,16 @@
 
 ## 0. 근거 버전
 
-| 대상 | 확인한 버전 | 확인 방법 |
-| --- | --- | --- |
-| DTCG Format / Color / Resolver Module | 2025.10 (Stable, 2025-10-28 발행) | [designtokens.org/technical-reports](https://www.designtokens.org/technical-reports/) |
-| Style Dictionary | 5.8.0 (npm latest) | npm registry, [CHANGELOG](https://github.com/style-dictionary/style-dictionary/blob/main/CHANGELOG.md), context7 `/style-dictionary/style-dictionary` |
-| `@material/material-color-utilities` (MCU) | 0.4.0 | npm registry, [GitHub 소스](https://github.com/material-foundation/material-color-utilities) |
-| `@radix-ui/colors` | 3.0.0 | npm registry, [GitHub 소스](https://github.com/radix-ui/colors) |
-| `@primer/primitives` | 11.10.0 | npm registry, [GitHub 소스](https://github.com/primer/primitives) |
-| `@carbon/colors` | 11.62.0 | npm registry, unpkg 배포 파일 |
-| `@atlaskit/tokens` | 20.9.1 | npm registry, unpkg 배포 파일 |
-| `tailwindcss` | 4.3.5 (참고용) | npm registry, unpkg `theme.css` |
+| 대상                                       | 확인한 버전                       | 확인 방법                                                                                                                                             |
+| ------------------------------------------ | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DTCG Format / Color / Resolver Module      | 2025.10 (Stable, 2025-10-28 발행) | [designtokens.org/technical-reports](https://www.designtokens.org/technical-reports/)                                                                 |
+| Style Dictionary                           | 5.8.0 (npm latest)                | npm registry, [CHANGELOG](https://github.com/style-dictionary/style-dictionary/blob/main/CHANGELOG.md), context7 `/style-dictionary/style-dictionary` |
+| `@material/material-color-utilities` (MCU) | 0.4.0                             | npm registry, [GitHub 소스](https://github.com/material-foundation/material-color-utilities)                                                          |
+| `@radix-ui/colors`                         | 3.0.0                             | npm registry, [GitHub 소스](https://github.com/radix-ui/colors)                                                                                       |
+| `@primer/primitives`                       | 11.10.0                           | npm registry, [GitHub 소스](https://github.com/primer/primitives)                                                                                     |
+| `@carbon/colors`                           | 11.62.0                           | npm registry, unpkg 배포 파일                                                                                                                         |
+| `@atlaskit/tokens`                         | 20.9.1                            | npm registry, unpkg 배포 파일                                                                                                                         |
+| `tailwindcss`                              | 4.3.5 (참고용)                    | npm registry, unpkg `theme.css`                                                                                                                       |
 
 ---
 
@@ -73,17 +73,17 @@ ADR 0002에서 Tailwind 기본 팔레트를 Tide 팔레트로 바꾸기로 했�
 
 WCAG 상대 휘도 공식으로 직접 계산했다(아래 4장과 같은 코드).
 
-| 시스템 · 단계 | hex | 흰색 대비 | 검정 대비 | 용도 |
-| --- | --- | --- | --- | --- |
-| **Tide 앵커** | `#3183f5` | **3.69** | **5.70** | — |
-| Radix blue9 | `#0090ff` | 3.26 | 6.43 | solid 배경 |
-| Radix blue11 | `#0d74ce` | 4.77 | 4.41 | 저대비 텍스트 |
-| Primer blue.4 | `#218bff` | 3.39 | 6.20 | |
-| Primer blue.5 | `#0969da` | 5.19 | 4.04 | `bgColor.accent.emphasis`(light) |
-| Carbon blue50 | `#4589ff` | 3.35 | 6.28 | |
-| Carbon blue60 | `#0f62fe` | 5.00 | 4.20 | interactive / focus |
-| Atlassian Blue600 | `#357DE8` | 4.00 | 5.25 | |
-| Atlassian Blue700 | `#1868DB` | 5.20 | 4.04 | brand bold 배경, brand 텍스트 |
+| 시스템 · 단계     | hex       | 흰색 대비 | 검정 대비 | 용도                             |
+| ----------------- | --------- | --------- | --------- | -------------------------------- |
+| **Tide 앵커**     | `#3183f5` | **3.69**  | **5.70**  | —                                |
+| Radix blue9       | `#0090ff` | 3.26      | 6.43      | solid 배경                       |
+| Radix blue11      | `#0d74ce` | 4.77      | 4.41      | 저대비 텍스트                    |
+| Primer blue.4     | `#218bff` | 3.39      | 6.20      |                                  |
+| Primer blue.5     | `#0969da` | 5.19      | 4.04      | `bgColor.accent.emphasis`(light) |
+| Carbon blue50     | `#4589ff` | 3.35      | 6.28      |                                  |
+| Carbon blue60     | `#0f62fe` | 5.00      | 4.20      | interactive / focus              |
+| Atlassian Blue600 | `#357DE8` | 4.00      | 5.25      |                                  |
+| Atlassian Blue700 | `#1868DB` | 5.20      | 4.04      | brand bold 배경, brand 텍스트    |
 
 관찰: Primer, Carbon, Atlassian은 흰 글자를 올리는 brand solid 배경에 흰색 대비 약 5:1인 단계를 쓴다. Radix는 9단계(3.26:1)를 solid로 쓰지만 대비 기준을 APCA로 잡는다. `#3183f5`(3.69)는 이 시스템들의 "중간 밝기" 단계(Primer 4, Carbon 50, Atlassian 600)와 밝기가 비슷하다.
 
@@ -91,13 +91,13 @@ WCAG 상대 휘도 공식으로 직접 계산했다(아래 4장과 같은 코드
 
 ## 2. Primitive / Semantic Token 네이밍과 계층
 
-| 시스템 | Primitive 층 | Semantic 층 | 네이밍 구조 | 출처 |
-| --- | --- | --- | --- | --- |
-| Material 3 | Tonal Palette (`primary` palette의 tone 0~100) | Color role: `primary`, `onPrimary`, `primaryContainer`, `onPrimaryContainer` … | 역할 + `on` 접두사로 짝을 표시 | [theme_utils.ts](https://github.com/material-foundation/material-color-utilities/blob/main/typescript/utils/theme_utils.ts), [color_spec_2021.ts](https://github.com/material-foundation/material-color-utilities/blob/main/typescript/dynamiccolor/color_spec_2021.ts) |
-| Radix | `blue1`~`blue12`(Radix Colors) | Radix Colors 자체에는 semantic 층이 없다. 단계 번호 자체가 용도를 담는다. | `{hue}{step}` | [Understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale) |
-| Primer | `base.color.blue.5` | `functional`: `bgColor.accent.emphasis`, `bgColor.accent.muted`, `fgColor.*`, `borderColor.*` | `{속성}.{역할}.{강도}`. CSS 변수는 `--bgColor-accent-muted` | [bgColor.json5](https://github.com/primer/primitives/blob/main/src/tokens/functional/color/bgColor.json5), [README](https://github.com/primer/primitives/blob/main/README.md) |
-| Carbon | `blue60`, `gray100` | `$background`, `$layer-01`, `$icon-primary`, `$icon-interactive`, `$focus` … | `${UI 요소}-{역할}` | [Color tokens](https://carbondesignsystem.com/elements/color/tokens/) |
-| Atlassian | `color.palette.Blue700` | `color.background.brand.bold`, `color.text.brand`, `color.border.brand`, `color.background.neutral.subtle.hovered` | Foundation · Property · Modifier(역할, 강도, 상태) | [Design tokens](https://atlassian.design/foundations/tokens/design-tokens), `@atlaskit/tokens` `token-names.js` |
+| 시스템     | Primitive 층                                   | Semantic 층                                                                                                        | 네이밍 구조                                                 | 출처                                                                                                                                                                                                                                                                    |
+| ---------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Material 3 | Tonal Palette (`primary` palette의 tone 0~100) | Color role: `primary`, `onPrimary`, `primaryContainer`, `onPrimaryContainer` …                                     | 역할 + `on` 접두사로 짝을 표시                              | [theme_utils.ts](https://github.com/material-foundation/material-color-utilities/blob/main/typescript/utils/theme_utils.ts), [color_spec_2021.ts](https://github.com/material-foundation/material-color-utilities/blob/main/typescript/dynamiccolor/color_spec_2021.ts) |
+| Radix      | `blue1`~`blue12`(Radix Colors)                 | Radix Colors 자체에는 semantic 층이 없다. 단계 번호 자체가 용도를 담는다.                                          | `{hue}{step}`                                               | [Understanding the scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale)                                                                                                                                                             |
+| Primer     | `base.color.blue.5`                            | `functional`: `bgColor.accent.emphasis`, `bgColor.accent.muted`, `fgColor.*`, `borderColor.*`                      | `{속성}.{역할}.{강도}`. CSS 변수는 `--bgColor-accent-muted` | [bgColor.json5](https://github.com/primer/primitives/blob/main/src/tokens/functional/color/bgColor.json5), [README](https://github.com/primer/primitives/blob/main/README.md)                                                                                           |
+| Carbon     | `blue60`, `gray100`                            | `$background`, `$layer-01`, `$icon-primary`, `$icon-interactive`, `$focus` …                                       | `${UI 요소}-{역할}`                                         | [Color tokens](https://carbondesignsystem.com/elements/color/tokens/)                                                                                                                                                                                                   |
+| Atlassian  | `color.palette.Blue700`                        | `color.background.brand.bold`, `color.text.brand`, `color.border.brand`, `color.background.neutral.subtle.hovered` | Foundation · Property · Modifier(역할, 강도, 상태)          | [Design tokens](https://atlassian.design/foundations/tokens/design-tokens), `@atlaskit/tokens` `token-names.js`                                                                                                                                                         |
 
 세부 사항:
 
@@ -112,13 +112,13 @@ WCAG 상대 휘도 공식으로 직접 계산했다(아래 4장과 같은 코드
 
 ## 3. light/dark Theme 매핑과 대비 보장
 
-| 시스템 | Theme 매핑 방식 | 대비 보장 방식 |
-| --- | --- | --- |
-| Material 3 | 같은 tonal palette에서 tone만 바꾼다(primary: light 40 ↔ dark 80). contrast level에 따라 tone을 다시 계산한다. | tone 차이(40 → 3:1, 50 → 4.5:1)와 `ContrastCurve` |
-| Radix | light 스케일과 dark 스케일을 따로 제공하고, 같은 단계 번호를 같은 용도로 쓴다. | 11·12단계가 2단계 위에서 APCA Lc 60/90 |
-| Primer | base 색 자체가 테마별 파일로 나뉜다. semantic의 override로 테마마다 참조를 바꾼다. light/dark 외에 high-contrast, colorblind, tritanopia, dimmed 테마가 있다. | GitHub Actions의 [A11y contrast check](https://github.com/primer/primitives/actions/workflows/a11y-contrast.yml) 워크플로(README 배지). 검사 세부 기준은 **확인 불가** |
-| Carbon | 4개 테마: White, Gray 10(light), Gray 90, Gray 100(dark). light는 layer가 White와 Gray 10을 번갈아 쓰고, dark는 layer마다 한 단계씩 밝아진다. | grade 차이 표(위 1.4) |
-| Atlassian | 토큰 이름은 그대로 두고 값만 바꾼다. light, dark, high-contrast 같은 테마가 있다. CSS는 `html[data-color-mode][data-theme]` 선택자로 바꾼다. | 공식 문서에서 구체적인 보장 방식을 찾지 못했다. **확인 불가** |
+| 시스템     | Theme 매핑 방식                                                                                                                                               | 대비 보장 방식                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Material 3 | 같은 tonal palette에서 tone만 바꾼다(primary: light 40 ↔ dark 80). contrast level에 따라 tone을 다시 계산한다.                                                | tone 차이(40 → 3:1, 50 → 4.5:1)와 `ContrastCurve`                                                                                                                      |
+| Radix      | light 스케일과 dark 스케일을 따로 제공하고, 같은 단계 번호를 같은 용도로 쓴다.                                                                                | 11·12단계가 2단계 위에서 APCA Lc 60/90                                                                                                                                 |
+| Primer     | base 색 자체가 테마별 파일로 나뉜다. semantic의 override로 테마마다 참조를 바꾼다. light/dark 외에 high-contrast, colorblind, tritanopia, dimmed 테마가 있다. | GitHub Actions의 [A11y contrast check](https://github.com/primer/primitives/actions/workflows/a11y-contrast.yml) 워크플로(README 배지). 검사 세부 기준은 **확인 불가** |
+| Carbon     | 4개 테마: White, Gray 10(light), Gray 90, Gray 100(dark). light는 layer가 White와 Gray 10을 번갈아 쓰고, dark는 layer마다 한 단계씩 밝아진다.                 | grade 차이 표(위 1.4)                                                                                                                                                  |
+| Atlassian  | 토큰 이름은 그대로 두고 값만 바꾼다. light, dark, high-contrast 같은 테마가 있다. CSS는 `html[data-color-mode][data-theme]` 선택자로 바꾼다.                  | 공식 문서에서 구체적인 보장 방식을 찾지 못했다. **확인 불가**                                                                                                          |
 
 출처: [MCU color_spec_2021.ts](https://github.com/material-foundation/material-color-utilities/blob/main/typescript/dynamiccolor/color_spec_2021.ts), [Radix scale](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale), [Primer README](https://github.com/primer/primitives/blob/main/README.md), [Carbon overview › Themes, Layering model](https://carbondesignsystem.com/elements/color/overview/), [Atlassian design tokens](https://atlassian.design/foundations/tokens/design-tokens), `@atlaskit/tokens` `atlassian-light.js`
 
@@ -128,13 +128,13 @@ WCAG 상대 휘도 공식으로 직접 계산했다(아래 4장과 같은 코드
 
 WCAG 2.2의 상대 휘도 정의([WCAG 2.2 relative luminance](https://www.w3.org/TR/WCAG22/#dfn-relative-luminance))로 scratch에서 계산했다. sRGB 선형화 임계값은 0.04045를 썼다. WCAG 본문의 0.03928과는 8비트 값에서 결과가 같다.
 
-| 항목 | 값 |
-| --- | --- |
-| 상대 휘도 Y | 0.2348 |
-| **흰색(#fff) 대비** | **3.69 : 1** (1.05 / (0.2348 + 0.05)) |
-| **검정(#000) 대비** | **5.70 : 1** ((0.2348 + 0.05) / 0.05) |
-| OKLCH | L 0.6215, C 0.1882, H 257.77 |
-| HCT (MCU 0.4.0으로 계산) | H 264.31, C 64.17, **T 55.56** |
+| 항목                     | 값                                    |
+| ------------------------ | ------------------------------------- |
+| 상대 휘도 Y              | 0.2348                                |
+| **흰색(#fff) 대비**      | **3.69 : 1** (1.05 / (0.2348 + 0.05)) |
+| **검정(#000) 대비**      | **5.70 : 1** ((0.2348 + 0.05) / 0.05) |
+| OKLCH                    | L 0.6215, C 0.1882, H 257.77          |
+| HCT (MCU 0.4.0으로 계산) | H 264.31, C 64.17, **T 55.56**        |
 
 해석:
 
@@ -144,19 +144,19 @@ WCAG 2.2의 상대 휘도 정의([WCAG 2.2 relative luminance](https://www.w3.or
 
 참고로, 앵커의 hue와 chroma로 MCU `TonalPalette.fromHct`를 돌린 결과(MCU 0.4.0, scratch 실행)는 아래와 같다. 대비는 `Contrast.ratioOfTones`로 계산했다.
 
-| tone | hex | 흰색 대비 | 검정 대비 |
-| --- | --- | --- | --- |
-| 95 | `#ecf0ff` | 1.13 | 18.52 |
-| 90 | `#d7e2ff` | 1.29 | 16.26 |
-| 80 | `#abc7ff` | 1.70 | 12.34 |
-| 70 | `#7dabff` | 2.30 | 9.15 |
-| 60 | `#458fff` | 3.17 | 6.62 |
-| 56 | `#3384f6` | 3.63 | 5.78 |
-| 50 | `#1674e6` | 4.48 | 4.68 |
-| 40 | `#005cbc` | 6.46 | 3.25 |
-| 30 | `#004590` | 9.35 | 2.25 |
-| 20 | `#002f66` | 13.14 | 1.60 |
-| 10 | `#001b3f` | 17.14 | 1.23 |
+| tone | hex       | 흰색 대비 | 검정 대비 |
+| ---- | --------- | --------- | --------- |
+| 95   | `#ecf0ff` | 1.13      | 18.52     |
+| 90   | `#d7e2ff` | 1.29      | 16.26     |
+| 80   | `#abc7ff` | 1.70      | 12.34     |
+| 70   | `#7dabff` | 2.30      | 9.15      |
+| 60   | `#458fff` | 3.17      | 6.62      |
+| 56   | `#3384f6` | 3.63      | 5.78      |
+| 50   | `#1674e6` | 4.48      | 4.68      |
+| 40   | `#005cbc` | 6.46      | 3.25      |
+| 30   | `#004590` | 9.35      | 2.25      |
+| 20   | `#002f66` | 13.14     | 1.60      |
+| 10   | `#001b3f` | 17.14     | 1.23      |
 
 주의: tone 56은 `#3384f6`으로, 앵커 `#3183f5`와 정확히 같지 않다(앵커의 tone은 55.56). 정수 tone 격자로 스케일을 만들면 **앵커가 스케일 안에 정확히 들어가지 않는다.** 앵커를 그대로 쓰려면 앵커 단계만 원본 hex로 고정해야 한다. tone 50(4.48)도 4.5:1에 아주 조금 못 미친다.
 
@@ -204,13 +204,13 @@ WCAG 2.2의 상대 휘도 정의([WCAG 2.2 relative luminance](https://www.w3.or
 
 ### 7.2 `#3183f5`를 앵커로 스케일을 만드는 방법 후보
 
-| # | 후보 | 방법 | 장점 | 단점 / 확인할 점 |
-| --- | --- | --- | --- | --- |
-| A | **OKLCH lightness 계단 + 앵커 고정** | 앵커의 H(257.8)는 고정한다. 단계별 L 목표값을 정하고 C는 곡선(양 끝에서 줄임)으로 둔다. 앵커 단계(예: 500)만 원본 hex로 고정한다. | Tailwind v4 기본 팔레트(OKLCH)와 성격이 같다. DTCG에 `oklch`로 그대로 저장할 수 있다. CSS `oklch()`와도 맞는다. | OKLCH L은 WCAG 대비와 선형 관계가 아니다. 단계별 대비는 따로 검증해야 한다. 파란색은 hue drift와 gamut 문제가 있다. |
-| B | **HCT Tonal Palette(MCU)** | 앵커의 H 264.3, C 64.2로 `TonalPalette`를 만든다. 단계를 tone 값(예: 95/90/…/10)에 대응시킨다. | tone 차이 40/50으로 3:1과 4.5:1이 보장되므로, 단계 간 대비 규칙을 만들기 쉽다. Google이 유지하는 라이브러리다. | 앵커 tone이 55.56이라 정수 tone 격자에 들어가지 않는다(tone 56 = `#3384f6`). npm 0.4.0 ESM 배포 파일은 import 경로 문제로 기본 진입점 import가 실패했다(scratch에서 확인). 빌드 의존성으로 쓰기 전에 검증해야 한다. |
-| C | **대비 목표 역산(WCAG 기반)** | 단계마다 흰색 대비 목표(예: 1.1, 1.3, …, 3.0, 4.5, 7, …)를 먼저 정한다. 그 목표를 만족하는 Y(L\*)를 역산하고, hue와 chroma는 OKLCH나 HCT에서 맞춘다. | 지도의 WCAG 2.2 AA 기준과 바로 연결된다. "N단계 이상은 흰 글자 OK" 같은 규칙을 수치로 보장한다(Carbon의 grade 차이 표와 비슷한 효과). | 단계 간 지각적 간격은 고르지 않을 수 있다. 앵커(3.69)를 목표 표 어디에 둘지 정해야 한다. |
-| D | **Radix 커스텀 생성기 방식** | Radix 생성기에 앵커를 넣는다. 가장 가까운 Radix 스케일을 섞어 12단계를 만들고 앵커를 9단계에 둔다. light와 dark가 함께 나온다. | 12단계마다 용도가 정해져 있어 Semantic Token 매핑이 쉽다. dark 스케일을 따로 얻는다. P3 값도 나온다. | 대비 기준이 APCA라 WCAG 2.2 AA는 따로 검증해야 한다. 9단계(solid)에 앵커가 들어가면 흰 글자 대비가 3.69라 지도의 방향("solid에는 더 진한 단계")과 충돌할 수 있다. 생성기는 웹 UI이고, 소스는 radix-ui/website 저장소에 있다(npm 패키지로 공개된 API인지는 **확인 불가**). |
-| E | **수작업 조정 + 자동 검증** | 위 방법 중 하나로 초안을 만든다. 디자이너가 hex를 다듬고, CI에서 대비를 검사한다(Primer의 a11y contrast check 방식). | 결과 품질을 사람이 통제한다. 대부분의 대형 시스템(Primer, Carbon, Atlassian)이 생성 알고리즘을 공개하지 않은 것과 같은 길이다. | 재현성이 낮다. 다른 hue(neutral, danger 등)로 넓힐 때 비용이 든다. |
+| #   | 후보                                 | 방법                                                                                                                                                 | 장점                                                                                                                                  | 단점 / 확인할 점                                                                                                                                                                                                                                                          |
+| --- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A   | **OKLCH lightness 계단 + 앵커 고정** | 앵커의 H(257.8)는 고정한다. 단계별 L 목표값을 정하고 C는 곡선(양 끝에서 줄임)으로 둔다. 앵커 단계(예: 500)만 원본 hex로 고정한다.                    | Tailwind v4 기본 팔레트(OKLCH)와 성격이 같다. DTCG에 `oklch`로 그대로 저장할 수 있다. CSS `oklch()`와도 맞는다.                       | OKLCH L은 WCAG 대비와 선형 관계가 아니다. 단계별 대비는 따로 검증해야 한다. 파란색은 hue drift와 gamut 문제가 있다.                                                                                                                                                       |
+| B   | **HCT Tonal Palette(MCU)**           | 앵커의 H 264.3, C 64.2로 `TonalPalette`를 만든다. 단계를 tone 값(예: 95/90/…/10)에 대응시킨다.                                                       | tone 차이 40/50으로 3:1과 4.5:1이 보장되므로, 단계 간 대비 규칙을 만들기 쉽다. Google이 유지하는 라이브러리다.                        | 앵커 tone이 55.56이라 정수 tone 격자에 들어가지 않는다(tone 56 = `#3384f6`). npm 0.4.0 ESM 배포 파일은 import 경로 문제로 기본 진입점 import가 실패했다(scratch에서 확인). 빌드 의존성으로 쓰기 전에 검증해야 한다.                                                       |
+| C   | **대비 목표 역산(WCAG 기반)**        | 단계마다 흰색 대비 목표(예: 1.1, 1.3, …, 3.0, 4.5, 7, …)를 먼저 정한다. 그 목표를 만족하는 Y(L\*)를 역산하고, hue와 chroma는 OKLCH나 HCT에서 맞춘다. | 지도의 WCAG 2.2 AA 기준과 바로 연결된다. "N단계 이상은 흰 글자 OK" 같은 규칙을 수치로 보장한다(Carbon의 grade 차이 표와 비슷한 효과). | 단계 간 지각적 간격은 고르지 않을 수 있다. 앵커(3.69)를 목표 표 어디에 둘지 정해야 한다.                                                                                                                                                                                  |
+| D   | **Radix 커스텀 생성기 방식**         | Radix 생성기에 앵커를 넣는다. 가장 가까운 Radix 스케일을 섞어 12단계를 만들고 앵커를 9단계에 둔다. light와 dark가 함께 나온다.                       | 12단계마다 용도가 정해져 있어 Semantic Token 매핑이 쉽다. dark 스케일을 따로 얻는다. P3 값도 나온다.                                  | 대비 기준이 APCA라 WCAG 2.2 AA는 따로 검증해야 한다. 9단계(solid)에 앵커가 들어가면 흰 글자 대비가 3.69라 지도의 방향("solid에는 더 진한 단계")과 충돌할 수 있다. 생성기는 웹 UI이고, 소스는 radix-ui/website 저장소에 있다(npm 패키지로 공개된 API인지는 **확인 불가**). |
+| E   | **수작업 조정 + 자동 검증**          | 위 방법 중 하나로 초안을 만든다. 디자이너가 hex를 다듬고, CI에서 대비를 검사한다(Primer의 a11y contrast check 방식).                                 | 결과 품질을 사람이 통제한다. 대부분의 대형 시스템(Primer, Carbon, Atlassian)이 생성 알고리즘을 공개하지 않은 것과 같은 길이다.        | 재현성이 낮다. 다른 hue(neutral, danger 등)로 넓힐 때 비용이 든다.                                                                                                                                                                                                        |
 
 ### 7.3 dark Theme 후보(참고)
 

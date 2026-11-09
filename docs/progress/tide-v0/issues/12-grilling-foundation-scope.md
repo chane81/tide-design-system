@@ -12,17 +12,17 @@ v0에 넣을 Foundation 항목을 확정한다. 컬러와 타이포그래피 외
 
 컬러와 타이포그래피 외에 v0 Foundation에 넣을 항목과, 항목마다 Tailwind 기본값을 어떻게 다룰지 정했다. 색 팔레트를 교체한 ADR 0002, ADR 0003의 규칙(`--tide-*` 공개 계약, 표준 namespace에 연결)을 그대로 따르므로 새 ADR은 만들지 않았다.
 
-| 항목 | v0 포함 | Tailwind 기본값 | 후속 |
-|---|---|---|---|
-| 간격 | ○ | **유지**. 숫자 규칙(`--spacing` 0.25rem)만 씀. 이름 붙은 간격(`gutter` 등)은 두지 않음 | 이 티켓에서 끝남 |
-| radius | ○ | **교체**. 기본값을 지우고 `sm`/`md`/`lg`/`xl`/`full` 5단계만 둠 | 「radius·elevation·focus ring 형태 결정」 |
-| elevation(그림자 형태) | ○ | **교체**. Tide 그림자 단계만 두고, 모든 단계가 `--tide-shadow-color`를 씀 | 「radius·elevation·focus ring 형태 결정」 |
-| focus ring 형태(두께, offset) | ○ | Token으로 정함. 근거는 WCAG 2.4.11(AA)과 비텍스트 대비 3:1. 2.4.13(AAA)은 최소 기준이 아님 | 「radius·elevation·focus ring 형태 결정」 |
-| motion | ○ (최소) | **Token으로 정함**. duration과 easing 몇 개, `prefers-reduced-motion` 규칙 | 「motion Foundation 결정」 |
-| breakpoint | ○ | **유지**(`sm` 40rem ~ `2xl` 96rem) | 이 티켓에서 끝남 |
-| z-index | ○ | Semantic 층 이름을 둠. 이름은 표면 층(surface level)과 섞이지 않게 정함 | 「z-index 층 결정」(헤드리스 결정에 따라 top-layer를 쓰면 Token을 줄임) |
-| 아이콘 | ○ | — | 「아이콘 전략 결정」 |
-| border width, opacity | — | **유지**. Token을 따로 두지 않음 | 없음 |
+| 항목                          | v0 포함  | Tailwind 기본값                                                                            | 후속                                                                    |
+| ----------------------------- | -------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| 간격                          | ○        | **유지**. 숫자 규칙(`--spacing` 0.25rem)만 씀. 이름 붙은 간격(`gutter` 등)은 두지 않음     | 이 티켓에서 끝남                                                        |
+| radius                        | ○        | **교체**. 기본값을 지우고 `sm`/`md`/`lg`/`xl`/`full` 5단계만 둠                            | 「radius·elevation·focus ring 형태 결정」                               |
+| elevation(그림자 형태)        | ○        | **교체**. Tide 그림자 단계만 두고, 모든 단계가 `--tide-shadow-color`를 씀                  | 「radius·elevation·focus ring 형태 결정」                               |
+| focus ring 형태(두께, offset) | ○        | Token으로 정함. 근거는 WCAG 2.4.11(AA)과 비텍스트 대비 3:1. 2.4.13(AAA)은 최소 기준이 아님 | 「radius·elevation·focus ring 형태 결정」                               |
+| motion                        | ○ (최소) | **Token으로 정함**. duration과 easing 몇 개, `prefers-reduced-motion` 규칙                 | 「motion Foundation 결정」                                              |
+| breakpoint                    | ○        | **유지**(`sm` 40rem ~ `2xl` 96rem)                                                         | 이 티켓에서 끝남                                                        |
+| z-index                       | ○        | Semantic 층 이름을 둠. 이름은 표면 층(surface level)과 섞이지 않게 정함                    | 「z-index 층 결정」(헤드리스 결정에 따라 top-layer를 쓰면 Token을 줄임) |
+| 아이콘                        | ○        | —                                                                                          | 「아이콘 전략 결정」                                                    |
+| border width, opacity         | —        | **유지**. Token을 따로 두지 않음                                                           | 없음                                                                    |
 
 ### 근거
 
