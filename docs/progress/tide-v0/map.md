@@ -28,7 +28,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - `#3183f5`는 브랜드 기준색으로 스케일 안에 둠. 흰색 대비가 약 3.7:1이라 AA에 못 미치므로, 텍스트와 solid 배경에는 더 진한 단계를 씀
 - 공개 문서 사이트는 Storybook 하나로 함(MDX 사용)
 - Tailwind는 최신 안정 버전을 씀. className 충돌 처리는 Component 공통 API 규칙 티켓에서 다룸
-- **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지는 `@tide-tds/foundation`, `@tide-tds/desktop`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)), `@tide-tds/icons`([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md))
+- **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지는 `@tide-tds/foundation`, `@tide-tds/desktop`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)), `@tide-tds/icons`([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 세 패키지는 fixed 버전([ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
 - 리서치 대상: Material 3, IBM Carbon, Atlassian, GitHub Primer, Radix Colors/Themes, 당근 SEED Design
 
 ## Decisions so far
@@ -64,14 +64,11 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [버전 관리와 npm 배포 흐름 조사](issues/29-research-release.md): changesets 3.0.3은 pnpm에 publish를 맡겨 `workspace:`·`catalog:`가 치환됨. pnpm도 자체 릴리스 관리를 가짐. trusted publishing은 새 설정 기본이 stage만 허용이고 changesets는 stage를 아직 못 씀. 2FA 우회 토큰 publish는 2027-01 제거 목표. 저장소가 PRIVATE이라 provenance가 없음. `lucide-static` SVG 2,322개 중 293개는 alias
 - [Storybook 문서 구성 결정](issues/26-grilling-storybook.md): 사이드바는 시작하기 → 원칙 → 기준 → Foundation → Component, v0는 한글만. Component당 MDX 한 페이지(섹션 순서 고정). 렌더링되는 예시는 모두 CSF story. 원칙·기준 원문은 `docs/`의 `.md`를 `<Markdown>`으로 불러옴. Theme은 addon-themes와 채널 구독, 기본 light. Token 블록은 Token 원본에서 직접 생성. 릴리스마다 Dokploy(`tide-tds.lakegreen.net`)에 배포
 - [테스트 전략 결정](issues/28-grilling-testing.md): Vitest projects 4층(Node `unit`, Browser Mode `browser`, `storybook`, `smoke`). jsdom은 안 씀. Chromium만. 동작 단언은 `*.test.tsx`에만 둠(`play` 안 씀). a11y는 `'error'` + `wcag22aa`. forced-colors·reduced-motion은 계산값 단언으로 자동화. 시각 회귀는 v0에서 뺌. `apps/smoke-next` + turbo `smoke`. PR은 `--affected`, 릴리스 전 전체. Component 완료 기준 6개
+- [버전과 배포 정책 결정](issues/30-grilling-release.md): changesets 3 + Version PR, 세 패키지 fixed 버전, desktop은 내부 패키지를 `workspace:*`(정확한 버전)로 의존. 0.x는 minor = breaking(공개 계약 변경), 시각 값 조정은 patch. 5단계마다 minor, prerelease 없음, CHANGELOG는 한글. 저장소 공개 전환. CI는 OIDC 직접 publish, 첫 0.1.0은 로컬 2FA([ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md)). 아이콘 alias 293개는 `@deprecated` 다른 이름 export로 생성
 
 ## Not yet specified
 
-세 항목 모두 티켓으로 나눴다. 세부 질문은 각 티켓에 옮겼다.
-
-- **Storybook 문서 구성**: [25 조사](issues/25-research-storybook.md) → [26 결정](issues/26-grilling-storybook.md)
-- **테스트 전략**: [27 조사](issues/27-research-testing.md) → [28 결정](issues/28-grilling-testing.md) (26에도 막힘)
-- **버전과 배포 정책**: [29 조사](issues/29-research-release.md) → [30 결정](issues/30-grilling-release.md)
+없음. 모든 티켓이 resolved이고, 지도는 `/to-spec`에 넘길 수 있다.
 
 ## Out of scope
 
@@ -81,4 +78,5 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - mobile Target Component(`@tide-tds/mobile`, 터치 중심 모바일 웹). 이름 공간만 정해 둠. 이유는 [ADR 0006](../../decisions/0006-foundation-and-target-packages.md)
 - v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장, Slider, Drawer/Sheet, 토글 Chip. 이유는 [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md)에 있음
 - 시각 회귀 테스트(스크린샷 비교)와 Firefox·WebKit 테스트. 이유는 [테스트 전략 결정](issues/28-grilling-testing.md)에 있음
+- 1.0 출시 시점과 기준. v0을 실제로 써 본 뒤 판단한다. 그때까지 0.x 규칙을 적용한다. 이유는 [버전과 배포 정책 결정](issues/30-grilling-release.md)에 있음
 - 오버레이의 top-layer(`<dialog>`, popover API) 전환. 이유는 [z-index 층 결정](issues/22-grilling-z-index.md)에 있음

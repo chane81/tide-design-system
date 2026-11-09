@@ -103,3 +103,13 @@ _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
+
+## 배포
+
+**공개 계약 (Public contract)**:
+사용자 코드가 이름으로 기대는 Tide의 표면. CSS 변수, Utility class 이름, 텍스트 스타일 이름, Component와 아이콘의 export·props가 여기에 속한다. 공개 계약을 지우거나 이름·뜻을 바꾸는 것이 breaking change다. 값의 시각적 조정은 공개 계약이 바뀌는 것이 아니다.
+_Avoid_: public API(Component props만 떠올리게 함), 인터페이스
+
+**릴리스 (Release)**:
+Tide의 모든 배포 패키지를 같은 버전으로 함께 내는 한 번의 배포. 바뀐 것이 없는 패키지도 같은 버전으로 함께 나간다.
+_Avoid_: 배포(문서 사이트 배포와 혼동), publish(패키지 하나의 동작)
