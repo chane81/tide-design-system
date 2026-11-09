@@ -1,8 +1,8 @@
-# 그림자·포커스 표시 시각 비교
+# 그림자·포커스 표시·motion 시각 비교
 
 Type: prototype
 Status: open
-Blocked by: 20
+Blocked by: 20, 21
 
 ## Question
 
@@ -14,6 +14,9 @@ Blocked by: 20
 - 24px(xs) 조작 요소에 radius `md`(6px)가 어색하지 않은지
 - 포커스 표시 field(border 2px, inset 방식)와 ring(outline 2px, offset 2px)이 두 Theme에서 잘 보이는지. solid 버튼, error 입력창, raised 위 Menu 항목 위에서 확인한다
 - forced-colors 에뮬레이션에서 field의 투명 outline이 보이는지
+- forced-colors 에뮬레이션에서 light raised의 투명 border가 경계로 보이는지
+- Menu·Select 목록(`lg`, padding 3px + border 1px) 안 항목 `sm` radius가 동심원으로 보이는지
+- 「motion Foundation 결정」(21번)의 등장·퇴장 값: Popover·Toast(opacity + blur 4px + translate 12px), Dialog(opacity + scale 0.96), 등장 300ms / 퇴장 150ms. 12px가 Popover에 큰지. Button press `scale 0.96`. reduced-motion 에뮬레이션에서 opacity 전환만 남는지
 
 ### 참고
 
