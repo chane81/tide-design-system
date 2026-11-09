@@ -56,10 +56,11 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [모노레포 패키지 구조와 빌드 결정](issues/16-grilling-monorepo-structure.md): 배포 패키지는 `@tide-tds/foundation`(Token, `tokens.css`, `tailwind.css`, tailwind-merge 설정)과 `@tide-tds/desktop`(desktop Target React Component, `styles.css`) 두 개이고, Storybook은 private `apps/docs`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)). TS 7.0.2 단독(Storybook은 `react-docgen` 기본값 고정). desktop은 Vite `preserveModules` + `tsc` d.ts, ESM 전용. react-aria는 dependencies, React·Tailwind는 peer. turbo 태스크는 build, typecheck, test, dev. catalog는 기본 하나에 `strict`
 - [radius·elevation·focus ring 형태 결정](issues/20-grilling-shape-radius-elevation-focus.md): radius는 Tailwind 기본값과 같은 4/6/8/12px/full이고 size와 짝짓지 않음(조작 요소는 모두 `md`). 그림자는 raised에서만 쓰는 sm/md/lg 3단계, 2레이어, dark에서도 그림. 포커스 표시는 입력창용 field(테두리 색 + 2px, `:focus`)와 나머지용 ring(outline 2px, offset 2px, `:focus-visible`)으로 나눔(토스증권 참고). `focus-ring`, `focus-field` Utility class 제공. 그림자 숫자는 24번 prototype에서 확정. 21번에서 목록 안 항목 radius `sm`(중첩 규칙)과 light raised의 투명 border(forced-colors)를 보완함
 - [motion Foundation 결정](issues/21-grilling-motion.md): jakub.kr 자료를 참고해 "자주 쓰는 UI일수록 덜 움직인다"를 기준으로 삼음. duration은 `fast` 150ms, `normal` 300ms 두 단계, easing은 `ease-out` 하나. Menu·Select 목록·Tooltip은 바로 나타나고 사라질 때만 fade. Popover·Toast·Dialog는 300ms로 나타나고 150ms로 약하게 사라짐. 목록 항목 hover는 바로 바뀜. Button은 누르면 0.96으로 축소(`static`으로 끔). 이동·확대·blur는 `motion-safe:`일 때만 쓰고, 줄이기를 원하면 opacity 전환으로 바꿈. Theme 전환 시 transition 끄기는 가이드로만 제공
+- [z-index 층 결정](issues/22-grilling-z-index.md): v0는 top-layer를 쓰지 않고 React Aria portal + z-index로 통일함. 쌓임 단계는 `sticky` 100 < `modal` 200 < `popover` 300 < `toast` 400 < `tooltip` 500(Dialog 안 Select 목록이 보이도록 popover가 modal 위). `z-modal`처럼 노출하고 공개 계약은 `--tide-z-*`. Component 내부 겹침은 `isolate` + `z-0`/`z-1`. WCAG 2.4.11은 `scroll-padding-top` 가이드와 Toast 위치로 대응
 
 ## Not yet specified
 
-- **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 폰트 로드 가이드(next/font/local, CDN 동적 subset)와 텍스트 스타일 시각화 페이지 포함. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것과, Theme 전환 시 transition을 끄는 가이드(motion Foundation 결정)도 포함.
+- **Storybook 문서 구성**: 원칙, 파운데이션, 컴포넌트 페이지의 MDX 구조와 토큰 시각화 방식. 폰트 로드 가이드(next/font/local, CDN 동적 subset)와 텍스트 스타일 시각화 페이지 포함. 원칙별 Do/Don't 예시를 실제 Component로 렌더링하는 것과, Theme 전환 시 transition을 끄는 가이드(motion Foundation 결정), sticky 헤더용 `scroll-padding-top` 가이드(z-index 층 결정)도 포함.
 - **테스트 전략**: vitest로 어디까지 테스트할지, 시각 회귀 테스트와 접근성 자동 검사를 넣을지. `pnpm pack` tarball을 Next 앱에 설치하는 smoke test(`"use client"` 보존, d.ts의 nodenext 해석 확인 포함)를 어디서 언제 돌릴지도 포함.
 - **버전과 배포 정책**: changesets 등 릴리스 흐름, v0의 semver 정책. CI publish 인증(trusted publishing, 토큰)과 npm의 2FA 우회 토큰 제한에 대한 대응도 포함.
 
@@ -70,3 +71,4 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - 특정 서비스 전용 Component
 - mobile Target Component(`@tide-tds/mobile`, 터치 중심 모바일 웹). 이름 공간만 정해 둠. 이유는 [ADR 0006](../../decisions/0006-foundation-and-target-packages.md)
 - v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장, Slider, Drawer/Sheet, 토글 Chip. 이유는 [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md)에 있음
+- 오버레이의 top-layer(`<dialog>`, popover API) 전환. 이유는 [z-index 층 결정](issues/22-grilling-z-index.md)에 있음
