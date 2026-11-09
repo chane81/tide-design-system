@@ -22,7 +22,7 @@ Blocked by: 03 (Storybook과 브라우저 테스트 골격), 36 (패키지 빌�
 
 ### 빌드와 배포
 
-- [ ] 파일 단위로 나눠(`preserveModules`) tree-shaking이 된다.
+- [ ] desktop·foundation과 같은 tsdown 설정(`unbundle`, oxc d.ts, 티켓 36)으로 빌드해 파일 단위로 나눠 tree-shaking이 된다.
 - [ ] LICENSE에 Lucide ISC와 Feather MIT 고지 전문을 넣는다. 공개 API, 패키지 설명, Storybook 본문에는 Lucide를 드러내지 않고 감사 문구만 한 줄 둔다.
 - [ ] desktop dependencies에 icons를 연결한다.
 

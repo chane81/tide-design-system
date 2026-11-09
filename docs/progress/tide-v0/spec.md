@@ -162,14 +162,15 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - private 앱은 두 개다. Storybook 문서 앱과 Next.js smoke test 앱.
 - 별도의 설정 패키지나 utils 패키지는 두지 않는다. `cn`과 공통 union 타입은 desktop이 export한다.
 - TypeScript 7.0.2 하나만 쓴다. 공통 tsconfig에서 `erasableSyntaxOnly`(enum 대신 union), `isolatedDeclarations`, `verbatimModuleSyntax`를 켠다. 상대 import에 `.ts`/`.tsx` 확장자를 붙이고 `rewriteRelativeImportExtensions`를 켠다.
+- 배포 패키지 세 개는 tsdown 하나로 빌드한다. 원본 파일 단위를 유지하는 `unbundle` 모드로 ESM을 내고, d.ts는 `isolatedDeclarations` 기반 oxc로 만든다. dependencies·peerDependencies(서브패스 포함)는 번들에 넣지 않는다. exports는 `package.json`에서 손으로 관리한다([패키지 빌드를 tsdown으로 전환](../tide-v0-impl/issues/36-tsdown-build.md), 2026-11-10 사용자 결정으로 Vite 라이브러리 모드·`tsc` 빌드를 대체).
 - 출력은 ESM 전용이다. 배포 패키지에는 `engines`를 두지 않는다. 저장소는 Node 26과 pnpm 12.18.0으로 고정한다.
-- 의존성 버전은 pnpm 기본 catalog 하나로 관리하고 `catalogMode: strict`로 둔다. peer 범위와 내부 패키지는 catalog에 넣지 않는다. 0.x인 oxfmt만 정확한 버전으로 고정한다.
+- 의존성 버전은 pnpm 기본 catalog 하나로 관리하고 `catalogMode: strict`로 둔다. peer 범위와 내부 패키지는 catalog에 넣지 않는다. 0.x인 패키지(oxfmt, publint, tsdown)는 정확한 버전으로 고정한다.
 - lint(oxlint)와 format(oxfmt)은 루트에서 저장소 전체를 한 번에 돌린다. type-aware 린팅은 쓰지 않는다.
 - turbo 태스크는 `build`, `typecheck`, `test`, `smoke`, `dev` 다섯 개다. `dev`를 뺀 나머지는 모두 `^build`에 의존한다.
 
 ### `@tide-tds/foundation`
 
-- **원본**: Token은 TS 객체(`as const`)가 원본이다. 대비 쌍 목록도 같은 곳에 둔다. 직접 만든 Node 스크립트가 원본에서 CSS와 tailwind-merge 설정을 만든다. JS와 d.ts는 `tsc`로 만들고 번들러는 쓰지 않는다. DTCG JSON은 만들지 않는다([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md)).
+- **원본**: Token은 TS 객체(`as const`)가 원본이다. 대비 쌍 목록도 같은 곳에 둔다. 직접 만든 Node 스크립트가 원본에서 CSS와 tailwind-merge 설정을 만든다. JS와 d.ts는 tsdown(`unbundle`, oxc d.ts)으로 만들고, 생성 스크립트는 그 뒤에 실행한다. DTCG JSON은 만들지 않는다([ADR 0003](../../decisions/0003-token-source-and-utility-namespaces.md)).
 - **공개 표면(exports)**:
   - 루트: Token 객체
   - tokens CSS: `--tide-*` 변수와 `[data-theme]` 덮어쓰기만 담는다. Tailwind 없이 쓰는 사용자의 공개 계약이다.
@@ -262,7 +263,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - `aria-label`: 있으면 `role="img"`. 없으면 `aria-hidden="true"`, `focusable="false"`
   - 나머지 SVG 속성은 그대로 넘긴다. 색은 `currentColor`다.
 - 손으로 쓰는 것은 공통 틀 하나뿐이다. 각 아이콘은 그 틀과 SVG 데이터를 합친 것이다.
-- **빌드**: 파일 단위로 나눠 tree-shaking이 되게 한다(`preserveModules`).
+- **빌드**: tsdown `unbundle`로 파일 단위로 나눠 tree-shaking이 되게 한다.
 - **라이선스**: LICENSE에 Lucide ISC와 Feather MIT 고지 전문을 포함한다. 공개 API, 패키지 설명, Storybook 본문에는 Lucide를 드러내지 않는다. 감사 문구만 한 줄 둔다.
 - **크기 규칙**(Component 안에서 쓸 때):
 
@@ -284,8 +285,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - styles CSS: foundation tailwind CSS를 import하고 `@source`로 패키지 자신을 등록한다.
   - 개발용 exports 조건 `@tide-tds/source`는 원본을 가리킨다(Storybook HMR용).
 - **빌드**:
-  - Vite 8 라이브러리 모드에 `preserveModules`를 켠다. `"use client"`는 원본 파일에 직접 붙인다.
-  - d.ts는 `tsc`의 `emitDeclarationOnly`로 만든다.
+  - tsdown `unbundle`로 원본 파일 단위를 유지한다. `"use client"`는 필요한 원본 파일에만 직접 붙이고, 빌드 결과에 파일마다 그대로 남는다. `banner`로 일괄로 붙이지 않는다.
+  - d.ts는 tsdown이 `isolatedDeclarations` 기반 oxc로 만든다.
   - `sideEffects`는 CSS만 둔다.
 - **의존성**:
   - peer: `react ^19`, `react-dom ^19`, `tailwindcss ^4.3`
