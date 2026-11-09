@@ -1,12 +1,6 @@
-import {
-  color,
-  contrastRatio,
-  roleFamily,
-  semanticHex,
-  type ColorFamily,
-  type ColorStep,
-  type Role,
-} from "@tide-tds/foundation";
+import { color, type ColorFamily, type ColorStep, type Role } from "@tide-tds/foundation";
+// 내부 서브패스(앱 개발자용 아님). 문서 블록이 원본 hex로 대비비를 계산하려고 쓴다.
+import { contrastRatio, roleFamily, semanticHex } from "@tide-tds/foundation/internal";
 import type { ReactElement } from "react";
 
 // 색 Token 블록: Primitive 스케일을 Token 원본에서 그린다(spec 「문서 앱」 Token 블록).

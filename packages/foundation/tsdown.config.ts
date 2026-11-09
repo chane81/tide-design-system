@@ -3,7 +3,8 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  // internal은 문서 앱·빌드 스크립트용 내부 서브패스다(앱 개발자용 아님).
+  entry: ["src/index.ts", "src/internal.ts"],
   // 원본 파일 단위로 낸다(디렉터리 구조 유지).
   unbundle: true,
   format: "esm",

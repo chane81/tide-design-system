@@ -5,13 +5,11 @@ import { fileURLToPath } from "node:url";
 
 import {
   color,
-  colorValueHex,
-  semanticEntries,
-  shadowColor,
   type SemanticColorValue,
   type SemanticNamespace,
   type ThemeName,
 } from "../src/index.ts";
+import { colorValueHex, semanticEntries, shadowColor } from "../src/internal.ts";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
 const header = "/* 이 파일은 @tide-tds/foundation 빌드 스크립트가 만든다. 직접 고치지 않는다. */\n";

@@ -100,7 +100,10 @@ export type PrimitiveColorName =
   | { [Key in keyof Color]: Color[Key] extends string ? Key : never }[keyof Color]
   | { [Family in ColorFamily]: `${Family}-${ColorStep}` }[ColorFamily];
 
-/** Primitive 이름을 정본 hex로 바꾼다 */
+/**
+ * Primitive 이름을 정본 hex로 바꾼다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export function primitiveHex(name: PrimitiveColorName): string {
   if (name === "white" || name === "black") return color[name];
   const index = name.lastIndexOf("-");

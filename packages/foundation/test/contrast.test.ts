@@ -2,15 +2,13 @@
 // 기준은 WCAG 2.x 대비비 하나다. 텍스트 4.5:1, UI 경계·포커스 3:1(tide-v0 티켓 09).
 import { describe, expect, it } from "vitest";
 
+import { color, contrastPairs, type ThemeName } from "../src/index.ts";
 import {
-  color,
   contrastExclusions,
-  contrastPairs,
   contrastRatio,
   semanticEntries,
   semanticHex,
-  type ThemeName,
-} from "../src/index.ts";
+} from "../src/internal.ts";
 
 const themes: ThemeName[] = ["light", "dark"];
 

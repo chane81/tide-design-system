@@ -64,6 +64,10 @@ export const contrastPairs: readonly ContrastPair[] = [
   ),
 ];
 
+/**
+ * 대비 검사에서 뺀 Semantic Token과 이유.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export const contrastExclusions: readonly ContrastExclusion[] = [
   { token: "border-default", reason: "장식용 구분선이다. 경계 식별에 쓰지 않는다." },
   {
@@ -91,6 +95,7 @@ function relativeLuminance(hex: string): number {
 /**
  * 두 색의 WCAG 2.x 대비비(1~21). 순서는 상관없다.
  * 반투명 색(8자리 hex)은 받지 않는다. 대비 검사에서 overlay와 shadow는 제외한다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function contrastRatio(foreground: string, background: string): number {
   const a = relativeLuminance(foreground);

@@ -1,18 +1,9 @@
+// 루트는 Token 객체와 그 타입만 낸다(spec 「`@tide-tds/foundation`」 공개 표면).
+// 대비 계산 같은 도우미는 앱 개발자용이 아니라서 `./internal.ts`(`@tide-tds/foundation/internal`)에 둔다.
+export { color, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color.ts";
 export {
-  color,
-  primitiveHex,
-  type ColorFamily,
-  type ColorStep,
-  type PrimitiveColorName,
-} from "./color.ts";
-export {
-  colorValueHex,
-  roleFamily,
   semantic,
-  semanticEntries,
-  semanticHex,
   semanticPrefix,
-  shadowColor,
   type AlphaColor,
   type Role,
   type SemanticColorName,
@@ -21,10 +12,4 @@ export {
   type ThemeName,
   type ThemedColor,
 } from "./semantic.ts";
-export {
-  contrastExclusions,
-  contrastPairs,
-  contrastRatio,
-  type ContrastExclusion,
-  type ContrastPair,
-} from "./contrast.ts";
+export { contrastPairs, type ContrastExclusion, type ContrastPair } from "./contrast.ts";

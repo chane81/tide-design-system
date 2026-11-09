@@ -22,7 +22,10 @@ export interface ThemedColor {
 /** Role. Component에서는 `color` prop으로 고른다. */
 export type Role = "neutral" | "primary" | "success" | "warning" | "danger" | "info";
 
-/** Role이 참조하는 Primitive 계열 */
+/**
+ * Role이 참조하는 Primitive 계열.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export const roleFamily = {
   neutral: "gray",
   primary: "blue",
@@ -150,6 +153,10 @@ export type SemanticColorName = {
 
 // shadow 색은 Utility class로 노출하지 않는다. 공개 계약은 `--tide-shadow-color` 하나다.
 // alpha는 tide-v0 티켓 24(그림자·포커스 표시 시각 비교)에서 light 8%, dark 30%로 정했다.
+/**
+ * Theme별 shadow 색. CSS에서는 `--tide-shadow-color`로 쓴다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export const shadowColor = {
   light: { primitive: "gray-950", alpha: 0.08 },
   dark: { primitive: "black", alpha: 0.3 },
@@ -157,7 +164,10 @@ export const shadowColor = {
 
 shadowColor satisfies ThemedColor;
 
-/** 모든 Semantic Token(namespace, Utility class 이름, Theme별 값) */
+/**
+ * 모든 Semantic Token(namespace, Utility class 이름, Theme별 값).
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export function semanticEntries(): {
   readonly namespace: SemanticNamespace;
   readonly key: string;
@@ -174,7 +184,10 @@ export function semanticEntries(): {
   );
 }
 
-/** 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다. */
+/**
+ * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export function colorValueHex(value: SemanticColorValue): string {
   if (typeof value === "string") return primitiveHex(value);
   const alpha = Math.round(value.alpha * 255)
@@ -183,7 +196,10 @@ export function colorValueHex(value: SemanticColorValue): string {
   return `${primitiveHex(value.primitive)}${alpha}`;
 }
 
-/** Semantic Token이 Theme에서 가리키는 hex */
+/**
+ * Semantic Token이 Theme에서 가리키는 hex.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
 export function semanticHex(name: SemanticColorName, theme: ThemeName): string {
   const entry = semanticEntries().find((candidate) => candidate.className === name);
   if (!entry) throw new Error(`Semantic Token이 아니다: ${name}`);
