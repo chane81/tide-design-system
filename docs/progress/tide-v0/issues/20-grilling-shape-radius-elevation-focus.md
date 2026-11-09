@@ -21,7 +21,7 @@ Blocked by: 12
 
 ## Answer
 
-radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자는 초안이고, 「그림자·포커스 표시·motion 시각 비교」(24번)에서 light·dark를 눈으로 보고 확정한다. 새 ADR은 만들지 않았다(기존 Token 규칙 안에서 값과 사용 규칙만 정함).
+radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자는 「그림자·포커스 표시·motion 시각 비교」(24번)에서 light·dark를 눈으로 보고 확정했다. 새 ADR은 만들지 않았다(기존 Token 규칙 안에서 값과 사용 규칙만 정함).
 
 ### 1. radius
 
@@ -48,30 +48,33 @@ radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자
 - 단계마다 2레이어(가까운 짧은 그림자 + 먼 넓은 그림자)다. 두 레이어 모두 `--tide-shadow-color` 하나를 쓰고, 레이어별 진하기는 `color-mix(in srgb, var(--tide-shadow-color) N%, transparent)`로 낮춘다. 그래서 컬러 결정의 "shadow 색 Token은 하나" 규칙이 유지된다.
 - dark Theme에서도 그림자를 그린다. 같은 `shadow-*` class가 Theme에 따라 색만 바뀐다(Component에 Theme 분기 없음, ③ 단순함). dark에서 잘 안 보이는 경계는 raised의 border가 맡는다.
 - light의 raised에도 `border: 1px solid transparent`를 둔다. forced-colors 모드는 box-shadow를 모두 지우는데, 투명 border는 이 모드에서 시스템 색으로 그려져 경계가 남는다. 두 Theme 모두 border 1px라 크기도 같다. border 대신 `0 0 0 1px` 그림자를 테두리로 쓰는 방식은 이 이유로 쓰지 않는다.
-- 초안 값(100%는 shadow 색의 alpha 그대로: light gray-950 12%, dark black 40%):
+- 확정 값(24번에서 3안 중 "옅게" 안을 골랐다). shadow 색의 alpha도 컬러 결정의 12%/40%에서 **light gray-950 8%, dark black 30%** 로 낮췄다. 아래 100%는 이 alpha 그대로라는 뜻이다:
 
   | 단계 | 가까운 레이어 | 먼 레이어 |
   |---|---|---|
-  | `sm` | `0 1px 2px` 60% | `0 1px 3px` 100% |
-  | `md` | `0 2px 4px -1px` 50% | `0 8px 16px -4px` 100% |
-  | `lg` | `0 4px 8px -2px` 50% | `0 16px 32px -8px` 100% |
+  | `sm` | `0 1px 1px` 60% | `0 1px 2px` 100% |
+  | `md` | `0 1px 3px` 50% | `0 4px 12px -2px` 100% |
+  | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% |
 
 ### 3. 포커스 표시
 
-토스증권 로그인 화면(입력창 포커스 시 offset 없이 테두리 색만 파랑으로 바뀜)을 참고해 두 종류로 나눴다. 용어는 GLOSSARY의 「포커스 표시」.
+토스증권 로그인 화면(입력창 포커스 시 offset 없이 테두리 색만 파랑으로 바뀜)을 참고해 나눴다. 처음에는 field와 ring 두 종류였고, 24번에서 목록 안 항목용 **highlight**를 더해 세 종류가 되었다. 용어는 GLOSSARY의 「포커스 표시」.
 
 | 종류 | 대상 | 모양 | 언제 |
 |---|---|---|---|
 | **field** | Input, Textarea, Select·Combobox 트리거 | offset 없이 border를 focus-ring 색으로 바꾸고 두께를 1px → 2px로 늘린다. 늘어난 1px은 `inset` box-shadow로 그려 레이아웃이 흔들리지 않게 한다. `outline: 2px solid transparent`를 함께 둔다 | `:focus` (마우스 클릭 포함) |
-| **ring** | Button, IconButton, Link, Checkbox, Radio, Switch, Tabs·Menu 항목 등 나머지 전부 | `outline` 2px, offset 2px. 요소의 radius를 따른다 | `:focus-visible` (키보드) |
+| **ring** | Button, IconButton, Link, Checkbox, Radio, Switch, Tabs 항목 등 나머지 전부 | `outline` 2px, offset 2px. 요소의 radius를 따른다 | `:focus-visible` (키보드) |
+| **highlight** | Menu 항목, Select·Combobox 옵션(목록 안 항목) | ring 없이 배경을 primary subtle, 글자를 primary text로 바꾼다. hover도 같은 모양이다. forced-colors 대비로 `outline: 2px solid transparent`를 둔다 | 키보드로 옮긴 항목(React Aria가 관리) + hover |
 
 - 색은 컬러 결정 그대로다(light blue-600, dark blue-400). error 상태 입력창도 포커스를 받으면 focus-ring 색으로 바뀐다. error는 메시지, 아이콘, `aria-invalid`가 계속 알린다(색만으로 알리지 않음, WCAG 1.4.1).
 - 두 종류로 나눈 이유:
   - 입력창은 field 방식이 가볍고 익숙하다.
   - solid 버튼은 배경(blue-600)과 ring 색이 같아서 offset 없이 그리면 ring이 묻힌다. 그래서 버튼류는 offset이 있는 ring을 쓴다.
   - 1px 회색 → 1px 파랑은 차이가 너무 작아 저시력 사용자에게 약하다. 그래서 field도 두께를 2px로 늘린다(① 접근성).
+- 구현 주의: error 입력창의 danger border가 field 포커스 스타일보다 우선하면, 빨간 border 안쪽에 파란 inset 1px이 겹쳐 두 줄로 보인다(24번 prototype에서 실제로 생김). `focus-field`는 error 상태보다 우선해야 한다. 선택자 순서에 기대지 말고 error+focus 조합을 명시한다.
 - forced-colors(Windows 고대비 모드)는 border 색과 box-shadow를 시스템 색으로 덮어쓴다. field에 둔 투명 outline이 이 모드에서만 보이므로 포커스 표시가 사라지지 않는다.
 - WCAG 근거: 2.4.7 Focus Visible(AA)과 1.4.11 비텍스트 대비 3:1(AA). 크기·전후 대비 요건인 2.4.13 Focus Appearance는 AAA라 최소 기준이 아니다. 티켓에 적혀 있던 **2.4.11은 Focus Not Obscured(Minimum)**, 즉 포커스된 요소가 sticky 요소 등에 가려지지 않아야 한다는 기준이다. 모양이 아니라 겹침 문제이므로 「z-index 층 결정」(22번)으로 넘긴다.
+- highlight를 쓰는 이유: 목록 padding(3px) 안에서 바깥 ring은 목록 가장자리와 옆 항목에 붙는다. 화살표 키로 움직이는 목록은 OS 메뉴처럼 배경으로 위치를 보이는 쪽이 익숙하다(④). AA 2.4.7은 포커스가 보이기만 하면 되고, 표시와 주변의 3:1 대비는 AAA 2.4.13 요건이다. 그래도 배경과 글자색을 함께 바꿔 알아보기 쉽게 한다.
 - 대비 검사: ring은 offset 덕분에 canvas·raised와 맞닿으므로 기존 대비 쌍(focus-ring × canvas, raised)이 그대로 유효하다. field는 입력창 배경과 맞닿는데, 입력창 배경은 canvas 또는 raised와 같으므로 새 대비 쌍이 필요 없다.
 
 ### 4. Utility class 노출
@@ -91,3 +94,4 @@ radius, elevation, 포커스 표시의 **규칙**을 정했다. 그림자 숫자
 
 - 2026-11-09 grilling 진행. 1라운드 Q1~Q6(radius 값, size와 짝짓지 않음, 종류별 매핑, 그림자 3단계, dark에서도 그림자, 2레이어)은 추천안대로 확정했다. 포커스 표시는 처음에 모든 Component에 outline 2px + offset 2px를 제안했으나, 사용자가 토스증권 로그인 화면처럼 두껍지 않고 색으로 구별하는 방식을 원해 입력형(field)과 나머지(ring)로 나눴다. 2라운드(error 상태, Utility class 이름, 그림자 초안과 prototype 분리)는 추천안대로 확정했다.
 - 2026-11-09 「motion Foundation 결정」(21번) grilling에서 jakub.kr 자료(중첩 radius, forced-colors에서 그림자 경계)를 참고해 두 가지를 보완했다. Menu 항목·Select 옵션을 `md`에서 `sm`으로 바꾸고 목록 padding을 3px(border 1px 포함 4px)로 정했다. light raised에 투명 border를 더했다.
+- 2026-11-09 「그림자·포커스 표시·motion 시각 비교」(24번)에서 값을 확정해 Answer를 고쳤다. 그림자는 "옅게" 안(alpha 8%/30%), 목록 안 항목은 highlight. 사용자는 처음에 버튼 포커스 ring을 없애자고 했으나 WCAG 2.4.7(AA) 위반이라 고르지 않았다. ring이 Tab 이동 때만 보인다는 점을 확인한 뒤 현재 규칙(outline 2px, offset 2px)을 유지했다.

@@ -43,12 +43,12 @@ v0 Component 안에서 쓸 아이콘과, 사용자에게 제공할 아이콘을 
 | Component size | 텍스트 스타일 | 텍스트 옆 아이콘 | IconButton 아이콘 |
 |---|---|---|---|
 | xs (24px) | `label-sm` 12px | 14px | 16px |
-| sm (32px) | `label-sm` 12px | 16px | 16px |
+| sm (32px) | `label-sm` 12px | 14px | 16px |
 | md (40px) | `label-md` 14px | 16px | 20px |
 | lg (48px) | `label-lg` 16px | 20px | 24px |
 
 - 선 두께는 렌더 기준으로 label(굵기 500) 옆에서 2px, body(굵기 400) 옆에서 1.5px다.
-- sm은 글자 대비 1.33em이라 jakub 범위(1~1.25em)를 조금 넘는다. 32px 버튼에서 14px는 작아 보일 수 있어 16px로 두고, 「그림자·포커스 표시·motion 시각 비교」(24번)에서 Pretendard와 나란히 놓고 확인한다.
+- sm 텍스트 옆 아이콘은 24번에서 14px와 16px를 Pretendard와 나란히 놓고 비교해 **14px**로 정했다(1.17em, jakub 범위 1~1.25em 안).
 - 한 화면에서 아이콘 세트를 섞지 않는다(가이드).
 
 ### 4. 접근성
@@ -67,3 +67,4 @@ v0 Component 안에서 쓸 아이콘과, 사용자에게 제공할 아이콘을 
 ## Comments
 
 - 2026-11-09 grilling 진행. Lucide, 내부 아이콘 복사, 크기·선 두께, 접근성은 추천안대로 확정했다. 처음에는 공개 아이콘 패키지 없이 앱이 필요하면 `lucide-react`를 직접 설치하는 안을 추천했다. 사용자가 앱에서 `@tide-tds/icons`로 불러 쓰는 것도 좋다고 해서 생성형 복사 패키지로 바꿨다. desktop 내부 아이콘도 그 패키지에서 가져오도록 출처를 하나로 합쳤다(ADR 0007).
+- 2026-11-09 「그림자·포커스 표시·motion 시각 비교」(24번)에서 값을 확정해 Answer를 고쳤다. sm 텍스트 옆 아이콘 16px → 14px.
