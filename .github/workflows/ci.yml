@@ -1,0 +1,43 @@
+# PR마다 lint, format, 그리고 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
+# 액션 버전: actions/checkout v7, pnpm/action-setup v6, actions/setup-node v7, actions/cache v6 (2026-11-10 확인)
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # turbo --affected가 base 브랜치와 비교하려면 전체 히스토리가 필요하다.
+          fetch-depth: 0
+
+      # package.json의 packageManager(pnpm@12.18.0)를 읽는다.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      # 원격 캐시 대신 .turbo를 GitHub Actions cache에 둔다.
+      - uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm turbo run typecheck test build smoke --affected

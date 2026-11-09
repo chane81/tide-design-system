@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "futureFlags": {
+    "githubActionsRemoteBaseRefFallback": true
+  },
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "storybook-static/**"] },
+    "typecheck": { "dependsOn": ["^build"] },
+    "test": { "dependsOn": ["^build"] },
+    "smoke": { "dependsOn": ["^build"] },
+    "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true }
+  }
+}
