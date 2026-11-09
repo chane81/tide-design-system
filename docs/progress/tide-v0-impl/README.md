@@ -1,0 +1,66 @@
+# Tide v0 구현 티켓
+
+근거 spec: [Tide v0 spec](../tide-v0/spec.md). 결정 기록은 [Tide v0 지도](../tide-v0/map.md)와 그 티켓에 있다.
+
+> **상태: 발행됨 (2026-11-10).** `issues/01~35` 티켓 파일을 만들었다. 프런티어는 「실행 규칙」대로 계산한다.
+
+## 실행 규칙 (멀티 에이전트)
+
+- **프런티어**: `Status: ready-for-agent`이고, `Blocked by`의 티켓이 모두 `done`이고, 아무도 claim하지 않은 티켓이다. 번호가 작은 것부터 고른다.
+- **병렬**: 프런티어 티켓마다 에이전트 하나를 붙인다. 에이전트마다 git worktree를 따로 쓴다. 끝난 티켓은 하나씩 main에 머지하고, 머지한 다음 프런티어를 다시 계산한다.
+- **직렬로 둔 이유**: 같은 파일(foundation의 Token 원본, CSS 생성 스크립트, tailwind-merge 설정)을 고치는 티켓은 병렬로 돌리지 않는다. 그래서 Foundation 04 → 05 → 06 → 07은 한 줄이다. 서로 다른 패키지나 앱을 고치는 티켓만 병렬로 둔다.
+- **단계 경계**: 단계 N의 티켓은 단계 N-1의 티켓이 모두 끝나야 시작한다. 단계 사이에 사람이 Version PR을 머지해 minor를 낸다(0.3.0, 0.4.0은 별도 티켓 없이 이 규칙으로 낸다). 그래야 다음 단계의 changeset이 이전 릴리스에 섞이지 않는다.
+- **HITL 티켓**(`ready-for-human`): 사람이 처리할 때까지 그 뒤의 티켓은 멈춘다.
+- **Claim과 완료**: 시작할 때 `Status: claimed`, 끝나면 `Status: done`으로 바꾸고 `## Comments`에 결과를 적는다.
+- **Component 완료 기준**: spec의 Testing Decisions에 있는 6개를 따른다.
+- **라이브러리 API**: 설치된 버전의 문서(context7, 공식 문서)로 확인하고 근거 버전을 남긴다. spec의 「구현 중 확인할 것」 항목은 해당 티켓에서 확인한다.
+
+## 분해안 (승인됨)
+
+| # | 제목 | Blocked by | 완료되면 되는 것 | 유형 |
+|---|---|---|---|---|
+| 01 | 저장소 골격 | — | workspace, catalog strict, turbo 태스크 5개, 공통 tsconfig, oxlint/oxfmt, Node·pnpm 고정, PR CI(typecheck·lint)가 빈 패키지로 통과 | agent |
+| 02 | Token에서 Next 앱까지 관통 | 01 | foundation에 Token 하나(`blue` 일부와 `bg-primary-solid`)를 원본 → tokens/tailwind CSS → tailwind-merge 설정으로 생성. desktop은 `cn`과 VisuallyHidden으로 빌드(preserveModules, tsc d.ts, styles CSS). Vitest `unit` project(class 생성 검사)와 `smoke` 앱(tarball → next build → tsc nodenext → publint) 통과 | agent |
+| 03 | Storybook과 브라우저 테스트 골격 | 02 | 문서 앱(react-docgen, Tailwind vite, desktop 원본 조건), Theme 툴바와 채널 구독(transition 끄기 포함), VisuallyHidden story와 MDX. `browser` project(+forcedColors·reducedMotion instance)와 `storybook` project(a11y `error`, `wcag22aa`) 동작 | agent |
+| 04 | 컬러 Foundation | 03 | Primitive 6계열 11단계, Semantic 전체(namespace 노출), 표면 층, light/dark `[data-theme]`, `dark:` variant, 대비 쌍 전체 검사와 미등록 Token 검출, Tailwind 기본 팔레트 제거, 색 Token 블록 | agent |
+| 05 | 타이포그래피 Foundation과 Typography | 04 | font-family 2개, 텍스트 스타일 14개, 굵기 5개, Tailwind 기본값 제거, base CSS(`keep-all`), merge 설정, Typography Component(기본 요소, `level`, `render`), 텍스트 스타일 블록 | agent |
+| 06 | radius·Elevation·포커스 표시 Foundation | 05 | radius 5단계, shadow 3단계(2레이어, `--tide-shadow-color`), light raised 투명 border, `focus-ring`/`focus-field` utility(error+focus 우선), merge 설정, radius·그림자 블록, forced-colors 계산값 테스트 | agent |
+| 07 | motion·z-index Foundation | 06 | duration `fast`/`normal`, easing `out`, 기본 transition 값, 쌓임 단계 5개, merge 설정, motion 블록 | agent |
+| 08 | 아이콘 패키지 | 03 | 이름표(정식 Lucide 이름으로 초기화), 생성 스크립트(원본 없음 → 실패, 새 SVG → 출력), 공통 틀, `unit` 테스트(이름표와 export 일치, 대표 아이콘 렌더), LICENSE 고지, desktop 의존 연결, 아이콘 검색 페이지 | agent |
+| 09 | Spinner | 07 | 1단계의 마지막 Component(접근 가능한 이름, reduced-motion에서도 회전 유지) | agent |
+| 10 | 문서: 시작하기·원칙·기준 | 03 | 사이드바 순서, 설치(Next App Router)·폰트 로드·Theme 전환 페이지, 원칙·기준 `.md` 원문 불러오기와 상대 링크 변환 | agent |
+| 11 | 릴리스 파이프라인 | 02, 08 | changesets 3 fixed + changelog-github, Version PR workflow, changeset 필수 검사, 이름표 키 제거 시 minor 요구 검사, OIDC publish job(`id-token: write`는 이 job만), GitHub Release 하나로 합치기, Dokploy Dockerfile과 배포 단계(publish 후에만) | agent |
+| 12 | 0.1.0 첫 publish | 05, 09, 10, 11 | 로컬 2FA로 세 패키지 publish, `access: public`·패키지 2FA 확인, 문서 첫 배포 | **HITL** |
+| 13 | Button | 07, 08, 09, 12 | 채움 방식 × Role × size 맵, `render`, press 축소와 끄는 prop(이름 확정), 로딩(Spinner), disabled 규칙 | agent |
+| 14 | IconButton과 Link | 13 | `aria-label` 필수, 24×24 하한, 아이콘 크기 표, Link `render` | agent |
+| 15 | Field와 Input·Textarea | 07, 12 | label·설명·오류 메시지 자동 연결, focus-field, size `sm`/`md`/`lg` | agent |
+| 16 | Checkbox와 Radio | 08, 15 | 네이티브 요소, 체크·indeterminate 아이콘, 그룹을 Field로 묶기 | agent |
+| 17 | Switch | 15 | 네이티브 요소, thumb `shadow-sm`, `transition-colors` | agent |
+| 18 | trusted publisher 설정과 0.2.0 CI 릴리스 | 14, 16, 17 | 세 패키지에 trusted publisher(직접 publish 허용) 설정 직후 Version PR 머지 → CI publish로 48시간 안에 검증, provenance 확인 | **HITL** |
+| 19 | Badge·Card·Separator | 18 | 서버 컴포넌트로 남는 표시용 3종 | agent |
+| 20 | Alert | 18 | 역할별 상태 아이콘(모양 구분), 닫기 IconButton | agent |
+| 21 | Avatar | 18 | 이미지와 fallback 아이콘 | agent |
+| 22 | Skeleton과 Progress | 18 | Skeleton은 reduced-motion에서 정지, Progress는 유지 | agent |
+| 23 | Table | 18 | 시맨틱 table(Table, Head, Row, Cell), 행 hover 즉시 변경 | agent |
+| 24 | Breadcrumb과 Pagination | 18 | 구분자·화살표 아이콘, Pagination은 IconButton 사용 | agent |
+| 25 | Popover | 19~24 | 오버레이 기반: portal, `z-popover`, 등장·퇴장 motion(`@starting-style`), hooks와 퇴장 애니메이션 확인, 트리거를 덮지 않는 위치 확인(2.4.11) | agent |
+| 26 | Tooltip | 25 | 바로 등장, `z-tooltip` | agent |
+| 27 | Menu | 25 | highlight, raised 위 항목 규칙, 목록 padding 3px·항목 radius `sm` | agent |
+| 28 | Select | 15, 27 | `useSelect`, Field 연결, `value`/`onValueChange` | agent |
+| 29 | Combobox | 28 | 클라이언트 필터링, 단일 선택 | agent |
+| 30 | Dialog와 AlertDialog | 25 | `z-modal`, overlay, 포커스 가두기와 복귀, Dialog 안 Select 목록이 위에 보임 | agent |
+| 31 | Tabs | 19~24 | 키보드 탐색, ring 포커스 | agent |
+| 32 | Accordion | 19~24 | chevron, 높이 애니메이션 없음 | agent |
+| 33 | Tag | 19~24 | `useTagGroup`, Delete 제거, 닫기 IconButton | agent |
+| 34 | Toast | 25~33 | `useToast`, 아래 오른쪽·폭 제한, 5초 이상·hover/focus 정지·액션/오류는 자동 닫힘 없음 | agent |
+| 35 | Windows 고대비 수동 확인과 0.5.0 릴리스 | 34 | 실제 Windows 고대비 테마에서 확인 후 v0 완료 릴리스 | **HITL** |
+
+병렬로 열리는 곳: 03 뒤의 [04→05→06→07] ‖ 08 ‖ 10, 08 뒤의 11 / 2단계의 [13→14] ‖ [15→16, 17] / 3단계 19~24 전부 / 4단계 [25→26, 27→28→29, 30] ‖ 31 ‖ 32 ‖ 33.
+
+단계 경계: 12(0.1.0) → 2단계 → 18(0.2.0) → 3단계 → 사람이 Version PR 머지(0.3.0) → 4단계 → Version PR 머지(0.4.0) → 34 → 35(0.5.0).
+
+## 발행 방법 (다음 세션)
+
+1. 이 표의 행마다 `issues/NN-<영문 slug>.md`를 하나씩 만든다. 형식은 mattpocock-skills `to-tickets`의 local 템플릿을 따른다: 제목, What to build(사용자 관점), Blocked by(번호와 제목), `Status:` 줄(agent는 `ready-for-agent`, HITL은 `ready-for-human`), 수용 기준 체크리스트.
+2. 수용 기준은 spec의 해당 절에서 가져온다. 파일 경로와 코드 조각은 쓰지 않는다. Component 티켓에는 spec의 「Component 완료 기준」 6개를 넣는다.
+3. 다 만들면 이 README 상단의 상태 줄을 「발행됨」으로 바꾸고 커밋한다.
