@@ -4,9 +4,12 @@
 import {
   Button,
   cn,
+  Field,
   IconButton,
+  Input,
   Link as TideLink,
   Spinner,
+  Textarea,
   Typography,
   VisuallyHidden,
 } from "@tide-tds/components";
@@ -62,6 +65,16 @@ export default function Page() {
           문서
         </TideLink>
       </p>
+      {/* Field는 서버 컴포넌트로 client 모듈의 context provider를 렌더하고, Input·Textarea(client)가 값을 읽는다.
+          입력창 내부 class(aria-invalid:border-danger, placeholder:text-muted)는 이 파일에 쓰지 않는다. */}
+      <form>
+        <Field label="이메일" description="회사 메일" error="형식이 아닙니다." required>
+          <Input name="email" type="email" size="sm" placeholder="tide@example.com" />
+        </Field>
+        <Field label="메모">
+          <Textarea name="memo" />
+        </Field>
+      </form>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

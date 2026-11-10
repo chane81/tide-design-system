@@ -215,6 +215,11 @@ try {
       css.includes(".underline-offset-2"),
     "IconButton·Link 내부 class(size-6, hover:decoration-2, underline-offset-2)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
+  assert(
+    /aria-invalid\\:border-danger\[aria-invalid=("?)true\1\]/.test(css) &&
+      /placeholder\\:text-muted::placeholder/.test(css),
+    "Input 내부 class(aria-invalid:border-danger, placeholder:text-muted)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
   // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
   const componentsDist = join(consumerDir, "node_modules/@tide-tds/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
@@ -232,6 +237,34 @@ try {
       throw new Error(`"use client" 확인 실패: ${file}에는 지시어가 없어야 한다`);
     }
   }
+  // Input·Textarea는 Field context를 읽고, context는 client 모듈이 만든다. Field는 서버 컴포넌트로 남는다(티켓 15).
+  for (const file of ["Input.js", "Textarea.js", "field-context.js"]) {
+    if (!(await startsWithUseClient(file))) {
+      throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
+    }
+  }
+  if (await startsWithUseClient("Field.js")) {
+    throw new Error('"use client" 확인 실패: Field.js는 서버 컴포넌트라 지시어가 없어야 한다');
+  }
+
+  // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
+  const htmlFiles = await filesUnder(join(consumerDir, ".next/server/app"), ".html");
+  const html = (await Promise.all(htmlFiles.map((file) => readFile(file, "utf8")))).find((text) =>
+    text.includes("Tide smoke"),
+  );
+  const emailInput = html && /<input[^>]*name="email"[^>]*>/.exec(html)?.[0];
+  const inputId = emailInput && /\sid="([^"]+)"/.exec(emailInput)?.[1];
+  const describedBy = emailInput && /aria-describedby="([^"]+)"/.exec(emailInput)?.[1];
+  assert(
+    html !== undefined &&
+      inputId !== undefined &&
+      html.includes(`for="${inputId}"`) &&
+      /aria-invalid="true"/.test(emailInput ?? "") &&
+      /\srequired=""/.test(emailInput ?? "") &&
+      describedBy?.split(" ").length === 2 &&
+      describedBy.split(" ").every((id) => html.includes(`id="${id}"`)),
+    "Field가 prerender한 HTML에서 label for·aria-describedby·aria-invalid·required가 입력창과 연결되지 않았다",
+  );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.

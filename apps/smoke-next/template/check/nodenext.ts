@@ -2,12 +2,18 @@
 import {
   Button,
   cn,
+  Field,
   IconButton,
+  Input,
   Link,
+  Textarea,
   VisuallyHidden,
   type ButtonProps,
+  type FieldProps,
   type IconButtonProps,
+  type InputProps,
   type LinkProps,
+  type TextareaProps,
   type Color,
   type ColorFamilyName,
   type FillVariant,
@@ -36,6 +42,11 @@ const iconButtonProps: IconButtonProps = { "aria-label": "추가", children: nul
 const unnamedIconButton: IconButtonProps = { children: null };
 const linkProps: LinkProps = { href: "/docs", color: "brand" };
 const brandButton: ButtonProps = { color: "brand", variant: "outline" };
+const fieldProps: FieldProps = { label: "이메일", error: "오류", children: null };
+const inputProps: InputProps = { size: "lg", invalid: true, type: "date" };
+const textareaProps: TextareaProps = { size: "sm", rows: 4 };
+// @ts-expect-error Input은 xs를 받지 않는다.
+const xsInput: InputProps = { size: "xs" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -73,4 +84,11 @@ export const values = [
   unnamedIconButton,
   Link,
   linkProps,
+  Field,
+  Input,
+  Textarea,
+  fieldProps,
+  inputProps,
+  textareaProps,
+  xsInput,
 ] as const;
