@@ -388,7 +388,7 @@ Component별로 이미 정한 범위:
   | `label-*`                                                 | `span`                    |
   - heading·display는 `level`(1~6)을 선택적으로 받고, 항상 `<h*>`로 렌더된다. 다른 요소가 필요하면 `render`를 쓴다.
 
-- **Field**: label, 설명, 오류 메시지를 붙이고 `id`, `aria-describedby`, `aria-invalid`를 자동으로 연결한다. props 하나로 받고, 입력 Component는 context로 연결한다. 오류 상태는 `aria-invalid="true"`와 `data-invalid`다([ADR 0013](../../decisions/0013-field-props-and-context-connection.md)).
+- **Field**: label, 설명, 오류 메시지를 붙이고 `id`, `aria-describedby`, `aria-invalid`를 자동으로 연결한다. props 하나로 받고, 입력 Component는 context로 연결한다. 오류 상태는 `aria-invalid="true"`와 `data-invalid`다([ADR 0013](../../decisions/0013-field-props-and-context-connection.md)). 묶음(CheckboxGroup·RadioGroup)은 `group`을 주면 label이 `for` 없는 요소가 되고 묶음이 `aria-labelledby`로 이름을 받는다. `aria-invalid`는 묶음 안의 input마다 붙는다(ADR 0013 정정, [티켓 16](../tide-v0-impl/issues/16-checkbox-and-radio.md)).
 - **Select**: `useSelect`로 만든다.
 - **Combobox**: 클라이언트 필터링, 단일 선택(`useComboBox`). 비동기, 다중 선택, 가상화, 자유 입력은 없다.
 - **Table**: 시맨틱 `<table>`(Table, Head, Row, Cell)이다. 정렬, 행 선택, 가상화는 없다.

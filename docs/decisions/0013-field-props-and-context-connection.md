@@ -19,6 +19,15 @@
 
 ## Consequences
 
-- 이후 Select(28), Combobox(29), Checkbox·Radio 그룹(16)은 같은 context를 읽어 연결한다. 그룹은 `<label for>` 대신 `labelId`로 이름을 받으므로, 그룹용 label 요소(예: `legend` 또는 `for` 없는 label)가 필요하면 그 티켓에서 Field에 선택지를 더한다(이 ADR의 정정으로 남긴다).
+- 이후 Select(28), Combobox(29), Checkbox·Radio 그룹(16)은 같은 context를 읽어 연결한다. 그룹은 `<label for>` 대신 `labelId`로 이름을 받으므로, 그룹용 label 요소(예: `legend` 또는 `for` 없는 label)가 필요하면 그 티켓에서 Field에 선택지를 더한다(이 ADR의 정정으로 남긴다). → 아래 「정정」에서 `group` prop으로 정했다.
 - label을 앞이 아닌 옆에 두는 배치(가로 폼)는 v0에 없다. 필요하면 부분 Component를 더하는 쪽으로 다시 검토한다(Field props는 그대로 둘 수 있다).
 - `Input`·`Textarea`는 hook(`use`)을 쓰므로 `"use client"`가 붙는다. 표시만 하는 Component는 아니어서 공통 규칙과 맞는다.
+
+## 정정
+
+- **2026-11-10, [티켓 16](../progress/tide-v0-impl/issues/16-checkbox-and-radio.md): 묶음용 `group` prop.** Field props에 `group?: boolean`(기본 `false`)을 더한다. `group`이면 label이 `<label for>` 대신 `for` 없는 `<span id={labelId}>`가 된다. `<label for>`는 입력 요소 하나만 가리킬 수 있어, 묶음 div를 가리키면 눌러도 아무 일이 없고 HTML 규칙에도 어긋나기 때문이다.
+  - 묶음(`CheckboxGroup` `role="group"`, `RadioGroup` `role="radiogroup"`)은 context의 `labelId`를 `aria-labelledby`로, `describedBy`를 `aria-describedby`로 받는다. `controlId`는 묶음의 `id`가 된다(오류 요약 `#id` 링크용, `htmlFor`로 정할 수 있다).
+  - 오류 상태는 묶음이 아니라 안의 input 하나하나에 `aria-invalid="true"`로 붙인다. 묶음 루트에는 `data-invalid`만 붙인다.
+  - 묶음은 안쪽에 Field context를 `null`로 다시 내려 항목이 `controlId`를 자기 id로 쓰지 않게 한다(id 중복 방지). 대신 묶음 전용 context로 `invalid`·`disabled`(RadioGroup은 `name`·선택 값·`required`까지)를 넘긴다.
+  - `required`: RadioGroup은 안의 Radio에 네이티브 `required`를 넘긴다(라디오 묶음 하나가 필수). CheckboxGroup은 넘기지 않는다. 체크박스마다 `required`가 붙으면 모두 체크해야 제출되기 때문이다. label의 `*`만 보이고 「하나 이상」 검사는 앱이 한다.
+  - 검토한 대안: **`fieldset`/`legend`** 는 네이티브 묶음 이름이고 `fieldset disabled`가 안을 모두 끈다. 하지만 Field 루트 요소의 타입이 `div`에서 바뀌어 `ref`·props 타입이 갈리고, legend의 특수 렌더링 때문에 Field의 세로 배치(`flex gap`)가 그대로 맞지 않는다. 또 `fieldset`의 `aria-describedby`는 스크린리더 지원이 고르지 않다. **prop 없이 그대로 `<label for={묶음 id}>`** 도 `aria-labelledby`로 이름은 붙지만 유효하지 않은 HTML이 남는다.

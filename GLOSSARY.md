@@ -108,6 +108,10 @@ _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
 
+**묶음 (Group)**:
+하나의 이름으로 함께 읽히는 선택 항목의 모음. `CheckboxGroup`(`role="group"`)과 `RadioGroup`(`role="radiogroup"`)이고, Field에 `group`을 주면 Field label이 묶음의 이름이 된다. 오류 상태는 묶음이 아니라 안의 항목마다 붙는다.
+_Avoid_: 그룹(문서에서는 「묶음」으로 쓴다. Component 이름은 `Group`), fieldset
+
 ## 배포
 
 **공개 계약 (Public contract)**:
