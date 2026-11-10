@@ -6,14 +6,11 @@ import type { ComponentProps, MouseEvent, ReactElement, ReactNode } from "react"
 
 import { renderElement } from "./render.ts";
 import { Spinner } from "./Spinner.tsx";
-import type { FillVariant, Role, Size } from "./types.ts";
+import type { Color, FillVariant, Size } from "./types.ts";
 import { VisuallyHidden } from "./VisuallyHidden.tsx";
 
 /** Button의 채움 방식. 4개를 모두 받는다. */
 type ButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;
-
-/** Button의 Role. 6개를 모두 받는다. */
-type ButtonColor = Extract<Role, "neutral" | "primary" | "success" | "warning" | "danger" | "info">;
 
 /** Button의 size. 공통 size 4개를 모두 받는다. */
 type ButtonSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
@@ -21,8 +18,11 @@ type ButtonSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
 export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   /** 채움 방식. 기본값은 `solid`다. */
   variant?: ButtonVariant;
-  /** Role. 기본값은 `primary`다. */
-  color?: ButtonColor;
+  /**
+   * 색 이름. Role 6개, 색 계열(`gray`, `blue` 등), 앱이 더한 브랜드 계열을 받는다. 기본값은 `primary`다.
+   * 루트에 `data-color`로 붙어 accent 색을 정한다. 바깥 요소의 색을 물려받지 않는다.
+   */
+  color?: Color;
   /** 높이 `xs` 24px, `sm` 32px, `md` 40px, `lg` 48px. 기본값은 `md`다. */
   size?: ButtonSize;
   /** 텍스트 앞 아이콘. 장식용으로 숨겨지고 size에 맞는 크기가 된다. 다른 라이브러리의 아이콘도 받는다. */
@@ -48,80 +48,27 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 모든 variant에 border 1px를 둔다. 색이 없는 variant는 투명 border라 forced-colors에서 경계로 보인다.
 
-/** 기본 색(배경, 글자, 경계). 글자와 배경은 foundation 대비 쌍에 등록된 짝만 쓴다. */
-const colorClass: Record<ButtonVariant, Record<ButtonColor, string>> = {
-  solid: {
-    neutral: "border-transparent bg-neutral-solid text-on-solid",
-    primary: "border-transparent bg-primary-solid text-on-solid",
-    success: "border-transparent bg-success-solid text-on-solid",
-    warning: "border-transparent bg-warning-solid text-on-solid",
-    danger: "border-transparent bg-danger-solid text-on-solid",
-    info: "border-transparent bg-info-solid text-on-solid",
-  },
-  subtle: {
-    neutral: "border-transparent bg-neutral-subtle text-default",
-    primary: "border-transparent bg-primary-subtle text-primary",
-    success: "border-transparent bg-success-subtle text-success",
-    warning: "border-transparent bg-warning-subtle text-warning",
-    danger: "border-transparent bg-danger-subtle text-danger",
-    info: "border-transparent bg-info-subtle text-info",
-  },
-  outline: {
-    neutral: "border-strong text-default",
-    primary: "border-primary text-primary",
-    success: "border-success text-success",
-    warning: "border-warning text-warning",
-    danger: "border-danger text-danger",
-    info: "border-info text-info",
-  },
-  ghost: {
-    neutral: "border-transparent text-default",
-    primary: "border-transparent text-primary",
-    success: "border-transparent text-success",
-    warning: "border-transparent text-warning",
-    danger: "border-transparent text-danger",
-    info: "border-transparent text-info",
-  },
+// 색 축은 맵에 두지 않는다. 루트의 data-color가 accent 슬롯(--tide-accent-*)을 고르고, 맵은 accent class만 쓴다(ADR 0011).
+// 그래서 Tide가 색 계열을 더하거나 앱이 브랜드 계열을 더해도 이 파일은 바뀌지 않는다.
+
+/** 기본 색(배경, 글자, 경계). 색 이름마다 Foundation이 같은 대비 규칙으로 검사한다. */
+const colorClass: Record<ButtonVariant, string> = {
+  solid: "border-transparent bg-accent-solid text-accent-on-solid",
+  subtle: "border-transparent bg-accent-subtle text-accent",
+  outline: "border-accent text-accent",
+  ghost: "border-transparent text-accent",
 };
 
 /** hover·누름 색. 활성 상태일 때만 붙인다(비활성·로딩에는 붙이지 않아 CSS 순서에 기대지 않는다). */
-const interactionClass: Record<ButtonVariant, Record<ButtonColor, string>> = {
-  solid: {
-    neutral: "hover:bg-neutral-solid-hover active:bg-neutral-solid-active",
-    primary: "hover:bg-primary-solid-hover active:bg-primary-solid-active",
-    success: "hover:bg-success-solid-hover active:bg-success-solid-active",
-    warning: "hover:bg-warning-solid-hover active:bg-warning-solid-active",
-    danger: "hover:bg-danger-solid-hover active:bg-danger-solid-active",
-    info: "hover:bg-info-solid-hover active:bg-info-solid-active",
-  },
-  subtle: {
-    neutral: "hover:bg-neutral-subtle-hover active:bg-neutral-subtle-active",
-    primary: "hover:bg-primary-subtle-hover active:bg-primary-subtle-active",
-    success: "hover:bg-success-subtle-hover active:bg-success-subtle-active",
-    warning: "hover:bg-warning-subtle-hover active:bg-warning-subtle-active",
-    danger: "hover:bg-danger-subtle-hover active:bg-danger-subtle-active",
-    info: "hover:bg-info-subtle-hover active:bg-info-subtle-active",
-  },
+const interactionClass: Record<ButtonVariant, string> = {
+  solid: "hover:bg-accent-solid-hover active:bg-accent-solid-active",
+  subtle: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
   // outline·ghost는 raised 위 항목과 같은 ghost 규칙이다(기본 투명, hover subtle-hover, 누름 subtle-active).
-  outline: {
-    neutral: "hover:bg-neutral-subtle-hover active:bg-neutral-subtle-active",
-    primary: "hover:bg-primary-subtle-hover active:bg-primary-subtle-active",
-    success: "hover:bg-success-subtle-hover active:bg-success-subtle-active",
-    warning: "hover:bg-warning-subtle-hover active:bg-warning-subtle-active",
-    danger: "hover:bg-danger-subtle-hover active:bg-danger-subtle-active",
-    info: "hover:bg-info-subtle-hover active:bg-info-subtle-active",
-  },
-  ghost: {
-    neutral: "hover:bg-neutral-subtle-hover active:bg-neutral-subtle-active",
-    primary: "hover:bg-primary-subtle-hover active:bg-primary-subtle-active",
-    success: "hover:bg-success-subtle-hover active:bg-success-subtle-active",
-    warning: "hover:bg-warning-subtle-hover active:bg-warning-subtle-active",
-    danger: "hover:bg-danger-subtle-hover active:bg-danger-subtle-active",
-    info: "hover:bg-info-subtle-hover active:bg-info-subtle-active",
-  },
+  outline: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
+  ghost: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
 };
 
-/** 비활성 색. Role과 관계없이 같다. disabled Token은 대비 검사 대상이 아니다. */
+/** 비활성 색. 색 이름과 관계없이 같다. disabled Token은 대비 검사 대상이 아니다. */
 const disabledClass: Record<ButtonVariant, string> = {
   solid: "cursor-not-allowed border-transparent bg-disabled text-disabled",
   subtle: "cursor-not-allowed border-transparent bg-disabled text-disabled",
@@ -168,7 +115,7 @@ function Icon({ size, children }: { size: ButtonSize; children: ReactNode }): Re
 }
 
 /**
- * 누르면 동작을 실행하는 버튼. 채움 방식(`variant`) × Role(`color`) × `size`로 모양을 고른다.
+ * 누르면 동작을 실행하는 버튼. 채움 방식(`variant`) × 색 이름(`color`) × `size`로 모양을 고른다.
  * 링크로 렌더해야 하면 `render={<Link href="/x" />}`를 쓴다.
  */
 export function Button({
@@ -199,8 +146,8 @@ export function Button({
   const className = [
     baseClass,
     sizeClass[size],
-    disabled ? disabledClass[variant] : colorClass[variant][color],
-    interactive ? interactionClass[variant][color] : undefined,
+    disabled ? disabledClass[variant] : colorClass[variant],
+    interactive ? interactionClass[variant] : undefined,
     interactive && !noPressScale ? pressScaleClass : undefined,
     // 커서: 활성 pointer, 로딩 wait, 비활성 not-allowed(disabledClass). Tailwind 4 preflight는 button 커서를
     // 브라우저 기본값(default)으로 두므로 직접 붙인다. 링크로 렌더해도 같은 규칙이다.
@@ -223,6 +170,8 @@ export function Button({
     // 기본 요소가 button이면 폼 안에서 뜻하지 않게 제출하지 않도록 type 기본값을 button으로 둔다.
     type: render === undefined ? (type ?? "button") : type,
     disabled: native && disabled ? true : undefined,
+    // 색은 항상 붙인다(기본 primary). 바깥 data-color를 물려받지 않게 한다(ADR 0011).
+    "data-color": color,
     "aria-disabled": blocked ? true : props["aria-disabled"],
     "data-disabled": softDisabled ? "" : undefined,
     "data-loading": showSpinner ? "" : undefined,

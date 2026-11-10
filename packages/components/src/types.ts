@@ -10,7 +10,7 @@ export type Size = "xs" | "sm" | "md" | "lg";
  */
 export type FillVariant = "solid" | "subtle" | "outline" | "ghost";
 
-/** Role 6개. Component에서는 `color` prop으로 고른다. 정의는 foundation이 가진다. */
+/** Role 6개. 색 이름(`Color`)의 일부다. 정의는 foundation이 가진다. */
 export type { Role } from "@tide-tds/foundation";
 
 // 색 이름(Color). foundation의 ColorRegistry를 그대로 다시 낸다(tide-v0-impl 티켓 40, ADR 0011).
