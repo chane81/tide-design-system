@@ -63,7 +63,10 @@ export const Variants: Story = {
   name: "텍스트 스타일과 기본 요소",
   render: () => (
     <div className="flex flex-col gap-4">
-      <Typography variant="display-lg">display-lg (h1)</Typography>
+      {/* 기본은 h1이지만 Docs 페이지 제목(h1)과 겹치지 않게 이 예시에서만 level 2로 렌더한다. */}
+      <Typography variant="display-lg" level={2}>
+        display-lg (기본 h1)
+      </Typography>
       <Typography variant="heading-lg">heading-lg (h2)</Typography>
       <Typography variant="heading-md">heading-md (h3)</Typography>
       <Typography variant="heading-sm">heading-sm (h4)</Typography>

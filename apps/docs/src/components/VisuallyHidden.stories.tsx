@@ -50,9 +50,14 @@ export const IconButtonName: Story = {
 export const SupplementLinkText: Story = {
   name: "링크 문맥 덧붙이기",
   render: () => (
-    <a href="#notice">
-      더 보기<VisuallyHidden> - 공지사항</VisuallyHidden>
-    </a>
+    <div className="flex flex-col gap-2">
+      <a href="#notice">
+        더 보기<VisuallyHidden> - 공지사항</VisuallyHidden>
+      </a>
+      <p id="notice" className="text-body-sm text-muted">
+        링크가 가리키는 공지사항 영역(예시)
+      </p>
+    </div>
   ),
 };
 
