@@ -170,6 +170,10 @@ try {
     css.includes(".z-sticky") && css.includes("--tide-z-sticky"),
     "쌓임 단계 class(z-sticky)나 --tide-z-sticky가 없다",
   );
+  assert(
+    css.includes(".animate-spin") && /@keyframes spin\b/.test(css),
+    "Spinner 내부 class(animate-spin)나 @keyframes spin이 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
