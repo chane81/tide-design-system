@@ -11,9 +11,12 @@
     "dev": "turbo run dev",
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt",
-    "format:check": "oxfmt --check"
+    "format:check": "oxfmt --check",
+    "release:version": "changeset version && node scripts/changelog-ko.ts"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "catalog:",
+    "@changesets/cli": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "turbo": "catalog:",

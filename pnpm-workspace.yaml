@@ -12,6 +12,8 @@ minimumReleaseAge: 1440
 # 의존성 버전은 기본 catalog 하나로 관리한다. peer 범위와 내부 패키지는 넣지 않는다.
 # 0.x인 패키지(oxfmt, publint, tsdown)는 정확한 버전으로 고정한다.
 catalog:
+  "@changesets/changelog-github": ^1.0.1
+  "@changesets/cli": ^3.0.3
   "@storybook/addon-a11y": ^10.6.6
   "@storybook/addon-docs": ^10.6.6
   "@storybook/addon-themes": ^10.6.6
