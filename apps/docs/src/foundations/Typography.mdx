@@ -1,0 +1,62 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as TypographyStories from "./Typography.stories.tsx";
+
+<Meta of={TypographyStories} />
+
+# 타이포그래피
+
+Tide의 글자는 **텍스트 스타일**로 고릅니다. `text-body-md` 같은 class 하나가 크기, 행간, 굵기를 한 번에 정합니다. 크기만 따로 고르는 class는 없습니다. Component 안의 글자도 모두 텍스트 스타일을 씁니다. 예를 들어 버튼은 `label-*`을 씁니다.
+
+시맨틱 요소까지 함께 고르려면 [Typography](?path=/docs/component-typography--docs) Component를 씁니다.
+
+## 텍스트 스타일
+
+범주는 다섯 가지입니다.
+
+- `display`: 랜딩 페이지 같은 곳의 가장 큰 제목
+- `heading`: 페이지와 섹션 제목. `xl`부터 `xs`까지 5단계입니다.
+- `body`: 읽는 글. 기본 본문은 `body-md`입니다.
+- `label`: 버튼, 입력창, 탭처럼 한 줄로 쓰는 UI 텍스트
+- `caption`: 보조 설명
+
+<Canvas of={TypographyStories.Styles} sourceState="none" />
+
+- 크기와 행간은 rem입니다. 루트 font-size는 바꾸지 않으므로, 사용자가 브라우저 글자 크기를 키우면 함께 커집니다.
+- 행간은 4px 격자를 따릅니다. 본문은 1.5 근처이고, 제목은 커질수록 좁아집니다.
+- 자간은 모든 스타일이 0입니다.
+- 스케일은 화면 크기와 무관하게 고정입니다. 바꿔야 하면 `md:text-heading-xl`처럼 반응형 variant를 씁니다.
+
+텍스트 스타일과 글자색은 이름이 겹치지 않습니다. `text-body-md text-muted`처럼 함께 쓰고, `cn`으로 합쳐도 서로 지우지 않습니다.
+
+## 굵기
+
+`font-light`(300), `font-normal`(400), `font-medium`(500), `font-semibold`(600), `font-bold`(700) 다섯 개입니다. 텍스트 스타일은 400~700만 쓰고, light는 class로만 씁니다. 텍스트 스타일 뒤에 굵기 class를 붙이면 굵기만 바뀝니다(`text-body-md font-semibold`).
+
+<Canvas of={TypographyStories.Weights} sourceState="none" />
+
+## font-family
+
+`font-sans`와 `font-mono` 두 개입니다. 기본 글꼴은 `sans`입니다. Tide는 글꼴 이름만 제공하고 웹폰트는 앱이 불러옵니다. 방법은 [폰트 로드](?path=/docs/시작하기-폰트-로드--docs)에 있습니다.
+
+- `sans`: [Pretendard](https://github.com/orioncactus/pretendard)의 가변 글꼴(`Pretendard Variable`)을 맨 앞에 둔 스택. 불러오지 않으면 시스템 글꼴로 그립니다.
+- `mono`: 시스템 고정폭 글꼴만 씁니다.
+
+<Canvas of={TypographyStories.Families} sourceState="none" />
+
+## 줄바꿈
+
+Tide CSS는 문서 전체에 `word-break: keep-all`과 `overflow-wrap: break-word`를 겁니다. 한글은 어절(띄어쓰기) 단위로 줄을 바꾸고, 공백 없이 긴 영문이나 URL은 칸 끝에서 끊습니다.
+
+## Tailwind 기본값
+
+Tailwind 기본 크기(`text-xs`~`text-9xl`), 기본 굵기(`font-thin`, `font-black` 등), `font-serif`는 지웠습니다. 자동완성에는 Tide 값만 나옵니다. 행간(`leading-*`), 자간(`tracking-*`), 고정폭 숫자(`tabular-nums`)는 드문 경우를 위한 확장 수단으로 남겼습니다. 표나 금액처럼 숫자를 세로로 맞출 때는 `tabular-nums`를 씁니다.
+
+## CSS 변수
+
+Tailwind 없이 쓸 때는 `@tide-tds/foundation/tokens.css`의 변수를 씁니다.
+
+- 텍스트 스타일: `--tide-text-<이름>`, `--tide-text-<이름>--line-height`, `--tide-text-<이름>--font-weight`. 예: `var(--tide-text-body-md)`
+- 굵기: `--tide-font-<이름>`. 예: `var(--tide-font-semibold)`
+- font-family: `--tide-font-sans`, `--tide-font-mono`
+- 크기 단계: `--tide-font-size-<px>`(12, 14, 16, 18, 20, 24, 32, 40, 48, 56). class는 없고 텍스트 스타일이 참조합니다.
