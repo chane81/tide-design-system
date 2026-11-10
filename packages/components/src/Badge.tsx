@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
 import { cn } from "./cn.ts";
-import type { FillVariant, Role, Size } from "./types.ts";
+import type { Color, FillVariant, Size } from "./types.ts";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 
@@ -19,17 +19,19 @@ export interface BadgeProps extends Omit<ComponentProps<"span">, "color" | "chil
   /** `sm` 높이 20px·`label-sm`, `md` 높이 24px·`label-md`. 기본값은 `md`다. */
   size?: BadgeSize;
   /**
-   * 상태의 뜻을 담은 Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `neutral`이다.
-   * 색 계열 이름(`blue` 등)은 받지 않는다(ADR 0017). 루트에 `data-color`로 붙고 바깥 요소의 색을 물려받지 않는다.
+   * 색 이름. 상태는 Role(Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role), 뜻 없는 분류는 색 계열 이름
+   * (Tide 색 계열 6개와 앱이 `ColorFamilyRegistry`에 더한 계열)을 쓴다(ADR 0016·0017). 기본값은 `neutral`이다.
+   * 루트에 `data-color`로 붙고 바깥 요소의 색을 물려받지 않는다.
    */
-  color?: Role;
+  // 장식·분류 Component라 색 계열 이름을 받고, 상태 라벨로도 쓰므로 Role도 함께 받는다(ADR 0017).
+  color?: Color;
 }
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 색은 accent 슬롯이다(ADR 0011). 둘 다 등록된 대비 쌍이다.
 // - subtle: text-accent × bg-accent-subtle 4.5:1(Role 대비 쌍 `text-<role>` × `bg-<role>-subtle`, neutral은 text-default × bg-neutral-subtle,
-//   앱 Role은 colorContrastRules의 text × subtle).
-// - solid: text-accent-on-solid × bg-accent-solid 4.5:1(Role은 text-on-solid × solid, 앱 Role은 on-solid × solid).
+//   색 계열·앱 Role·앱 계열은 색 이름 규칙 colorContrastRules의 text × subtle).
+// - solid: text-accent-on-solid × bg-accent-solid 4.5:1(Role은 text-on-solid × solid, 색 계열·앱 이름은 on-solid × solid).
 const variantClass: Record<BadgeVariant, string> = {
   subtle: "bg-accent-subtle text-accent",
   solid: "bg-accent-solid text-accent-on-solid",
@@ -49,8 +51,8 @@ const baseClass =
   "inline-flex max-w-full shrink-0 items-center rounded-sm border border-transparent align-middle whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0";
 
 /**
- * 상태를 짧은 텍스트로 보여 주는 라벨. 누르거나 고르는 동작이 없다.
- * 색은 Role로 고르고, 상태는 반드시 텍스트로 적는다. 서버 컴포넌트로 쓸 수 있다.
+ * 상태나 분류를 짧은 텍스트로 보여 주는 라벨. 누르거나 고르는 동작이 없다.
+ * 상태는 Role, 분류는 색 계열 이름으로 색을 고르고, 뜻은 반드시 텍스트로 적는다. 서버 컴포넌트로 쓸 수 있다.
  */
 export function Badge({
   variant = "subtle",
