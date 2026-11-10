@@ -28,7 +28,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - `#3183f5`는 브랜드 기준색으로 스케일 안에 둠. 흰색 대비가 약 3.7:1이라 AA에 못 미치므로, 텍스트와 solid 배경에는 더 진한 단계를 씀
 - 공개 문서 사이트는 Storybook 하나로 함(MDX 사용)
 - Tailwind는 최신 안정 버전을 씀. className 충돌 처리는 Component 공통 API 규칙 티켓에서 다룸
-- **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지는 `@tide-tds/foundation`, `@tide-tds/desktop`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)), `@tide-tds/icons`([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 세 패키지는 fixed 버전([ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
+- **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지는 `@tide-tds/foundation`, `@tide-tds/components`([ADR 0009](../../decisions/0009-single-components-package.md), ADR 0006을 대체), `@tide-tds/icons`([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 세 패키지는 fixed 버전([ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
 - 리서치 대상: Material 3, IBM Carbon, Atlassian, GitHub Primer, Radix Colors/Themes, 당근 SEED Design
 
 ## Decisions so far
@@ -75,7 +75,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - Vue, Svelte 등 React 외 프레임워크용 Component (ADR 0001)
 - Storybook 외 별도 문서 사이트
 - 특정 서비스 전용 Component
-- mobile Target Component(`@tide-tds/mobile`, 터치 중심 모바일 웹). 이름 공간만 정해 둠. 이유는 [ADR 0006](../../decisions/0006-foundation-and-target-packages.md)
+- 별도 mobile 패키지. 터치 환경을 위한 크기·밀도는 필요해지면 `@tide-tds/components` 안의 옵션으로 다룸. 이유는 [ADR 0009](../../decisions/0009-single-components-package.md)
 - v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장, Slider, Drawer/Sheet, 토글 Chip. 이유는 [v0 Component 목록과 우선순위 결정](issues/15-grilling-component-list.md)에 있음
 - 시각 회귀 테스트(스크린샷 비교)와 Firefox·WebKit 테스트. 이유는 [테스트 전략 결정](issues/28-grilling-testing.md)에 있음
 - 1.0 출시 시점과 기준. v0을 실제로 써 본 뒤 판단한다. 그때까지 0.x 규칙을 적용한다. 이유는 [버전과 배포 정책 결정](issues/30-grilling-release.md)에 있음

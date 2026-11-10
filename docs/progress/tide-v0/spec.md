@@ -14,7 +14,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
 `#3183f5`(blue)를 primary로 하는 범용 디자인 시스템 Tide v0를 npm `@tide-tds` scope로 공개 배포한다.
 
-- 앱 개발자는 `@tide-tds/desktop`을 설치하고, 앱 CSS에 Tailwind와 Tide CSS를 import하는 두 줄만 쓴다. 그러면 Tide Token에 연결된 Utility class(`bg-primary-solid`, `text-body-md`, `rounded-md`, `z-modal` 등)와 Component 33개를 쓸 수 있다.
+- 앱 개발자는 `@tide-tds/components`를 설치하고, 앱 CSS에 Tailwind와 Tide CSS를 import하는 두 줄만 쓴다. 그러면 Tide Token에 연결된 Utility class(`bg-primary-solid`, `text-body-md`, `rounded-md`, `z-modal` 등)와 Component 33개를 쓸 수 있다.
 - 색은 Primitive와 Semantic 두 층의 Token으로 나뉜다. Component는 Semantic Token만 쓴다. `[data-theme]` 속성 하나로 light와 dark를 바꾼다.
 - 모든 Component는 WCAG 2.2 AA를 최소 기준으로 삼는다. 접근성 동작은 React Aria hooks로 가져오고, 마크업과 스타일은 Tide가 직접 만든다.
 - 아이콘은 `@tide-tds/icons`로 함께 배포한다. 사용자는 Tide 이름으로만 쓴다.
@@ -25,7 +25,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
 ### 설치와 시작
 
-1. 앱 개발자로서, `@tide-tds/desktop` 하나만 설치하면 foundation과 icons가 함께 설치되기를 원한다. 그래야 패키지 버전 조합을 따지지 않아도 된다.
+1. 앱 개발자로서, `@tide-tds/components` 하나만 설치하면 foundation과 icons가 함께 설치되기를 원한다. 그래야 패키지 버전 조합을 따지지 않아도 된다.
 2. 앱 개발자로서, 앱 CSS에 `@import "tailwindcss"`와 Tide CSS import 두 줄만 쓰면 Tide Utility class와 Component 스타일이 동작하기를 원한다. 그래야 설정 파일을 따로 만지지 않아도 된다.
 3. Next.js App Router 개발자로서, `transpilePackages` 설정 없이 Tide를 import하기를 원한다. 그래야 기본 Next 설정 그대로 쓸 수 있다.
 4. Next.js App Router 개발자로서, 서버 컴포넌트에서 표시용 Component(Badge, Card 등)를 그대로 쓰고, 상호작용 Component는 `"use client"` 경계가 이미 처리되어 있기를 원한다. 그래야 경계 오류를 직접 고치지 않아도 된다.
@@ -153,14 +153,14 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
 ## Implementation Decisions
 
-### 저장소와 패키지 ([ADR 0006](../../decisions/0006-foundation-and-target-packages.md), [ADR 0007](../../decisions/0007-lucide-generated-icons-package.md), [ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
+### 저장소와 패키지 ([ADR 0006](../../decisions/0006-foundation-and-target-packages.md), [ADR 0007](../../decisions/0007-lucide-generated-icons-package.md), [ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md), [ADR 0009](../../decisions/0009-single-components-package.md))
 
 - pnpm workspace 모노레포 위에 Turborepo를 쓴다. 배포 패키지는 세 개다.
   - `@tide-tds/foundation`: 프레임워크와 무관한 Token과 CSS
   - `@tide-tds/icons`: React 아이콘 Component
-  - `@tide-tds/desktop`: desktop Target의 React Component
+  - `@tide-tds/components`: React Component. desktop·mobile 같은 사용 환경별로 패키지를 나누지 않는다([ADR 0009](../../decisions/0009-single-components-package.md))
 - private 앱은 두 개다. Storybook 문서 앱과 Next.js smoke test 앱.
-- 별도의 설정 패키지나 utils 패키지는 두지 않는다. `cn`과 공통 union 타입은 desktop이 export한다.
+- 별도의 설정 패키지나 utils 패키지는 두지 않는다. `cn`과 공통 union 타입은 components가 export한다.
 - TypeScript 7.0.2 하나만 쓴다. 공통 tsconfig에서 `erasableSyntaxOnly`(enum 대신 union), `isolatedDeclarations`, `verbatimModuleSyntax`를 켠다. 상대 import에 `.ts`/`.tsx` 확장자를 붙이고 `rewriteRelativeImportExtensions`를 켠다.
 - 배포 패키지 세 개는 tsdown 하나로 빌드한다. 원본 파일 단위를 유지하는 `unbundle` 모드로 ESM을 내고, d.ts는 `isolatedDeclarations` 기반 oxc로 만든다. dependencies·peerDependencies(서브패스 포함)는 번들에 넣지 않는다. exports는 `package.json`에서 손으로 관리한다([패키지 빌드를 tsdown으로 전환](../tide-v0-impl/issues/36-tsdown-build.md), 2026-11-10 사용자 결정으로 Vite 라이브러리 모드·`tsc` 빌드를 대체).
 - 출력은 ESM 전용이다. 배포 패키지에는 `engines`를 두지 않는다. 저장소는 Node 26과 pnpm 12.18.0으로 고정한다.
@@ -285,7 +285,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - Tide Component 내부 아이콘은 항상 장식용이다.
 - 상태 아이콘(info, success, warning, danger)은 모양으로도 서로 구분되어야 한다.
 
-### `@tide-tds/desktop` 공통 API ([Component 공통 API 규칙 결정](issues/14-grilling-component-api.md), [ADR 0004](../../decisions/0004-react-aria-hooks-own-markup.md), [ADR 0005](../../decisions/0005-hand-written-variant-maps-and-render-prop.md))
+### `@tide-tds/components` 공통 API ([Component 공통 API 규칙 결정](issues/14-grilling-component-api.md), [ADR 0004](../../decisions/0004-react-aria-hooks-own-markup.md), [ADR 0005](../../decisions/0005-hand-written-variant-maps-and-render-prop.md))
 
 - **exports**:
   - 루트: Component 33개, `cn`, 공통 union 타입, `XxxProps` 타입을 평평하게 export한다. Component별 서브패스는 없다.
@@ -392,7 +392,7 @@ Component별로 이미 정한 범위:
 
 ### 문서 앱 ([Storybook 문서 구성 결정](issues/26-grilling-storybook.md))
 
-- Storybook 10.6.6이고 `reactDocgen`은 기본값 `react-docgen`으로 고정한다. Tailwind는 `@tailwindcss/vite`로 연결한다. desktop은 원본 조건으로, foundation은 빌드 결과로 resolve한다.
+- Storybook 10.6.6이고 `reactDocgen`은 기본값 `react-docgen`으로 고정한다. Tailwind는 `@tailwindcss/vite`로 연결한다. components는 원본 조건으로, foundation은 빌드 결과로 resolve한다.
 - **사이드바**: 시작하기(설치, 폰트 로드, Theme 전환) → 원칙 → 기준 → Foundation → Component(이름순). v0는 한글만 쓴다.
 - **Component 페이지**: MDX 한 페이지이고 섹션 순서는 고정이다. 렌더되는 예시는 모두 CSF story로 만든다. MDX에는 글과 Canvas만 둔다.
 - 원칙과 기준은 저장소의 `.md` 원문을 Markdown 블록으로 불러온다. 상대 링크는 Storybook 경로로 바꾼다.
@@ -435,7 +435,7 @@ Component별로 이미 정한 범위:
 
 ### 좋은 테스트의 기준
 
-- 배포 패키지의 **공개 표면**만 테스트한다. 공개 표면은 Token export, 빌드한 CSS와 그것을 Tailwind로 컴파일한 결과, tailwind-merge 설정, `@tide-tds/desktop`·`@tide-tds/icons`에서 import한 Component, `pnpm pack` tarball이다. 내부 함수나 variant 맵의 구조는 직접 단언하지 않는다.
+- 배포 패키지의 **공개 표면**만 테스트한다. 공개 표면은 Token export, 빌드한 CSS와 그것을 Tailwind로 컴파일한 결과, tailwind-merge 설정, `@tide-tds/components`·`@tide-tds/icons`에서 import한 Component, `pnpm pack` tarball이다. 내부 함수나 variant 맵의 구조는 직접 단언하지 않는다.
 - Component 동작은 사용자가 보는 것으로 단언한다. 역할, 이름, ARIA 상태, 포커스 위치, 키보드 결과, 계산된 스타일이 그 대상이다. class 문자열 자체는 단언하지 않는다.
 - 동작 단언은 `*.test.tsx`에만 둔다. story의 `play` 함수는 쓰지 않는다.
 - jsdom과 happy-dom은 쓰지 않는다. 브라우저 동작은 실제 Chromium에서 본다.
@@ -472,7 +472,7 @@ Component 하나는 다음을 모두 만족해야 완료다.
 ## Out of Scope
 
 - React 외 프레임워크용 Component (ADR 0001)
-- mobile Target(`@tide-tds/mobile`). 이름 공간만 정해 둔다 (ADR 0006)
+- 터치 환경을 위한 크기·밀도 옵션. 필요해지면 `@tide-tds/components` 안의 size·밀도 옵션으로 더한다. 별도 mobile 패키지는 두지 않는다 (ADR 0009)
 - Storybook 외의 문서 사이트, 영문 문서와 영문 CHANGELOG
 - v0 이후 후보 Component: Box/Stack/Flex/Grid, DatePicker/Calendar, DataTable, Combobox 확장(비동기·다중·가상화), Slider, Drawer/Sheet, 토글 Chip
 - 오버레이의 top-layer(`<dialog>`, popover API) 전환
@@ -490,7 +490,7 @@ Component 하나는 다음을 모두 만족해야 완료다.
   1. 저장소 골격(workspace, turbo, tsconfig, lint/format, CI)
   2. foundation(Token 원본, CSS 생성, ①의 테스트)
   3. icons(이름표, 생성, ①의 테스트)
-  4. desktop 골격(`cn`, union 타입, 빌드, styles CSS)
+  4. components 골격(`cn`, union 타입, 빌드, styles CSS)
   5. Storybook과 smoke 앱
   6. Component 1~5단계
 

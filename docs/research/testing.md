@@ -2,6 +2,8 @@
 
 티켓: [27. 테스트 도구와 방식 조사](../progress/tide-v0/issues/27-research-testing.md)
 
+> 2026-11-10: `@tide-tds/desktop`은 첫 배포 전에 `@tide-tds/components`로 이름이 바뀌었다([ADR 0009](../decisions/0009-single-components-package.md)). 실험 환경과 출력은 당시 이름(desktop) 그대로 두었고, 그 밖의 서술은 새 이름으로 고쳤다.
+
 이 문서는 Tide의 테스트 전략을 정하는 데 필요한 사실을 모은다. 다루는 범위는 Component 동작 테스트 환경, Storybook 연동, 접근성 자동 검사, 시각 회귀, forced-colors와 reduced-motion 에뮬레이션, Token 대비 검사, tarball smoke test, GitHub Actions 구성이다. 이 문서는 결정을 내리지 않는다. 시사점만 적고, 결정은 [28. 테스트 전략 결정](../progress/tide-v0/issues/28-grilling-testing.md)에서 한다.
 
 ## 조사 기준 버전 (2026-11-09, `npm view`로 확인)
@@ -340,7 +342,7 @@ ESM `dist`(`Button.js`에 `"use client"`와 `useState`, `index.js` 재export), d
 
 - 하나의 smoke job으로 세 가지를 확인할 수 있다. ① `"use client"` 경계(`next build` prerender). ② d.ts의 nodenext 해석(`tsc` 또는 attw). ③ `exports` 구조(publint). 19번이 손으로 검증한 것을 CI로 옮기는 셈이다.
 - attw는 내부에 TS 5.6.1-rc를 고정해서 쓴다. Tide는 TS 7 단독이므로 실제 사용자의 TS 7 해석은 TS 7 `tsc`로 보는 것이 더 직접적이다. attw는 보조 수단이다.
-- CSS 경로(`@import "@tide-tds/desktop/styles.css"`, 패키지 안 `@source`)도 같은 consumer 앱에서 확인할 수 있다. 19번의 2~3번 항목이다. 이번 실험에는 넣지 않았다.
+- CSS 경로(`@import "@tide-tds/components/styles.css"`, 패키지 안 `@source`)도 같은 consumer 앱에서 확인할 수 있다. 19번의 2~3번 항목이다. 이번 실험에는 넣지 않았다.
 
 ---
 

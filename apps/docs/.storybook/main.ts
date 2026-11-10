@@ -10,7 +10,7 @@ import { defaultClientConditions, mergeConfig } from "vite";
 //   설치본 @storybook/addon-docs 10.6.6 `mdx-plugin`이 이 옵션을 compile에 넘기는 것 확인).
 // - resolve.conditions: Vite 8.3.6에서 사용자 조건을 넣으면 기본 조건을 대체하므로 defaultClientConditions를 함께 펼친다
 //   (Vite 8 docs config/shared-options `resolve.conditions`).
-//   `@tide-tds/source` 조건이 있는 desktop은 원본(src)으로, 조건이 없는 foundation은 빌드 결과(dist)로 resolve된다.
+//   `@tide-tds/source` 조건이 있는 components는 원본(src)으로, 조건이 없는 foundation은 빌드 결과(dist)로 resolve된다.
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",
   stories: ["../src/**/*.mdx", "../src/**/*.stories.tsx"],

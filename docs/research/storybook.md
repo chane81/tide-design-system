@@ -2,6 +2,8 @@
 
 티켓: [25. Storybook 문서 사이트 구성 조사](../progress/tide-v0/issues/25-research-storybook.md)
 
+> 2026-11-10: `@tide-tds/desktop`은 첫 배포 전에 `@tide-tds/components`로 이름이 바뀌었다([ADR 0009](../decisions/0009-single-components-package.md)). 이 문서의 desktop은 모두 실험 당시 이름이고, 지금의 components를 가리킨다.
+
 Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만들 때 필요한 사실을 정리한다. 패키지 구조와 TS 7 단독 결정은 [모노레포 패키지 구조와 빌드 결정](../progress/tide-v0/issues/16-grilling-monorepo-structure.md), Tailwind 연동 일반론은 [monorepo-tooling.md](./monorepo-tooling.md) 7절과 [tailwind-theme-and-autocomplete.md](./tailwind-theme-and-autocomplete.md)에 있다. 이 문서는 결정을 내리지 않고 시사점만 적는다. 결정은 [26. Storybook 문서 구성 결정](../progress/tide-v0/issues/26-grilling-storybook.md)에서 한다.
 
 ## 조사 기준 버전 (2026-11-09, `npm view`로 확인)

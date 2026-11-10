@@ -105,7 +105,7 @@ try {
     devDependencies: await versions(appDevDependencies),
   };
   await writeFile(join(consumerDir, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
-  // desktop tarball이 foundation·icons를 정확한 버전으로 의존하므로, registry 대신 tarball로 연결한다.
+  // components tarball이 foundation·icons를 정확한 버전으로 의존하므로, registry 대신 tarball로 연결한다.
   const overrides = Object.entries(tarballs)
     .map(([name, spec]) => `  "${name}": "${spec}"`)
     .join("\n");
@@ -128,7 +128,7 @@ try {
   assert(css.includes("--tide-bg-primary-solid"), "foundation의 --tide-* 변수가 없다");
   assert(
     css.includes(".sr-only"),
-    "desktop 내부 class(sr-only)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+    "components 내부 class(sr-only)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(!css.includes("--color-red-500"), "Tailwind 기본 팔레트가 남아 있다");
   assert(

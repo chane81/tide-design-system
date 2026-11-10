@@ -4,7 +4,7 @@ Tide의 버전과 릴리스 규칙을 적는다. 근거는 [tide-v0 spec](docs/p
 
 ## changeset
 
-배포 패키지(`packages/*`: `@tide-tds/foundation`, `@tide-tds/icons`, `@tide-tds/desktop`)를 바꾸는 PR에는 changeset을 하나 넣는다. 없으면 CI가 실패한다.
+배포 패키지(`packages/*`: `@tide-tds/foundation`, `@tide-tds/icons`, `@tide-tds/components`)를 바꾸는 PR에는 changeset을 하나 넣는다. 없으면 CI가 실패한다.
 
 ```sh
 pnpm changeset          # 패키지와 변경 수준(patch / minor)을 고르고 요약을 쓴다
@@ -38,7 +38,7 @@ pnpm changeset --empty  # 패키지를 바꿨지만 릴리스가 필요 없을 �
 
 1. changeset이 든 PR을 main에 머지하면 「chore: 릴리스 버전 올리기」 PR(Version PR)이 생기거나 갱신된다. 버전과 CHANGELOG 변경이 들어 있다.
 2. 릴리스할 때 Version PR을 머지한다. 단계 경계(0.1.0 … 0.5.0)는 이 PR을 머지할 때 사람이 고른다.
-3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-tds/desktop@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
+3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-tds/components@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
 4. publish가 실제로 일어났으면 문서 사이트(`tide-tds.lakegreen.net`) 배포를 요청한다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
 
 prerelease dist-tag(`next`, `canary`)는 v0에서 쓰지 않는다.

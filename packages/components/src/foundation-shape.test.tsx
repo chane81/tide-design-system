@@ -1,5 +1,5 @@
 // Foundation의 radius·Elevation·포커스 표시를 실제 Chromium에서 계산값으로 확인한다(tide-v0-impl 티켓 06).
-// 앱과 같은 CSS(@import "tailwindcss" + desktop styles.css → foundation tailwind.css)를 쓴다.
+// 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
 // 두 instance에서 모두 돈다. forced-colors instance(contextOptions forcedColors: "active")에서는
 // 그림자와 border 색이 시스템 색으로 덮이므로, 투명 border·outline이 보이는지를 따로 단언한다.
 import { color } from "@tide-tds/foundation";

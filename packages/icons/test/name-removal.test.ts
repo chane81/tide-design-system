@@ -16,9 +16,9 @@ function without(...keys: string[]): Record<string, string> {
 
 const iconsMinor = { id: "rename-house", releases: [{ name: "@tide-tds/icons", type: "minor" }] };
 const iconsPatch = { id: "fix-house", releases: [{ name: "@tide-tds/icons", type: "patch" }] };
-const desktopMinor = {
-  id: "desktop-break",
-  releases: [{ name: "@tide-tds/desktop", type: "minor" }],
+const componentsMinor = {
+  id: "components-break",
+  releases: [{ name: "@tide-tds/components", type: "minor" }],
 };
 const empty = { id: "docs-only", releases: [] };
 
@@ -57,7 +57,7 @@ describe("minor changeset 요구", () => {
   });
 
   it("다른 패키지의 minor로는 통과하지 않는다", () => {
-    expect(nameRemovalProblem(["HouseIcon"], [desktopMinor])).not.toBeNull();
+    expect(nameRemovalProblem(["HouseIcon"], [componentsMinor])).not.toBeNull();
   });
 
   it("icons minor changeset이 하나라도 있으면 통과한다", () => {

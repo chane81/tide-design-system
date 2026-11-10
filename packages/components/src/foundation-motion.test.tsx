@@ -1,5 +1,5 @@
 // Foundation의 motion·쌓임 단계를 실제 Chromium에서 계산값으로 확인한다(tide-v0-impl 티켓 07).
-// 앱과 같은 CSS(@import "tailwindcss" + desktop styles.css → foundation tailwind.css)를 쓴다.
+// 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
 // 두 instance에서 모두 돈다. 두 번째 instance(contextOptions reducedMotion: "reduce")에서는
 // motion-safe: class가 빠지고, Tide Token 자체(transition-colors의 fast)는 그대로인지를 단언한다
 // (tide-v0 티켓 21: hover 색 변화는 reduced-motion에서도 유지, 이동·확대·blur만 motion-safe:로 감싼다).

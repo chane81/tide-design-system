@@ -2,7 +2,9 @@
 
 티켓: [29. 버전 관리와 npm 배포 흐름 조사](../progress/tide-v0/issues/29-research-release.md)
 
-`@tide-tds/foundation`, `@tide-tds/desktop`, `@tide-tds/icons` 세 패키지를 npm에 배포하는 흐름을 정하기 위한 사실을 모은다. 이 문서는 결정을 내리지 않는다. 결정은 [30. 버전과 배포 정책 결정](../progress/tide-v0/issues/30-grilling-release.md)에서 한다. 각 절 끝에 시사점만 적는다.
+> 2026-11-10: `@tide-tds/desktop`은 첫 배포 전에 `@tide-tds/components`로 이름이 바뀌었다([ADR 0009](../decisions/0009-single-components-package.md)). 실험 환경과 출력은 당시 이름(desktop) 그대로 두었고, 그 밖의 서술은 새 이름으로 고쳤다.
+
+`@tide-tds/foundation`, `@tide-tds/components`, `@tide-tds/icons` 세 패키지를 npm에 배포하는 흐름을 정하기 위한 사실을 모은다. 이 문서는 결정을 내리지 않는다. 결정은 [30. 버전과 배포 정책 결정](../progress/tide-v0/issues/30-grilling-release.md)에서 한다. 각 절 끝에 시사점만 적는다.
 
 이미 정해진 전제: npm scope `@tide-tds`(org owner `charles-green`, 2FA 켜짐), pnpm workspace + catalog(기본 하나와 `strict`), Turborepo, ESM 전용 배포([ADR 0006](../decisions/0006-foundation-and-target-packages.md), [ADR 0007](../decisions/0007-lucide-generated-icons-package.md), [티켓 18](../progress/tide-v0/issues/18-task-npm-scope.md)).
 
@@ -241,7 +243,7 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 ### 시사점
 
 - 0.x 동안 minor를 breaking으로 쓸지는 도구가 정해 주지 않는다. changesets는 사람이 bump 종류를 적으므로 관례를 문서로 정해야 한다.
-- 0.x에서 foundation의 minor를 올리면 desktop의 `^0.y` 범위를 벗어나므로 desktop도 다시 배포해야 한다(6절 실험 참고).
+- 0.x에서 foundation의 minor를 올리면 components의 `^0.y` 범위를 벗어나므로 components도 다시 배포해야 한다(6절 실험 참고).
 
 ---
 
@@ -269,7 +271,7 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 | Tabler Icons | `fixed: [["@tabler/icons*"]]`                                        | 아이콘 패키지끼리 같은 버전                                                                                            |
 | Lucide       | 모든 패키지가 같은 버전(`lucide-react`, `lucide-static` 모두 1.70.0) |                                                                                                                        |
 
-desktop처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `dependencies` + `^` 범위가 가장 흔하다(Primer, Carbon, Atlassian). 스타일·Token 패키지는 dependency로 두는 곳(Carbon, Atlassian)과 peer로 두는 곳(SEED)이 나뉜다.
+components처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `dependencies` + `^` 범위가 가장 흔하다(Primer, Carbon, Atlassian). 스타일·Token 패키지는 dependency로 두는 곳(Carbon, Atlassian)과 peer로 두는 곳(SEED)이 나뉜다.
 
 ### 기타 사실
 
@@ -279,8 +281,8 @@ desktop처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `de
 
 ### 시사점
 
-- 0.x에서는 foundation의 minor가 곧 desktop의 범위 이탈이라, 독립 방식이어도 desktop이 자주 함께 올라간다.
-- fixed는 "모든 Tide 패키지가 같은 숫자"라는 단순함을 주지만, 아이콘만 바뀌어도 foundation·desktop이 새 버전으로 배포된다. 아이콘 패키지는 Lucide 업데이트(주 단위로 나옴)를 따라 자주 바뀔 수 있다.
+- 0.x에서는 foundation의 minor가 곧 components의 범위 이탈이라, 독립 방식이어도 components가 자주 함께 올라간다.
+- fixed는 "모든 Tide 패키지가 같은 숫자"라는 단순함을 주지만, 아이콘만 바뀌어도 foundation·components가 새 버전으로 배포된다. 아이콘 패키지는 Lucide 업데이트(주 단위로 나옴)를 따라 자주 바뀔 수 있다.
 
 ---
 
