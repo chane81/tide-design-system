@@ -8,6 +8,9 @@
     "url": "git+https://github.com/chane81/tide-design-system.git",
     "directory": "packages/foundation"
   },
+  "bin": {
+    "tide-color": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],
@@ -23,6 +26,10 @@
     "./internal": {
       "types": "./dist/internal.d.ts",
       "default": "./dist/internal.js"
+    },
+    "./color-family": {
+      "types": "./dist/color-family.d.ts",
+      "default": "./dist/color-family.js"
     },
     "./tokens.css": "./dist/tokens.css",
     "./tailwind.css": "./dist/tailwind.css",
