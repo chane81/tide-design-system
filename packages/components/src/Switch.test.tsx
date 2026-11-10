@@ -1,13 +1,21 @@
 // Switch의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 17).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // 켜짐·꺼짐이 시스템 색 채움과 thumb 위치로 구분되는지, thumb 이동 transition이 빠지는지를 계산값으로 단언한다.
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import { useState, type ReactElement } from "react";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Field } from "./Field.tsx";
 import { Switch, type SwitchProps } from "./Switch.tsx";
+
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+declare module "@tide-tds/foundation" {
+  interface RoleRegistry {
+    brand: true;
+  }
+}
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -300,9 +308,13 @@ describe("size", () => {
   test("지원하지 않는 size와 color는 타입 오류다", () => {
     // @ts-expect-error Switch는 xs를 받지 않는다.
     const xs: SwitchProps = { size: "xs" };
-    // @ts-expect-error 색 계열 이름은 받지 않는다. color는 Role만 받는다.
+    // @ts-expect-error 색 계열 이름은 장식·분류 Component용이라 Switch는 받지 않는다(ADR 0016).
+    const blue: SwitchProps = { color: "blue" };
+    // @ts-expect-error neutral과 다른 색인 gray도 받지 않는다.
     const gray: SwitchProps = { color: "gray" };
-    expect([xs, gray]).toHaveLength(2);
+    // augmentation한 앱 Role은 타입을 통과한다.
+    const brand: SwitchProps = { color: "brand" };
+    expect([xs, blue, gray, brand]).toHaveLength(4);
   });
 
   test("RTL에서는 켜면 thumb이 왼쪽으로 간다", async () => {
@@ -378,6 +390,49 @@ describe("색", () => {
     expect(getComputedStyle(parts("기본").track).backgroundColor).toBe(
       resolve("var(--tide-bg-primary-solid)"),
     );
+  });
+
+  describe("앱 Role", () => {
+    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"로 앱 Role을 쓰고, Switch 코드는 그대로다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+
+      await render(
+        <div data-theme="light">
+          <Switch color="brand" defaultChecked>
+            브랜드
+          </Switch>
+        </div>,
+      );
+      const { track, thumb, root } = parts("브랜드");
+      expect(root).toHaveAttribute("data-color", "brand");
+      await settle();
+      if (forcedColors()) return;
+      expect(getComputedStyle(track).backgroundColor).toBe(resolve("#7c3aed"));
+      expect(getComputedStyle(track).borderTopColor).toBe(resolve("#7c3aed"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("#ffffff"));
+    });
   });
 
   test("비활성은 disabled Token 색이다", async () => {
@@ -565,7 +620,7 @@ describe("hover와 누름", () => {
     );
   });
 
-  test("꺼짐: label에 올리면 track이 neutral subtle-hover, 누르면 subtle-active이고 thumb은 text-default다", async () => {
+  test("꺼짐: label에 올리면 track이 accent subtle, 누르면 subtle-active이고 thumb은 text-accent다(Checkbox·Radio와 같은 규칙)", async () => {
     await render(
       <div data-theme="light">
         <Switch>
@@ -581,8 +636,8 @@ describe("hover와 누름", () => {
       expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("CanvasText"));
       expect(getComputedStyle(track).borderTopColor).toBe(resolve("CanvasText"));
     } else {
-      expect(hovered).toBe(resolve("var(--tide-bg-neutral-subtle-hover)"));
-      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-default)"));
+      expect(hovered).toBe(resolve("var(--tide-bg-primary-subtle)"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-primary)"));
       // 경계는 그대로 border-strong이다.
       expect(getComputedStyle(track).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
     }
@@ -590,10 +645,27 @@ describe("hover와 누름", () => {
     await commands.mouseDownOn("off");
     await settle();
     const pressed = getComputedStyle(track).backgroundColor;
+    const pressedThumb = getComputedStyle(thumb).backgroundColor;
     await commands.mouseUp();
     expect(pressed).toBe(
-      forcedColors() ? resolve("Canvas") : resolve("var(--tide-bg-neutral-subtle-active)"),
+      forcedColors() ? resolve("Canvas") : resolve("var(--tide-bg-primary-subtle-active)"),
     );
+    expect(pressedThumb).toBe(
+      forcedColors() ? resolve("CanvasText") : resolve("var(--tide-text-primary)"),
+    );
+  });
+
+  test('color="neutral" 꺼짐 hover는 neutral subtle 위 text-default thumb이다(neutral의 text 슬롯)', async () => {
+    await render(
+      <div data-theme="light">
+        <Switch color="neutral">꺼짐</Switch>
+      </div>,
+    );
+    const { track, thumb } = parts("꺼짐");
+    await hoverLabel("꺼짐");
+    if (forcedColors()) return;
+    expect(getComputedStyle(track).backgroundColor).toBe(resolve("var(--tide-bg-neutral-subtle)"));
+    expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-default)"));
   });
 
   test("track에 올려도 같은 hover 색이다", async () => {
