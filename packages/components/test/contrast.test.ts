@@ -1,7 +1,13 @@
 // Link·IconButton이 쓰는 글자색이 대비 쌍에 등록되어 있는지 본다(tide-v0-impl 티켓 14, Component 완료 기준 5).
 // 값의 대비비는 foundation이 검사한다. 여기서는 「등록되어 있는지」만 본다.
 import { contrastPairs } from "@tide-tds/foundation";
-import { colorContrastRules, contrastExclusions } from "@tide-tds/foundation/internal";
+import {
+  checkColorContrast,
+  colorContrastRules,
+  colorFamilyNames,
+  colorSlotHex,
+  contrastExclusions,
+} from "@tide-tds/foundation/internal";
 import { describe, expect, it } from "vitest";
 
 const surfaces = ["bg-canvas", "bg-surface", "bg-raised"] as const;
@@ -69,7 +75,28 @@ describe("Badge 대비 쌍", () => {
     },
   );
 
-  it("앱 Role은 text × subtle, on-solid × solid 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+  it("색 계열 6개가 text × subtle, on-solid × solid 규칙을 light·dark에서 통과한다", () => {
+    expect(colorFamilyNames).toEqual(["blue", "gray", "green", "amber", "red", "cyan"]);
+    for (const family of colorFamilyNames) {
+      const results = checkColorContrast({
+        light: colorSlotHex(family, "light"),
+        dark: colorSlotHex(family, "dark"),
+      });
+      const used = results.filter(
+        (result) =>
+          (result.foreground === "text" && result.background === "subtle") ||
+          (result.foreground === "on-solid" && result.background === "solid"),
+      );
+      // 규칙 2개 × Theme 2개
+      expect(used, family).toHaveLength(4);
+      expect(
+        used.filter((result) => !result.pass),
+        family,
+      ).toEqual([]);
+    }
+  });
+
+  it("앱 Role·앱 장식 계열은 text × subtle, on-solid × solid 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
     const rule = (foreground: string, background: string): boolean =>
       colorContrastRules.some(
         (r) => r.foreground === foreground && r.background === background && r.minRatio === 4.5,

@@ -7,10 +7,13 @@ import { render } from "vitest-browser-react";
 
 import { Badge, type BadgeProps } from "./Badge.tsx";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)과 앱 장식 계열(leaf)을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-tds/foundation" {
   interface RoleRegistry {
     brand: true;
+  }
+  interface ColorFamilyRegistry {
+    leaf: true;
   }
 }
 
@@ -34,6 +37,8 @@ const badge = (text: string): HTMLElement =>
   page.getByText(text, { exact: true }).element() as HTMLElement;
 
 const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
+// 색 계열은 Theme 블록이 정한 계열 변수(--tide-<계열>-<슬롯>)를 accent 슬롯으로 쓴다(ADR 0011).
+const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
 
 describe("역할과 이름", () => {
   test("상태를 텍스트로 전한다. 역할이 없는 span이라 주변 이름에 그대로 들어간다", async () => {
@@ -191,17 +196,64 @@ describe("색", () => {
     );
   });
 
-  test("color는 Role만 받는다. 색 계열 이름은 타입 오류다(ADR 0017)", () => {
-    // @ts-expect-error -- 색 계열 이름(blue)은 장식·분류 Component용이다.
-    const blue: BadgeProps = { children: "a", color: "blue" };
-    // @ts-expect-error -- gray도 색 계열 이름이다. 뜻이 없는 상태는 neutral이다.
-    const gray: BadgeProps = { children: "a", color: "gray" };
-    const brand: BadgeProps = { children: "a", color: "brand" };
-    expect([blue.color, gray.color, brand.color]).toEqual(["blue", "gray", "brand"]);
+  test.each(
+    (["subtle", "solid"] as const).flatMap((variant) =>
+      families.map((family) => [variant, family] as const),
+    ),
+  )("%s × 색 계열 %s는 그 계열 변수를 쓴다", async (variant, family) => {
+    await render(
+      <div data-theme="light">
+        <Badge color={family} variant={variant}>
+          {family}
+        </Badge>
+      </div>,
+    );
+    const element = badge(family);
+    expect(element).toHaveAttribute("data-color", family);
+    if (forcedColors()) return;
+    const [bg, text] = variant === "solid" ? ["solid", "on-solid"] : ["subtle", "text"];
+    expect(getComputedStyle(element).backgroundColor).toBe(resolve(`var(--tide-${family}-${bg})`));
+    expect(getComputedStyle(element).color).toBe(resolve(`var(--tide-${family}-${text})`));
   });
 
-  describe("앱 Role", () => {
-    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+  test("gray는 neutral과 다른 색 이름이다(dark subtle 배경이 다르다)", async () => {
+    await render(
+      <div data-theme="dark">
+        <Badge color="gray">gray</Badge>
+        <Badge color="neutral">neutral</Badge>
+      </div>,
+    );
+    expect(badge("gray")).toHaveAttribute("data-color", "gray");
+    if (forcedColors()) return;
+    expect(getComputedStyle(badge("gray")).backgroundColor).not.toBe(
+      getComputedStyle(badge("neutral")).backgroundColor,
+    );
+  });
+
+  test("color는 Role과 색 계열 이름(Color)을 받고, 없는 이름은 타입 오류다(ADR 0016·0017)", () => {
+    // @ts-expect-error -- 등록하지 않은 이름은 색 이름이 아니다.
+    const unknown: BadgeProps = { children: "a", color: "purple-ish" };
+    const names: BadgeProps[] = [
+      { children: "a", color: "success" },
+      { children: "a", color: "blue" },
+      { children: "a", color: "gray" },
+      // 앱 Role과 앱 장식 계열도 받는다.
+      { children: "a", color: "brand" },
+      { children: "a", color: "leaf" },
+    ];
+    expect([unknown.color, ...names.map((props) => props.color)]).toEqual([
+      "purple-ish",
+      "success",
+      "blue",
+      "gray",
+      "brand",
+      "leaf",
+    ]);
+  });
+
+  describe("앱 Role과 앱 장식 계열", () => {
+    // 앱이 RoleRegistry에 brand, ColorFamilyRegistry에 leaf를 더하고, tide-color로 만든 CSS를
+    // Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다. 계열 CSS는 등록 종류와 관계없이 같은 모양이다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -218,6 +270,7 @@ describe("색", () => {
         950: "#2e1065",
       },
     });
+    const leaf = defineColorFamily({ name: "leaf", scale: { ...brand.scale, 600: "#15803d" } });
     let style: HTMLStyleElement | undefined;
     afterEach(() => style?.remove());
 
@@ -238,6 +291,24 @@ describe("색", () => {
       if (forcedColors()) return;
       expect(getComputedStyle(element).backgroundColor).toBe(resolve("#7c3aed"));
       expect(getComputedStyle(element).color).toBe(resolve("#ffffff"));
+    });
+
+    test('color="leaf"로 앱 장식 계열을 쓴다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([leaf]);
+      document.head.append(style);
+
+      await render(
+        <div data-theme="light">
+          <Badge color="leaf" variant="solid">
+            분류
+          </Badge>
+        </div>,
+      );
+      const element = badge("분류");
+      expect(element).toHaveAttribute("data-color", "leaf");
+      if (forcedColors()) return;
+      expect(getComputedStyle(element).backgroundColor).toBe(resolve("#15803d"));
     });
   });
 });
