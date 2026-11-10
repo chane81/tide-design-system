@@ -31,13 +31,11 @@ import * as IconButtonStories from "./IconButton.stories.tsx";
 
 ### 색 고르기
 
-`color`는 Button과 같은 색 이름(Role, 색 계열, 앱 브랜드 색)을 받습니다. 기본값은 `primary`입니다.
+`color`는 Button과 같은 Role(Tide Role 6개와 앱 Role)을 받습니다. 기본값은 `primary`입니다.
 
 <Canvas of={IconButtonStories.Colors} />
 
-<Canvas of={IconButtonStories.Families} />
-
-앱의 브랜드 계열은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만든 뒤 `color="brand"`로 씁니다.
+앱 Role은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만든 뒤 `color="brand"`로 씁니다.
 
 <Canvas of={IconButtonStories.Brand} />
 
@@ -133,6 +131,6 @@ import Link from "next/link";
 
 ## Props
 
-`button`의 props를 모두 받습니다(`color`는 색 이름으로 바뀌고, `aria-label`과 `children`은 필수입니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 루트에는 `data-color`가 붙습니다.
+`button`의 props를 모두 받습니다(`color`는 Role로 바뀌고, `aria-label`과 `children`은 필수입니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 루트에는 `data-color`가 붙습니다.
 
 <ArgTypes of={IconButtonStories} />

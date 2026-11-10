@@ -47,7 +47,12 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 강�
 </p>
 ```
 
-색 이름은 Role 6개와 색 계열 6개(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)입니다. 앱의 브랜드 계열도 더할 수 있습니다([브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)).
+색 이름은 Role과 색 계열 둘로 나뉩니다. 앱도 이름을 더할 수 있습니다([브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)).
+
+| 종류    | Tide 이름                                                    | 뜻   | 쓰는 Component                          |
+| ------- | ------------------------------------------------------------ | ---- | --------------------------------------- |
+| Role    | `neutral`, `primary`, `success`, `warning`, `danger`, `info` | 있음 | Button, IconButton, Link 같은 행동·의미 |
+| 색 계열 | `blue`, `gray`, `green`, `amber`, `red`, `cyan`              | 없음 | Badge, Tag, Avatar 같은 장식·분류       |
 
 | 속성   | class                                        | 쓰는 곳                  |
 | ------ | -------------------------------------------- | ------------------------ |
@@ -57,6 +62,7 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 강�
 | 테두리 | `border-accent`                              | UI 경계                  |
 
 - `data-color`가 없으면 `primary`입니다.
+- 동작의 뜻을 전할 때는 Role을 씁니다. 색 계열은 뜻 없이 색만 구분할 때 씁니다.
 - 색 계열은 Role과 같은 단계 규칙을 따릅니다. `neutral`과 `gray`는 다른 색입니다. `neutral`은 dark subtle이 더 밝고, 글자와 테두리가 `text-default`, `border-strong`입니다.
 - `data-color`는 `data-theme`과 같은 요소나 그 안쪽에 둡니다. 그러면 그 Theme 값을 씁니다.
 - 계열 class(`bg-blue-solid`)는 없습니다. 색 계열은 `data-color`로만 고릅니다.

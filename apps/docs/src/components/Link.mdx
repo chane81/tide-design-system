@@ -24,7 +24,7 @@ import * as LinkStories from "./Link.stories.tsx";
 
 ### 색 고르기
 
-`color`로 색 이름(Role, 색 계열, 앱 브랜드 색)을 고릅니다. 기본값은 `primary`입니다. 바깥 요소의 색은 물려받지 않습니다.
+`color`로 Role(Tide Role 6개와 앱 Role)을 고릅니다. 기본값은 `primary`입니다. 바깥 요소의 색은 물려받지 않습니다.
 
 <Canvas of={LinkStories.Colors} />
 
@@ -81,7 +81,7 @@ import NextLink from "next/link";
 - 역할: `link`. 이름은 텍스트입니다.
 - 키보드: Tab으로 포커스하고 Enter로 이동합니다.
 - 포커스 표시: 키보드 포커스에 2px ring이 보입니다(`focus-ring`).
-- 색: 모든 색 이름의 글자색이 light·dark 표면에서 4.5:1 이상입니다.
+- 색: 모든 Role의 글자색이 light·dark 표면에서 4.5:1 이상입니다.
 - 밑줄: 색만으로 링크를 구분하지 않도록 밑줄이 항상 있습니다. hover에는 두꺼워집니다.
 - 고대비 모드(forced-colors): 시스템 링크 색으로 바뀌고 밑줄은 남습니다.
 
@@ -93,6 +93,6 @@ import NextLink from "next/link";
 
 ## Props
 
-`a`의 props를 모두 받습니다(`color`는 색 이름으로 바뀝니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 루트에는 `data-color`가 붙습니다. 비활성 상태는 없습니다. 갈 수 없는 링크는 텍스트로 둡니다.
+`a`의 props를 모두 받습니다(`color`는 Role로 바뀝니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 루트에는 `data-color`가 붙습니다. 비활성 상태는 없습니다. 갈 수 없는 링크는 텍스트로 둡니다.
 
 <ArgTypes of={LinkStories} />
