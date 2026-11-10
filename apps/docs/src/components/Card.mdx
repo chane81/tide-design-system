@@ -1,0 +1,69 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as CardStories from "./Card.stories.tsx";
+
+<Meta of={CardStories} />
+
+# Card
+
+관련 내용을 한 덩어리로 묶는 surface 표면 컨테이너입니다. 경계만 있고 그림자는 없습니다.
+
+<Canvas of={CardStories.Basic} />
+
+## 사용 시점
+
+- 대시보드 수치, 요금제, 설정 묶음처럼 한 주제를 한 덩어리로 보여 줄 때
+- 같은 모양의 항목을 목록이나 격자로 나열할 때
+
+## 쓰지 않을 때
+
+- 화면 위에 떠 있어야 하면(메뉴, 팝오버) raised 표면을 쓰는 Popover·Dialog를 씁니다. Card는 그림자가 없습니다.
+- 알림이나 오류를 보여 주려면 Alert를 씁니다.
+- 묶을 내용이 한 줄뿐이면 Card 없이 둡니다. 구역 사이만 나누려면 Separator를 씁니다.
+
+## 예시
+
+### 요소 바꾸기
+
+기본 요소는 `div`입니다. 내용에 맞는 요소를 `render`로 줍니다. 혼자 읽혀도 뜻이 통하는 묶음은 `article`, 이름 붙인 구역은 `section`, 목록 항목은 `li`입니다.
+
+<Canvas of={CardStories.Article} />
+
+<Canvas of={CardStories.List} />
+
+### 안쪽 나누기
+
+안쪽 여백은 16px입니다. `className`으로 바꿉니다(예: `p-6`, `p-0`). 여백을 없애고 Separator로 구역을 나눌 수 있습니다.
+
+<Canvas of={CardStories.Sections} />
+
+## Do/Don't
+
+### Do: 관련 내용을 한 덩어리로 묶는다
+
+<Canvas of={CardStories.DoGroupRelated} />
+
+### Don't: Card 안에 Card를 겹친다
+
+경계가 두 겹이 되어 어디까지가 한 덩어리인지 흐려집니다. 안쪽은 Separator나 여백으로 나눕니다.
+
+<Canvas of={CardStories.DontNested} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 기본 `div`라 역할이 없습니다. `render`로 고른 요소의 역할을 그대로 씁니다.
+- 대비: 본문 글자(`text-default`)가 surface 표면과 4.5:1 이상입니다. 경계는 장식용이라 대비 검사 대상이 아닙니다.
+- 고대비 모드(forced-colors): 경계가 시스템 글자색으로 그려져 덩어리가 그대로 보입니다.
+
+### 앱이 할 일
+
+- `article`·`section`을 쓰면 제목을 `aria-labelledby`로 연결합니다.
+- Card 전체를 링크로 만들지 않습니다. 안의 제목이나 버튼을 링크·버튼으로 둡니다.
+
+## Props
+
+서버 컴포넌트로 쓸 수 있습니다. `div`의 props를 모두 받습니다. `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `p-6`). `render` 요소의 class보다도 이깁니다.
+
+<ArgTypes of={CardStories} />

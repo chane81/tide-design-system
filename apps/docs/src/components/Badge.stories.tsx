@@ -1,0 +1,163 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Badge } from "@tide-tds/components";
+import { CheckIcon } from "@tide-tds/icons";
+
+// Badge 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
+// story는 문서·렌더·a11y만 맡는다. 동작 단언은 components의 `Badge.test.tsx`에 있다.
+
+const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
+const roleLabel: Record<(typeof roles)[number], string> = {
+  neutral: "초안",
+  primary: "새 기능",
+  success: "완료",
+  warning: "검토 필요",
+  danger: "실패",
+  info: "안내",
+};
+
+const meta = {
+  title: "Component/Badge",
+  component: Badge,
+  args: {
+    children: "완료",
+    variant: "subtle",
+    size: "md",
+    color: "neutral",
+  },
+  // react-docgen이 `Extract<...>` 별칭을 풀지 못한다. 선택지와 타입을 직접 적는다.
+  argTypes: {
+    children: { control: "text", table: { type: { summary: "ReactNode" } } },
+    variant: {
+      control: "inline-radio",
+      options: ["subtle", "solid"],
+      table: { type: { summary: '"subtle" | "solid"' }, defaultValue: { summary: '"subtle"' } },
+    },
+    size: {
+      control: "inline-radio",
+      options: ["sm", "md"],
+      table: { type: { summary: '"sm" | "md"' }, defaultValue: { summary: '"md"' } },
+    },
+    color: {
+      control: "select",
+      options: roles,
+      table: { type: { summary: "Role" }, defaultValue: { summary: '"neutral"' } },
+    },
+  },
+} satisfies Meta<typeof Badge>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+/** 기본: neutral subtle, md */
+export const Basic: Story = {
+  name: "기본",
+};
+
+/** Role 6개. 텍스트가 상태를 말하고 색은 뜻을 거든다. */
+export const Colors: Story = {
+  name: "Role",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      {roles.map((role) => (
+        <Badge key={role} color={role}>
+          {roleLabel[role]}
+        </Badge>
+      ))}
+    </div>
+  ),
+};
+
+/** subtle과 solid */
+export const Variants: Story = {
+  name: "채움 방식",
+  render: () => (
+    <div className="flex flex-col gap-3">
+      {(["subtle", "solid"] as const).map((variant) => (
+        <div key={variant} className="flex flex-wrap items-center gap-2">
+          {roles.map((role) => (
+            <Badge key={role} color={role} variant={variant}>
+              {roleLabel[role]}
+            </Badge>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+/** size 2개 */
+export const Sizes: Story = {
+  name: "size",
+  render: () => (
+    <div className="flex items-center gap-3">
+      <Badge size="sm" color="success">
+        sm 완료
+      </Badge>
+      <Badge size="md" color="success">
+        md 완료
+      </Badge>
+    </div>
+  ),
+};
+
+/** 아이콘을 텍스트와 함께 넣는다. 아이콘만 두지 않는다. */
+export const WithIcon: Story = {
+  name: "아이콘과 함께",
+  render: () => (
+    <Badge color="success">
+      <CheckIcon />
+      배포됨
+    </Badge>
+  ),
+};
+
+/** 제목·목록 옆에 붙인다. */
+export const InContext: Story = {
+  name: "제목 옆에",
+  render: () => (
+    <ul className="flex flex-col gap-2 text-body-md text-default">
+      <li className="flex items-center gap-2">
+        결제 API <Badge color="success">정상</Badge>
+      </li>
+      <li className="flex items-center gap-2">
+        알림 서버 <Badge color="warning">지연</Badge>
+      </li>
+      <li className="flex items-center gap-2">
+        검색 색인 <Badge color="danger">중단</Badge>
+      </li>
+    </ul>
+  ),
+};
+
+/** Do: 상태를 텍스트로 말한다. */
+export const DoTextState: Story = {
+  name: "Do: 상태를 텍스트로",
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Badge color="success">승인됨</Badge>
+      <Badge color="danger">거절됨</Badge>
+    </div>
+  ),
+};
+
+/** Don't: 색만 다르고 텍스트가 같다. */
+export const DontColorOnly: Story = {
+  name: "Don't: 색만으로 구분",
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Badge color="success">상태</Badge>
+      <Badge color="danger">상태</Badge>
+    </div>
+  ),
+};
+
+/** Don't: 누를 수 있는 것처럼 쓴다. */
+export const DontAsButton: Story = {
+  name: "Don't: 버튼처럼",
+  render: () => (
+    <p className="text-body-md text-default">
+      필터: <Badge color="primary">디자인 ×</Badge>
+    </p>
+  ),
+};
