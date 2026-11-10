@@ -34,7 +34,7 @@ export const choiceRootClass =
 export const choiceAreaClass = "grid size-6 shrink-0 place-items-center";
 
 /** 네이티브 input을 상자로 그린다. 모양(rounded)과 크기 class는 Component가 앞에 붙인다. */
-export const choiceInputClass =
+export const choiceInputClass: string =
   "peer col-start-1 row-start-1 m-0 appearance-none border border-strong bg-canvas cursor-pointer transition-colors checked:border-accent checked:bg-accent-solid enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:checked:group-hover/choice:bg-accent-solid-hover indeterminate:border-accent indeterminate:bg-accent-solid enabled:indeterminate:group-hover/choice:bg-accent-solid-hover aria-invalid:border-danger focus-visible:focus-ring disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled " +
   choiceInputForcedClass;
 
