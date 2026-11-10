@@ -26,6 +26,28 @@ describe("searchIcons", () => {
     expect(names("close")).toEqual(["XIcon"]);
   });
 
+  it("이름이 같은 것, 이름이 검색어로 시작하는 것, 이름에 든 것, 태그가 같은 것 순서로 둔다", () => {
+    const ranked = buildIconIndex(
+      {
+        AlarmClockPlusIcon: "alarm-clock-plus",
+        CirclePlusIcon: "circle-plus",
+        CrossIcon: "cross",
+        PlusIcon: "plus",
+        PlusSquareIcon: "plus-square",
+        AddIcon: "add",
+      },
+      { cross: ["plus"], add: ["plus sign"] },
+    );
+    expect(searchIcons(ranked, "plus").map(({ name }) => name)).toEqual([
+      "PlusIcon",
+      "PlusSquareIcon",
+      "AlarmClockPlusIcon",
+      "CirclePlusIcon",
+      "CrossIcon",
+      "AddIcon",
+    ]);
+  });
+
   it("검색어 낱말이 모두 맞아야 한다", () => {
     expect(names("arrow direction")).toEqual(["ArrowDownIcon"]);
     expect(names("house close")).toEqual([]);

@@ -79,7 +79,9 @@ export function IconSearch(): ReactElement {
       />
       <p role="status" style={{ margin: "8px 0 0", fontSize: 14 }}>
         {status ||
-          `${results.length.toLocaleString("ko-KR")}개. 아이콘을 누르면 import 문을 복사합니다.`}
+          (results.length === 0
+            ? "찾는 아이콘이 없습니다. 다른 낱말이나 영어 태그로 검색해 보세요."
+            : `${results.length.toLocaleString("ko-KR")}개. 아이콘을 누르면 import 문을 복사합니다.`)}
       </p>
       <ul style={styles.grid}>
         {results.map(({ name }) => {

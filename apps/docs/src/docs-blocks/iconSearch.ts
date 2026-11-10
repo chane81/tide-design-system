@@ -29,8 +29,22 @@ export function buildIconIndex(
 }
 
 /**
+ * 검색어와 얼마나 가까운지. 작을수록 앞에 둔다.
+ * 0: 이름이 정확히 같다, 1: 이름이 검색어로 시작한다, 2: 이름에 들어 있다, 3: 태그가 정확히 같다, 4: 그 밖.
+ */
+function rank(keywords: readonly string[], joined: string): number {
+  const [name = "", ...tagList] = keywords;
+  if (name === joined) return 0;
+  if (name.startsWith(joined)) return 1;
+  if (name.includes(joined)) return 2;
+  if (tagList.some((tag) => tag.replace(/[\s-]/g, "") === joined)) return 3;
+  return 4;
+}
+
+/**
  * 공백으로 나눈 검색어가 모두 이름이나 태그 중 하나에 들어 있는 아이콘만 남긴다.
  * 대소문자와 낱말 사이 공백·하이픈은 무시한다(`arrow down`, `arrow-down`이 `ArrowDownIcon`을 찾는다).
+ * 이름이 같은 것, 이름이 검색어로 시작하는 것, 이름에 든 것, 태그가 같은 것 순서로 앞에 두고, 같은 순위는 이름순이다.
  */
 export function searchIcons(index: readonly IconEntry[], query: string): IconEntry[] {
   const terms = query
@@ -40,13 +54,17 @@ export function searchIcons(index: readonly IconEntry[], query: string): IconEnt
     .filter(Boolean);
   if (terms.length === 0) return [...index];
   const joined = terms.join("");
-  return index.filter(
-    ({ keywords }) =>
-      keywords[0]?.includes(joined) ||
-      terms.every((term) =>
-        keywords.some((keyword) => keyword.replace(/[\s-]/g, "").includes(term)),
-      ),
-  );
+  return index
+    .filter(
+      ({ keywords }) =>
+        keywords[0]?.includes(joined) ||
+        terms.every((term) =>
+          keywords.some((keyword) => keyword.replace(/[\s-]/g, "").includes(term)),
+        ),
+    )
+    .map((entry) => ({ entry, score: rank(entry.keywords, joined) }))
+    .sort((a, b) => a.score - b.score)
+    .map(({ entry }) => entry);
 }
 
 /** 아이콘 하나를 가져오는 import 문. 복사 버튼이 클립보드에 넣는다. */
