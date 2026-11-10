@@ -1,7 +1,7 @@
 # 12: 0.1.0 첫 publish
 
 Status: ready-for-human
-Blocked by: 05 (타이포그래피 Foundation과 Typography), 09 (Spinner), 10 (문서: 시작하기·원칙·기준), 11 (릴리스 파이프라인)
+Blocked by: 05 (타이포그래피 Foundation과 Typography), 09 (Spinner), 10 (문서: 시작하기·원칙·기준), 11 (릴리스 파이프라인), 38 (`@tide-tds/desktop`을 `@tide-tds/components`로 바꾸기)
 
 ## What to build
 
