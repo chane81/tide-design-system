@@ -3,7 +3,7 @@
 // 켜짐·꺼짐이 시스템 색 채움과 thumb 위치로 구분되는지, thumb 이동 transition이 빠지는지를 계산값으로 단언한다.
 import { useState, type ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Field } from "./Field.tsx";
@@ -522,5 +522,136 @@ describe("props", () => {
     expect(track).toHaveAttribute("data-testid", "wifi");
     expect(getComputedStyle(root).columnGap).toBe("24px");
     expect(getComputedStyle(root).marginInlineStart).toBe("8px");
+  });
+});
+
+describe("hover와 누름", () => {
+  /** label 텍스트 위에 마우스를 올린 뒤 transition이 끝난 계산값 */
+  async function hoverLabel(text: string): Promise<void> {
+    await userEvent.hover(page.getByText(text));
+    await settle();
+  }
+
+  test("테스트 환경은 hover를 지원한다(Tailwind v4 hover variant는 @media (hover: hover) 안에 있다)", () => {
+    expect(matchMedia("(hover: hover)").matches).toBe(true);
+  });
+
+  test("켜짐: label에 올리면 track이 solid-hover, 누르면 solid-active이고 thumb은 on-solid다", async () => {
+    await render(
+      <div data-theme="light">
+        <Switch defaultChecked>
+          <span data-testid="on">켜짐</span>
+        </Switch>
+      </div>,
+    );
+    const { track, thumb } = parts("켜짐");
+    await hoverLabel("켜짐");
+    const hovered = getComputedStyle(track).backgroundColor;
+    if (forcedColors()) {
+      // forced-colors에서는 hover에도 켜짐 채움(Highlight)이 그대로다.
+      expect(hovered).toBe(resolve("Highlight"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("HighlightText"));
+    } else {
+      expect(hovered).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-on-solid)"));
+    }
+
+    await commands.mouseDownOn("on");
+    await settle();
+    const pressed = getComputedStyle(track).backgroundColor;
+    await commands.mouseUp();
+    expect(pressed).toBe(
+      forcedColors() ? resolve("Highlight") : resolve("var(--tide-bg-primary-solid-active)"),
+    );
+  });
+
+  test("꺼짐: label에 올리면 track이 neutral subtle-hover, 누르면 subtle-active이고 thumb은 text-default다", async () => {
+    await render(
+      <div data-theme="light">
+        <Switch>
+          <span data-testid="off">꺼짐</span>
+        </Switch>
+      </div>,
+    );
+    const { track, thumb } = parts("꺼짐");
+    await hoverLabel("꺼짐");
+    const hovered = getComputedStyle(track).backgroundColor;
+    if (forcedColors()) {
+      expect(hovered).toBe(resolve("Canvas"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("CanvasText"));
+      expect(getComputedStyle(track).borderTopColor).toBe(resolve("CanvasText"));
+    } else {
+      expect(hovered).toBe(resolve("var(--tide-bg-neutral-subtle-hover)"));
+      expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-default)"));
+      // 경계는 그대로 border-strong이다.
+      expect(getComputedStyle(track).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
+    }
+
+    await commands.mouseDownOn("off");
+    await settle();
+    const pressed = getComputedStyle(track).backgroundColor;
+    await commands.mouseUp();
+    expect(pressed).toBe(
+      forcedColors() ? resolve("Canvas") : resolve("var(--tide-bg-neutral-subtle-active)"),
+    );
+  });
+
+  test("track에 올려도 같은 hover 색이다", async () => {
+    await render(
+      <div data-theme="light">
+        <Switch defaultChecked>켜짐</Switch>
+      </div>,
+    );
+    const { track } = parts("켜짐");
+    await userEvent.hover(page.getByRole("switch"));
+    await settle();
+    if (forcedColors()) return;
+    expect(getComputedStyle(track).backgroundColor).toBe(
+      resolve("var(--tide-bg-primary-solid-hover)"),
+    );
+  });
+
+  test.each([
+    ["켜짐", true],
+    ["꺼짐", false],
+  ] as const)("비활성 %s은 hover·누름에 색이 바뀌지 않는다", async (label, checked) => {
+    await render(
+      <div data-theme="light">
+        <Switch disabled defaultChecked={checked}>
+          <span data-testid="target">{label}</span>
+        </Switch>
+      </div>,
+    );
+    const { track, thumb } = parts(label);
+    const before = [
+      getComputedStyle(track).backgroundColor,
+      getComputedStyle(thumb).backgroundColor,
+    ];
+    await userEvent.hover(page.getByText(label));
+    await settle();
+    expect([
+      getComputedStyle(track).backgroundColor,
+      getComputedStyle(thumb).backgroundColor,
+    ]).toEqual(before);
+    await commands.mouseDownOn("target");
+    await settle();
+    const pressed = getComputedStyle(track).backgroundColor;
+    await commands.mouseUp();
+    expect(pressed).toBe(before[0]);
+    if (!forcedColors()) expect(before[0]).toBe(resolve("var(--tide-bg-disabled)"));
+  });
+
+  test("Switch를 감싼 바깥 group 요소에 올려도 반응하지 않는다", async () => {
+    await render(
+      <div data-theme="light" data-testid="card" className="group p-8">
+        <Switch defaultChecked>켜짐</Switch>
+      </div>,
+    );
+    const { track } = parts("켜짐");
+    const before = getComputedStyle(track).backgroundColor;
+    // 카드 왼쪽 위 여백(padding)에 마우스를 올린다.
+    await userEvent.hover(page.getByTestId("card"), { position: { x: 4, y: 4 } });
+    await settle();
+    expect(getComputedStyle(track).backgroundColor).toBe(before);
   });
 });
