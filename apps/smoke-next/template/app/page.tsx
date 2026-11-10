@@ -15,7 +15,7 @@ export default function Page() {
         보조 설명
       </Typography>
       {/* radius·Elevation·포커스 표시 Utility class를 앱 코드에서 직접 쓴다. */}
-      <section className="rounded-lg border border-transparent bg-raised shadow-md dark:border-default">
+      <section className="rounded-lg border border-raised bg-raised shadow-md">
         <button type="button" className="rounded-md focus-visible:focus-ring">
           저장
         </button>

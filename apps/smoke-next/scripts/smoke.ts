@@ -143,6 +143,10 @@ try {
     "radius class(rounded-lg)나 --tide-rounded-lg가 없다",
   );
   assert(
+    css.includes(".border-raised") && css.includes("--tide-border-raised"),
+    "raised 표면 경계 class(border-raised)나 --tide-border-raised가 없다",
+  );
+  assert(
     css.includes(".shadow-md") && css.includes("--tide-shadow-md"),
     "그림자 class(shadow-md)나 --tide-shadow-md가 없다",
   );
