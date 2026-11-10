@@ -3,13 +3,15 @@
 // 화살표 이동과 하나만 선택되는 동작은 같은 `name`의 네이티브 라디오가 맡는다.
 // RadioGroup context(이름, 선택 값)를 읽으므로 client Component다.
 //
-// ref와 나머지 props는 input에, className은 루트 label에 간다(ADR 0014).
+// Switch와 같은 구조다(티켓 17, ADR 0015): ref와 나머지 HTML 속성은 input에, className·style은 루트 label에 간다.
+// 루트 label에는 data-color와 상태 노출용 data-disabled·data-invalid도 붙는다.
 
 import { CircleIcon } from "@tide-tds/icons";
 import {
   use,
   type ChangeEvent,
   type ComponentProps,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -29,7 +31,7 @@ import type { Role } from "./types.ts";
 
 export interface RadioProps extends Omit<
   ComponentProps<"input">,
-  "type" | "size" | "color" | "children" | "value"
+  "type" | "size" | "color" | "children" | "className" | "style" | "value"
 > {
   /** 이 라디오의 값. RadioGroup의 `value`·`onValueChange`가 이 값을 쓰고, form에 제출된다. */
   value: string;
@@ -44,8 +46,10 @@ export interface RadioProps extends Omit<
    * Field·RadioGroup 안에서는 그 값을 따르고, 여기에 준 값이 이긴다.
    */
   invalid?: boolean;
-  /** 루트 label의 class. 사용자 class가 기본 class를 이긴다. */
+  /** 루트 label의 class. 사용자 class가 기본 class를 이긴다. 상자 모양은 바꾸지 않는다(`size`·`color`가 맡는다). */
   className?: string;
+  /** 루트 label의 style */
+  style?: CSSProperties;
 }
 
 const boxClass: Record<ChoiceSize, string> = {
@@ -74,6 +78,7 @@ export function Radio({
   defaultChecked,
   onChange,
   className,
+  style,
   "aria-describedby": ariaDescribedBy,
   "aria-invalid": ariaInvalid,
   ...props
@@ -104,7 +109,13 @@ export function Radio({
   };
 
   return (
-    <label data-color={color} className={cn(choiceRootClass, choiceTextClass[size], className)}>
+    <label
+      data-color={color}
+      data-disabled={control.disabled ? "" : undefined}
+      data-invalid={control["data-invalid"]}
+      style={style}
+      className={cn(choiceRootClass, choiceTextClass[size], className)}
+    >
       <span className={choiceAreaClass}>
         <input
           {...props}

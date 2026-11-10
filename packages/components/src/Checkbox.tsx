@@ -3,7 +3,8 @@
 // Field·CheckboxGroup context를 읽고, indeterminate를 DOM 속성으로 넣어야 해서 client Component다
 // (indeterminate는 HTML 속성이 없고 `input.indeterminate`로만 정한다).
 //
-// ref와 나머지 props는 input에, className은 루트 label에 간다(ADR 0014).
+// Switch와 같은 구조다(티켓 17, ADR 0015): ref와 나머지 HTML 속성은 input에, className·style은 루트 label에 간다.
+// 루트 label에는 data-color와 상태 노출용 data-disabled·data-invalid도 붙는다.
 
 import { CheckIcon, MinusIcon } from "@tide-tds/icons";
 import {
@@ -12,6 +13,7 @@ import {
   useLayoutEffect,
   useRef,
   type ComponentProps,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -31,7 +33,7 @@ import type { Role } from "./types.ts";
 
 export interface CheckboxProps extends Omit<
   ComponentProps<"input">,
-  "type" | "size" | "color" | "children"
+  "type" | "size" | "color" | "children" | "className" | "style"
 > {
   /** 상자 옆에 보이는 label. 체크박스의 이름이 된다. 없으면 `aria-label`을 준다. */
   children?: ReactNode;
@@ -49,8 +51,10 @@ export interface CheckboxProps extends Omit<
    * Field·CheckboxGroup 안에서는 그 값을 따르고, 여기에 준 값이 이긴다.
    */
   invalid?: boolean;
-  /** 루트 label의 class. 사용자 class가 기본 class를 이긴다. */
+  /** 루트 label의 class. 사용자 class가 기본 class를 이긴다. 상자 모양은 바꾸지 않는다(`size`·`color`가 맡는다). */
   className?: string;
+  /** 루트 label의 style */
+  style?: CSSProperties;
 }
 
 /** 상자 크기와 모서리. 체크박스는 radius `sm`(4px)이다. */
@@ -76,6 +80,7 @@ export function Checkbox({
   disabled,
   required,
   className,
+  style,
   ref,
   "aria-describedby": ariaDescribedBy,
   "aria-invalid": ariaInvalid,
@@ -100,7 +105,13 @@ export function Checkbox({
   });
 
   return (
-    <label data-color={color} className={cn(choiceRootClass, choiceTextClass[size], className)}>
+    <label
+      data-color={color}
+      data-disabled={control.disabled ? "" : undefined}
+      data-invalid={control["data-invalid"]}
+      style={style}
+      className={cn(choiceRootClass, choiceTextClass[size], className)}
+    >
       <span className={choiceAreaClass}>
         <input
           {...props}
