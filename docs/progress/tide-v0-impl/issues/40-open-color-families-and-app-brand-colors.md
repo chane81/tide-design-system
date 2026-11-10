@@ -1,6 +1,6 @@
 # 40: 열린 색 이름(color)과 앱 브랜드 색 계열
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 07 (motion·z-index Foundation)
 
 ## What to build
