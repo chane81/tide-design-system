@@ -392,3 +392,79 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     );
   });
 });
+
+// spec 「`@tide-tds/foundation`」 motion·z-index. 기대 목록은 spec을 그대로 적는다.
+const durations = ["fast", "normal"];
+const zIndices = ["sticky", "modal", "popover", "toast", "tooltip"];
+// 시간을 적지 않은 transition class. 모두 --default-transition-* 를 읽는다.
+const defaultTransitions = [
+  "transition",
+  "transition-colors",
+  "transition-opacity",
+  "transition-transform",
+  "transition-shadow",
+];
+
+describe("tailwind.css motion·쌓임 단계", () => {
+  let css: string;
+
+  beforeAll(async () => {
+    css = await buildCss([
+      ...durations.map((name) => `duration-${name}`),
+      ...zIndices.map((name) => `z-${name}`),
+      ...defaultTransitions,
+      "ease-out",
+      "ease-in",
+      "ease-in-out",
+      "duration-150",
+      "z-0",
+      "z-10",
+      "motion-safe:duration-normal",
+    ]);
+  });
+
+  it.each(durations)("duration-%s가 --tide-* 공개 계약을 가리킨다", (name) => {
+    const body = ruleBody(css, `duration-${name}`);
+    expect(body).toContain(`--tw-duration: var(--tide-duration-${name})`);
+    expect(body).toContain(`transition-duration: var(--tide-duration-${name})`);
+  });
+
+  it("ease-out이 --tide-ease-out을 가리키고 ease-in, ease-in-out은 Tailwind 기본값으로 남는다", () => {
+    expect(ruleBody(css, "ease-out")).toContain("transition-timing-function: var(--tide-ease-out)");
+    expect(ruleBody(css, "ease-in")).toContain("transition-timing-function: var(--ease-in)");
+    expect(ruleBody(css, "ease-in-out")).toContain(
+      "transition-timing-function: var(--ease-in-out)",
+    );
+    expect(css).toMatch(/--ease-in: cubic-bezier\(0\.4, 0, 1, 1\)/);
+  });
+
+  it.each(defaultTransitions)("시간을 적지 않은 %s는 Tide 기본값(fast, out)을 쓴다", (name) => {
+    const body = ruleBody(css, name);
+    expect(body).toContain("transition-duration: var(--tw-duration, var(--tide-duration-fast))");
+    expect(body).toContain("transition-timing-function: var(--tw-ease, var(--tide-ease-out))");
+  });
+
+  it("Tailwind 기본 transition 값(150ms, cubic-bezier(0.4, 0, 0.2, 1))이 남지 않는다", () => {
+    expect(css).not.toContain("--default-transition-duration");
+    expect(css).not.toContain("--default-transition-timing-function");
+    for (const name of defaultTransitions) {
+      expect(ruleBody(css, name), name).not.toContain("cubic-bezier(0.4, 0, 0.2, 1)");
+    }
+  });
+
+  it("motion-safe variant와 함께 쓸 수 있다", () => {
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*\.motion-safe\\:duration-normal\s*\{\s*--tw-duration: var\(--tide-duration-normal\)/,
+    );
+  });
+
+  it.each(zIndices)("z-%s가 --tide-* 공개 계약을 가리킨다", (name) => {
+    expect(ruleBody(css, `z-${name}`)).toContain(`z-index: var(--tide-z-${name})`);
+  });
+
+  it("숫자 해석(duration-150, z-0, z-10)은 그대로 남는다", () => {
+    expect(ruleBody(css, "duration-150")).toContain("transition-duration: 150ms");
+    expect(ruleBody(css, "z-0")).toContain("z-index: 0");
+    expect(ruleBody(css, "z-10")).toContain("z-index: 10");
+  });
+});

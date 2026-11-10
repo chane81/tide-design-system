@@ -116,4 +116,36 @@ describe("tailwind-merge 설정", () => {
       expect(twMerge("drop-shadow-md drop-shadow-lg")).toBe("drop-shadow-md drop-shadow-lg");
     });
   });
+
+  describe("motion·쌓임 단계", () => {
+    it("duration 이름끼리, 숫자·임의 값과도 뒤에 온 것이 이긴다", () => {
+      expect(twMerge("duration-fast duration-normal")).toBe("duration-normal");
+      expect(twMerge("duration-normal duration-150")).toBe("duration-150");
+      expect(twMerge("duration-150 duration-fast")).toBe("duration-fast");
+      expect(twMerge("duration-fast duration-[250ms]")).toBe("duration-[250ms]");
+    });
+
+    it("easing은 기본 theme의 out으로 충돌을 푼다", () => {
+      expect(twMerge("ease-in ease-out")).toBe("ease-out");
+      expect(twMerge("ease-out ease-linear")).toBe("ease-linear");
+    });
+
+    it("쌓임 단계끼리, 숫자·임의 값과도 뒤에 온 것이 이긴다", () => {
+      expect(twMerge("z-sticky z-modal")).toBe("z-modal");
+      expect(twMerge("z-10 z-modal")).toBe("z-modal");
+      expect(twMerge("z-popover z-[350]")).toBe("z-[350]");
+      expect(twMerge("hover:z-toast hover:z-tooltip")).toBe("hover:z-tooltip");
+    });
+
+    it("motion과 다른 속성은 서로 지우지 않는다", () => {
+      expect(twMerge("transition-colors duration-fast ease-out z-modal")).toBe(
+        "transition-colors duration-fast ease-out z-modal",
+      );
+    });
+
+    it("Tide에 없는 이름은 분류하지 않는다", () => {
+      expect(twMerge("duration-fast duration-slow")).toBe("duration-fast duration-slow");
+      expect(twMerge("z-modal z-dropdown")).toBe("z-modal z-dropdown");
+    });
+  });
 });

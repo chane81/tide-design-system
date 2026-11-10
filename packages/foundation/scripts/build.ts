@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 import {
   color,
+  duration,
+  easing,
   focusRing,
   fontFamily,
   fontSize,
@@ -12,6 +14,7 @@ import {
   radius,
   shadow,
   textStyle,
+  zIndex,
   type FontFamilyName,
   type SemanticColorValue,
   type SemanticNamespace,
@@ -89,6 +92,21 @@ const shapeDeclarations: string[] = [
   `  --tide-focus-ring-offset: ${focusRing.offset};`,
 ];
 
+// motion·쌓임 단계 공개 계약. Theme과 무관하므로 :root 블록에 둔다.
+// 이름은 `--tide-<Utility class 이름>` 규칙을 따른다(duration-fast → --tide-duration-fast, ease-out → --tide-ease-out,
+// z-modal → --tide-z-modal).
+const durationNames = Object.keys(duration);
+const easingNames = Object.keys(easing);
+const zIndexNames = Object.keys(zIndex);
+const tideDurationVar = (name: string): string => `--tide-duration-${name}`;
+const tideEaseVar = (name: string): string => `--tide-ease-${name}`;
+const tideZVar = (name: string): string => `--tide-z-${name}`;
+const motionDeclarations: string[] = [
+  ...Object.entries(duration).map(([name, value]) => `  ${tideDurationVar(name)}: ${value};`),
+  ...Object.entries(easing).map(([name, value]) => `  ${tideEaseVar(name)}: ${value};`),
+  ...Object.entries(zIndex).map(([name, value]) => `  ${tideZVar(name)}: ${value};`),
+];
+
 // Elevation 공개 계약(shadow-md → --tide-shadow-md).
 // --tide-shadow-color를 참조하는 값이라 Theme 블록마다 다시 선언한다. 사용자 정의 속성의 var()는 선언한 요소에서
 // 계산되어 상속되므로, :root에만 두면 요소 단위 data-theme="dark" 안에서도 light 그림자 색이 남는다.
@@ -114,6 +132,7 @@ const tokensCss = [
   ...primitiveEntries.map((entry) => `  ${tidePrimitiveVar(entry.name)}: ${entry.hex};`),
   ...typographyDeclarations,
   ...shapeDeclarations,
+  ...motionDeclarations,
   "}",
   "",
   ':root,\n[data-theme="light"] {',
@@ -141,6 +160,13 @@ const tokensCss = [
 //   --shadow-*(단계 없는 shadow 포함), --inset-shadow-*, --drop-shadow-*, --text-shadow-*. shadow-none은 theme 변수가 없는 class라 남는다.
 // - shadow-md는 --tw-shadow: var(--tide-shadow-md)가 된다. 값이 var() 하나라 Tailwind가 색을 --tw-shadow-color로 바꾸지 않으므로
 //   shadow-<색> class로 그림자 색을 바꿀 수 없다(spec: shadow 색은 class로 노출하지 않는다).
+// - motion(tide-v0 티켓 21): duration-* class는 --transition-duration-* namespace를 찾고, 없으면 숫자를 ms로 읽는다.
+//   기본 theme에는 이 namespace 값이 없으므로 지울 것이 없다. 숫자 해석(duration-150)은 끌 수 없어 그대로 둔다.
+//   easing namespace는 --ease-*다. --ease-out만 Tide 공개 계약에 연결하고 ease-in, ease-in-out은 Tailwind 기본값으로 남긴다.
+//   transition-colors처럼 시간을 적지 않은 class는 --default-transition-duration과 --default-transition-timing-function을 쓰므로
+//   둘을 fast와 out에 연결한다(기본값은 150ms, cubic-bezier(0.4, 0, 0.2, 1)).
+// - 쌓임 단계(tide-v0 티켓 22): z-* class는 --z-index-* namespace를 찾는다. 기본 theme에는 값이 없다.
+//   숫자 해석(z-10, z-50)은 끌 수 없어 그대로 둔다. Component 내부 겹침용 z-0/z-1도 숫자 해석이다.
 const tailwindCss = [
   header,
   '@import "./tokens.css";',
@@ -175,6 +201,11 @@ const tailwindCss = [
   ]),
   ...Object.keys(radius).map((name) => `  --radius-${name}: var(${tideRadiusVar(name)});`),
   ...shadowNames.map((name) => `  --shadow-${name}: var(${tideShadowVar(name)});`),
+  ...durationNames.map((name) => `  --transition-duration-${name}: var(${tideDurationVar(name)});`),
+  ...easingNames.map((name) => `  --ease-${name}: var(${tideEaseVar(name)});`),
+  `  --default-transition-duration: var(${tideDurationVar("fast")});`,
+  `  --default-transition-timing-function: var(${tideEaseVar("out")});`,
+  ...zIndexNames.map((name) => `  --z-index-${name}: var(${tideZVar(name)});`),
   "}",
   "",
   // 포커스 표시(tide-v0 티켓 20). @utility로 정의해서 focus-visible:focus-ring, focus:focus-field처럼 variant와 함께 쓴다.
@@ -256,6 +287,10 @@ const tailwindMergeConfig = {
       ),
       "divide-color": [{ divide: semanticKeys("border") }],
       "outline-color": [{ outline: semanticKeys("outline") }],
+      // motion·쌓임 단계: 기본 group은 숫자와 임의 값만 안다. Tide 이름을 더해 duration-fast duration-normal,
+      // z-10 z-modal이 서로 지우게 한다. easing은 기본 theme ease(in, out, in-out)에 out이 이미 있다.
+      duration: [{ duration: durationNames }],
+      z: [{ z: zIndexNames }],
     },
   },
 };

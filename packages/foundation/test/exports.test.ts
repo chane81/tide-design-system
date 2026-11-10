@@ -9,6 +9,8 @@ describe("exports", () => {
       [
         "color",
         "contrastPairs",
+        "duration",
+        "easing",
         "focusRing",
         "fontFamily",
         "fontSize",
@@ -18,6 +20,7 @@ describe("exports", () => {
         "semanticPrefix",
         "shadow",
         "textStyle",
+        "zIndex",
       ].sort(),
     );
   });

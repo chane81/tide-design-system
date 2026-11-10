@@ -32,3 +32,5 @@ export {
   type ShadowLayer,
   type ShadowName,
 } from "./shape.ts";
+export { duration, easing, type DurationName, type EasingName } from "./motion.ts";
+export { zIndex, type ZIndexName } from "./stacking.ts";

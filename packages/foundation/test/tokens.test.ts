@@ -99,10 +99,29 @@ const shapeVars = [
 ];
 const shadowVars = shadows.map(([name]) => `--tide-shadow-${name}`);
 
+// spec 「`@tide-tds/foundation`」 motion·z-index. [이름, 값]
+const durations = [
+  ["fast", "150ms"],
+  ["normal", "300ms"],
+] as const;
+const zIndices = [
+  ["sticky", "100"],
+  ["modal", "200"],
+  ["popover", "300"],
+  ["toast", "400"],
+  ["tooltip", "500"],
+] as const;
+const motionVars = [
+  ...durations.map(([name]) => `--tide-duration-${name}`),
+  "--tide-ease-out",
+  ...zIndices.map(([name]) => `--tide-z-${name}`),
+];
+
 const contractVars = [
   ...primitiveVars,
   ...typographyVars,
   ...shapeVars,
+  ...motionVars,
   ...semanticClasses.map((name) => `--tide-${name}`),
   "--tide-shadow-color",
   ...shadowVars,
@@ -141,9 +160,9 @@ describe("tokens.css", () => {
     expect([...new Set(defined)].sort()).toEqual([...contractVars].sort());
   });
 
-  it("Theme과 무관한 :root 블록은 Primitive 색, 타이포그래피, radius, 포커스 ring만 담는다", () => {
+  it("Theme과 무관한 :root 블록은 Primitive 색, 타이포그래피, radius, 포커스 ring, motion, 쌓임 단계만 담는다", () => {
     expect([...root.keys()].sort()).toEqual(
-      [...primitiveVars, ...typographyVars, ...shapeVars].sort(),
+      [...primitiveVars, ...typographyVars, ...shapeVars, ...motionVars].sort(),
     );
   });
 
@@ -283,6 +302,30 @@ describe("tokens.css", () => {
       expect(light.get(`--tide-shadow-${name}`)).toBe(expected);
       expect(dark.get(`--tide-shadow-${name}`)).toBe(expected);
       expect(root.has(`--tide-shadow-${name}`)).toBe(false);
+    });
+  });
+
+  describe("motion·쌓임 단계", () => {
+    it.each(durations)("duration %s는 %s다", (name, value) => {
+      expect(root.get(`--tide-duration-${name}`)).toBe(value);
+    });
+
+    it("easing은 out 하나이고 Tailwind ease-out과 같은 곡선이다", () => {
+      expect(root.get("--tide-ease-out")).toBe("cubic-bezier(0, 0, 0.2, 1)");
+      expect([...root.keys()].filter((name) => name.startsWith("--tide-ease-"))).toEqual([
+        "--tide-ease-out",
+      ]);
+    });
+
+    it.each(zIndices)("쌓임 단계 %s는 %s다", (name, value) => {
+      expect(root.get(`--tide-z-${name}`)).toBe(value);
+    });
+
+    it("쌓임 단계는 sticky < modal < popover < toast < tooltip이고 100 간격이다", () => {
+      const values = zIndices.map(([name]) => Number(root.get(`--tide-z-${name}`)));
+      expect(values.slice(1).map((value, index) => value - values[index]!)).toEqual([
+        100, 100, 100, 100,
+      ]);
     });
   });
 });
