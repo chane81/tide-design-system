@@ -13,3 +13,14 @@ export {
   type ThemedColor,
 } from "./semantic.ts";
 export { contrastPairs, type ContrastExclusion, type ContrastPair } from "./contrast.ts";
+export {
+  fontFamily,
+  fontSize,
+  fontWeight,
+  textStyle,
+  type FontFamilyName,
+  type FontSizeStep,
+  type FontWeightName,
+  type TextStyleName,
+  type TextStyleValue,
+} from "./typography.ts";

@@ -6,7 +6,16 @@ describe("exports", () => {
   it("루트는 Token 객체만 낸다", async () => {
     const root = await import("../dist/index.js");
     expect(Object.keys(root).sort()).toEqual(
-      ["color", "contrastPairs", "semantic", "semanticPrefix"].sort(),
+      [
+        "color",
+        "contrastPairs",
+        "fontFamily",
+        "fontSize",
+        "fontWeight",
+        "semantic",
+        "semanticPrefix",
+        "textStyle",
+      ].sort(),
     );
   });
 
@@ -17,6 +26,7 @@ describe("exports", () => {
         "colorValueHex",
         "contrastExclusions",
         "contrastRatio",
+        "fontFamilyCss",
         "primitiveHex",
         "roleFamily",
         "semanticEntries",

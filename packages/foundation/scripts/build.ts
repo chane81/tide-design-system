@@ -5,11 +5,16 @@ import { fileURLToPath } from "node:url";
 
 import {
   color,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  textStyle,
+  type FontFamilyName,
   type SemanticColorValue,
   type SemanticNamespace,
   type ThemeName,
 } from "../src/index.ts";
-import { colorValueHex, semanticEntries, shadowColor } from "../src/internal.ts";
+import { colorValueHex, fontFamilyCss, semanticEntries, shadowColor } from "../src/internal.ts";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
 const header = "/* 이 파일은 @tide-tds/foundation 빌드 스크립트가 만든다. 직접 고치지 않는다. */\n";
@@ -43,6 +48,26 @@ function cssValue(value: SemanticColorValue): string {
   return typeof value === "string" ? `var(${tidePrimitiveVar(value)})` : colorValueHex(value);
 }
 
+// 타이포그래피 공개 계약. Theme과 무관하므로 Primitive 색과 같은 :root 블록에 둔다.
+// 텍스트 스타일은 Primitive 크기와 굵기 Token을 변수로 참조한다(Semantic이 Primitive를 참조하는 것과 같은 구조).
+const fontFamilyNames = Object.keys(fontFamily) as FontFamilyName[];
+const tideFontFamilyVar = (name: string): string => `--tide-font-${name}`;
+const tideFontSizeVar = (step: string | number): string => `--tide-font-size-${step}`;
+const tideFontWeightVar = (name: string): string => `--tide-font-${name}`;
+const tideTextVar = (name: string): string => `--tide-text-${name}`;
+const textStyleEntries = Object.entries(textStyle);
+
+const typographyDeclarations: string[] = [
+  ...fontFamilyNames.map((name) => `  ${tideFontFamilyVar(name)}: ${fontFamilyCss(name)};`),
+  ...Object.entries(fontSize).map(([step, rem]) => `  ${tideFontSizeVar(step)}: ${rem};`),
+  ...Object.entries(fontWeight).map(([name, value]) => `  ${tideFontWeightVar(name)}: ${value};`),
+  ...textStyleEntries.flatMap(([name, style]) => [
+    `  ${tideTextVar(name)}: var(${tideFontSizeVar(style.fontSize)});`,
+    `  ${tideTextVar(name)}--line-height: ${style.lineHeight};`,
+    `  ${tideTextVar(name)}--font-weight: var(${tideFontWeightVar(style.fontWeight)});`,
+  ]),
+];
+
 function themeBlock(theme: ThemeName): string[] {
   return [
     `  color-scheme: ${theme};`,
@@ -59,6 +84,7 @@ const tokensCss = [
   header,
   ":root {",
   ...primitiveEntries.map((entry) => `  ${tidePrimitiveVar(entry.name)}: ${entry.hex};`),
+  ...typographyDeclarations,
   "}",
   "",
   ':root,\n[data-theme="light"] {',
@@ -71,9 +97,15 @@ const tokensCss = [
   "",
 ].join("\n");
 
-// tailwind.css: tokens.css 위에 dark variant, Tailwind 기본 팔레트 제거, @theme inline 연결을 얹는다.
+// tailwind.css: tokens.css 위에 dark variant, Tailwind 기본값 제거, @theme inline 연결, base CSS를 얹는다.
 // Tailwind 변수는 --tide-*를 가리키는 내부 연결이고 공개 계약이 아니다.
 // dark variant는 Tailwind 문서(dark-mode, data attribute)의 형태를 그대로 쓴다.
+// 기본값 제거(tailwindcss 4.3.5에서 확인):
+// - --text-*: initial은 기본 크기(text-xs~9xl)만 지운다. --text-color-*(뒤에서 정의), --text-shadow-*는 남는다.
+// - --font-*: initial은 font-family(sans·serif·mono)만 지우고 굵기는 남기므로 --font-weight-*: initial을 따로 쓴다.
+// - --leading-*, --tracking-*는 지우지 않는다(드문 경우의 확장 수단). tabular-nums는 theme 변수가 없는 class다.
+// - --font-sans를 정의하면 Tailwind preflight의 기본 글꼴(--default-font-family)도 Tide sans를 따른다.
+// 텍스트 스타일은 --text-<이름>--line-height, --font-weight 하위 변수로 class 하나에 묶는다(Tailwind font-size 문서).
 const tailwindCss = [
   header,
   '@import "./tokens.css";',
@@ -82,6 +114,9 @@ const tailwindCss = [
   "",
   "@theme inline {",
   "  --color-*: initial;",
+  "  --text-*: initial;",
+  "  --font-*: initial;",
+  "  --font-weight-*: initial;",
   ...primitiveEntries.map(
     (entry) => `  --color-${entry.name}: var(${tidePrimitiveVar(entry.name)});`,
   ),
@@ -89,6 +124,25 @@ const tailwindCss = [
     (entry) =>
       `  ${tailwindNamespace[entry.namespace]}-${entry.key}: var(${tideSemanticVar(entry.className)});`,
   ),
+  ...fontFamilyNames.map((name) => `  --font-${name}: var(${tideFontFamilyVar(name)});`),
+  ...Object.keys(fontWeight).map(
+    (name) => `  --font-weight-${name}: var(${tideFontWeightVar(name)});`,
+  ),
+  ...textStyleEntries.flatMap(([name]) => [
+    `  --text-${name}: var(${tideTextVar(name)});`,
+    `  --text-${name}--line-height: var(${tideTextVar(name)}--line-height);`,
+    `  --text-${name}--font-weight: var(${tideTextVar(name)}--font-weight);`,
+  ]),
+  "}",
+  "",
+  // 한글은 어절 단위로 줄을 바꾸고, 공백 없이 긴 영문·URL은 끊는다. 루트 font-size는 바꾸지 않는다.
+  // 선택자는 Tailwind preflight의 html, :host와 같다. 둘 다 상속되는 속성이다.
+  "@layer base {",
+  "  html,",
+  "  :host {",
+  "    word-break: keep-all;",
+  "    overflow-wrap: break-word;",
+  "  }",
   "}",
   "",
 ].join("\n");
@@ -102,13 +156,23 @@ const semanticKeys = (namespace: SemanticNamespace): string[] =>
   semantic.filter((entry) => entry.namespace === namespace).map((entry) => entry.key);
 
 const borderSides = ["x", "y", "s", "e", "bs", "be", "t", "r", "b", "l"];
+// - 텍스트 스타일·굵기·font-family: theme의 text, font-weight, font를 Tide 이름으로 바꾼다.
+//   text-body-md는 font-size group, text-muted는 text-color group이라 서로 지우지 않는다.
+// - 텍스트 스타일은 행간과 굵기도 정한다. 기본 설정의 font-size → leading 충돌에 font-weight를 더해서
+//   앞에 온 font-bold가 뒤에 온 text-body-md보다 이기는 일(Tailwind의 --tw-font-weight 우선)을 막는다.
 const tailwindMergeConfig = {
   override: {
     theme: {
       color: ["inherit", "current", "transparent", ...primitiveEntries.map((entry) => entry.name)],
+      text: Object.keys(textStyle),
+      "font-weight": Object.keys(fontWeight),
+      font: fontFamilyNames,
     },
   },
   extend: {
+    conflictingClassGroups: {
+      "font-size": ["font-weight"],
+    },
     classGroups: {
       "bg-color": [{ bg: semanticKeys("background") }],
       "text-color": [{ text: semanticKeys("text") }],

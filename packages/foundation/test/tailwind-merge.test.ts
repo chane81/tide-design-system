@@ -44,4 +44,44 @@ describe("tailwind-merge 설정", () => {
     expect(twMerge("bg-canvas bg-muted")).toBe("bg-canvas bg-muted");
     expect(twMerge("bg-blue-500 bg-slate-500")).toBe("bg-blue-500 bg-slate-500");
   });
+  describe("타이포그래피", () => {
+    it("텍스트 스타일과 글자색은 서로 지우지 않는다", () => {
+      expect(twMerge("text-body-md text-muted")).toBe("text-body-md text-muted");
+      expect(twMerge("text-primary text-heading-lg")).toBe("text-primary text-heading-lg");
+      expect(twMerge("text-caption text-gray-700")).toBe("text-caption text-gray-700");
+    });
+
+    it("텍스트 스타일끼리는 뒤에 온 것이 이긴다", () => {
+      expect(twMerge("text-body-md text-heading-lg")).toBe("text-heading-lg");
+      expect(twMerge("text-display-lg text-caption")).toBe("text-caption");
+      expect(twMerge("text-label-sm text-[13px]")).toBe("text-[13px]");
+      expect(twMerge("md:text-body-md md:text-body-lg")).toBe("md:text-body-lg");
+    });
+
+    it("굵기와 font-family는 Tide 이름으로 충돌을 푼다", () => {
+      expect(twMerge("font-normal font-bold")).toBe("font-bold");
+      expect(twMerge("font-light font-semibold")).toBe("font-semibold");
+      expect(twMerge("font-sans font-mono")).toBe("font-mono");
+      // 굵기와 font-family는 다른 그룹이다.
+      expect(twMerge("font-mono font-bold")).toBe("font-mono font-bold");
+      // Tide에 없는 이름은 분류하지 않는다.
+      expect(twMerge("font-sans font-serif")).toBe("font-sans font-serif");
+      expect(twMerge("font-bold font-black")).toBe("font-bold font-black");
+    });
+
+    it("텍스트 스타일은 앞에 온 행간·굵기를 지우고, 뒤에 온 행간·굵기는 남긴다", () => {
+      expect(twMerge("leading-tight font-bold text-body-md")).toBe("text-body-md");
+      expect(twMerge("text-body-md leading-tight font-bold")).toBe(
+        "text-body-md leading-tight font-bold",
+      );
+      // 자간과 숫자 정렬은 텍스트 스타일과 충돌하지 않는다.
+      expect(twMerge("tracking-tight tabular-nums text-body-md")).toBe(
+        "tracking-tight tabular-nums text-body-md",
+      );
+    });
+
+    it("Tailwind 기본 크기 이름은 텍스트 스타일로 분류하지 않는다", () => {
+      expect(twMerge("text-body-md text-xl")).toBe("text-body-md text-xl");
+    });
+  });
 });

@@ -45,11 +45,46 @@ const semanticClasses = [
   "outline-focus",
 ];
 
+// spec 「`@tide-tds/foundation`」 타이포그래피. [이름, 크기 px, 행간 px, 굵기]
+const textStyles = [
+  ["display-lg", 56, 64, 700],
+  ["display-md", 48, 56, 700],
+  ["heading-xl", 40, 48, 700],
+  ["heading-lg", 32, 40, 700],
+  ["heading-md", 24, 32, 700],
+  ["heading-sm", 20, 28, 600],
+  ["heading-xs", 18, 28, 600],
+  ["body-lg", 18, 28, 400],
+  ["body-md", 16, 24, 400],
+  ["body-sm", 14, 20, 400],
+  ["label-lg", 16, 20, 500],
+  ["label-md", 14, 20, 500],
+  ["label-sm", 12, 16, 500],
+  ["caption", 12, 16, 400],
+] as const;
+const fontSizes = [12, 14, 16, 18, 20, 24, 32, 40, 48, 56] as const;
+const fontWeights = { light: 300, normal: 400, medium: 500, semibold: 600, bold: 700 } as const;
+
+const typographyVars = [
+  "--tide-font-sans",
+  "--tide-font-mono",
+  ...fontSizes.map((px) => `--tide-font-size-${px}`),
+  ...Object.keys(fontWeights).map((name) => `--tide-font-${name}`),
+  ...textStyles.flatMap(([name]) => [
+    `--tide-text-${name}`,
+    `--tide-text-${name}--line-height`,
+    `--tide-text-${name}--font-weight`,
+  ]),
+];
+
 const contractVars = [
   ...primitiveVars,
+  ...typographyVars,
   ...semanticClasses.map((name) => `--tide-${name}`),
   "--tide-shadow-color",
 ];
+
+const rem = (px: number): string => `${px / 16}rem`;
 
 /** 선택자 하나의 블록 본문에서 `--이름: 값` 목록을 꺼낸다 */
 function declarations(css: string, selector: string): Map<string, string> {
@@ -82,9 +117,14 @@ describe("tokens.css", () => {
     expect([...new Set(defined)].sort()).toEqual([...contractVars].sort());
   });
 
+  it("Theme과 무관한 :root 블록은 Primitive 색과 타이포그래피만 담는다", () => {
+    expect([...root.keys()].sort()).toEqual([...primitiveVars, ...typographyVars].sort());
+  });
+
   it("Primitive는 6계열 11단계와 white, black이고 hex가 정본이다", () => {
-    expect([...root.keys()].sort()).toEqual([...primitiveVars].sort());
-    for (const value of root.values()) expect(value).toMatch(/^#[0-9a-f]{6}$/);
+    const primitive = [...root].filter(([name]) => name.startsWith("--tide-color-"));
+    expect(primitive.map(([name]) => name).sort()).toEqual([...primitiveVars].sort());
+    for (const [, value] of primitive) expect(value).toMatch(/^#[0-9a-f]{6}$/);
     expect(root.get("--tide-color-blue-500")).toBe("#3183f5");
     expect(root.get("--tide-color-white")).toBe("#ffffff");
     expect(root.get("--tide-color-black")).toBe("#000000");
@@ -160,6 +200,38 @@ describe("tokens.css", () => {
         expect(light.get(`--tide-${name}`), name).toBe(ref(lightValue));
         expect(dark.get(`--tide-${name}`), name).toBe(ref(darkValue));
       }
+    });
+  });
+  describe("타이포그래피", () => {
+    it("font-family는 sans(Pretendard Variable 우선)와 mono(시스템 스택) 두 개다", () => {
+      expect(root.get("--tide-font-sans")).toMatch(/^"Pretendard Variable", Pretendard, /);
+      expect(root.get("--tide-font-sans")).toMatch(/, sans-serif$/);
+      expect(root.get("--tide-font-mono")).toMatch(/, monospace$/);
+      expect(root.get("--tide-font-mono")).not.toContain("Pretendard");
+      // 웹폰트는 앱이 로드한다.
+      expect(css).not.toContain("@font-face");
+    });
+
+    it("Primitive 크기는 rem이다", () => {
+      for (const px of fontSizes) expect(root.get(`--tide-font-size-${px}`)).toBe(rem(px));
+    });
+
+    it("굵기는 300/400/500/600/700 다섯 개다", () => {
+      for (const [name, value] of Object.entries(fontWeights)) {
+        expect(root.get(`--tide-font-${name}`), name).toBe(String(value));
+      }
+    });
+
+    it.each(textStyles)("텍스트 스타일 %s: %ipx/%ipx, %i", (name, size, lineHeight, weight) => {
+      const weightName = Object.entries(fontWeights).find(([, value]) => value === weight)![0];
+      expect(root.get(`--tide-text-${name}`)).toBe(`var(--tide-font-size-${size})`);
+      expect(root.get(`--tide-text-${name}--line-height`)).toBe(rem(lineHeight));
+      expect(root.get(`--tide-text-${name}--font-weight`)).toBe(`var(--tide-font-${weightName})`);
+    });
+
+    it("자간 하위 변수와 루트 font-size가 없다", () => {
+      expect(css).not.toContain("letter-spacing");
+      expect(css).not.toMatch(/^\s*font-size:/m);
     });
   });
 });
