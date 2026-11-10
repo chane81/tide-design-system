@@ -2,8 +2,12 @@
 import {
   Button,
   cn,
+  IconButton,
+  Link,
   VisuallyHidden,
   type ButtonProps,
+  type IconButtonProps,
+  type LinkProps,
   type Color,
   type FillVariant,
   type VisuallyHiddenProps,
@@ -25,6 +29,10 @@ const props: VisuallyHiddenProps = { children: "텍스트" };
 const anchor: "#3183f5" = color.blue[500];
 const buttonProps: ButtonProps = { variant: "subtle", color: "danger", size: "lg", loading: true };
 const fill: FillVariant = "ghost";
+const iconButtonProps: IconButtonProps = { "aria-label": "추가", children: null, size: "xs" };
+// @ts-expect-error IconButton은 aria-label이 필수다.
+const unnamedIconButton: IconButtonProps = { children: null };
+const linkProps: LinkProps = { href: "/docs", color: "brand" };
 const brandButton: ButtonProps = { color: "brand", variant: "outline" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
@@ -50,4 +58,9 @@ export const values = [
   buttonProps,
   fill,
   brandButton,
+  IconButton,
+  iconButtonProps,
+  unnamedIconButton,
+  Link,
+  linkProps,
 ] as const;

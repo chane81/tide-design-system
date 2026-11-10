@@ -209,12 +209,28 @@ try {
     /motion-safe\\:active\\:scale-96/.test(css) && css.includes(".text-label-sm"),
     "Button 내부 class(motion-safe:active:scale-96, text-label-sm)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
+  assert(
+    css.includes(".size-6") &&
+      /hover\\:decoration-2/.test(css) &&
+      css.includes(".underline-offset-2"),
+    "IconButton·Link 내부 class(size-6, hover:decoration-2, underline-offset-2)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
   // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
   const componentsDist = join(consumerDir, "node_modules/@tide-tds/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
     /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
-  if (!(await startsWithUseClient("Button.js")) || (await startsWithUseClient("Spinner.js"))) {
-    throw new Error('"use client" 확인 실패: Button.js에만 지시어가 있어야 한다');
+  // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(pressable.js)은 이벤트를 DOM에 넘기지 않는다.
+  const clientFiles = ["Button.js", "IconButton.js"];
+  const serverFiles = ["Spinner.js", "Link.js", "pressable.js"];
+  for (const file of clientFiles) {
+    if (!(await startsWithUseClient(file))) {
+      throw new Error(`"use client" 확인 실패: ${file}에 지시어가 있어야 한다`);
+    }
+  }
+  for (const file of serverFiles) {
+    if (await startsWithUseClient(file)) {
+      throw new Error(`"use client" 확인 실패: ${file}에는 지시어가 없어야 한다`);
+    }
   }
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
