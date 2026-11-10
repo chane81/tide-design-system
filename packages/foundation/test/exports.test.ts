@@ -39,7 +39,42 @@ describe("exports", () => {
         "semanticHex",
         "shadowColor",
         "shadowCss",
+        // 색 계열·accent 슬롯(티켓 40)
+        "accentDefaultDeclarations",
+        "accentUtilities",
+        "accentVar",
+        "checkColorContrast",
+        "colorContrastRules",
+        "colorFamilyNames",
+        "colorSlotHex",
+        "colorSlotValues",
+        "colorSlots",
+        "dataColorRule",
+        "familyOverrides",
+        "familySlotSteps",
+        "familyThemeDeclarations",
+        "familyVar",
+        "isRole",
+        "primitiveVar",
+        "resolveSlotSteps",
+        "roleAliasCss",
+        "roleNames",
+        "roleOverrides",
+        "roleSharedSlots",
+        "roleSlotToken",
+        "semanticVar",
+        "slotPrimitive",
+        "slotRule",
+        "tideColorNames",
+        "tideFamilyThemeDeclarations",
       ].sort(),
+    );
+  });
+
+  it("color-family 서브패스는 앱 브랜드 색 계열 API를 낸다(티켓 40)", async () => {
+    const colorFamily = await import("../dist/color-family.js");
+    expect(Object.keys(colorFamily).sort()).toEqual(
+      ["checkColorFamily", "colorFamilyCss", "colorFamilySlotHex", "defineColorFamily"].sort(),
     );
   });
 });

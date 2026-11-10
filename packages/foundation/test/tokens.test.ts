@@ -117,6 +117,24 @@ const motionVars = [
   ...zIndices.map(([name]) => `--tide-z-${name}`),
 ];
 
+// 색 계열 변수 묶음과 accent 슬롯(tide-v0-impl 티켓 40, ADR 0011). [슬롯, light 단계, dark 단계]
+const slotRule = [
+  ["solid", 600, 600],
+  ["solid-hover", 700, 700],
+  ["solid-active", 800, 800],
+  ["subtle", 50, 950],
+  ["subtle-hover", 100, 900],
+  ["subtle-active", 200, 800],
+  ["text", 800, 200],
+  ["border", 600, 400],
+  ["on-solid", "white", "white"],
+] as const;
+const slots = slotRule.map(([slot]) => slot);
+const familyVars = families.flatMap((family) => slots.map((slot) => `--tide-${family}-${slot}`));
+const accentVars = slots.map((slot) => `--tide-accent-${slot}`);
+// data-color로 고르는 색 이름: Role 6개와 색 계열 6개
+const colorNames = [...roles, ...families];
+
 const contractVars = [
   ...primitiveVars,
   ...typographyVars,
@@ -125,6 +143,8 @@ const contractVars = [
   ...semanticClasses.map((name) => `--tide-${name}`),
   "--tide-shadow-color",
   ...shadowVars,
+  ...familyVars,
+  ...accentVars,
 ];
 
 const rem = (px: number): string => `${px / 16}rem`;
@@ -142,17 +162,31 @@ function declarations(css: string, selector: string): Map<string, string> {
   );
 }
 
+/** 같은 Theme 블록 안의 `var(--tide-*)` 별칭을 따라가서 Primitive 참조(또는 값)까지 푼다 */
+function resolveAliases(block: Map<string, string>): Map<string, string> {
+  const resolve = (value: string): string => {
+    const target = /^var\((--tide-[\w-]+)\)$/.exec(value)?.[1];
+    return target && block.has(target) ? resolve(block.get(target)!) : value;
+  };
+  return new Map([...block].map(([name, value]) => [name, resolve(value)]));
+}
+
 describe("tokens.css", () => {
   let css: string;
   let root: Map<string, string>;
   let light: Map<string, string>;
   let dark: Map<string, string>;
+  // Role Token은 계열 변수의 별칭이다. 매핑은 별칭을 푼 값으로 확인한다.
+  let lightResolved: Map<string, string>;
+  let darkResolved: Map<string, string>;
 
   beforeAll(async () => {
     css = await readFile(new URL("../dist/tokens.css", import.meta.url), "utf8");
     root = declarations(css, ":root");
     light = declarations(css, ':root,\n[data-theme="light"]');
     dark = declarations(css, '[data-theme="dark"]');
+    lightResolved = resolveAliases(light);
+    darkResolved = resolveAliases(dark);
   });
 
   it("--tide-* 공개 계약 목록이 spec과 같다", () => {
@@ -179,15 +213,85 @@ describe("tokens.css", () => {
     expect(light.get("color-scheme")).toBe("light");
     expect(dark.get("color-scheme")).toBe("dark");
     expect([...light.keys()].sort()).toEqual([...dark.keys()].sort());
-    // color-scheme, --tide-shadow-color, 그림자 3단계
-    expect(light.size).toBe(semanticClasses.length + 2 + shadowVars.length);
+    // color-scheme, --tide-shadow-color, 그림자 3단계, 계열 변수, accent 기본값
+    expect(light.size).toBe(
+      semanticClasses.length + 2 + shadowVars.length + familyVars.length + accentVars.length,
+    );
   });
 
-  it("Theme은 속성 선택자로만 바꾼다(요소 단위 data-theme, prefers-color-scheme 없음)", () => {
+  it("Theme과 색 이름은 속성 선택자로만 바꾼다(요소 단위 data-theme·data-color, prefers-color-scheme 없음)", () => {
     expect(css).not.toContain("prefers-color-scheme");
     expect(css).not.toContain("@theme");
     const selectors = [...css.matchAll(/^([^\s{}/][^{}]*?)\s*\{/gm)].map((match) => match[1]!);
-    expect(selectors).toEqual([":root", ':root,\n[data-theme="light"]', '[data-theme="dark"]']);
+    expect(selectors).toEqual([
+      ":root",
+      ':root,\n[data-theme="light"]',
+      '[data-theme="dark"]',
+      ...colorNames.map((name) => `[data-color="${name}"]`),
+    ]);
+  });
+
+  describe("색 계열과 accent 슬롯(티켓 40)", () => {
+    const ref = (family: string, step: number | string): string =>
+      `var(--tide-color-${typeof step === "number" ? `${family}-${step}` : step})`;
+
+    it.each(families)("%s 계열 변수는 매핑 규칙을 따른다", (family) => {
+      for (const [slot, lightStep, darkStep] of slotRule) {
+        expect(light.get(`--tide-${family}-${slot}`), slot).toBe(ref(family, lightStep));
+        expect(dark.get(`--tide-${family}-${slot}`), slot).toBe(ref(family, darkStep));
+      }
+    });
+
+    it("gray는 일반 계열 규칙을 따르고 neutral과 다르다", () => {
+      expect(dark.get("--tide-gray-subtle")).toBe(ref("gray", 950));
+      expect(darkResolved.get("--tide-bg-neutral-subtle")).toBe(ref("gray", 900));
+      expect(dark.get("--tide-gray-text")).toBe(ref("gray", 200));
+      expect(dark.get("--tide-gray-border")).toBe(ref("gray", 400));
+    });
+
+    it("Role Token은 계열 변수의 별칭이고, 덮어쓴 슬롯만 Primitive를 가리킨다", () => {
+      expect(light.get("--tide-bg-primary-solid")).toBe("var(--tide-blue-solid)");
+      expect(dark.get("--tide-text-danger")).toBe("var(--tide-red-text)");
+      expect(light.get("--tide-border-info")).toBe("var(--tide-cyan-border)");
+      expect(light.get("--tide-bg-neutral-subtle")).toBe("var(--tide-gray-subtle)");
+      expect(dark.get("--tide-bg-neutral-subtle")).toBe(ref("gray", 900));
+    });
+
+    it("accent 기본값은 두 Theme 모두 primary다", () => {
+      for (const block of [light, dark]) {
+        expect(block.get("--tide-accent-solid")).toBe("var(--tide-bg-primary-solid)");
+        expect(block.get("--tide-accent-text")).toBe("var(--tide-text-primary)");
+        expect(block.get("--tide-accent-on-solid")).toBe("var(--tide-text-on-solid)");
+      }
+    });
+
+    it.each(families)("[data-color=%s]는 accent 슬롯에 계열 변수를 꽂는다", (family) => {
+      const rule = declarations(css, `[data-color="${family}"]`);
+      expect([...rule]).toEqual(
+        slots.map((slot) => [`--tide-accent-${slot}`, `var(--tide-${family}-${slot})`]),
+      );
+    });
+
+    it.each(roles.filter((role) => role !== "neutral"))(
+      "[data-color=%s]는 accent 슬롯에 Role Token을 꽂는다",
+      (role) => {
+        const rule = declarations(css, `[data-color="${role}"]`);
+        expect(rule.get("--tide-accent-solid-hover")).toBe(`var(--tide-bg-${role}-solid-hover)`);
+        expect(rule.get("--tide-accent-subtle-active")).toBe(
+          `var(--tide-bg-${role}-subtle-active)`,
+        );
+        expect(rule.get("--tide-accent-text")).toBe(`var(--tide-text-${role})`);
+        expect(rule.get("--tide-accent-border")).toBe(`var(--tide-border-${role})`);
+        expect(rule.get("--tide-accent-on-solid")).toBe("var(--tide-text-on-solid)");
+      },
+    );
+
+    it("[data-color=neutral]의 글자와 테두리는 text-default, border-strong이다", () => {
+      const rule = declarations(css, '[data-color="neutral"]');
+      expect(rule.get("--tide-accent-subtle")).toBe("var(--tide-bg-neutral-subtle)");
+      expect(rule.get("--tide-accent-text")).toBe("var(--tide-text-default)");
+      expect(rule.get("--tide-accent-border")).toBe("var(--tide-border-strong)");
+    });
   });
 
   it("alpha는 overlay와 shadow 색에만 8자리 hex로 쓴다", () => {
@@ -209,12 +313,14 @@ describe("tokens.css", () => {
       const states = ["", "-hover", "-active"];
       states.forEach((state, index) => {
         const solid = [600, 700, 800][index];
-        expect(light.get(`--tide-bg-${role}-solid${state}`)).toBe(ref(`${family}-${solid}`));
-        expect(dark.get(`--tide-bg-${role}-solid${state}`)).toBe(ref(`${family}-${solid}`));
-        expect(light.get(`--tide-bg-${role}-subtle${state}`)).toBe(
+        expect(lightResolved.get(`--tide-bg-${role}-solid${state}`)).toBe(
+          ref(`${family}-${solid}`),
+        );
+        expect(darkResolved.get(`--tide-bg-${role}-solid${state}`)).toBe(ref(`${family}-${solid}`));
+        expect(lightResolved.get(`--tide-bg-${role}-subtle${state}`)).toBe(
           ref(`${family}-${[50, 100, 200][index]}`),
         );
-        expect(dark.get(`--tide-bg-${role}-subtle${state}`)).toBe(
+        expect(darkResolved.get(`--tide-bg-${role}-subtle${state}`)).toBe(
           ref(`${family}-${subtleDark[index]}`),
         );
       });
@@ -222,10 +328,10 @@ describe("tokens.css", () => {
 
     it.each(roles.filter((role) => role !== "neutral"))("%s 글자와 테두리", (role) => {
       const family = roleFamily[role];
-      expect(light.get(`--tide-text-${role}`)).toBe(ref(`${family}-800`));
-      expect(dark.get(`--tide-text-${role}`)).toBe(ref(`${family}-200`));
-      expect(light.get(`--tide-border-${role}`)).toBe(ref(`${family}-600`));
-      expect(dark.get(`--tide-border-${role}`)).toBe(ref(`${family}-400`));
+      expect(lightResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-800`));
+      expect(darkResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-200`));
+      expect(lightResolved.get(`--tide-border-${role}`)).toBe(ref(`${family}-600`));
+      expect(darkResolved.get(`--tide-border-${role}`)).toBe(ref(`${family}-400`));
     });
 
     it("공통 Token", () => {
@@ -243,12 +349,12 @@ describe("tokens.css", () => {
         "outline-focus": ["blue-600", "blue-400"],
       };
       for (const [name, [lightValue, darkValue]] of Object.entries(expected)) {
-        expect(light.get(`--tide-${name}`), name).toBe(ref(lightValue));
-        expect(dark.get(`--tide-${name}`), name).toBe(ref(darkValue));
+        expect(lightResolved.get(`--tide-${name}`), name).toBe(ref(lightValue));
+        expect(darkResolved.get(`--tide-${name}`), name).toBe(ref(darkValue));
       }
       // raised 표면 경계: light는 투명(키워드), dark는 gray-800(2026-11-10 사용자 결정)
-      expect(light.get("--tide-border-raised")).toBe("transparent");
-      expect(dark.get("--tide-border-raised")).toBe(ref("gray-800"));
+      expect(lightResolved.get("--tide-border-raised")).toBe("transparent");
+      expect(darkResolved.get("--tide-border-raised")).toBe(ref("gray-800"));
     });
   });
   describe("타이포그래피", () => {

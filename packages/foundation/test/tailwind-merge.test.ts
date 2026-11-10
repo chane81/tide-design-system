@@ -46,6 +46,24 @@ describe("tailwind-merge 설정", () => {
     expect(twMerge("bg-canvas bg-muted")).toBe("bg-canvas bg-muted");
     expect(twMerge("bg-blue-500 bg-slate-500")).toBe("bg-blue-500 bg-slate-500");
   });
+  it("accent class도 같은 속성의 Semantic 색과 충돌을 푼다(티켓 40)", () => {
+    expect(twMerge("bg-accent-solid bg-accent-subtle")).toBe("bg-accent-subtle");
+    expect(twMerge("bg-primary-solid bg-accent-solid")).toBe("bg-accent-solid");
+    expect(twMerge("bg-accent-solid bg-canvas")).toBe("bg-canvas");
+    expect(twMerge("text-accent text-accent-on-solid")).toBe("text-accent-on-solid");
+    expect(twMerge("text-accent-on-solid text-muted")).toBe("text-muted");
+    expect(twMerge("border-accent border-strong")).toBe("border-strong");
+    expect(twMerge("hover:bg-accent-solid-hover hover:bg-accent-solid-active")).toBe(
+      "hover:bg-accent-solid-active",
+    );
+    // 앱이 @theme에 직접 더한 계열 class는 분류하지 않는다(브랜드 색 더하기 문서의 경고).
+    expect(twMerge("bg-accent-solid bg-brand-solid")).toBe("bg-accent-solid bg-brand-solid");
+    // 다른 속성은 남긴다.
+    expect(twMerge("bg-accent-solid text-accent-on-solid border-accent text-label-md")).toBe(
+      "bg-accent-solid text-accent-on-solid border-accent text-label-md",
+    );
+  });
+
   describe("타이포그래피", () => {
     it("텍스트 스타일과 글자색은 서로 지우지 않는다", () => {
       expect(twMerge("text-body-md text-muted")).toBe("text-body-md text-muted");

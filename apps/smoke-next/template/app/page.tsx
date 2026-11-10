@@ -4,6 +4,8 @@
 import { cn, Spinner, Typography, VisuallyHidden } from "@tide-tds/components";
 import { PlusIcon } from "@tide-tds/icons";
 
+import { brandColor } from "./colors";
+
 export default function Page() {
   return (
     <main>
@@ -27,6 +29,10 @@ export default function Page() {
       </header>
       {/* Spinner는 서버 컴포넌트다. 회전 class(animate-spin)는 이 파일에 쓰지 않는다. */}
       <Spinner size="sm" aria-label="불러오는 중" />
+      {/* 앱 브랜드 계열을 data-color로 고르고 accent Utility class로 칠한다. */}
+      <p data-color={brandColor} className="bg-accent-solid text-accent-on-solid">
+        브랜드
+      </p>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

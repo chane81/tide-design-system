@@ -1,5 +1,5 @@
 // 배포 tarball 소비 검사(seam ④). workspace 밖 임시 폴더에 실제 npm 사용자와 같은 구조로 설치한다.
-// 순서: pnpm pack → publint → 앱 설치 → next build → tsc(bundler) → tsc(nodenext) → 출력 CSS 확인 → 아이콘 tree-shaking 확인.
+// 순서: pnpm pack → publint → 앱 설치 → 브랜드 계열 CSS(tide-color) → next build → tsc(bundler) → tsc(nodenext) → 출력 CSS 확인 → 아이콘 tree-shaking 확인.
 // workspace symlink로 연결하면 transpilePackages가 필요해져 사용자 구조와 달라진다(tide-v0 티켓 19).
 import { spawnSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -116,6 +116,19 @@ try {
 
   run("pnpm", ["install"], consumerDir);
 
+  // 앱 브랜드 계열 CSS를 설치된 foundation의 bin(tide-color)으로 만든다(티켓 40). 대비가 미달이면 exit 1로 여기서 멈춘다.
+  console.log(`\n$ pnpm exec tide-color build brand.ts > app/brand.css  (${consumerDir})`);
+  const brand = spawnSync("pnpm", ["exec", "tide-color", "build", "brand.ts"], {
+    cwd: consumerDir,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "inherit"],
+    env: cleanEnv(),
+  });
+  if (brand.status !== 0) {
+    throw new Error(`실패: tide-color build brand.ts (exit ${brand.status})`);
+  }
+  await writeFile(join(consumerDir, "app/brand.css"), brand.stdout);
+
   // 3. "use client" 경계와 prerender, d.ts 해석을 확인한다.
   run("pnpm", ["exec", "next", "build"], consumerDir);
   run("pnpm", ["exec", "tsc", "-p", "tsconfig.json"], consumerDir);
@@ -173,6 +186,24 @@ try {
   assert(
     css.includes(".animate-spin") && /@keyframes spin\b/.test(css),
     "Spinner 내부 class(animate-spin)나 @keyframes spin이 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  // 색 이름과 앱 브랜드 계열(티켓 40): accent Utility class, Tide [data-color] 규칙, 앱 계열 변수와 규칙
+  assert(
+    css.includes(".bg-accent-solid") &&
+      css.includes(".text-accent-on-solid") &&
+      css.includes("--tide-accent-solid"),
+    "accent class(bg-accent-solid, text-accent-on-solid)나 --tide-accent-solid가 없다",
+  );
+  assert(
+    /\[data-color=("?)danger\1\]/.test(css) && css.includes("--tide-red-solid"),
+    "Tide [data-color] 규칙이나 계열 변수(--tide-red-solid)가 없다",
+  );
+  assert(
+    /\[data-color=("?)brand\1\]/.test(css) &&
+      css.includes("--tide-brand-solid") &&
+      css.includes("--tide-color-brand-600"),
+    "tide-color가 만든 앱 브랜드 계열 CSS([data-color=brand], --tide-brand-solid)가 없다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.

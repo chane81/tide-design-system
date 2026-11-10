@@ -65,6 +65,31 @@ const meaninglessClasses = [
   "border-neutral",
   "bg-shadow-color",
   "shadow-shadow-color",
+  // 계열 Utility class는 노출하지 않는다. accent는 강도를 생략하지 않고, 속성마다 정한 이름만 생긴다(티켓 40).
+  "bg-blue-solid",
+  "bg-gray-subtle",
+  "text-blue-text",
+  "border-blue-border",
+  "bg-accent",
+  "bg-accent-text",
+  "text-accent-solid",
+  "border-accent-solid",
+  "outline-accent",
+];
+
+// accent Utility class(티켓 40). [class, CSS 속성, 변수]
+const accentClasses: [string, string, string][] = [
+  ...["solid", "solid-hover", "solid-active", "subtle", "subtle-hover", "subtle-active"].map(
+    (slot) =>
+      [`bg-accent-${slot}`, "background-color", `--tide-accent-${slot}`] as [
+        string,
+        string,
+        string,
+      ],
+  ),
+  ["text-accent", "color", "--tide-accent-text"],
+  ["text-accent-on-solid", "color", "--tide-accent-on-solid"],
+  ["border-accent", "border-color", "--tide-accent-border"],
 ];
 
 // Tailwind 기본 팔레트 중 Tide에 없는 계열
@@ -97,6 +122,7 @@ describe("tailwind.css", () => {
   beforeAll(async () => {
     css = await buildCss([
       ...semanticClasses.map(([name]) => name),
+      ...accentClasses.map(([name]) => name),
       ...meaninglessClasses,
       ...defaultOnlyFamilies.flatMap((family) => [`bg-${family}-500`, `text-${family}-50`]),
       "bg-blue-500",
@@ -114,6 +140,13 @@ describe("tailwind.css", () => {
     "Semantic class %s가 --tide-* 공개 계약을 가리킨다",
     (name, property) => {
       expect(ruleBody(css, name)).toContain(`${property}: var(--tide-${name})`);
+    },
+  );
+
+  it.each(accentClasses)(
+    "accent class %s가 accent 슬롯 변수를 가리킨다",
+    (name, property, cssVar) => {
+      expect(ruleBody(css, name)).toContain(`${property}: var(${cssVar})`);
     },
   );
 
