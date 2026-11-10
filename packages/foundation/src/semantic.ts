@@ -10,8 +10,10 @@ export interface AlphaColor {
   readonly alpha: number;
 }
 
-/** Semantic Token 하나가 가리키는 값 */
-export type SemanticColorValue = PrimitiveColorName | AlphaColor;
+/**
+ * Semantic Token 하나가 가리키는 값. `transparent`는 light raised border에만 쓴다(CSS에서도 `transparent` 키워드로 나간다).
+ */
+export type SemanticColorValue = PrimitiveColorName | AlphaColor | "transparent";
 
 /** Theme별로 가리키는 값 */
 export interface ThemedColor {
@@ -116,6 +118,9 @@ export const semantic = {
     default: { light: "gray-200", dark: "gray-800" },
     // 입력창 등 UI 식별용 경계. 3:1
     strong: { light: "gray-500", dark: "gray-400" },
+    // raised 표면 경계. light는 그림자가 경계를 맡고 투명 border는 forced-colors에서 시스템 색으로 그려진다.
+    // dark는 그림자가 잘 보이지 않아 border가 경계를 맡는다(tide-v0 티켓 20, 2026-11-10 사용자 결정). 장식용이라 대비 검사에서 제외한다.
+    raised: { light: "transparent", dark: "gray-800" },
 
     primary: { light: "blue-600", dark: "blue-400" },
     success: { light: "green-600", dark: "green-400" },
@@ -185,10 +190,11 @@ export function semanticEntries(): {
 }
 
 /**
- * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다.
+ * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다. `transparent`는 `#00000000`이다.
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function colorValueHex(value: SemanticColorValue): string {
+  if (value === "transparent") return "#00000000";
   if (typeof value === "string") return primitiveHex(value);
   const alpha = Math.round(value.alpha * 255)
     .toString(16)

@@ -13,6 +13,8 @@ describe("tailwind-merge 설정", () => {
     expect(twMerge("text-default text-muted")).toBe("text-muted");
     expect(twMerge("text-on-solid text-primary")).toBe("text-primary");
     expect(twMerge("border-default border-strong")).toBe("border-strong");
+    expect(twMerge("border-transparent border-raised")).toBe("border-raised");
+    expect(twMerge("border-raised border-t-raised")).toBe("border-raised border-t-raised");
     expect(twMerge("border-t-default border-t-danger")).toBe("border-t-danger");
     expect(twMerge("divide-default divide-strong")).toBe("divide-strong");
     expect(twMerge("outline-focus outline-blue-600")).toBe("outline-blue-600");

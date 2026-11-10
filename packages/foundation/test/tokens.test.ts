@@ -41,6 +41,7 @@ const semanticClasses = [
   ...roles.filter((role) => role !== "neutral").map((role) => `text-${role}`),
   "border-default",
   "border-strong",
+  "border-raised",
   ...roles.filter((role) => role !== "neutral").map((role) => `border-${role}`),
   "outline-focus",
 ];
@@ -226,6 +227,9 @@ describe("tokens.css", () => {
         expect(light.get(`--tide-${name}`), name).toBe(ref(lightValue));
         expect(dark.get(`--tide-${name}`), name).toBe(ref(darkValue));
       }
+      // raised 표면 경계: light는 투명(키워드), dark는 gray-800(2026-11-10 사용자 결정)
+      expect(light.get("--tide-border-raised")).toBe("transparent");
+      expect(dark.get("--tide-border-raised")).toBe(ref("gray-800"));
     });
   });
   describe("타이포그래피", () => {

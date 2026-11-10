@@ -71,6 +71,11 @@ export const contrastPairs: readonly ContrastPair[] = [
 export const contrastExclusions: readonly ContrastExclusion[] = [
   { token: "border-default", reason: "장식용 구분선이다. 경계 식별에 쓰지 않는다." },
   {
+    token: "border-raised",
+    reason:
+      "raised 표면의 장식용 경계다(light 투명, dark gray-800). 표면 구분은 그림자와 배경 밝기가 맡고, 대비 의무가 없다.",
+  },
+  {
     token: "bg-disabled",
     reason: "비활성 상태는 WCAG 대비 요건 밖이다. Component가 속성과 cursor로도 표현한다.",
   },

@@ -39,7 +39,7 @@ const semanticClasses: [string, string][] = [
   ...["default", "muted", "disabled", "on-solid", ...accentRoles].map(
     (name) => [`text-${name}`, "color"] as [string, string],
   ),
-  ...["default", "strong", ...accentRoles].map(
+  ...["default", "strong", "raised", ...accentRoles].map(
     (name) => [`border-${name}`, "border-color"] as [string, string],
   ),
   ["outline-focus", "outline-color"],

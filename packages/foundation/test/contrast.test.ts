@@ -69,7 +69,7 @@ describe("Semantic Token 등록", () => {
 
   it("제외 목록은 장식용 border, disabled, overlay뿐이다", () => {
     expect([...excluded].sort()).toEqual(
-      ["bg-disabled", "bg-overlay", "border-default", "text-disabled"].sort(),
+      ["bg-disabled", "bg-overlay", "border-default", "border-raised", "text-disabled"].sort(),
     );
   });
 
