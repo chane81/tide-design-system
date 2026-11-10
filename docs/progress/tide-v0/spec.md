@@ -312,7 +312,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - props는 루트 DOM 요소의 props를 확장하고, 이름이 겹치는 HTML 속성(`color` 등)은 `Omit`한다.
 - **스타일 축**:
   - `variant`는 Component마다 정의되는 주된 스타일 축이다. Button류는 채움 방식(`solid`/`subtle`/`outline`/`ghost`)을, Typography는 텍스트 스타일 이름을 값으로 받는다.
-  - `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)). 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Alert, Toast)는 `Role`(앱 Role 포함)만 받는다. 장식·분류 Component(Badge, Tag, Avatar)는 `ColorFamilyName`을 받고, Role도 받을지는 그 Component 티켓에서 정한다(둘 다 받으면 `Color`). Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
+  - `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)). 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Badge, Alert, Toast)는 `Role`(앱 Role 포함)만 받는다(Badge는 [ADR 0017](../../decisions/0017-badge-is-status-label-role-only.md), 기본 `neutral`). 장식·분류 Component(Tag, Avatar)는 `ColorFamilyName`을 받고, Role도 받을지는 그 Component 티켓에서 정한다(둘 다 받으면 `Color`). Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
   - `Role`, `RoleRegistry`, `ColorFamilyName`, `ColorFamilyRegistry`, `Color`는 `@tide-tds/components`에서도 다시 낸다. 앱의 augmentation 대상은 `@tide-tds/components`다(앱이 설치하는 패키지).
   - 공통 union 타입은 한 곳에서 정의하고, Component마다 `Extract`로 필요한 값만 고른다.
   - 채움 방식 union 이름은 `Variant`가 아니라 채움 방식을 드러내는 이름(예: `FillVariant`)으로 한다.
@@ -327,7 +327,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - 높이는 24px 밑으로 내려가지 않는다. 같은 size의 컨트롤은 높이가 같다. 세로 정렬은 고정 높이와 `items-center`로 한다.
 
 - **variant 정의**: 타입이 붙은 객체 맵과 `cn`으로 직접 쓴다. cva와 tailwind-variants는 쓰지 않는다. 모든 조합을 채웠는지는 타입 검사가 확인한다. 색 축은 맵에 두지 않는다. 맵은 `Record<FillVariant, string>`이고 accent class(`bg-accent-solid`, `text-accent` 등)로 쓰며, 색은 루트의 `data-color`가 정한다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)).
-- **앱 확장점(색)**: 앱은 Tide 패키지를 고치지 않고 브랜드 색을 더한다. `defineColorFamily` → `tide-color build` → Tide CSS 다음에 import → `RoleRegistry`(Button 등에 쓸 때) 또는 `ColorFamilyRegistry`(Badge 등에 쓸 때) augmentation 순서다. Tide Role의 색을 바꾸려면 Role CSS 변수(`--tide-bg-primary-*`, `--tide-text-primary`, `--tide-border-primary` 등)를 Theme별로 덮어쓴다. 이 값은 대비 검사를 받지 않는다. 계열 변수(`--tide-blue-*`)는 덮어쓰지 않는다. Component는 앱 계열 class를 쓰지 않으므로 Tailwind 자동완성과 tailwind-merge 설정은 앱 계열에 따라 바뀌지 않는다.
+- **앱 확장점(색)**: 앱은 Tide 패키지를 고치지 않고 브랜드 색을 더한다. `defineColorFamily` → `tide-color build` → Tide CSS 다음에 import → `RoleRegistry`(Button·Badge 등에 쓸 때) 또는 `ColorFamilyRegistry`(Tag·Avatar 등에 쓸 때) augmentation 순서다. Tide Role의 색을 바꾸려면 Role CSS 변수(`--tide-bg-primary-*`, `--tide-text-primary`, `--tide-border-primary` 등)를 Theme별로 덮어쓴다. 이 값은 대비 검사를 받지 않는다. 계열 변수(`--tide-blue-*`)는 덮어쓰지 않는다. Component는 앱 계열 class를 쓰지 않으므로 Tailwind 자동완성과 tailwind-merge 설정은 앱 계열에 따라 바뀌지 않는다.
 - **className 병합**: `cn` = clsx + 생성된 설정으로 확장한 tailwind-merge. 사용자의 `className`은 항상 마지막에 넣는다.
 - **`render` prop**:
   - 루트가 DOM 요소 하나인 Component만 받는다. 요소를 넘기면 props, ref, className을 병합한다.
@@ -394,7 +394,9 @@ Component별로 이미 정한 범위:
 - **Table**: 시맨틱 `<table>`(Table, Head, Row, Cell)이다. 정렬, 행 선택, 가상화는 없다.
 - **Tag**: 지울 수 있는 라벨이다. 묶음 탐색과 Delete 제거는 `useTagGroup`이 맡는다. 상호작용이 없는 상태 표시는 Badge다.
 - **AlertDialog**: Dialog 위의 얇은 변형이다.
-- **Card**: surface 표면 컨테이너이고 border만 쓴다. 그림자는 없다.
+- **Badge**: 상호작용 없는 상태 라벨(`span`)이다. `color`는 Role(기본 `neutral`), `variant`는 `subtle`/`solid`, `size`는 `sm`(20px)/`md`(24px), radius `sm`. 상태는 텍스트(`children` 필수)로 전한다([티켓 19](../tide-v0-impl/issues/19-badge-card-separator.md)).
+- **Card**: surface 표면 컨테이너이고 border만 쓴다. 그림자는 없다. radius `lg`, 여백 16px, 기본 `div`이고 `render`로 요소를 바꾼다.
+- **Separator**: 네이티브 `<hr>`이다(`useSeparator` 없음). 기본은 separator 역할, 세로는 `aria-orientation`, `decorative`면 `role="none"`. 선은 장식용 `border-default`다.
 - **Toast**:
   - 기본 위치는 아래 오른쪽이고 폭을 제한한다. 쌓임 단계는 `toast`다.
   - 자동으로 닫힐 때는 5초 이상 보이고, hover나 focus 중에는 멈춘다. 액션이나 오류가 있으면 자동으로 닫지 않는다.

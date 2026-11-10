@@ -13,6 +13,8 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 
 장식·분류 Component가 Role도 함께 받을지(예: 상태를 뜻하는 Badge)는 그 Component 티켓(19·21·33)에서 정한다. 둘 다 받으면 `Color`(`Role | ColorFamilyName`)를 쓴다.
 
+> 정정(2026-11-10, [ADR 0017](0017-badge-is-status-label-role-only.md)): Badge는 상태 라벨이라 행동·의미 쪽으로 옮겨 `Role`만 받는다. 장식·분류는 Tag, Avatar다.
+
 이렇게 바꾼 이유는 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)이다. Atlassian은 「Color roles are applied to buttons to differentiate between primary, secondary, warning, or dangerous actions」라고 Role을 버튼에 쓰고, accent 색은 「colors that don't have any specific meaning … exchange one accent color for another, and the experience would remain unchanged」라고 뜻이 없는 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
 
 - **등록 interface 두 개**: foundation이 `RoleRegistry`(Tide Role 6개)와 `ColorFamilyRegistry`(Tide 색 계열 6개)를 둔다. `Role = keyof RoleRegistry`, `ColorFamilyName = keyof ColorFamilyRegistry`, `Color = Role | ColorFamilyName`이다. ADR 0011의 `ColorRegistry`는 없앤다.

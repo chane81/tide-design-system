@@ -47,11 +47,11 @@ Token에 연결된 Tailwind 클래스. 사용자가 `className`에 직접 쓴다
 _Avoid_: 헬퍼 클래스, 스타일 클래스
 
 **Role (역할)**:
-Semantic Token이 나타내는 의미 범주. Tide Role은 `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다. Role은 색 계열 하나에 덮어쓸 값을 얹은 별칭이다. 예: `primary`는 `blue`와 같고, `neutral`은 `gray`에서 dark subtle·글자·테두리를 덮어쓴 다른 색이다. 행동·의미 Component(Button, IconButton, Link 등)의 `color` prop은 Role만 받는다. 앱은 `RoleRegistry`를 module augmentation해서 자기 Role(예: `brand`)을 더한다. 앱 Role에는 Role Token(`bg-brand-solid`)이 없고 accent 슬롯으로만 칠한다.
+Semantic Token이 나타내는 의미 범주. Tide Role은 `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다. Role은 색 계열 하나에 덮어쓸 값을 얹은 별칭이다. 예: `primary`는 `blue`와 같고, `neutral`은 `gray`에서 dark subtle·글자·테두리를 덮어쓴 다른 색이다. 행동·의미 Component(Button, IconButton, Link, 상태 라벨 Badge 등)의 `color` prop은 Role만 받는다. 앱은 `RoleRegistry`를 module augmentation해서 자기 Role(예: `brand`)을 더한다. 앱 Role에는 Role Token(`bg-brand-solid`)이 없고 accent 슬롯으로만 칠한다.
 _Avoid_: 컬러 그룹, intent, tone
 
 **색 이름 (Color)**:
-`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
+`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Tag, Avatar 등)가 쓴다. Badge는 상태 라벨이라 Role을 쓴다(ADR 0017). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
 _Avoid_: 팔레트, color scheme(`color-scheme` CSS와 혼동), tone
 
 **accent 슬롯 (Accent slot)**:
@@ -101,7 +101,7 @@ Button류 Component의 Variant 값 집합. `solid`, `subtle`, `outline`, `ghost`
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
 
 **Badge (배지)**:
-상태나 분류를 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다.
+상태를 텍스트로 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다. 색은 상태의 뜻이라 Role로 고른다(ADR 0017). 뜻 없는 분류 색은 Tag·Avatar가 맡는다.
 _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 
 **Tag (태그)**:
