@@ -223,6 +223,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
   - 굵기는 300/400/500/600/700의 5개만 둔다. 자간은 0이다. Tailwind 기본 `text-*` 크기, `font-weight`, `font-serif`는 지운다. `leading-*`와 `tracking-*`는 남긴다.
   - base CSS에 `word-break: keep-all`과 `overflow-wrap: break-word`를 넣는다. 루트 font-size는 바꾸지 않는다.
+  - 공개 계약: `--tide-font-sans`/`--tide-font-mono`, 굵기 `--tide-font-<light|normal|medium|semibold|bold>`, 텍스트 스타일 `--tide-text-<이름>`과 `--tide-text-<이름>--line-height`/`--font-weight`, Primitive 크기 `--tide-font-size-<px>`. 텍스트 스타일은 Primitive 크기와 굵기 변수를 참조한다([타이포그래피 Foundation](../tide-v0-impl/issues/05-typography-foundation.md)).
+  - tailwind-merge: 텍스트 스타일(font-size group)은 앞에 온 행간(`leading-*`, Tailwind 기본)과 굵기(`font-*`, Tide 추가)를 지운다. 텍스트 스타일 뒤에 온 행간·굵기는 남는다.
 - **간격과 breakpoint**: Tailwind 기본값을 그대로 쓴다. border width와 opacity에는 Token을 두지 않는다.
 - **radius**: `sm` 4px, `md` 6px, `lg` 8px, `xl` 12px, `full`. 나머지 Tailwind 기본값은 지운다.
   - 쓰는 곳: 작은 표시 요소와 목록 안 항목은 `sm`, 조작 요소는 모든 size에서 `md`, 담는 요소(Card, Alert, Popover, 목록, Toast, Accordion)는 `lg`, Dialog류는 `xl`, 원·알약형은 `full`이다.
