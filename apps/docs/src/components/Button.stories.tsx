@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@tide-tds/components";
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import { ArrowRightIcon, PlusIcon, TrashIcon } from "@tide-tds/icons";
 import { useState, type ReactElement } from "react";
 
@@ -8,10 +9,18 @@ import { useState, type ReactElement } from "react";
 
 const variants = ["solid", "subtle", "outline", "ghost"] as const;
 const colors = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
+const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
 const sizes = ["xs", "sm", "md", "lg"] as const;
 
 const union = (values: readonly string[]): string =>
   values.map((value) => `"${value}"`).join(" | ");
+
+// 예시 브랜드 계열을 색 이름 타입에 더한다. 앱도 같은 augmentation을 쓴다(「브랜드 색 더하기」).
+declare module "@tide-tds/components" {
+  interface ColorRegistry {
+    brand: true;
+  }
+}
 
 const meta = {
   title: "Component/Button",
@@ -31,8 +40,11 @@ const meta = {
     },
     color: {
       control: "select",
-      options: colors,
-      table: { type: { summary: union(colors) }, defaultValue: { summary: '"primary"' } },
+      options: [...colors, ...families],
+      table: {
+        type: { summary: "Color", detail: `${union([...colors, ...families])} | 앱이 더한 계열` },
+        defaultValue: { summary: '"primary"' },
+      },
     },
     size: {
       control: "inline-radio",
@@ -85,6 +97,59 @@ export const Colors: Story = {
             </Button>
           ))}
         </div>
+      ))}
+    </div>
+  ),
+};
+
+/** 색 계열 6개 × 채움 방식 4개 */
+export const Families: Story = {
+  name: "색 계열",
+  render: (args) => (
+    <div className="flex flex-col gap-3">
+      {families.map((color) => (
+        <div key={color} className="flex flex-wrap items-center gap-3">
+          {variants.map((variant) => (
+            <Button key={variant} {...args} variant={variant} color={color}>
+              {color}
+            </Button>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+// 예시 브랜드 계열. 앱에서는 `tide-color build brand.ts`로 만든 CSS를 Tide CSS 다음에 불러온다.
+const brand = defineColorFamily({
+  name: "brand",
+  scale: {
+    50: "#f5f3ff",
+    100: "#ede9fe",
+    200: "#ddd6fe",
+    300: "#c4b5fd",
+    400: "#a78bfa",
+    500: "#8b5cf6",
+    600: "#7c3aed",
+    700: "#6d28d9",
+    800: "#5b21b6",
+    900: "#4c1d95",
+    950: "#2e1065",
+  },
+});
+const brandCss = colorFamilyCss([brand]);
+
+/** 앱 브랜드 계열. `ColorRegistry`에 등록하면 `color="brand"`로 씁니다. */
+export const Brand: Story = {
+  name: "앱 브랜드 색",
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-3">
+      {/* 문서에서만 예시 CSS를 페이지에 넣는다. */}
+      <style>{brandCss}</style>
+      {variants.map((variant) => (
+        <Button key={variant} {...args} variant={variant} color="brand">
+          {variant}
+        </Button>
       ))}
     </div>
   ),

@@ -36,11 +36,27 @@ import * as ButtonStories from "./Button.stories.tsx";
 
 <Canvas of={ButtonStories.Variants} />
 
-### Role 고르기
+### 색 고르기
 
-`color`로 Role 6개 중 하나를 고릅니다. 기본값은 `primary`입니다. 되돌릴 수 없는 동작은 `danger`를 씁니다.
+`color`로 색 이름을 고릅니다. 기본값은 `primary`입니다.
+
+| 종류         | 값                                                           | 쓰는 곳                                     |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------- |
+| Role         | `neutral`, `primary`, `success`, `warning`, `danger`, `info` | 의미가 있는 동작. 되돌릴 수 없으면 `danger` |
+| 색 계열      | `gray`, `blue`, `green`, `amber`, `red`, `cyan`              | 의미 없이 색만 구분할 때(분류, 태그)        |
+| 앱 브랜드 색 | 앱이 더한 계열(예: `brand`)                                  | 브랜드 동작                                 |
+
+Role이 뜻을 전하므로 먼저 Role을 고릅니다. 바깥 요소의 색은 물려받지 않습니다.
 
 <Canvas of={ButtonStories.Colors} />
+
+색 계열은 Role과 같은 규칙으로 light·dark 색이 정해집니다. `neutral`과 `gray`는 다른 색입니다.
+
+<Canvas of={ButtonStories.Families} />
+
+앱의 브랜드 계열은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만든 뒤 `color="brand"`로 씁니다. 대비는 `tide-color`가 검사합니다.
+
+<Canvas of={ButtonStories.Brand} />
 
 ### 크기 바꾸기
 
@@ -142,6 +158,6 @@ import Link from "next/link";
 
 ## Props
 
-`button`의 props를 모두 받습니다(`color` 제외). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `px-8`). 상태는 `disabled:`, `data-loading`, `data-disabled`(링크로 렌더했을 때)로 덮어씁니다.
+`button`의 props를 모두 받습니다(`color`는 색 이름으로 바뀝니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `px-8`). 루트에는 `data-color`가 붙습니다. 상태는 `disabled:`, `data-loading`, `data-disabled`(링크로 렌더했을 때)로 덮어씁니다.
 
 <ArgTypes of={ButtonStories} />
