@@ -20,11 +20,14 @@
 //   (on-solid × solid-hover 4.5:1 등록), 체크 전은 bg-accent-subtle 배경만 옅게 깐다(경계 border-strong은 그대로라
 //   오류 경계도 가리지 않는다). group-hover는 `:is(:where(.group\/choice):hover *)`라 checked:보다 우선순위가 높아
 //   체크 전 규칙에 not-checked·not-indeterminate를 붙인다.
+// - 누름: hover보다 한 단계 진한 -active 슬롯이다. 체크됨·indeterminate는 bg-accent-solid-active(on-solid × solid-active
+//   4.5:1 등록), 체크 전은 bg-accent-subtle-active. Switch(티켓 17)와 같은 규칙이다. group-active는 group-hover보다
+//   뒤에 만들어져 누르는 동안 hover 색을 이긴다(Chromium에서 계산값으로 확인).
 // - motion: 혼자 있는 조작 요소라 transition-colors(fast)다.
 
 /** 상자의 forced-colors 시스템 색 */
 const choiceInputForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-bg-canvas:Canvas] forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-bg-canvas:Canvas] forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight]";
 
 /** 루트 label. 글자 크기 class와 사용자 className은 뒤에 붙인다. */
 export const choiceRootClass =
@@ -35,7 +38,7 @@ export const choiceAreaClass = "grid size-6 shrink-0 place-items-center";
 
 /** 네이티브 input을 상자로 그린다. 모양(rounded)과 크기 class는 Component가 앞에 붙인다. */
 export const choiceInputClass: string =
-  "peer col-start-1 row-start-1 m-0 appearance-none border border-strong bg-canvas cursor-pointer transition-colors checked:border-accent checked:bg-accent-solid enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:checked:group-hover/choice:bg-accent-solid-hover indeterminate:border-accent indeterminate:bg-accent-solid enabled:indeterminate:group-hover/choice:bg-accent-solid-hover aria-invalid:border-danger focus-visible:focus-ring disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled " +
+  "peer col-start-1 row-start-1 m-0 appearance-none border border-strong bg-canvas cursor-pointer transition-colors checked:border-accent checked:bg-accent-solid enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:checked:group-hover/choice:bg-accent-solid-hover indeterminate:border-accent indeterminate:bg-accent-solid enabled:indeterminate:group-hover/choice:bg-accent-solid-hover enabled:not-checked:not-indeterminate:group-active/choice:bg-accent-subtle-active enabled:checked:group-active/choice:bg-accent-solid-active enabled:indeterminate:group-active/choice:bg-accent-solid-active aria-invalid:border-danger focus-visible:focus-ring disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled " +
   choiceInputForcedClass;
 
 /** 상자 위에 겹치는 표시 아이콘. 누름은 input이 받는다. 보이는 조건 class는 Component가 붙인다. */
