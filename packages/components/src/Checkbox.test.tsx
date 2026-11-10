@@ -279,6 +279,73 @@ describe("색", () => {
   });
 });
 
+describe("hover", () => {
+  const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
+
+  test("label 글자에 올리면 체크됨은 solid-hover, 체크 전은 subtle 배경이 되고 경계는 그대로다", async () => {
+    await render(
+      <div data-theme="light" className="flex flex-col gap-4">
+        <Checkbox defaultChecked>체크됨</Checkbox>
+        <Checkbox>체크 전</Checkbox>
+        <Checkbox indeterminate>일부</Checkbox>
+      </div>,
+    );
+    if (forcedColors()) return;
+    const box = (name: string): HTMLElement =>
+      page.getByRole("checkbox", { name }).element() as HTMLElement;
+
+    await userEvent.hover(page.getByText("체크됨"));
+    await wait();
+    expect(getComputedStyle(box("체크됨")).backgroundColor).toBe(
+      resolve("var(--tide-bg-primary-solid-hover)"),
+    );
+
+    await userEvent.hover(page.getByText("체크 전"));
+    await wait();
+    expect(getComputedStyle(box("체크 전")).backgroundColor).toBe(
+      resolve("var(--tide-bg-primary-subtle)"),
+    );
+    expect(getComputedStyle(box("체크 전")).borderTopColor).toBe(
+      resolve("var(--tide-border-strong)"),
+    );
+    // 마우스가 떠난 체크박스는 원래 색으로 돌아온다.
+    expect(getComputedStyle(box("체크됨")).backgroundColor).toBe(
+      resolve("var(--tide-bg-primary-solid)"),
+    );
+
+    await userEvent.hover(page.getByText("일부"));
+    await wait();
+    expect(getComputedStyle(box("일부")).backgroundColor).toBe(
+      resolve("var(--tide-bg-primary-solid-hover)"),
+    );
+  });
+
+  test("비활성은 hover에도 바뀌지 않는다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox disabled defaultChecked>
+          꺼짐
+        </Checkbox>
+      </div>,
+    );
+    const box = page.getByRole("checkbox").element();
+    const before = getComputedStyle(box).backgroundColor;
+    await userEvent.hover(page.getByText("꺼짐"));
+    await wait();
+    expect(getComputedStyle(box).backgroundColor).toBe(before);
+  });
+
+  test("forced-colors에서 hover해도 체크 전 상자는 Canvas다", async () => {
+    await render(<Checkbox>알림</Checkbox>);
+    if (!forcedColors()) return;
+    await userEvent.hover(page.getByText("알림"));
+    await wait();
+    expect(getComputedStyle(page.getByRole("checkbox").element()).backgroundColor).toBe(
+      resolve("Canvas"),
+    );
+  });
+});
+
 describe("오류", () => {
   test("invalid면 aria-invalid와 data-invalid가 붙고, 체크해도 경계가 danger다", async () => {
     await render(

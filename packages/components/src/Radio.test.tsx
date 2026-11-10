@@ -289,6 +289,26 @@ describe("모양", () => {
     expect(getComputedStyle(dot(input)).color).toBe(resolve("var(--tide-text-on-solid)"));
   });
 
+  test("label 글자에 올리면 선택됨은 solid-hover, 선택 전은 subtle 배경이 된다", async () => {
+    await render(
+      <div data-theme="light">
+        <Shipping />
+      </div>,
+    );
+    if (forcedColors()) return;
+    const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
+    await userEvent.hover(page.getByText("일반"));
+    await wait();
+    expect(
+      getComputedStyle(page.getByRole("radio", { name: "일반" }).element()).backgroundColor,
+    ).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
+    await userEvent.hover(page.getByText("빠른"));
+    await wait();
+    expect(
+      getComputedStyle(page.getByRole("radio", { name: "빠른" }).element()).backgroundColor,
+    ).toBe(resolve("var(--tide-bg-primary-subtle)"));
+  });
+
   test("키보드 포커스에 focus-ring이 보인다", async () => {
     await render(<Shipping />);
     await userEvent.tab();
