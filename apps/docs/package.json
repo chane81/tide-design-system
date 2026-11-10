@@ -27,6 +27,7 @@
     "playwright": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "remark-gfm": "catalog:",
     "storybook": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
