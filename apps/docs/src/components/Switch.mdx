@@ -27,7 +27,7 @@ import * as SwitchStories from "./Switch.stories.tsx";
 
 `children`이 label이 됩니다. label 텍스트를 눌러도 켜지고 꺼집니다.
 
-label에 마우스를 올리면 track 색이 조금 진해지고, 누르면 한 단계 더 진해집니다. 비활성일 때는 바뀌지 않습니다.
+label에 마우스를 올리면 켜진 track은 색이 조금 진해지고, 꺼진 track에는 고른 색의 옅은 배경이 깔립니다(경계는 그대로). 누르면 한 단계 더 진해집니다. Checkbox·Radio와 같은 규칙이고, 비활성일 때는 바뀌지 않습니다.
 
 <Canvas of={SwitchStories.States} />
 
@@ -45,7 +45,7 @@ label에 마우스를 올리면 track 색이 조금 진해지고, 누르면 한 
 
 ### 켜진 색 고르기
 
-`color`로 Role을 고릅니다. 기본값은 `primary`입니다.
+`color`로 Role(Tide Role 6개와 앱 Role)을 고릅니다. 기본값은 `primary`입니다. 앱 Role은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만든 뒤 `color="brand"`로 씁니다.
 
 <Canvas of={SwitchStories.Colors} />
 
