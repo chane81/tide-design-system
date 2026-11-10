@@ -66,6 +66,16 @@ Blocked by: 15 (Field와 Input·Textarea)
     1. ADR 0015의 `ref`(input) / `className`(루트 label) 분리. Checkbox·Radio(16)와 맞춰야 한다.
     2. 꺼짐 모양을 「투명 track + 회색 경계 + 회색 thumb」(Fluent·M3 방식)으로 했다. 「회색 채운 track + 흰 thumb」(iOS 방식)은 dark에서 흰 thumb과 회색 track의 대비 쌍이 등록되어 있지 않다.
     3. 켜진 track 경계를 `border-accent`로 둬 dark에서 solid보다 밝은 테두리가 보인다(표면 대비 3:1을 위해).
-    4. hover 색 변화를 두지 않았다.
+    4. ~~hover 색 변화를 두지 않았다.~~ 같은 날 사용자 피드백으로 더했다(아래).
     5. Field 안 배치는 Field 규칙대로 label 위, 스위치 아래다(가로 배치 없음).
   - **다음 티켓 메모**: 16(Checkbox·Radio)이 자기 label을 children으로 받는다면 ADR 0015 구조(루트 label, input에 ref)를 쓸 수 있다. smoke page의 Input 주석이 내부 class 이름(`aria-invalid:border-danger` 등)을 적고 있어 Tailwind가 page에서도 스캔한다. 그 @source 검사는 실제로는 page 주석으로도 통과할 수 있다(티켓 15 확인 필요).
+- 2026-11-10 사용자 피드백 반영: hover 시 약간의 색 변화를 둔다.
+  - **API 확인**: tailwindcss 4.3.5의 `hover`(와 `group-hover`)는 `@media (hover: hover)` 안에서 컴파일된다(context7 `/tailwindlabs/tailwindcss.com` upgrade-guide.mdx 「Hover styles on mobile」). 이름 붙인 group(`group/{name}`, `group-hover/{name}:`)과 `not-*` variant도 같은 문서(hover-focus-and-other-states.mdx, v4 blog)로 확인했다. 테스트 환경(Playwright Chromium headless)에서 `matchMedia("(hover: hover)")`가 `true`임을 테스트로 단언한다.
+  - **결정**: 루트 label에 `group/switch`를 붙이고 track·thumb이 `group-hover/switch:`·`group-active/switch:`로 반응한다(label을 눌러도 토글되므로 label 전체가 hover 영역). 이름 없는 `group`은 바깥 요소의 `group` hover에도 반응해서 이름을 붙였다. 활성(`:enabled`)일 때만 붙고, 색 전환은 기존 `transition-colors`(fast)다.
+    - 켜짐: track `bg-accent-solid-hover`, 누름 `bg-accent-solid-active`(Button solid와 같은 규칙). thumb `text-accent-on-solid` × solid 3단계 4.5:1은 등록된 쌍이다(Role 대비 쌍과 색 이름 규칙 모두).
+    - 꺼짐: track 투명 → `bg-neutral-subtle-hover`, 누름 `bg-neutral-subtle-active`(Button ghost의 「hover subtle-hover, 누름 subtle-active」를 neutral로). thumb은 `text-muted` → `text-default`로 바꿔 등록된 쌍(`text-default` × `bg-neutral-subtle` 3단계 4.5:1) 안에 남긴다. `text-muted` × neutral subtle은 등록되어 있지 않다. 경계 `border-strong`은 바깥 표면과의 대비(3:1, 등록)라 그대로 둔다. 경계를 한 단계 진하게 하는 안은 `border-strong`보다 진한 경계 Token이 없어 쓰지 않았다. foundation은 고치지 않았다.
+    - 비활성: 변화 없음.
+    - forced-colors: hover·누름이 쓰는 변수(`--tide-accent-solid-hover`/`-active` → `Highlight`, `--tide-bg-neutral-subtle-hover`/`-active` → `Canvas`, thumb `--tide-text-default` → `CanvasText`)도 같은 시스템 색으로 바꿔 hover에서도 모양이 바뀌지 않는다.
+  - **테스트**: components browser 452 tests(Switch 45 × instance 2). hover 지원 단언, 켜짐 hover·누름(label 텍스트에 hover, `mouseDownOn` 명령으로 `:active` 유지), 꺼짐 hover·누름(thumb `text-default`, 경계 그대로), track에 올려도 같은 색, 비활성 켜짐·꺼짐에서 hover·누름 변화 없음, 바깥 `group` 요소 hover에 반응하지 않음. forced-colors instance에서는 hover·누름에도 `Highlight`/`HighlightText`/`Canvas`/`CanvasText`가 그대로인지 본다. 루트 group을 빼면 4개, 이름 없는 `group`으로 바꾸면 바깥 group 테스트가 실패함을 확인하고 되돌렸다.
+  - **문서**: MDX 「켜고 끄기」에 hover·누름 문장을 더했다(hover는 정적 story로 보일 수 없어 story는 더하지 않았다).
+  - **로컬 검증**: `pnpm lint`, `pnpm format:check`, `rm -rf packages/*/dist apps/docs/storybook-static` 후 `pnpm turbo run typecheck test build smoke --force` 15/15 통과. foundation 433, icons 18, components 452, docs 115 tests, smoke 「smoke 통과」, publint 「All good!」.
