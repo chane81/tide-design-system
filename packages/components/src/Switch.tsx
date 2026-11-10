@@ -25,11 +25,10 @@ export interface SwitchProps extends Omit<
   /** track 크기 `sm` 28×16px, `md` 36×20px, `lg` 44×24px. label 텍스트 스타일도 함께 바뀐다. 기본값은 `md`다. */
   size?: SwitchSize;
   /**
-   * 켜졌을 때 track 색. Role 6개를 받는다. 기본값은 `primary`다.
+   * 켜졌을 때 track 색. Role(Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role)을 받는다. 기본값은 `primary`다.
    * 루트에 `data-color`로 붙어 accent 색을 정한다. 바깥 요소의 색을 물려받지 않는다.
    */
-  // 행동·의미 Component의 color는 Role만 받는다(2026-11-10 사용자 결정). 색 계열 이름은 장식 Component용이다.
-  // 티켓 41에서 Role 타입이 앱 Role(RoleRegistry augmentation)까지 넓어지면 따라간다.
+  // 행동·의미 Component의 color는 Role만 받는다(ADR 0016). 색 계열 이름은 장식·분류 Component용이다.
   color?: Role;
   /**
    * 오류 상태. `aria-invalid="true"`와 `data-invalid`가 붙고 꺼진 track 경계가 danger 색이 된다.
@@ -68,16 +67,18 @@ const thumbSizeClass: Record<SwitchSize, string> = {
 // track: 꺼짐은 투명 배경에 border-strong 경계(표면 층 위 3:1), 켜짐은 accent solid 배경에 border-accent 경계(표면 층 위 3:1).
 // 켜짐·비활성은 :enabled/:disabled로 나눠 CSS 순서에 기대지 않는다.
 // hover·누름은 루트 label(이름 붙인 group/switch)에서 반응한다. 바깥 요소의 group hover에는 반응하지 않는다. label을 눌러도 토글되기 때문이다. 활성(:enabled)일 때만 붙는다.
+// Checkbox·Radio(choice-style.ts)와 같은 규칙이다. hover는 켜짐 solid-hover·꺼짐 subtle, 누름은 한 단계 진한 -active 슬롯이다.
 // - 켜짐: solid-hover / solid-active(Button solid와 같은 규칙). thumb on-solid와 4.5:1 대비 쌍이 등록되어 있다.
-// - 꺼짐: neutral subtle-hover / subtle-active 배경(Button ghost의 subtle-hover 규칙을 neutral로). thumb은 text-default가 되어
-//   등록된 대비 쌍(text-default × neutral subtle 3단계 4.5:1) 안에 남는다. 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
+// - 꺼짐: accent subtle / subtle-active 배경. thumb은 text-accent가 되어 등록된 대비 쌍(색 이름 text × 같은 색 subtle 3단계
+//   4.5:1, neutral은 text-default × neutral subtle 3단계) 안에 남는다. 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
 const trackClass =
-  "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-neutral-subtle-hover group-active/switch:not-checked:enabled:bg-neutral-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
+  "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-accent-subtle group-active/switch:not-checked:enabled:bg-accent-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
 
 // thumb: 색은 currentColor로 칠한다. 꺼짐 text-muted(표면 층 위 4.5:1), 켜짐 text-accent-on-solid(solid 위 4.5:1).
+// 꺼짐 hover·누름은 track이 accent subtle이라 text-accent다. hover가 없는 터치 기기에서도 누르는 동안 맞도록 active에도 붙인다.
 // 이동은 motion-safe일 때만 transition에 넣는다. 움직임 줄이기에서는 위치가 바로 바뀌고 색만 fast로 바뀐다.
 const thumbClass =
-  "pointer-events-none absolute start-0.75 top-0.75 rounded-full bg-current text-muted shadow-sm transition-colors motion-safe:transition-[color,background-color,translate] peer-checked:peer-enabled:text-accent-on-solid group-hover/switch:peer-enabled:peer-not-checked:text-default peer-disabled:text-disabled";
+  "pointer-events-none absolute start-0.75 top-0.75 rounded-full bg-current text-muted shadow-sm transition-colors motion-safe:transition-[color,background-color,translate] peer-checked:peer-enabled:text-accent-on-solid group-hover/switch:peer-enabled:peer-not-checked:text-accent group-active/switch:peer-enabled:peer-not-checked:text-accent peer-disabled:text-disabled";
 
 // forced-colors: 기본 동작은 배경을 Canvas로 덮어 thumb과 켜진 track이 사라진다(Chromium에서 확인).
 // track과 thumb만 forced-color-adjust를 끄고, 쓰는 Token 변수를 시스템 색으로 바꾼다(@theme inline이라 요소에서 바꾼 변수를 바로 쓴다).
@@ -85,9 +86,9 @@ const thumbClass =
 // hover·누름 변수도 같은 시스템 색으로 바꿔 forced-colors 모양이 hover에서 바뀌지 않는다.
 // 상태 class를 다시 적지 않아 선택자 우선순위와 CSS 순서에 기대지 않는다.
 const trackForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-bg-neutral-subtle-hover:Canvas] forced-colors:[--tide-bg-neutral-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight]";
 const thumbForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-text-muted:CanvasText] forced-colors:[--tide-text-default:CanvasText] forced-colors:[--tide-accent-on-solid:HighlightText] forced-colors:[--tide-text-disabled:GrayText]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-text-muted:CanvasText] forced-colors:[--tide-accent-text:CanvasText] forced-colors:[--tide-accent-on-solid:HighlightText] forced-colors:[--tide-text-disabled:GrayText]";
 
 /**
  * 켜고 끄는 설정을 바꾸는 스위치. 네이티브 체크박스라 form 제출이 그대로 되고, 스크린리더는 「스위치」로 읽는다.
