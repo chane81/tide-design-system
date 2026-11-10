@@ -293,6 +293,52 @@ describe("forced-colors", () => {
   );
 });
 
+describe("커서", () => {
+  // 활성 pointer, 비활성 not-allowed, 로딩 wait. button과 render 요소(Next Link, <a>)가 같다.
+  const cursorOf = (testId: string): string =>
+    getComputedStyle(page.getByTestId(testId).element()).cursor;
+
+  test("기본 button: 활성 pointer, disabled not-allowed, loading wait", async () => {
+    await render(
+      <div>
+        <Button data-testid="active">저장</Button>
+        <Button data-testid="disabled" disabled>
+          저장
+        </Button>
+        <Button data-testid="loading" loading>
+          저장
+        </Button>
+      </div>,
+    );
+    expect(cursorOf("active")).toBe("pointer");
+    expect(cursorOf("disabled")).toBe("not-allowed");
+    expect(cursorOf("loading")).toBe("wait");
+  });
+
+  test("render 요소(Next Link, a)도 같은 규칙을 따른다", async () => {
+    await render(
+      <div>
+        <Button data-testid="link" render={<Link href="/settings" />}>
+          설정
+        </Button>
+        <Button data-testid="anchor" render={<a href="#top" />}>
+          맨 위로
+        </Button>
+        <Button data-testid="link-disabled" render={<Link href="/settings" />} disabled>
+          설정
+        </Button>
+        <Button data-testid="anchor-loading" render={<a href="#top" />} loading>
+          맨 위로
+        </Button>
+      </div>,
+    );
+    expect(cursorOf("link")).toBe("pointer");
+    expect(cursorOf("anchor")).toBe("pointer");
+    expect(cursorOf("link-disabled")).toBe("not-allowed");
+    expect(cursorOf("anchor-loading")).toBe("wait");
+  });
+});
+
 describe("disabled", () => {
   test("네이티브 disabled를 쓰고 클릭되지 않으며 cursor가 not-allowed다", async () => {
     const onClick = vi.fn();

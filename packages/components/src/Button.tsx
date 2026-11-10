@@ -202,6 +202,9 @@ export function Button({
     disabled ? disabledClass[variant] : colorClass[variant][color],
     interactive ? interactionClass[variant][color] : undefined,
     interactive && !noPressScale ? pressScaleClass : undefined,
+    // 커서: 활성 pointer, 로딩 wait, 비활성 not-allowed(disabledClass). Tailwind 4 preflight는 button 커서를
+    // 브라우저 기본값(default)으로 두므로 직접 붙인다. 링크로 렌더해도 같은 규칙이다.
+    interactive ? "cursor-pointer" : undefined,
     showSpinner ? "cursor-wait" : undefined,
   ]
     .filter(Boolean)
