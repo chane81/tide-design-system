@@ -39,6 +39,8 @@ export default function Page() {
         저장
       </Button>
       <Button render={<Link href="/settings" />}>설정</Button>
+      {/* 앱 브랜드 계열을 Button color로 쓴다(augmentation은 colors.ts). */}
+      <Button color="brand">브랜드 버튼</Button>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

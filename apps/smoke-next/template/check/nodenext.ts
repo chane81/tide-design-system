@@ -25,6 +25,7 @@ const props: VisuallyHiddenProps = { children: "텍스트" };
 const anchor: "#3183f5" = color.blue[500];
 const buttonProps: ButtonProps = { variant: "subtle", color: "danger", size: "lg", loading: true };
 const fill: FillVariant = "ghost";
+const brandButton: ButtonProps = { color: "brand", variant: "outline" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -48,4 +49,5 @@ export const values = [
   Button,
   buttonProps,
   fill,
+  brandButton,
 ] as const;

@@ -1,9 +1,11 @@
 // Button 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 13).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
+import { color } from "@tide-tds/foundation";
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import NextLink from "next/link.js";
 import type { ReactNode } from "react";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
@@ -12,6 +14,19 @@ import { Button, type ButtonProps } from "./Button.tsx";
 // nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
 // 두 경우 모두 Link Component를 꺼낸다.
 const Link = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+
+// 앱 브랜드 계열을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 40).
+// 테스트 안에서는 interface를 선언한 foundation을 넓힌다. 앱이 `@tide-tds/components`를 넓히는 경우는 smoke가 본다.
+declare module "@tide-tds/foundation" {
+  interface ColorRegistry {
+    brand: true;
+  }
+}
+
+function rgb(hex: string): string {
+  const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
@@ -188,11 +203,155 @@ describe("스타일 축", () => {
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {
     // @ts-expect-error -- variant는 채움 방식 4개만 받는다.
     const a: ButtonProps = { variant: "link" };
-    // @ts-expect-error -- color는 Role 6개만 받는다.
-    const b: ButtonProps = { color: "secondary" };
+    // @ts-expect-error -- color는 등록된 색 이름(Role, 색 계열, augmentation한 앱 계열)만 받는다.
+    const b: ButtonProps = { color: "purple" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다.
     const c: ButtonProps = { size: "xl" };
-    expect([a, b, c]).toHaveLength(3);
+    // 색 계열과 augmentation한 앱 계열은 타입을 통과한다.
+    const d: ButtonProps[] = [{ color: "gray" }, { color: "cyan" }, { color: "brand" }];
+    expect([a, b, c, ...d]).toHaveLength(6);
+  });
+});
+
+describe("색 이름(data-color)", () => {
+  // 색 계열은 Theme 블록이 정한 계열 변수(--tide-<계열>-<슬롯>)를 accent 슬롯으로 쓴다(ADR 0011).
+  const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+  const slotsOf = (variant: NonNullable<ButtonProps["variant"]>) => {
+    switch (variant) {
+      case "solid":
+        return { bg: "solid", text: "on-solid", border: null };
+      case "subtle":
+        return { bg: "subtle", text: "text", border: null };
+      case "outline":
+        return { bg: null, text: "text", border: "border" };
+      case "ghost":
+        return { bg: null, text: "text", border: null };
+    }
+  };
+
+  test.each(
+    (["solid", "subtle", "outline", "ghost"] as const).flatMap((v) =>
+      families.map((f) => [v, f] as const),
+    ),
+  )("%s × %s는 그 계열 변수를 쓴다", async (variant, family) => {
+    if (forcedColors()) return;
+    await render(
+      <div data-theme="light">
+        <Button variant={variant} color={family}>
+          저장
+        </Button>
+      </div>,
+    );
+    const style = getComputedStyle(page.getByRole("button").element());
+    const slot = slotsOf(variant);
+    expect(style.backgroundColor).toBe(
+      slot.bg ? await resolve("backgroundColor", `var(--tide-${family}-${slot.bg})`) : transparent,
+    );
+    expect(style.color).toBe(await resolve("color", `var(--tide-${family}-${slot.text})`));
+    expect(style.borderTopColor).toBe(
+      slot.border
+        ? await resolve("borderColor", `var(--tide-${family}-${slot.border})`)
+        : transparent,
+    );
+  });
+
+  test("루트에 data-color를 항상 붙이고(기본 primary), 바깥 data-color를 물려받지 않는다", async () => {
+    await render(
+      <div data-color="danger">
+        <Button data-testid="default">저장</Button>
+        <Button data-testid="blue" color="blue">
+          저장
+        </Button>
+      </div>,
+    );
+    const element = page.getByTestId("default").element();
+    expect(element).toHaveAttribute("data-color", "primary");
+    expect(page.getByTestId("blue").element()).toHaveAttribute("data-color", "blue");
+    expect(getComputedStyle(element).getPropertyValue("--tide-accent-solid").trim()).toBe(
+      color.blue[600],
+    );
+  });
+
+  test("dark Theme에서 subtle은 계열 dark 값이고 neutral은 gray와 다르다", async () => {
+    await render(
+      <div data-theme="dark">
+        <Button data-testid="blue" variant="subtle" color="blue">
+          저장
+        </Button>
+        <Button data-testid="neutral" variant="subtle" color="neutral">
+          저장
+        </Button>
+        <Button data-testid="gray" variant="subtle" color="gray">
+          저장
+        </Button>
+      </div>,
+    );
+    const subtle = (testId: string): string =>
+      getComputedStyle(page.getByTestId(testId).element())
+        .getPropertyValue("--tide-accent-subtle")
+        .trim();
+    // 변수 값은 forced-colors에서도 바뀌지 않는다.
+    expect(subtle("blue")).toBe(color.blue[950]);
+    expect(subtle("neutral")).toBe(color.gray[900]);
+    expect(subtle("gray")).toBe(color.gray[950]);
+    if (!forcedColors()) {
+      expect(getComputedStyle(page.getByTestId("blue").element()).backgroundColor).toBe(
+        rgb(color.blue[950]),
+      );
+    }
+  });
+
+  describe("앱 브랜드 계열", () => {
+    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"로 앱 계열을 쓰고, Button 코드는 그대로다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+
+      await render(
+        <div>
+          <Button data-testid="solid" color="brand">
+            브랜드
+          </Button>
+          <div data-theme="dark">
+            <Button data-testid="dark" variant="subtle" color="brand">
+              브랜드
+            </Button>
+          </div>
+        </div>,
+      );
+      const solid = page.getByTestId("solid").element();
+      expect(solid).toHaveAttribute("data-color", "brand");
+      expect(getComputedStyle(solid).getPropertyValue("--tide-accent-solid").trim()).toBe(
+        "#7c3aed",
+      );
+      if (!forcedColors()) {
+        expect(getComputedStyle(solid).backgroundColor).toBe(rgb("#7c3aed"));
+        expect(getComputedStyle(solid).color).toBe(rgb(color.white));
+        expect(getComputedStyle(page.getByTestId("dark").element()).backgroundColor).toBe(
+          rgb("#2e1065"),
+        );
+      }
+    });
   });
 
   test("transition-colors는 Tide 기본값(fast 150ms)이다", async () => {
