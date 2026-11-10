@@ -4,7 +4,9 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # Theme 전환
 
-Tide의 Theme은 light와 dark 둘입니다. `data-theme` 속성 하나로 바꿉니다. Tide는 ThemeProvider나 Theme 전환 함수를 배포하지 않습니다. 앱은 속성 값만 바꾸면 되고, 이 페이지의 코드는 그대로 옮겨 쓸 수 있는 예시입니다.
+light와 dark Theme을 `data-theme` 속성 하나로 바꾸는 방법입니다.
+
+Tide는 ThemeProvider나 Theme 전환 함수를 배포하지 않습니다. 이 페이지의 코드는 그대로 옮겨 쓸 수 있는 예시입니다.
 
 ## 속성 하나로 바꾸기
 
@@ -20,7 +22,7 @@ Tide의 Theme은 light와 dark 둘입니다. `data-theme` 속성 하나로 바�
 
 ## 요소 단위 Theme
 
-`data-theme`은 `<html>`이 아닌 요소에도 줄 수 있습니다. 그 요소 안쪽만 그 Theme이 됩니다. 페이지 일부만 다른 Theme으로 보여 줄 때 씁니다.
+페이지 일부만 다른 Theme으로 보여 주려면 그 요소에 `data-theme`을 줍니다. 그 요소 안쪽만 그 Theme이 됩니다.
 
 ```tsx
 <main>
@@ -31,15 +33,17 @@ Tide의 Theme은 light와 dark 둘입니다. `data-theme` 속성 하나로 바�
 </main>
 ```
 
-영역에는 배경과 글자색 class(`bg-canvas text-default`)를 함께 줍니다. 속성만 주면 영역 안의 Component와 Token class는 바뀌지만, 바깥에서 물려받은 배경과 글자색은 그대로 남습니다.
-
-`dark:` variant는 조상 중 하나라도 `data-theme="dark"`이면 적용됩니다. 그래서 dark 페이지 안에 둔 light 영역에서도 `dark:` class가 적용됩니다. 영역 단위로 Theme을 섞는다면 `dark:` 대신 Semantic Token class를 씁니다. Semantic Token은 가장 가까운 `data-theme`을 따릅니다.
+- 영역에는 배경과 글자색 class(`bg-canvas text-default`)를 함께 줍니다. 속성만 주면 영역 안의 Component와 Token class는 바뀌지만, 바깥에서 물려받은 배경과 글자색은 그대로 남습니다.
+- 영역 단위로 Theme을 섞는다면 `dark:` 대신 Semantic Token class를 씁니다. Semantic Token은 가장 가까운 `data-theme`을 따르지만, `dark:`는 조상 중 하나라도 `data-theme="dark"`이면 적용되어 dark 페이지 안의 light 영역에서도 켜집니다.
 
 ## OS 설정을 따를지는 앱이 정합니다
 
 Tide는 OS의 다크 모드 설정(`prefers-color-scheme`)을 읽지 않습니다. `data-theme`이 없으면 OS가 dark여도 light입니다. OS 설정을 따를지, 사용자가 고른 Theme을 기억할지는 앱이 정합니다.
 
-서버는 사용자의 선택을 모른 채 렌더하므로, 브라우저가 화면을 그리기 전에 `data-theme`을 정해야 깜빡임이 없습니다. Next.js 공식 가이드([How to prevent flash before hydration](https://nextjs.org/docs/app/guides/preventing-flash-before-hydration))처럼 root layout의 `<head>`에 인라인 스크립트를 둡니다. 아래 예시는 저장된 선택이 있으면 그것을, 없으면 OS 설정을 따릅니다. OS 설정을 따르지 않으려면 `matchMedia` 부분을 지우고 `"light"`를 기본값으로 둡니다.
+깜빡임을 막으려면 브라우저가 화면을 그리기 전에 `data-theme`을 정합니다. 서버는 사용자의 선택을 모른 채 렌더하기 때문입니다. Next.js 공식 가이드([How to prevent flash before hydration](https://nextjs.org/docs/app/guides/preventing-flash-before-hydration))처럼 root layout의 `<head>`에 인라인 스크립트를 둡니다.
+
+- 아래 예시는 저장된 선택이 있으면 그것을, 없으면 OS 설정을 따릅니다.
+- OS 설정을 따르지 않으려면 `matchMedia` 부분을 지우고 `"light"`를 기본값으로 둡니다.
 
 ```tsx
 // app/layout.tsx
@@ -73,7 +77,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ## 전환 순간에는 transition을 끕니다
 
-Component에는 hover 같은 상태 변화를 위한 transition이 있습니다. 색 전환은 `transition-colors`이고 시간은 `duration-fast`(`--tide-duration-fast`, 150ms)입니다([움직임](?path=/docs/foundation-움직임--docs)). Theme을 바꿀 때 이 transition이 그대로 돌면 요소마다 색이 따로 천천히 바뀌어 화면이 어수선해집니다. 바꾸는 순간에만 transition을 끄면 모든 색이 한꺼번에 바뀝니다.
+바꾸는 순간에만 transition을 끄면 모든 색이 한꺼번에 바뀝니다. 끄지 않으면 Component의 hover용 색 전환(`transition-colors`, `duration-fast` 150ms, [움직임](?path=/docs/foundation-움직임--docs))이 그대로 돌아, 요소마다 색이 따로 바뀌어 어수선합니다.
 
 ```ts
 // theme.ts — 사용자가 Theme을 고를 때 부르는 함수(클라이언트에서만 실행)
