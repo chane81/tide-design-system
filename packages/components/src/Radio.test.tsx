@@ -1,13 +1,21 @@
 // Radio·RadioGroup의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 16).
 // 화살표 이동과 하나만 선택되는 동작은 네이티브 라디오가 맡으므로, 같은 name이 넘어가는지와 실제 키 동작을 단언한다.
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import { useState, type ReactElement } from "react";
-import { describe, expect, test, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Field } from "./Field.tsx";
 import { Radio, type RadioProps } from "./Radio.tsx";
 import { RadioGroup } from "./RadioGroup.tsx";
+
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+declare module "@tide-tds/foundation" {
+  interface RoleRegistry {
+    brand: true;
+  }
+}
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
@@ -264,12 +272,16 @@ describe("모양", () => {
     expect(getComputedStyle(input).borderTopLeftRadius).toBe("9999px");
   });
 
-  test("value는 필수이고, 지원하지 않는 size는 타입 오류다", () => {
+  test("value는 필수이고, 지원하지 않는 size·color는 타입 오류다", () => {
     // @ts-expect-error value가 없다.
     const missing: RadioProps = {};
     // @ts-expect-error lg는 Radio size가 아니다.
     const large: RadioProps = { value: "a", size: "lg" };
-    expect([missing, large]).toHaveLength(2);
+    // @ts-expect-error 색 계열 이름은 장식·분류 Component용이라 Radio는 받지 않는다(ADR 0016).
+    const blue: RadioProps = { value: "a", color: "blue" };
+    // augmentation한 앱 Role은 타입을 통과한다.
+    const brand: RadioProps = { value: "a", color: "brand" };
+    expect([missing, large, blue, brand]).toHaveLength(4);
   });
 
   test("선택하면 accent solid 배경·경계와 on-solid 점이 된다", async () => {
@@ -287,6 +299,48 @@ describe("모양", () => {
     expect(getComputedStyle(input).backgroundColor).toBe(resolve("var(--tide-bg-success-solid)"));
     expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-success)"));
     expect(getComputedStyle(dot(input)).color).toBe(resolve("var(--tide-text-on-solid)"));
+  });
+
+  describe("앱 Role", () => {
+    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"로 앱 Role을 쓰고, Radio 코드는 그대로다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+
+      await render(
+        <div data-theme="light">
+          <Radio value="a" color="brand" defaultChecked>
+            브랜드
+          </Radio>
+        </div>,
+      );
+      const input = page.getByRole("radio").element();
+      expect(input.closest("label")).toHaveAttribute("data-color", "brand");
+      if (forcedColors()) return;
+      await settle();
+      expect(getComputedStyle(input).backgroundColor).toBe(resolve("#7c3aed"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("#7c3aed"));
+    });
   });
 
   test("label 글자에 올리면 선택됨은 solid-hover, 선택 전은 subtle 배경이 된다", async () => {
@@ -307,6 +361,39 @@ describe("모양", () => {
     expect(
       getComputedStyle(page.getByRole("radio", { name: "빠른" }).element()).backgroundColor,
     ).toBe(resolve("var(--tide-bg-primary-subtle)"));
+  });
+
+  test("누르면 hover보다 한 단계 진한 -active 배경이다(선택됨 solid-active, 선택 전 subtle-active)", async () => {
+    await render(
+      <div data-theme="light">
+        <RadioGroup aria-label="배송" defaultValue="normal">
+          <Radio value="normal">
+            <span data-testid="normal">일반</span>
+          </Radio>
+          <Radio value="fast">
+            <span data-testid="fast">빠른</span>
+          </Radio>
+        </RadioGroup>
+      </div>,
+    );
+    const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
+    // 값은 누르는 동안(떼어서 선택이 바뀌기 전) 읽는다.
+    const pressed = async (testId: string, name: string): Promise<string> => {
+      await commands.mouseDownOn(testId);
+      await wait();
+      const value = getComputedStyle(page.getByRole("radio", { name }).element()).backgroundColor;
+      await commands.mouseUp();
+      return value;
+    };
+    const checked = await pressed("normal", "일반");
+    // 일반을 눌렀다 떼도 선택은 일반 그대로라 빠른은 선택 전이다.
+    const unchecked = await pressed("fast", "빠른");
+    if (forcedColors()) {
+      expect([checked, unchecked]).toEqual([resolve("Highlight"), resolve("Canvas")]);
+      return;
+    }
+    expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));
+    expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
   });
 
   test("키보드 포커스에 focus-ring이 보인다", async () => {

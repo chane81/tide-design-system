@@ -1,14 +1,22 @@
 // Checkbox·CheckboxGroup의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 16).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 배경이 Canvas로 바뀌므로
 // 체크 표시 아이콘이 상자 배경과 다른 색(시스템 글자색)으로 보이는지를 계산값으로 단언한다.
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import { useState, type ReactElement } from "react";
-import { describe, expect, test, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Checkbox, type CheckboxProps } from "./Checkbox.tsx";
 import { CheckboxGroup } from "./CheckboxGroup.tsx";
 import { Field } from "./Field.tsx";
+
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+declare module "@tide-tds/foundation" {
+  interface RoleRegistry {
+    brand: true;
+  }
+}
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
@@ -235,10 +243,14 @@ describe("크기", () => {
     await expect.element(checkbox).toBeChecked();
   });
 
-  test("지원하지 않는 size는 타입 오류다", () => {
+  test("지원하지 않는 size·color는 타입 오류다", () => {
     // @ts-expect-error lg는 Checkbox size가 아니다.
     const props: CheckboxProps = { size: "lg" };
-    expect(props.size).toBe("lg");
+    // @ts-expect-error 색 계열 이름은 장식·분류 Component용이라 Checkbox는 받지 않는다(ADR 0016).
+    const blue: CheckboxProps = { color: "blue" };
+    // augmentation한 앱 Role은 타입을 통과한다.
+    const brand: CheckboxProps = { color: "brand" };
+    expect([props, blue, brand]).toHaveLength(3);
   });
 });
 
@@ -276,6 +288,48 @@ describe("색", () => {
     const style = getComputedStyle(page.getByRole("checkbox").element());
     expect(style.backgroundColor).toBe(resolve("var(--tide-bg-canvas)"));
     expect(style.borderTopColor).toBe(resolve("var(--tide-border-strong)"));
+  });
+
+  describe("앱 Role", () => {
+    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"로 앱 Role을 쓰고, Checkbox 코드는 그대로다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+
+      await render(
+        <div data-theme="light">
+          <Checkbox color="brand" defaultChecked>
+            브랜드
+          </Checkbox>
+        </div>,
+      );
+      const input = page.getByRole("checkbox").element();
+      expect(input.closest("label")).toHaveAttribute("data-color", "brand");
+      if (forcedColors()) return;
+      await settle();
+      expect(getComputedStyle(input).backgroundColor).toBe(resolve("#7c3aed"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("#7c3aed"));
+    });
   });
 });
 
@@ -318,6 +372,47 @@ describe("hover", () => {
     expect(getComputedStyle(box("일부")).backgroundColor).toBe(
       resolve("var(--tide-bg-primary-solid-hover)"),
     );
+  });
+
+  test("누르면 hover보다 한 단계 진한 -active 배경이다(체크됨 solid-active, 체크 전 subtle-active)", async () => {
+    await render(
+      <div data-theme="light" className="flex flex-col gap-4">
+        <Checkbox defaultChecked>
+          <span data-testid="checked">체크됨</span>
+        </Checkbox>
+        <Checkbox>
+          <span data-testid="unchecked">체크 전</span>
+        </Checkbox>
+        <Checkbox indeterminate>
+          <span data-testid="indeterminate">일부</span>
+        </Checkbox>
+      </div>,
+    );
+    const pressed = async (testId: string, name: string): Promise<string> => {
+      await commands.mouseDownOn(testId);
+      await wait();
+      const value = getComputedStyle(
+        page.getByRole("checkbox", { name }).element(),
+      ).backgroundColor;
+      await commands.mouseUp();
+      return value;
+    };
+    const checked = await pressed("checked", "체크됨");
+    const unchecked = await pressed("unchecked", "체크 전");
+    const indeterminate = await pressed("indeterminate", "일부");
+    // 값은 누르는 동안(떼어서 토글되기 전) 읽는다.
+    if (forcedColors()) {
+      // forced-colors에서는 누름에도 시스템 색 그대로다.
+      expect([checked, unchecked, indeterminate]).toEqual([
+        resolve("Highlight"),
+        resolve("Canvas"),
+        resolve("Highlight"),
+      ]);
+      return;
+    }
+    expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));
+    expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
+    expect(indeterminate).toBe(resolve("var(--tide-bg-primary-solid-active)"));
   });
 
   test("비활성은 hover에도 바뀌지 않는다", async () => {
