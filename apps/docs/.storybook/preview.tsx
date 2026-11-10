@@ -41,6 +41,8 @@ const preview: Preview = {
   decorators: [withTheme],
   initialGlobals: {
     theme: DEFAULT_THEME,
+    // 기본 viewport는 desktop(1280×1024)이다. storybook 10.6.6 기본 목록 MINIMAL_VIEWPORTS의 `desktop` 키.
+    viewport: { value: "desktop", isRotated: false },
   },
   parameters: {
     // 사이드바 순서(storybook 10.6.6 `parameters.options.storySort`). order에 없는 항목은 method로 정렬한다.
