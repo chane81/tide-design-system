@@ -1,5 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Field, Input, Textarea } from "@tide-tds/components";
+import {
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  Input,
+  Radio,
+  RadioGroup,
+  Textarea,
+} from "@tide-tds/components";
 import { useState, type ReactElement } from "react";
 
 // Field 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
@@ -20,6 +29,7 @@ const meta = {
     required: { control: "boolean", table: { defaultValue: { summary: "false" } } },
     disabled: { control: "boolean", table: { defaultValue: { summary: "false" } } },
     htmlFor: { control: "text", table: { defaultValue: { summary: "자동 생성" } } },
+    group: { control: false, table: { defaultValue: { summary: "false" } } },
     children: { control: false, table: { type: { summary: "ReactNode" } } },
   },
   decorators: [
@@ -148,4 +158,29 @@ export const DontPlaceholderLabel: Story = {
   // 의도적으로 이름이 없는 입력창이라 a11y 검사를 끈다.
   parameters: { a11y: { test: "off" } },
   render: () => <Input type="search" placeholder="검색어" />,
+};
+
+/** 묶음(CheckboxGroup·RadioGroup)에 붙인다. `group`이면 label이 묶음의 이름이 된다. */
+export const WithGroup: Story = {
+  name: "묶음",
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <Field label="배송 방법" description="주문마다 고릅니다." group>
+        <RadioGroup name="shipping" defaultValue="normal">
+          <Radio value="normal">일반 배송</Radio>
+          <Radio value="fast">빠른 배송</Radio>
+        </RadioGroup>
+      </Field>
+      <Field label="알림 받을 곳" error="하나 이상 고르세요." group>
+        <CheckboxGroup>
+          <Checkbox name="notify" value="email">
+            이메일
+          </Checkbox>
+          <Checkbox name="notify" value="sms">
+            문자
+          </Checkbox>
+        </CheckboxGroup>
+      </Field>
+    </div>
+  ),
 };

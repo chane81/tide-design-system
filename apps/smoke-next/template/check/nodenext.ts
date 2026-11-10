@@ -1,14 +1,22 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
   cn,
   Field,
   IconButton,
   Input,
   Link,
+  Radio,
+  RadioGroup,
   Textarea,
   VisuallyHidden,
   type ButtonProps,
+  type CheckboxGroupProps,
+  type CheckboxProps,
+  type RadioGroupProps,
+  type RadioProps,
   type FieldProps,
   type IconButtonProps,
   type InputProps,
@@ -47,6 +55,18 @@ const inputProps: InputProps = { size: "lg", invalid: true, type: "date" };
 const textareaProps: TextareaProps = { size: "sm", rows: 4 };
 // @ts-expect-error Input은 xs를 받지 않는다.
 const xsInput: InputProps = { size: "xs" };
+const checkboxProps: CheckboxProps = { size: "sm", color: "success", indeterminate: true };
+const checkboxGroupProps: CheckboxGroupProps = { orientation: "horizontal", invalid: true };
+const radioProps: RadioProps = { value: "fast", size: "md" };
+const radioGroupProps: RadioGroupProps = {
+  defaultValue: "fast",
+  onValueChange: (value: string) => value,
+};
+// @ts-expect-error Radio는 value가 필수다.
+const radioWithoutValue: RadioProps = {};
+// @ts-expect-error Checkbox color는 Role만 받는다(색 계열 이름은 받지 않는다).
+const grayCheckbox: CheckboxProps = { color: "gray" };
+const groupField: FieldProps = { label: "배송", group: true, children: null };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -91,4 +111,15 @@ export const values = [
   inputProps,
   textareaProps,
   xsInput,
+  Checkbox,
+  CheckboxGroup,
+  Radio,
+  RadioGroup,
+  checkboxProps,
+  checkboxGroupProps,
+  radioProps,
+  radioGroupProps,
+  radioWithoutValue,
+  grayCheckbox,
+  groupField,
 ] as const;

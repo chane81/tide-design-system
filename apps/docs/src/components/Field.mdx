@@ -54,6 +54,12 @@ import * as FieldStories from "./Field.stories.tsx";
 
 <Canvas of={FieldStories.WithTextarea} />
 
+### 묶음에 붙이기
+
+CheckboxGroup·RadioGroup을 감쌀 때는 `group`을 줍니다. label이 묶음의 이름이 되고, 설명·오류는 묶음에 연결됩니다.
+
+<Canvas of={FieldStories.WithGroup} />
+
 ### 폼 만들기
 
 Field를 세로로 쌓습니다. 값은 네이티브 form으로 그대로 제출됩니다.
@@ -101,7 +107,7 @@ import { Button, Field, Input, Textarea } from "@tide-tds/components";
 
 ### 기본 제공
 
-- 이름: label이 `<label for>`로 입력창 이름이 됩니다. label을 누르면 입력창에 포커스가 갑니다.
+- 이름: label이 `<label for>`로 입력창 이름이 됩니다. label을 누르면 입력창에 포커스가 갑니다. `group`이면 묶음이 `aria-labelledby`로 label을 이름으로 씁니다.
 - 설명·오류: `aria-describedby`로 연결되어 설명, 오류 순서로 읽힙니다.
 - 오류 상태: 입력창에 `aria-invalid="true"`가 붙습니다. 색과 함께 아이콘과 메시지로도 보입니다.
 - 포커스: 오류 상태에서도 포커스 중에는 포커스 표시가 보이고 오류 메시지는 남습니다.

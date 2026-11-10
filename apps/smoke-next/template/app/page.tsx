@@ -3,11 +3,15 @@
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
   cn,
   Field,
   IconButton,
   Input,
   Link as TideLink,
+  Radio,
+  RadioGroup,
   Spinner,
   Textarea,
   Typography,
@@ -39,7 +43,7 @@ export default function Page() {
       <header className="sticky top-0 z-sticky transition-colors">
         <p className="transition-opacity duration-normal ease-out">헤더</p>
       </header>
-      {/* Spinner는 서버 컴포넌트다. 회전 class(animate-spin)는 이 파일에 쓰지 않는다. */}
+      {/* Spinner는 서버 컴포넌트다. 회전 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
       <Spinner size="sm" aria-label="불러오는 중" />
       {/* 앱 브랜드 색(앱 Role)을 data-color로 고르고 accent Utility class로 칠한다. */}
       <p data-color={brandColor} className="bg-accent-solid text-accent-on-solid">
@@ -66,13 +70,31 @@ export default function Page() {
         </TideLink>
       </p>
       {/* Field는 서버 컴포넌트로 client 모듈의 context provider를 렌더하고, Input·Textarea(client)가 값을 읽는다.
-          입력창 내부 class(aria-invalid:border-danger, placeholder:text-muted)는 이 파일에 쓰지 않는다. */}
+          입력창 내부 class는 이 파일에 쓰지 않는다(주석도 Tailwind 스캔 대상이라 이름도 적지 않는다). */}
       <form>
         <Field label="이메일" description="회사 메일" error="형식이 아닙니다." required>
           <Input name="email" type="email" size="sm" placeholder="tide@example.com" />
         </Field>
         <Field label="메모">
           <Textarea name="memo" />
+        </Field>
+        {/* 묶음은 Field group 안에 둔다. CheckboxGroup·RadioGroup·Checkbox·Radio는 client Component다.
+            상자 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+        <Field label="배송" description="하나를 고릅니다." error="배송을 고르세요." group required>
+          <RadioGroup name="shipping" defaultValue="fast">
+            <Radio value="normal">일반</Radio>
+            <Radio value="fast">빠른</Radio>
+          </RadioGroup>
+        </Field>
+        <Field label="알림" group>
+          <CheckboxGroup>
+            <Checkbox name="notify" value="email" defaultChecked>
+              이메일
+            </Checkbox>
+            <Checkbox name="notify" value="sms" indeterminate>
+              문자
+            </Checkbox>
+          </CheckboxGroup>
         </Field>
       </form>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}

@@ -1,0 +1,107 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+import { Radio } from "@tide-tds/components";
+
+import * as RadioStories from "./Radio.stories.tsx";
+
+<Meta of={RadioStories} />
+
+# Radio
+
+정해진 선택지 몇 개 중 하나만 고를 때 쓰는 네이티브 라디오 버튼 묶음입니다.
+
+<Canvas of={RadioStories.Basic} />
+
+## 사용 시점
+
+- 2~5개 선택지를 모두 보여 주고 하나를 고르게 할 때
+- 고르기 전에 선택지를 비교해야 할 때
+
+## 쓰지 않을 때
+
+- 선택지가 많으면 Select를 씁니다.
+- 켜고 끄는 값 하나는 Checkbox나 Switch를 씁니다.
+- 여러 개를 고르면 Checkbox를 씁니다.
+
+## 예시
+
+### 크기 바꾸기
+
+| `size`     | 원   | 글자 | 누르는 영역 |
+| ---------- | ---- | ---- | ----------- |
+| `sm`       | 16px | 14px | 24×24px     |
+| `md`(기본) | 20px | 16px | 24×24px     |
+
+`size`는 Radio마다 줍니다.
+
+<Canvas of={RadioStories.Sizes} />
+
+### 색 고르기
+
+`color`로 선택한 원 색을 Role 중에서 고릅니다. 기본값은 `primary`입니다.
+
+<Canvas of={RadioStories.Colors} />
+
+### 가로로 늘어놓기
+
+<Canvas of={RadioStories.Horizontal} />
+
+### 값을 앱이 정하기
+
+`value`와 `onValueChange`를 주면 제어 묶음이 됩니다. `defaultValue`만 주면 브라우저가 선택을 가집니다.
+
+<Canvas of={RadioStories.Controlled} />
+
+### 오류·필수 보이기
+
+Field의 `error`는 묶음에 연결되고 각 Radio 경계가 danger 색이 됩니다. `required`면 고르지 않은 채로 제출할 수 없습니다.
+
+<Canvas of={RadioStories.Invalid} />
+
+### 비활성으로 두기
+
+묶음 전체는 RadioGroup이나 Field의 `disabled`, 항목 하나는 Radio의 `disabled`로 끕니다.
+
+<Canvas of={RadioStories.Disabled} />
+
+## Do/Don't
+
+### Do: 기본값을 하나 골라 둔다
+
+가장 흔한 선택을 `defaultValue`로 둡니다. 사용자는 바꿀 때만 누릅니다.
+
+<Canvas of={RadioStories.DoDefault} />
+
+### Don't: 선택지 하나에 쓴다
+
+한 번 고르면 끌 수 없습니다. 켜고 끄는 값은 Checkbox를 씁니다.
+
+<Canvas of={RadioStories.DontSingleOption} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: RadioGroup은 `role="radiogroup"`이고 Field label로 이름이 붙습니다. 각 항목은 네이티브 라디오입니다.
+- 키보드: Tab은 묶음에 한 번만 멈추고, 화살표 키로 옮기며 고릅니다. 고르기 전에는 Space로 고릅니다.
+- 이름 공유: 안의 Radio가 같은 `name`을 써서 form에 고른 값 하나가 제출됩니다.
+- 오류·필수: 각 Radio에 `aria-invalid="true"`, `required`가 붙고, 묶음에 `aria-required`가 붙습니다.
+- 포커스 표시: 키보드 포커스에 원 둘레로 포커스 링이 보입니다.
+- 누르는 영역: 원 크기와 상관없이 24×24px 이상입니다.
+- 고대비 모드(forced-colors): 경계와 선택 점이 시스템 색으로 보입니다.
+
+### 앱이 할 일
+
+- Field 없이 쓰면 RadioGroup에 `aria-label`을 줍니다.
+- 선택지 글자는 짧게 쓰고, 설명이 길면 Field `description`에 씁니다.
+
+## Props
+
+RadioGroup은 `div`의 props를 모두 받습니다. `ref`·`className`은 루트 `div`에 붙고, 루트에 `data-invalid`, `data-disabled`가 붙습니다.
+
+<ArgTypes of={RadioStories} />
+
+### Radio
+
+`input`의 props를 모두 받고 `value`는 필수입니다. `ref`와 나머지 props는 `input`에, `className`은 루트 `label`에 붙습니다. 직접 준 `disabled`, `invalid`가 묶음 값보다 이깁니다.
+
+<ArgTypes of={Radio} />

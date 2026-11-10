@@ -1,0 +1,115 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+import { CheckboxGroup } from "@tide-tds/components";
+
+import * as CheckboxStories from "./Checkbox.stories.tsx";
+
+<Meta of={CheckboxStories} />
+
+# Checkbox
+
+켜고 끄는 값 하나나, 여러 개를 함께 고르는 선택지에 쓰는 네이티브 체크박스입니다.
+
+<Canvas of={CheckboxStories.Basic} />
+
+## 사용 시점
+
+- 약관 동의처럼 켜고 끄는 값 하나를 받을 때
+- 선택지 여러 개 중 몇 개든 고를 때(CheckboxGroup)
+- 표에서 행을 고를 때
+
+## 쓰지 않을 때
+
+- 하나만 고르는 선택지는 Radio를 씁니다.
+- 누르는 즉시 설정이 바뀌면 Switch를 씁니다.
+
+## 예시
+
+### 크기 바꾸기
+
+| `size`     | 상자 | 글자 | 누르는 영역 |
+| ---------- | ---- | ---- | ----------- |
+| `sm`       | 16px | 14px | 24×24px     |
+| `md`(기본) | 20px | 16px | 24×24px     |
+
+<Canvas of={CheckboxStories.Sizes} />
+
+### 색 고르기
+
+`color`로 체크한 상자 색을 Role 중에서 고릅니다. 기본값은 `primary`입니다.
+
+<Canvas of={CheckboxStories.Colors} />
+
+### 일부만 고른 상태 보이기
+
+`indeterminate`를 주면 체크 대신 가로줄이 보입니다. 누르면 브라우저가 이 상태를 지우므로, 앱이 하위 항목으로 다시 계산해 넘깁니다.
+
+<Canvas of={CheckboxStories.Indeterminate} />
+
+### 묶어서 이름 붙이기
+
+`<Field group>` 안에 CheckboxGroup을 둡니다. Field의 label이 묶음의 이름, 설명·오류가 묶음의 설명이 됩니다.
+
+<Canvas of={CheckboxStories.Group} />
+
+`orientation="horizontal"`이면 가로로 늘어놓습니다.
+
+<Canvas of={CheckboxStories.Horizontal} />
+
+### 오류 보이기
+
+Field의 `error`를 주면 각 Checkbox 경계가 danger 색이 되고 메시지가 묶음에 연결됩니다.
+
+<Canvas of={CheckboxStories.Invalid} />
+
+### 비활성으로 두기
+
+<Canvas of={CheckboxStories.Disabled} />
+
+### 글자 없이 쓰기
+
+표의 행 선택처럼 글자를 둘 곳이 없으면 `aria-label`을 줍니다. 누르는 영역은 그대로 24×24px입니다.
+
+<Canvas of={CheckboxStories.WithoutLabel} />
+
+## Do/Don't
+
+### Do: 무엇을 고르는지 문장으로 쓴다
+
+label을 눌러도 체크됩니다. 짧은 단어보다 고른 결과를 알 수 있는 문장이 좋습니다.
+
+<Canvas of={CheckboxStories.DoClearLabel} />
+
+### Don't: 하나만 고르는 선택에 쓴다
+
+둘 다 체크할 수 있어 헷갈립니다. 하나만 고르면 Radio를 씁니다.
+
+<Canvas of={CheckboxStories.DontSingleChoice} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 네이티브 `input type="checkbox"`라 Space로 바뀌고 form에 그대로 제출됩니다.
+- 이름: 옆의 글자가 이름이 됩니다. 글자를 눌러도 바뀝니다.
+- indeterminate: 보조 기술이 「일부 선택」으로 읽습니다. 아이콘은 읽지 않습니다.
+- 묶음: CheckboxGroup은 `role="group"`이고 Field label로 이름이 붙습니다. 오류 상태는 각 Checkbox의 `aria-invalid="true"`로 알립니다.
+- 포커스 표시: 키보드 포커스에 상자 둘레로 포커스 링이 보입니다.
+- 누르는 영역: 상자 크기와 상관없이 24×24px 이상입니다.
+- 고대비 모드(forced-colors): 경계와 체크 표시가 시스템 색으로 보입니다.
+
+### 앱이 할 일
+
+- 글자 없이 쓰면 `aria-label`을 줍니다.
+- 「하나 이상 고르기」 같은 묶음 규칙은 앱이 검사하고 Field `error`로 알립니다. 묶음의 `required`는 label의 `*`만 보입니다.
+
+## Props
+
+`input`의 props를 모두 받습니다. `ref`와 나머지 props는 `input`에, `className`은 루트 `label`에 붙고 기본 class를 이깁니다. 상태는 `checked:`, `indeterminate:`, `disabled:`, `data-invalid:`로 덮어씁니다.
+
+<ArgTypes of={CheckboxStories} />
+
+### CheckboxGroup
+
+`div`의 props를 모두 받습니다. 루트에 `data-invalid`, `data-disabled`가 붙습니다. 안의 Checkbox에 직접 준 `disabled`, `invalid`가 묶음 값보다 이깁니다.
+
+<ArgTypes of={CheckboxGroup} />

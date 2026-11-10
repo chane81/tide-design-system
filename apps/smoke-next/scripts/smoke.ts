@@ -220,6 +220,10 @@ try {
       /placeholder\\:text-muted::placeholder/.test(css),
     "Input 내부 class(aria-invalid:border-danger, placeholder:text-muted)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
+  assert(
+    /checked\\:bg-accent-solid:checked/.test(css) && css.includes(".peer-indeterminate\\:block"),
+    "Checkbox 내부 class(checked:bg-accent-solid, peer-indeterminate:block)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
   // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
   const componentsDist = join(consumerDir, "node_modules/@tide-tds/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
@@ -238,7 +242,17 @@ try {
     }
   }
   // Input·Textarea는 Field context를 읽고, context는 client 모듈이 만든다. Field는 서버 컴포넌트로 남는다(티켓 15).
-  for (const file of ["Input.js", "Textarea.js", "field-context.js"]) {
+  // Checkbox·Radio와 묶음은 Field·묶음 context를 읽으므로 client다(티켓 16).
+  for (const file of [
+    "Input.js",
+    "Textarea.js",
+    "field-context.js",
+    "Checkbox.js",
+    "CheckboxGroup.js",
+    "Radio.js",
+    "RadioGroup.js",
+    "choice-group.js",
+  ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
     }
@@ -266,6 +280,30 @@ try {
     "Field가 prerender한 HTML에서 label for·aria-describedby·aria-invalid·required가 입력창과 연결되지 않았다",
   );
 
+  // Field group(서버 컴포넌트) 안의 RadioGroup이 prerender한 HTML에서 묶음 이름·설명이 연결되고,
+  // 같은 name, 기본 선택, 각 Radio의 aria-invalid·required가 있다(티켓 16).
+  const radioGroup = html && /<div[^>]*role="radiogroup"[^>]*>/.exec(html)?.[0];
+  const groupLabel = radioGroup && /aria-labelledby="([^"]+)"/.exec(radioGroup)?.[1];
+  const groupDescribedBy = radioGroup && /aria-describedby="([^"]+)"/.exec(radioGroup)?.[1];
+  const groupId = radioGroup && /\sid="([^"]+)"/.exec(radioGroup)?.[1];
+  const radios = html ? [...html.matchAll(/<input[^>]*type="radio"[^>]*>/g)].map((m) => m[0]) : [];
+  assert(
+    groupLabel !== undefined &&
+      html?.includes(`<span id="${groupLabel}"`) === true &&
+      groupId !== undefined &&
+      !html.includes(`for="${groupId}"`) &&
+      groupDescribedBy?.split(" ").length === 2 &&
+      radios.length === 2 &&
+      radios.every(
+        (radio) =>
+          radio.includes('name="shipping"') &&
+          /aria-invalid="true"/.test(radio) &&
+          /\srequired=""/.test(radio),
+      ) &&
+      radios.filter((radio) => /\schecked=""/.test(radio)).length === 1,
+    "Field group이 prerender한 HTML에서 radiogroup 이름·설명·name·checked·aria-invalid·required가 연결되지 않았다",
+  );
+
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
   const builtJs = (
@@ -286,6 +324,12 @@ try {
   };
   if (!builtJs.includes(await iconShape("plus-icon.js"))) {
     throw new Error("아이콘 확인 실패: 페이지가 쓴 PlusIcon의 도형이 빌드 결과에 없다");
+  }
+  // Checkbox·Radio 표시 아이콘은 Component가 쓰므로 빌드 결과에 있다.
+  for (const file of ["check-icon.js", "minus-icon.js"]) {
+    if (!builtJs.includes(await iconShape(file))) {
+      throw new Error(`아이콘 확인 실패: Checkbox가 쓰는 ${file}의 도형이 빌드 결과에 없다`);
+    }
   }
   if (builtJs.includes(await iconShape("house-icon.js"))) {
     throw new Error(
