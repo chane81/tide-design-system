@@ -1,0 +1,72 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ShapeStories from "./Shape.stories.tsx";
+
+<Meta of={ShapeStories} />
+
+# 모양과 깊이
+
+radius, 그림자(Elevation), 포커스 표시를 다룹니다. 단계를 적게 두어 Component 사이 모양을 맞춥니다.
+
+## radius
+
+`rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-full` 다섯 단계입니다.
+
+<Canvas of={ShapeStories.Radius} sourceState="none" />
+
+- 조작 요소(버튼, 입력창, Select 트리거 등)는 size와 관계없이 모두 `md`입니다.
+- 안쪽 요소가 바깥 컨테이너보다 더 둥글지 않게 합니다. 바깥과 안쪽 사이 간격이 고르면 **바깥 radius = 안쪽 radius + padding + border**입니다. 그래서 목록(`lg` 8px, border 1px)의 padding은 3px이고 그 안 항목은 `sm`(4px)입니다.
+- 방향별 class(`rounded-t-lg` 등)도 같은 단계를 씁니다.
+
+## 그림자
+
+`shadow-sm`, `shadow-md`, `shadow-lg` 세 단계이고 **raised 표면 층에서만** 씁니다. Card 같은 surface는 그림자 없이 border만 씁니다.
+
+<Canvas of={ShapeStories.Elevation} sourceState="none" />
+
+- 단계마다 가까운 짧은 그림자와 먼 넓은 그림자 두 레이어입니다. 두 레이어 모두 shadow 색 하나를 `color-mix`로 낮춰 씁니다.
+- 같은 class가 Theme에 따라 색만 바뀝니다(light는 gray-950 8%, dark는 black 30%). Component에 Theme 분기를 두지 않습니다. dark에서도 그림자를 그리고, 잘 보이지 않는 경계는 raised의 border가 맡습니다.
+- shadow 색은 class로 고를 수 없습니다.
+
+raised 표면은 두 Theme 모두 border 1px를 둡니다. light는 투명 border, dark는 `border-default`입니다.
+
+```tsx
+<div className="rounded-lg border border-transparent bg-raised shadow-md dark:border-default">
+  …
+</div>
+```
+
+Windows 고대비 모드(forced-colors)는 그림자를 모두 지웁니다. 투명 border는 이 모드에서 시스템 색으로 그려지므로 popover와 dialog의 경계가 남습니다. 그래서 테두리를 `0 0 0 1px` 그림자로 그리지 않습니다.
+
+## 포커스 표시
+
+두 가지를 Utility class로 씁니다. 직접 만든 요소에도 그대로 붙입니다. 색은 `outline-focus`(light blue-600, dark blue-400)입니다.
+
+- `focus-ring`: `outline` 2px, offset 2px. 요소의 radius를 따릅니다. 버튼, 링크, 체크박스처럼 입력창이 아닌 요소에 `focus-visible:focus-ring`으로 씁니다. 키보드로 옮겼을 때만 보이고 마우스로 누를 때는 보이지 않습니다.
+- `focus-field`: offset 없이 border를 focus 색으로 바꾸고 두께를 2px로 보이게 합니다. 늘어난 1px는 안쪽 그림자라서 레이아웃이 흔들리지 않습니다. 입력창과 Select·Combobox 트리거에 `focus:focus-field`로 씁니다. 클릭해도 보입니다.
+
+<Canvas of={ShapeStories.Focus} sourceState="none" />
+
+```tsx
+<button className="rounded-md focus-visible:focus-ring">저장</button>
+<input className="rounded-md border border-default aria-invalid:border-danger focus:focus-field" />
+```
+
+- 오류 입력창(`aria-invalid="true"`)도 포커스 중에는 focus 색이 이깁니다. 오류는 메시지, 아이콘, `aria-invalid`가 계속 알립니다. 오류 상태는 `aria-invalid="true"`로 나타내야 이 규칙이 적용됩니다.
+- `focus-field`는 투명 outline을 함께 둡니다. 평소에는 보이지 않고, 고대비 모드에서 border 색과 그림자가 덮여도 포커스 표시가 남습니다.
+- 목록 안 항목(Menu 항목, Select 옵션)은 ring 대신 배경 강조(highlight)를 씁니다. Component가 직접 그립니다.
+
+## Tailwind 기본값
+
+Tailwind 기본 radius(`rounded`, `rounded-xs`, `rounded-2xl`~`rounded-4xl`)와 그림자(`shadow`, `shadow-2xs`, `shadow-xs`, `shadow-xl`, `shadow-2xl`, `inset-shadow-*`, `drop-shadow-*`, `text-shadow-*`)는 지웠습니다. 기본 그림자는 자기 색(검정)을 써서 Theme과 어긋나기 때문입니다. 값이 0인 `rounded-none`과 `shadow-none`은 남습니다.
+
+`cn`은 radius와 그림자 이름을 알아서, Component에 넘긴 `className="rounded-lg shadow-lg"`가 기본 class를 이깁니다.
+
+## CSS 변수
+
+Tailwind 없이 쓸 때는 `@tide-tds/foundation/tokens.css`의 변수를 씁니다.
+
+- radius: `--tide-rounded-<단계>`. 예: `var(--tide-rounded-md)`
+- 그림자: `--tide-shadow-<단계>`. 예: `box-shadow: var(--tide-shadow-md)`. Theme 블록(`[data-theme]`)마다 선언되어 요소 단위 Theme도 따릅니다.
+- shadow 색: `--tide-shadow-color`
+- 포커스 ring: `--tide-focus-ring-width`(2px), `--tide-focus-ring-offset`(2px)
