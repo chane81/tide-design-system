@@ -131,6 +131,13 @@ try {
     "desktop 내부 class(sr-only)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(!css.includes("--color-red-500"), "Tailwind 기본 팔레트가 남아 있다");
+  assert(
+    css.includes(".text-heading-lg") && css.includes("--tide-text-heading-lg"),
+    "Typography의 텍스트 스타일 class(text-heading-lg)가 없다",
+  );
+  assert(/word-break:\s*keep-all/.test(css), "base CSS의 word-break: keep-all이 없다");
+  assert(css.includes("--tide-font-sans"), "기본 글꼴이 Tide sans 스택을 쓰지 않는다");
+  assert(!/--text-xl\b|--font-serif\b/.test(css), "Tailwind 기본 크기나 font-serif가 남아 있다");
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
