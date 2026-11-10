@@ -243,6 +243,7 @@ try {
   }
   // Input·Textarea는 Field context를 읽고, context는 client 모듈이 만든다. Field는 서버 컴포넌트로 남는다(티켓 15).
   // Checkbox·Radio와 묶음은 Field·묶음 context를 읽으므로 client다(티켓 16).
+  // Switch도 Field context를 읽으므로 client Component다(티켓 17).
   for (const file of [
     "Input.js",
     "Textarea.js",
@@ -252,6 +253,7 @@ try {
     "Radio.js",
     "RadioGroup.js",
     "choice-group.js",
+    "Switch.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -260,6 +262,11 @@ try {
   if (await startsWithUseClient("Field.js")) {
     throw new Error('"use client" 확인 실패: Field.js는 서버 컴포넌트라 지시어가 없어야 한다');
   }
+
+  assert(
+    /peer-checked\\:translate-x-4/.test(css),
+    "Switch 내부 class(peer-checked:translate-x-4)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
   const htmlFiles = await filesUnder(join(consumerDir, ".next/server/app"), ".html");

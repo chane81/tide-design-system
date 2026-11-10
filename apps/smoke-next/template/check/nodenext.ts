@@ -10,6 +10,7 @@ import {
   Link,
   Radio,
   RadioGroup,
+  Switch,
   Textarea,
   VisuallyHidden,
   type ButtonProps,
@@ -21,6 +22,7 @@ import {
   type IconButtonProps,
   type InputProps,
   type LinkProps,
+  type SwitchProps,
   type TextareaProps,
   type Color,
   type ColorFamilyName,
@@ -67,6 +69,16 @@ const radioWithoutValue: RadioProps = {};
 // @ts-expect-error Checkbox color는 Role만 받는다(색 계열 이름은 받지 않는다).
 const grayCheckbox: CheckboxProps = { color: "gray" };
 const groupField: FieldProps = { label: "배송", group: true, children: null };
+const switchProps: SwitchProps = {
+  size: "sm",
+  color: "success",
+  defaultChecked: true,
+  name: "news",
+};
+// @ts-expect-error Switch는 xs를 받지 않는다.
+const xsSwitch: SwitchProps = { size: "xs" };
+// @ts-expect-error Switch color는 Role만 받는다(색 계열 이름은 받지 않는다).
+const graySwitch: SwitchProps = { color: "gray" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -122,4 +134,8 @@ export const values = [
   radioWithoutValue,
   grayCheckbox,
   groupField,
+  Switch,
+  switchProps,
+  xsSwitch,
+  graySwitch,
 ] as const;

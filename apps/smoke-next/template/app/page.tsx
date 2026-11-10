@@ -13,6 +13,7 @@ import {
   Radio,
   RadioGroup,
   Spinner,
+  Switch,
   Textarea,
   Typography,
   VisuallyHidden,
@@ -96,6 +97,11 @@ export default function Page() {
             </Checkbox>
           </CheckboxGroup>
         </Field>
+        {/* Switch는 Field context를 읽는 client Component다. 서버 컴포넌트에서 children label로 쓴다.
+            thumb 이동 class는 이 파일에 쓰지 않는다(이름을 주석에 적어도 Tailwind가 스캔한다). */}
+        <Switch name="news" defaultChecked>
+          소식 받기
+        </Switch>
       </form>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
