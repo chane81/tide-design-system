@@ -9,15 +9,14 @@ import { useState, type ReactElement } from "react";
 
 const variants = ["solid", "subtle", "outline", "ghost"] as const;
 const colors = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
-const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
 const sizes = ["xs", "sm", "md", "lg"] as const;
 
 const union = (values: readonly string[]): string =>
   values.map((value) => `"${value}"`).join(" | ");
 
-// 예시 브랜드 계열을 색 이름 타입에 더한다. 앱도 같은 augmentation을 쓴다(「브랜드 색 더하기」).
+// 예시 앱 Role(brand)을 Role 타입에 더한다. 앱도 같은 augmentation을 쓴다(「브랜드 색 더하기」, ADR 0016).
 declare module "@tide-tds/components" {
-  interface ColorRegistry {
+  interface RoleRegistry {
     brand: true;
   }
 }
@@ -40,9 +39,9 @@ const meta = {
     },
     color: {
       control: "select",
-      options: [...colors, ...families],
+      options: colors,
       table: {
-        type: { summary: "Color", detail: `${union([...colors, ...families])} | 앱이 더한 계열` },
+        type: { summary: "Role", detail: `${union(colors)} | 앱이 더한 Role` },
         defaultValue: { summary: '"primary"' },
       },
     },
@@ -102,25 +101,7 @@ export const Colors: Story = {
   ),
 };
 
-/** 색 계열 6개 × 채움 방식 4개 */
-export const Families: Story = {
-  name: "색 계열",
-  render: (args) => (
-    <div className="flex flex-col gap-3">
-      {families.map((color) => (
-        <div key={color} className="flex flex-wrap items-center gap-3">
-          {variants.map((variant) => (
-            <Button key={variant} {...args} variant={variant} color={color}>
-              {color}
-            </Button>
-          ))}
-        </div>
-      ))}
-    </div>
-  ),
-};
-
-// 예시 브랜드 계열. 앱에서는 `tide-color build brand.ts`로 만든 CSS를 Tide CSS 다음에 불러온다.
+// 예시 앱 Role의 색. 앱에서는 `tide-color build brand.ts`로 만든 CSS를 Tide CSS 다음에 불러온다.
 const brand = defineColorFamily({
   name: "brand",
   scale: {
@@ -139,7 +120,7 @@ const brand = defineColorFamily({
 });
 const brandCss = colorFamilyCss([brand]);
 
-/** 앱 브랜드 계열. `ColorRegistry`에 등록하면 `color="brand"`로 씁니다. */
+/** 앱 Role. `RoleRegistry`에 `brand`를 더하면 `color="brand"`로 씁니다. */
 export const Brand: Story = {
   name: "앱 브랜드 색",
   render: (args) => (

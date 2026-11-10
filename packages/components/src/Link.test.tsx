@@ -1,7 +1,8 @@
 // Link 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 14).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서도 밑줄과 포커스 ring이 남는지 본다.
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import NextLink from "next/link.js";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
@@ -9,6 +10,13 @@ import { Link, type LinkProps } from "./Link.tsx";
 
 // nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
 const Next = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+declare module "@tide-tds/foundation" {
+  interface RoleRegistry {
+    brand: true;
+  }
+}
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
@@ -72,9 +80,8 @@ describe("색 이름(data-color)", () => {
   test.each([
     ["neutral", "var(--tide-text-default)"],
     ["danger", "var(--tide-text-danger)"],
-    ["gray", "var(--tide-gray-text)"],
-    ["cyan", "var(--tide-cyan-text)"],
-  ] as const)("color=%s는 그 색의 text 슬롯을 쓴다", async (color, token) => {
+    ["info", "var(--tide-text-info)"],
+  ] as const)("color=%s는 그 Role의 text 슬롯을 쓴다", async (color, token) => {
     if (forcedColors()) return; // 시스템 색(LinkText)으로 바뀐다.
     await render(
       <div data-theme="light">
@@ -88,11 +95,57 @@ describe("색 이름(data-color)", () => {
     expect(getComputedStyle(element).color).toBe(await resolveColor(token));
   });
 
-  test("지원하지 않는 색 이름은 타입 오류다", () => {
-    // @ts-expect-error -- color는 등록된 색 이름만 받는다.
+  test("Role이 아닌 색 이름은 타입 오류다", () => {
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
     const a: LinkProps = { color: "purple" };
+    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
     const b: LinkProps = { color: "blue", href: "/x" };
-    expect([a, b]).toHaveLength(2);
+    const c: LinkProps = { color: "brand", href: "/x" };
+    expect([a, b, c]).toHaveLength(3);
+  });
+
+  describe("앱 Role", () => {
+    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"는 앱 Role의 text 슬롯을 쓴다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+      await render(
+        <div data-theme="light">
+          <Link href="#a" color="brand">
+            안내
+          </Link>
+        </div>,
+      );
+      const element = page.getByRole("link").element();
+      expect(element).toHaveAttribute("data-color", "brand");
+      // light text 슬롯은 800 단계다.
+      expect(getComputedStyle(element).getPropertyValue("--tide-accent-text").trim()).toBe(
+        "#5b21b6",
+      );
+      if (!forcedColors()) {
+        expect(getComputedStyle(element).color).toBe(await resolveColor("#5b21b6"));
+      }
+    });
   });
 });
 

@@ -15,10 +15,10 @@ import { Button, type ButtonProps } from "./Button.tsx";
 // 두 경우 모두 Link Component를 꺼낸다.
 const Link = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
 
-// 앱 브랜드 계열을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 40).
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 // 테스트 안에서는 interface를 선언한 foundation을 넓힌다. 앱이 `@tide-tds/components`를 넓히는 경우는 smoke가 본다.
 declare module "@tide-tds/foundation" {
-  interface ColorRegistry {
+  interface RoleRegistry {
     brand: true;
   }
 }
@@ -203,85 +203,45 @@ describe("스타일 축", () => {
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {
     // @ts-expect-error -- variant는 채움 방식 4개만 받는다.
     const a: ButtonProps = { variant: "link" };
-    // @ts-expect-error -- color는 등록된 색 이름(Role, 색 계열, augmentation한 앱 계열)만 받는다.
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
     const b: ButtonProps = { color: "purple" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다.
     const c: ButtonProps = { size: "xl" };
-    // 색 계열과 augmentation한 앱 계열은 타입을 통과한다.
-    const d: ButtonProps[] = [{ color: "gray" }, { color: "cyan" }, { color: "brand" }];
-    expect([a, b, c, ...d]).toHaveLength(6);
+    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 Button은 받지 않는다(ADR 0016).
+    const blue: ButtonProps = { color: "blue" };
+    // @ts-expect-error -- neutral과 다른 색인 gray도 받지 않는다.
+    const gray: ButtonProps = { color: "gray" };
+    // augmentation한 앱 Role은 타입을 통과한다.
+    const d: ButtonProps = { color: "brand" };
+    expect([a, b, c, blue, gray, d]).toHaveLength(6);
   });
 });
 
-describe("색 이름(data-color)", () => {
-  // 색 계열은 Theme 블록이 정한 계열 변수(--tide-<계열>-<슬롯>)를 accent 슬롯으로 쓴다(ADR 0011).
-  const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
-  const slotsOf = (variant: NonNullable<ButtonProps["variant"]>) => {
-    switch (variant) {
-      case "solid":
-        return { bg: "solid", text: "on-solid", border: null };
-      case "subtle":
-        return { bg: "subtle", text: "text", border: null };
-      case "outline":
-        return { bg: null, text: "text", border: "border" };
-      case "ghost":
-        return { bg: null, text: "text", border: null };
-    }
-  };
-
-  test.each(
-    (["solid", "subtle", "outline", "ghost"] as const).flatMap((v) =>
-      families.map((f) => [v, f] as const),
-    ),
-  )("%s × %s는 그 계열 변수를 쓴다", async (variant, family) => {
-    if (forcedColors()) return;
-    await render(
-      <div data-theme="light">
-        <Button variant={variant} color={family}>
-          저장
-        </Button>
-      </div>,
-    );
-    const style = getComputedStyle(page.getByRole("button").element());
-    const slot = slotsOf(variant);
-    expect(style.backgroundColor).toBe(
-      slot.bg ? await resolve("backgroundColor", `var(--tide-${family}-${slot.bg})`) : transparent,
-    );
-    expect(style.color).toBe(await resolve("color", `var(--tide-${family}-${slot.text})`));
-    expect(style.borderTopColor).toBe(
-      slot.border
-        ? await resolve("borderColor", `var(--tide-${family}-${slot.border})`)
-        : transparent,
-    );
-  });
-
+describe("Role(data-color)", () => {
   test("루트에 data-color를 항상 붙이고(기본 primary), 바깥 data-color를 물려받지 않는다", async () => {
     await render(
       <div data-color="danger">
         <Button data-testid="default">저장</Button>
-        <Button data-testid="blue" color="blue">
+        <Button data-testid="success" color="success">
           저장
         </Button>
       </div>,
     );
     const element = page.getByTestId("default").element();
     expect(element).toHaveAttribute("data-color", "primary");
-    expect(page.getByTestId("blue").element()).toHaveAttribute("data-color", "blue");
+    expect(page.getByTestId("success").element()).toHaveAttribute("data-color", "success");
     expect(getComputedStyle(element).getPropertyValue("--tide-accent-solid").trim()).toBe(
       color.blue[600],
     );
   });
 
-  test("dark Theme에서 subtle은 계열 dark 값이고 neutral은 gray와 다르다", async () => {
+  test("dark Theme에서 subtle은 Role의 dark 값이다(neutral은 gray 규칙을 덮어쓴 값)", async () => {
     await render(
       <div data-theme="dark">
-        <Button data-testid="blue" variant="subtle" color="blue">
+        <Button data-testid="primary" variant="subtle" color="primary">
           저장
         </Button>
         <Button data-testid="neutral" variant="subtle" color="neutral">
-          저장
-        </Button>
-        <Button data-testid="gray" variant="subtle" color="gray">
           저장
         </Button>
       </div>,
@@ -291,18 +251,17 @@ describe("색 이름(data-color)", () => {
         .getPropertyValue("--tide-accent-subtle")
         .trim();
     // 변수 값은 forced-colors에서도 바뀌지 않는다.
-    expect(subtle("blue")).toBe(color.blue[950]);
+    expect(subtle("primary")).toBe(color.blue[950]);
     expect(subtle("neutral")).toBe(color.gray[900]);
-    expect(subtle("gray")).toBe(color.gray[950]);
     if (!forcedColors()) {
-      expect(getComputedStyle(page.getByTestId("blue").element()).backgroundColor).toBe(
+      expect(getComputedStyle(page.getByTestId("primary").element()).backgroundColor).toBe(
         rgb(color.blue[950]),
       );
     }
   });
 
-  describe("앱 브랜드 계열", () => {
-    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+  describe("앱 Role", () => {
+    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -322,7 +281,7 @@ describe("색 이름(data-color)", () => {
     let style: HTMLStyleElement | undefined;
     afterEach(() => style?.remove());
 
-    test('color="brand"로 앱 계열을 쓰고, Button 코드는 그대로다', async () => {
+    test('color="brand"로 앱 Role을 쓰고, Button 코드는 그대로다', async () => {
       style = document.createElement("style");
       style.textContent = colorFamilyCss([brand]);
       document.head.append(style);

@@ -5,7 +5,6 @@ import { Link } from "@tide-tds/components";
 // story는 문서·렌더·a11y만 맡는다. 동작 단언은 components의 `Link.test.tsx`에 있다.
 
 const colors = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
-const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
 
 const union = (values: readonly string[]): string =>
   values.map((value) => `"${value}"`).join(" | ");
@@ -21,9 +20,9 @@ const meta = {
   argTypes: {
     color: {
       control: "select",
-      options: [...colors, ...families],
+      options: colors,
       table: {
-        type: { summary: "Color", detail: `${union([...colors, ...families])} | 앱이 더한 계열` },
+        type: { summary: "Role", detail: `${union(colors)} | 앱이 더한 Role` },
         defaultValue: { summary: '"primary"' },
       },
     },
@@ -46,12 +45,12 @@ export const Basic: Story = {
   ),
 };
 
-/** Role과 색 계열 */
+/** Role 6개 */
 export const Colors: Story = {
   name: "색",
   render: (args) => (
     <div className="flex flex-wrap gap-4 text-body-md">
-      {[...colors, ...families].map((color) => (
+      {colors.map((color) => (
         <Link key={color} {...args} color={color}>
           {color} 링크
         </Link>

@@ -32,7 +32,7 @@ describe("Link 글자색 대비 쌍", () => {
     }
   });
 
-  it("색 계열과 앱 계열은 text 슬롯 × 표면 층 규칙(4.5:1)으로 검사된다", () => {
+  it("앱 Role은 text 슬롯 × 표면 층 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
     for (const background of surfaces) {
       expect(
         colorContrastRules.some(

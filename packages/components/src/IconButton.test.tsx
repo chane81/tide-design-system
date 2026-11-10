@@ -2,9 +2,10 @@
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
 // 채움 방식·색 맵과 상태 처리는 Button과 같은 모듈(pressable.ts)이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
+import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
 import NextLink from "next/link.js";
 import type { ReactNode } from "react";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
@@ -12,6 +13,13 @@ import { IconButton, type IconButtonProps } from "./IconButton.tsx";
 
 // nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
 const Link = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+declare module "@tide-tds/foundation" {
+  interface RoleRegistry {
+    brand: true;
+  }
+}
 
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
@@ -56,10 +64,12 @@ describe("역할과 이름", () => {
     const c: IconButtonProps = { "aria-label": "설정", children: <Icon />, variant: "link" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다. 24px보다 작은 size는 없다.
     const d: IconButtonProps = { "aria-label": "설정", children: <Icon />, size: "2xs" };
-    // @ts-expect-error -- color는 등록된 색 이름만 받는다.
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
     const e: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "purple" };
-    const ok: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "gray" };
-    expect([a, b, c, d, e, ok]).toHaveLength(6);
+    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
+    const f: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "blue" };
+    const ok: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "brand" };
+    expect([a, b, c, d, e, f, ok]).toHaveLength(7);
   });
 
   test("JSX에서 aria-label을 빠뜨리면 타입 오류다", async () => {
@@ -167,18 +177,49 @@ describe("스타일 축", () => {
     expect(style.color).toBe(await resolve("color", `var(--tide-${text})`));
   });
 
-  test("색 계열(gray)은 계열 변수를 쓴다", async () => {
-    if (forcedColors()) return;
-    await render(
-      <div data-theme="light">
-        <IconButton aria-label="설정" color="gray">
-          <Icon />
-        </IconButton>
-      </div>,
-    );
-    expect(getComputedStyle(page.getByRole("button").element()).backgroundColor).toBe(
-      await resolve("backgroundColor", "var(--tide-gray-solid)"),
-    );
+  describe("앱 Role", () => {
+    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    const brand = defineColorFamily({
+      name: "brand",
+      scale: {
+        50: "#f5f3ff",
+        100: "#ede9fe",
+        200: "#ddd6fe",
+        300: "#c4b5fd",
+        400: "#a78bfa",
+        500: "#8b5cf6",
+        600: "#7c3aed",
+        700: "#6d28d9",
+        800: "#5b21b6",
+        900: "#4c1d95",
+        950: "#2e1065",
+      },
+    });
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test('color="brand"는 앱 Role의 계열 변수를 쓴다', async () => {
+      style = document.createElement("style");
+      style.textContent = colorFamilyCss([brand]);
+      document.head.append(style);
+      await render(
+        <div data-theme="light">
+          <IconButton aria-label="설정" color="brand">
+            <Icon />
+          </IconButton>
+        </div>,
+      );
+      const element = page.getByRole("button").element();
+      expect(element).toHaveAttribute("data-color", "brand");
+      expect(getComputedStyle(element).getPropertyValue("--tide-accent-solid").trim()).toBe(
+        "#7c3aed",
+      );
+      if (!forcedColors()) {
+        expect(getComputedStyle(element).backgroundColor).toBe(
+          await resolve("backgroundColor", "#7c3aed"),
+        );
+      }
+    });
   });
 });
 

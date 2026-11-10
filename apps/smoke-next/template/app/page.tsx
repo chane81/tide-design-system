@@ -38,7 +38,7 @@ export default function Page() {
       </header>
       {/* Spinner는 서버 컴포넌트다. 회전 class(animate-spin)는 이 파일에 쓰지 않는다. */}
       <Spinner size="sm" aria-label="불러오는 중" />
-      {/* 앱 브랜드 계열을 data-color로 고르고 accent Utility class로 칠한다. */}
+      {/* 앱 브랜드 색(앱 Role)을 data-color로 고르고 accent Utility class로 칠한다. */}
       <p data-color={brandColor} className="bg-accent-solid text-accent-on-solid">
         브랜드
       </p>
@@ -47,7 +47,7 @@ export default function Page() {
         저장
       </Button>
       <Button render={<Link href="/settings" />}>설정</Button>
-      {/* 앱 브랜드 계열을 Button color로 쓴다(augmentation은 colors.ts). */}
+      {/* 앱 Role을 Button color로 쓴다(RoleRegistry augmentation은 colors.ts). */}
       <Button color="brand">브랜드 버튼</Button>
       {/* IconButton은 client Component다. 서버 컴포넌트에서 아이콘과 Next Link render를 넘긴다. */}
       <IconButton aria-label="추가" size="xs">
