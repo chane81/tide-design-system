@@ -138,6 +138,19 @@ try {
   assert(/word-break:\s*keep-all/.test(css), "base CSS의 word-break: keep-all이 없다");
   assert(css.includes("--tide-font-sans"), "기본 글꼴이 Tide sans 스택을 쓰지 않는다");
   assert(!/--text-xl\b|--font-serif\b/.test(css), "Tailwind 기본 크기나 font-serif가 남아 있다");
+  assert(
+    css.includes(".rounded-lg") && css.includes("--tide-rounded-lg"),
+    "radius class(rounded-lg)나 --tide-rounded-lg가 없다",
+  );
+  assert(
+    css.includes(".shadow-md") && css.includes("--tide-shadow-md"),
+    "그림자 class(shadow-md)나 --tide-shadow-md가 없다",
+  );
+  assert(
+    /focus-visible\\:focus-ring:focus-visible/.test(css) && /focus\\:focus-field:focus/.test(css),
+    "포커스 표시 utility(focus-ring, focus-field)가 없다",
+  );
+  assert(!/--radius-2xl\b|--shadow-xl\b/.test(css), "Tailwind 기본 radius나 그림자가 남아 있다");
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.

@@ -14,6 +14,13 @@ export default function Page() {
       <Typography variant="caption" render={<small />}>
         보조 설명
       </Typography>
+      {/* radius·Elevation·포커스 표시 Utility class를 앱 코드에서 직접 쓴다. */}
+      <section className="rounded-lg border border-transparent bg-raised shadow-md dark:border-default">
+        <button type="button" className="rounded-md focus-visible:focus-ring">
+          저장
+        </button>
+        <input aria-label="이름" className="border border-default focus:focus-field" />
+      </section>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>
