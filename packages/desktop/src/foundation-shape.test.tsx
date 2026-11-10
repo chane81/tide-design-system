@@ -26,8 +26,9 @@ function tideLayers(boxShadow: string): { alpha: number; geometry: string }[] {
 }
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-// light raised 표면의 class 조합. 두 Theme 모두 border 1px이고, light는 투명, dark는 border-default다.
-const raisedClass = "bg-raised border border-transparent dark:border-default rounded-lg shadow-md";
+// raised 표면의 class 조합. 두 Theme 모두 border 1px이고 색은 border-raised(light 투명, dark gray-800)다.
+// Theme 분기(dark:)가 없으므로 요소 단위 data-theme을 그대로 따른다.
+const raisedClass = "bg-raised border border-raised rounded-lg shadow-md";
 
 describe("Elevation", () => {
   test("light raised는 투명 border 1px와 2레이어 그림자를 갖고, forced-colors에서는 border가 경계로 남는다", async () => {
@@ -58,7 +59,29 @@ describe("Elevation", () => {
     }
   });
 
-  test("dark에서도 그림자를 그리고 raised border는 border-default다", async () => {
+  test("dark 페이지 안의 light 영역에서도 raised border는 투명이다", async () => {
+    await render(
+      <div data-theme="dark">
+        <div data-theme="light">
+          <div data-testid="raised" className={raisedClass}>
+            raised
+          </div>
+        </div>
+      </div>,
+    );
+    const style = getComputedStyle(page.getByTestId("raised").element());
+
+    expect(style.borderTopWidth).toBe("1px");
+    if (forcedColors()) {
+      expect(style.borderTopColor).not.toBe(transparent);
+    } else {
+      expect(style.borderTopColor).toBe(transparent);
+      // 그림자도 light shadow 색(gray-950 8%)이다.
+      expect(tideLayers(style.boxShadow)[1]!.alpha).toBeCloseTo(0.08, 2);
+    }
+  });
+
+  test("dark에서도 그림자를 그리고 raised border는 gray-800이다", async () => {
     await render(
       <div data-theme="dark">
         <div data-testid="raised" className={raisedClass}>
