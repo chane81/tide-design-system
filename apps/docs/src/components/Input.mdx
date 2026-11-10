@@ -1,0 +1,97 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as InputStories from "./Input.stories.tsx";
+
+<Meta of={InputStories} />
+
+# Input
+
+이메일, 이름, 날짜처럼 한 줄 값을 입력받는 네이티브 입력창입니다.
+
+<Canvas of={InputStories.Basic} />
+
+## 사용 시점
+
+- 한 줄로 끝나는 텍스트, 숫자, 비밀번호, 날짜를 받을 때
+- 검색어를 받을 때(`type="search"`)
+
+## 쓰지 않을 때
+
+- 여러 줄 글은 Textarea를 씁니다.
+- 정해진 선택지 중 하나를 고르면 Select나 Radio를 씁니다.
+- 켜고 끄는 값은 Checkbox나 Switch를 씁니다.
+
+## 예시
+
+### 크기 바꾸기
+
+| `size`     | 높이 | 텍스트 스타일 | 좌우 padding |
+| ---------- | ---- | ------------- | ------------ |
+| `sm`       | 32px | `label-sm`    | 10px         |
+| `md`(기본) | 40px | `label-md`    | 12px         |
+| `lg`       | 48px | `label-lg`    | 16px         |
+
+같은 size의 Button과 높이가 같습니다. 입력한 글자는 보통 굵기이고, 모서리는 `rounded-md`(6px)입니다.
+
+<Canvas of={InputStories.Sizes} />
+
+### type 고르기
+
+네이티브 `type`을 그대로 씁니다. `type="date"`도 같은 모양입니다.
+
+<Canvas of={InputStories.Types} />
+
+### 오류 보이기
+
+보통은 Field의 `error`로 정합니다. Field 밖에서는 `invalid`를 줍니다.
+
+<Canvas of={InputStories.Invalid} />
+
+### 비활성·읽기 전용으로 두기
+
+`disabled`는 포커스와 제출에서 빠집니다. `readOnly`는 포커스와 제출은 되고 값만 바꿀 수 없습니다.
+
+<Canvas of={InputStories.Disabled} />
+
+<Canvas of={InputStories.ReadOnly} />
+
+### 값을 앱이 정하기
+
+`value`와 `onChange`를 주면 제어 입력이 됩니다. `defaultValue`만 주면 브라우저가 값을 가집니다.
+
+<Canvas of={InputStories.Controlled} />
+
+## Do/Don't
+
+### Do: 날짜는 type="date"로 받는다
+
+브라우저의 날짜 선택기와 키보드 입력을 그대로 씁니다.
+
+<Canvas of={InputStories.DoDateType} />
+
+### Don't: label 없이 둔다
+
+스크린리더가 무엇을 입력할지 알 수 없습니다. Field로 label을 붙입니다.
+
+<Canvas of={InputStories.DontNoLabel} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 네이티브 `input`이라 `type`에 맞는 역할과 키보드 동작을 그대로 가집니다.
+- 포커스 표시: 클릭과 키보드 포커스 모두 경계가 2px 포커스 색으로 바뀝니다(`focus-field`).
+- 오류: `aria-invalid="true"`와 `data-invalid`가 붙습니다. 포커스 중에는 포커스 표시가 오류 색을 이깁니다.
+- 경계: 배경과 3:1 이상 대비입니다.
+- 고대비 모드(forced-colors): 경계와 포커스 표시가 시스템 색으로 보입니다.
+
+### 앱이 할 일
+
+- Field로 label을 붙입니다. Field 없이 쓰면 `aria-label`을 줍니다.
+- `autoComplete`를 알맞게 줍니다(`email`, `name` 등).
+
+## Props
+
+`input`의 props를 모두 받습니다(`size`는 높이로 바뀝니다). `ref`는 `input`에 연결되고, `className`은 기본 class를 이깁니다(예: `px-8`). 상태는 `disabled:`, `read-only:`, `data-invalid:`로 덮어씁니다.
+
+<ArgTypes of={InputStories} />

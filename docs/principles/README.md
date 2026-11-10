@@ -100,4 +100,5 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ② 명확함, ③ 단순함: [ADR 0009 Component는 `@tide-tds/components` 한 패키지로 두고 Target으로 나누지 않는다](../decisions/0009-single-components-package.md)
 - ③ 단순함, ④ 발견할 수 있음: [ADR 0010 press 축소를 끄는 prop은 `noPressScale`이다](../decisions/0010-press-scale-opt-out-prop-name.md)
 - ① 접근성, ③ 단순함, ④ 발견할 수 있음: [ADR 0011 `color`는 열린 색 이름이고, `data-color`로 accent 슬롯에 꽂는다](../decisions/0011-open-color-names-data-color-accent.md) (ADR 0016으로 일부 대체됨)
+- ① 접근성, ③ 단순함, ④ 발견할 수 있음: [ADR 0013 Field는 label·설명·오류를 props로 받고, 입력 Component는 context로 연결한다](../decisions/0013-field-props-and-context-connection.md)
 - ① 접근성, ② 명확함, ③ 단순함: [ADR 0016 행동·의미 Component의 `color`는 Role만 받고, 앱 브랜드 색은 앱 Role로 더한다](../decisions/0016-role-scoped-color-and-app-roles.md)

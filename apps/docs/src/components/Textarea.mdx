@@ -1,0 +1,82 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as TextareaStories from "./Textarea.stories.tsx";
+
+<Meta of={TextareaStories} />
+
+# Textarea
+
+문의 내용, 메모처럼 여러 줄 글을 입력받는 네이티브 입력창입니다.
+
+<Canvas of={TextareaStories.Basic} />
+
+## 사용 시점
+
+- 줄바꿈이 들어가는 긴 글을 받을 때
+- 길이를 미리 알 수 없는 설명을 받을 때
+
+## 쓰지 않을 때
+
+- 한 줄 값은 Input을 씁니다.
+- 굵게, 목록 같은 서식이 필요하면 별도 편집기를 씁니다.
+
+## 예시
+
+### 크기 바꾸기
+
+| `size`     | 글자 크기 | 텍스트 스타일 | 좌우 padding |
+| ---------- | --------- | ------------- | ------------ |
+| `sm`       | 12px      | `caption`     | 10px         |
+| `md`(기본) | 14px      | `body-sm`     | 12px         |
+| `lg`       | 16px      | `body-md`     | 16px         |
+
+글자 크기는 같은 size의 Input과 같습니다. 여러 줄을 읽기 좋게 행간이 넉넉한 텍스트 스타일을 씁니다.
+
+<Canvas of={TextareaStories.Sizes} />
+
+### 줄 수 정하기
+
+`rows`로 처음 높이를 정합니다. 기본값은 3이고, 사용자는 세로로 크기를 바꿀 수 있습니다.
+
+<Canvas of={TextareaStories.Rows} />
+
+### 오류 보이기
+
+보통은 Field의 `error`로 정합니다. Field 밖에서는 `invalid`를 줍니다.
+
+<Canvas of={TextareaStories.Invalid} />
+
+### 비활성으로 두기
+
+<Canvas of={TextareaStories.Disabled} />
+
+## Do/Don't
+
+### Do: 여러 줄 글에 쓴다
+
+<Canvas of={TextareaStories.DoLongText} />
+
+### Don't: 한 줄 값에 쓴다
+
+Enter가 줄바꿈이 되어 폼을 제출하지 못합니다. 한 줄 값은 Input을 씁니다.
+
+<Canvas of={TextareaStories.DontShortValue} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 네이티브 `textarea`라 여러 줄 입력과 키보드 동작을 그대로 가집니다.
+- 포커스 표시: 클릭과 키보드 포커스 모두 경계가 2px 포커스 색으로 바뀝니다(`focus-field`).
+- 오류: `aria-invalid="true"`와 `data-invalid`가 붙습니다. 포커스 중에는 포커스 표시가 오류 색을 이깁니다.
+- 고대비 모드(forced-colors): 경계와 포커스 표시가 시스템 색으로 보입니다.
+
+### 앱이 할 일
+
+- Field로 label을 붙입니다. 글자 수 제한이 있으면 `description`에 적습니다.
+
+## Props
+
+`textarea`의 props를 모두 받습니다. `ref`는 `textarea`에 연결되고, `className`은 기본 class를 이깁니다(예: `resize-none`). 상태는 `disabled:`, `read-only:`, `data-invalid:`로 덮어씁니다.
+
+<ArgTypes of={TextareaStories} />

@@ -1,0 +1,120 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as FieldStories from "./Field.stories.tsx";
+
+<Meta of={FieldStories} />
+
+# Field
+
+입력창에 label, 설명, 오류 메시지를 붙이고 스크린리더 연결을 자동으로 맞춥니다.
+
+<Canvas of={FieldStories.Basic} />
+
+## 사용 시점
+
+- Input, Textarea에 보이는 label을 붙일 때
+- 입력 규칙(설명)이나 오류 메시지를 입력창과 함께 읽히게 할 때
+
+## 쓰지 않을 때
+
+- 켜고 끄는 설정 하나는 Switch가 자기 label을 가집니다.
+- 입력창이 아닌 텍스트에 이름을 붙일 때는 Typography를 씁니다.
+
+## 예시
+
+### 설명 붙이기
+
+`description`은 입력창 아래에 보입니다. 스크린리더는 입력창 이름 다음에 읽습니다.
+
+<Canvas of={FieldStories.WithDescription} />
+
+### 오류 보이기
+
+`error`를 주면 오류 상태가 됩니다. 경계가 빨갛게 바뀌고 아이콘과 메시지가 보입니다.
+
+<Canvas of={FieldStories.WithError} />
+
+오류가 없을 때 `error`에 `undefined`를 주면 오류 상태가 풀립니다. 메시지를 둔 채 상태만 바꾸려면 `invalid`를 씁니다.
+
+<Canvas of={FieldStories.Validation} />
+
+### 필수로 두기
+
+`required`를 주면 label 뒤에 `*`가 보이고 브라우저가 빈 값 제출을 막습니다.
+
+<Canvas of={FieldStories.Required} />
+
+### 비활성으로 두기
+
+`disabled`를 주면 안의 입력창이 비활성이 됩니다.
+
+<Canvas of={FieldStories.Disabled} />
+
+### Textarea에 붙이기
+
+<Canvas of={FieldStories.WithTextarea} />
+
+### 폼 만들기
+
+Field를 세로로 쌓습니다. 값은 네이티브 form으로 그대로 제출됩니다.
+
+```tsx
+// app/contact/page.tsx
+import { Button, Field, Input, Textarea } from "@tide-tds/components";
+
+<form action="/contact" method="post">
+  <Field label="이메일" required>
+    <Input name="email" type="email" />
+  </Field>
+  <Field label="문의 내용">
+    <Textarea name="message" />
+  </Field>
+  <Button type="submit">보내기</Button>
+</form>;
+```
+
+<Canvas of={FieldStories.Form} />
+
+## Do/Don't
+
+### Do: 오류 메시지에 고치는 방법을 적는다
+
+<Canvas of={FieldStories.DoSpecificError} />
+
+### Don't: 「잘못된 입력」만 적는다
+
+무엇을 고쳐야 할지 알 수 없습니다.
+
+<Canvas of={FieldStories.DontVagueError} />
+
+### Do: label을 보이게 둔다
+
+<Canvas of={FieldStories.DoVisibleLabel} />
+
+### Don't: placeholder를 label 대신 쓴다
+
+입력하면 사라지고, 입력창에 이름이 없습니다.
+
+<Canvas of={FieldStories.DontPlaceholderLabel} />
+
+## 접근성
+
+### 기본 제공
+
+- 이름: label이 `<label for>`로 입력창 이름이 됩니다. label을 누르면 입력창에 포커스가 갑니다.
+- 설명·오류: `aria-describedby`로 연결되어 설명, 오류 순서로 읽힙니다.
+- 오류 상태: 입력창에 `aria-invalid="true"`가 붙습니다. 색과 함께 아이콘과 메시지로도 보입니다.
+- 포커스: 오류 상태에서도 포커스 중에는 포커스 표시가 보이고 오류 메시지는 남습니다.
+- 필수: 네이티브 `required`로 알립니다. `*`는 스크린리더가 읽지 않습니다.
+
+### 앱이 할 일
+
+- label은 짧은 이름으로, 규칙은 `description`에 씁니다.
+- 제출할 때 오류가 여러 개면 첫 오류 입력창으로 포커스를 옮깁니다.
+- 오류 메시지는 입력하는 중보다 입력창을 떠날 때나 제출할 때 보입니다.
+
+## Props
+
+`div`의 props를 모두 받습니다. `ref`와 `className`은 루트 `div`에 붙고, `className`은 기본 class를 이깁니다. 루트에는 `data-invalid`, `data-disabled`가 붙습니다. 안의 입력창에 직접 준 `id`, `disabled`, `required`, `invalid`는 Field 값보다 이깁니다.
+
+<ArgTypes of={FieldStories} />
