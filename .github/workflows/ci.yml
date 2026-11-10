@@ -1,4 +1,4 @@
-# PR마다 lint, format, 그리고 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
+# PR마다 lint, format, changeset 규칙, 그리고 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
 # 액션 버전: actions/checkout v7, pnpm/action-setup v6, actions/setup-node v7, actions/cache v6 (2026-11-10 확인)
 name: CI
 
@@ -44,4 +44,11 @@ jobs:
       - run: pnpm --filter @tide-tds/desktop exec playwright install --with-deps --only-shell chromium
       - run: pnpm lint
       - run: pnpm format:check
+      # changeset 규칙: packages/*를 바꿨으면 changeset 필수(문서·설정만이면 필요 없음, 릴리스가 필요 없으면 empty),
+      # 0.x 동안 major 금지, 아이콘 이름표 키가 빠지면 icons minor 필수(scripts/check-changesets.ts).
+      # Version PR(changeset-release/*)은 changeset을 지우는 PR이라 건너뛴다(changesets.dev 「Automating Changesets」).
+      - if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: node scripts/check-changesets.ts "origin/$BASE_REF"
       - run: pnpm turbo run typecheck test build smoke --affected
