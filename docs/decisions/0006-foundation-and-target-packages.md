@@ -1,5 +1,7 @@
 # 패키지는 Foundation과 Target(desktop)으로 나눈다
 
+> **ADR 0009로 대체됨(2026-11-10)**: [Component는 `@tide-tds/components` 한 패키지로 두고 Target으로 나누지 않는다](0009-single-components-package.md)
+
 근거 원칙: ② 명확함이 화려함보다 우선한다
 
 배포 패키지는 두 개다.
