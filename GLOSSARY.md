@@ -47,8 +47,16 @@ Token에 연결된 Tailwind 클래스. 사용자가 `className`에 직접 쓴다
 _Avoid_: 헬퍼 클래스, 스타일 클래스
 
 **Role (역할)**:
-Semantic Token이 나타내는 의미 범주. `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다. Component에서는 `color` prop으로 Role을 고른다.
+Semantic Token이 나타내는 의미 범주. `neutral`, `primary`, `success`, `warning`, `danger`, `info` 여섯 가지다. 같은 Role의 Token은 같은 Primitive 계열을 참조한다. Role은 색 계열 하나에 덮어쓸 값을 얹은 별칭이다. 예: `primary`는 `blue`와 같고, `neutral`은 `gray`에서 dark subtle·글자·테두리를 덮어쓴 다른 색이다. Component에서는 색 이름(Color)의 하나로 `color` prop에 넘긴다.
 _Avoid_: 컬러 그룹, intent, tone
+
+**색 이름 (Color)**:
+`data-color` 속성과 Component의 `color` prop으로 고르는 이름. Role 6개, Tide 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`), 앱이 더한 브랜드 계열(예: `brand`)이 있다. 타입은 `ColorRegistry`의 키이고, 앱은 module augmentation으로 이름을 더한다.
+_Avoid_: 팔레트, color scheme(`color-scheme` CSS와 혼동), tone
+
+**accent 슬롯 (Accent slot)**:
+`data-color`가 고른 색 이름의 값을 받는 자리. `--tide-accent-<슬롯>` 변수 9개(`solid`/`-hover`/`-active`, `subtle`/`-hover`/`-active`, `text`, `border`, `on-solid`)이고, `bg-accent-solid`, `text-accent` 같은 Utility class로 쓴다. `data-color`가 없으면 `primary` 값을 받는다. 색 계열도 같은 슬롯 이름으로 변수 묶음(`--tide-blue-solid` 등)을 가진다.
+_Avoid_: accent color(색 하나로 오해), 강조색, theme color
 
 **강도 (Emphasis)**:
 같은 Role 안에서 배경색이 얼마나 강한지를 나타내는 구분. `solid`(진한 배경, 흰 글자)와 `subtle`(옅은 배경, 역할색 글자) 두 가지다. 이름에 항상 적고 생략하지 않는다.
@@ -85,7 +93,7 @@ _Avoid_: 타이포 토큰, font style, 텍스트 크기(크기 하나만 뜻하�
 ## Component API
 
 **Variant**:
-Component마다 정의되는 주된 스타일 축. 값 집합은 Component 종류마다 다르다. 예를 들어 Button은 채움 방식을, Typography는 텍스트 스타일을 값으로 쓴다. 값은 새로 만들지 않고 Foundation에 이미 있는 이름을 쓴다. 색은 Variant가 아니라 Role로 고른다.
+Component마다 정의되는 주된 스타일 축. 값 집합은 Component 종류마다 다르다. 예를 들어 Button은 채움 방식을, Typography는 텍스트 스타일을 값으로 쓴다. 값은 새로 만들지 않고 Foundation에 이미 있는 이름을 쓴다. 색은 Variant가 아니라 색 이름(Color)으로 고른다.
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
 
 **채움 방식 (Fill)**:

@@ -98,3 +98,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ③ 단순함, ④ 발견할 수 있음: [ADR 0007 아이콘은 Lucide를 생성 복사한 `@tide-tds/icons`로 배포한다](../decisions/0007-lucide-generated-icons-package.md)
 - ③ 단순함: [ADR 0008 세 패키지는 fixed 버전으로 묶고, CI는 OIDC 직접 publish로 배포한다](../decisions/0008-fixed-versions-and-oidc-direct-publish.md)
 - ② 명확함, ③ 단순함: [ADR 0009 Component는 `@tide-tds/components` 한 패키지로 두고 Target으로 나누지 않는다](../decisions/0009-single-components-package.md)
+- ① 접근성, ③ 단순함, ④ 발견할 수 있음: [ADR 0011 `color`는 열린 색 이름이고, `data-color`로 accent 슬롯에 꽂는다](../decisions/0011-open-color-names-data-color-accent.md)

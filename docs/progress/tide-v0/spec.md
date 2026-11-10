@@ -84,7 +84,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 ### Component 공통 API
 
 47. 앱 개발자로서, 모든 Component가 `ref`를 일반 prop으로 받아 루트 DOM 요소에 연결하기를 원한다(React 19).
-48. 앱 개발자로서, Button류에서 `variant`(`solid`/`subtle`/`outline`/`ghost`), `color`(Role 6개), `size`(`xs`/`sm`/`md`/`lg`)로 스타일을 고르기를 원한다.
+48. 앱 개발자로서, Button류에서 `variant`(`solid`/`subtle`/`outline`/`ghost`), `color`(색 이름: Role, 색 계열, 앱 브랜드 계열. [ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)), `size`(`xs`/`sm`/`md`/`lg`)로 스타일을 고르기를 원한다.
 49. 앱 개발자로서, Component가 지원하지 않는 값(예: Input의 `xs`)은 타입 오류로 바로 알기를 원한다.
 50. 앱 개발자로서, 같은 size의 Button, Input, Select가 한 줄에서 같은 높이(24/32/40/48px)이기를 원한다.
 51. 앱 개발자로서, 내가 넘긴 `className`이 Tide class와 충돌하면 내 쪽이 이기기를 원한다(`p-2`가 기본 padding을 이김). 커스텀 이름(`rounded-md`, `text-body-md`, `shadow-lg`, `z-modal`, `duration-fast`)에서도 마찬가지여야 한다.
@@ -176,8 +176,9 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - tokens CSS: `--tide-*` 변수와 `[data-theme]` 덮어쓰기만 담는다. Tailwind 없이 쓰는 사용자의 공개 계약이다.
   - tailwind CSS: tokens CSS를 import한다. 그 위에 Tailwind 기본값 제거(`initial`), `@theme inline` 연결, `@custom-variant dark`, `@utility focus-ring`/`focus-field`, base CSS를 담는다.
   - tailwind-merge 설정: 타입만 import하는 순수 객체다. 런타임에서는 tailwind-merge에 의존하지 않는다.
+  - color-family(`@tide-tds/foundation/color-family`): 앱 브랜드 색 계열 API(`defineColorFamily`)다. bin `tide-color build <파일>`이 같은 매핑 규칙으로 CSS를 만들고 대비를 검사한다(미달이면 exit 1). 앱은 이 API를 쓰려면 foundation을 직접 설치한다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md), [티켓 40](../tide-v0-impl/issues/40-open-color-families-and-app-brand-colors.md)).
   - internal(`@tide-tds/foundation/internal`): 문서 앱 Token 블록과 빌드 스크립트가 쓰는 내부 도우미(대비 계산 등)다. 앱 개발자용이 아니고 공개 계약이 아니다. d.ts에 `@internal`로 표시하고 문서에 싣지 않는다([컬러 Foundation](../tide-v0-impl/issues/04-color-foundation.md), 2026-11-10 사용자 결정).
-- **공개 계약**: `--tide-<Utility class 이름>`(kebab-case)이다. Tailwind 변수는 `--tide-*`를 가리키는 내부 연결이고 공개 계약이 아니다.
+- **공개 계약**: `--tide-<Utility class 이름>`(kebab-case)이다. 예외로 색 계열 변수 `--tide-<계열>-<슬롯>`과 accent 슬롯 `--tide-accent-<슬롯>`은 Utility class가 없는 변수 묶음이라 색 이름과 슬롯으로 짓는다. Tailwind 변수는 `--tide-*`를 가리키는 내부 연결이고 공개 계약이 아니다.
 - **컬러**:
   - Primitive 계열은 `blue`(primary), `gray`(neutral), `green`(success), `amber`(warning), `red`(danger), `cyan`(info)이고 단계는 50~950의 11단계다. 그 밖에 `white`, `black`이 있다.
   - 정본은 hex다. OKLCH L 계단으로 만든 초안을 손으로 조정해도 된다. `blue-500`은 `#3183f5`로 고정한다.
@@ -185,6 +186,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **Semantic 색**: Tailwind 속성별 namespace(`--background-color-*`, `--text-color-*`, `--border-color-*`, `--outline-color-*`)로 노출한다.
   - `bg-<역할>-<solid|subtle>[-hover|-active]`. 강도는 생략하지 않는다.
   - `text-<역할>`, `border-<역할>`. neutral은 이 둘을 두지 않는다.
+  - accent: `bg-accent-<solid|subtle>[-hover|-active]`, `text-accent`, `text-accent-on-solid`, `border-accent`. `data-color`가 고른 색 이름의 값을 쓴다(아래 「색 이름」). 색 계열 Utility class(`bg-blue-solid`)는 노출하지 않는다.
   - 공통: `bg-canvas`, `bg-surface`, `bg-raised`, `bg-disabled`, `bg-overlay`, `text-default`, `text-muted`, `text-disabled`, `text-on-solid`, `border-default`, `border-strong`, `border-raised`, `outline-focus`
   - shadow 색은 class로 노출하지 않는다. `--tide-shadow-color`만 둔다.
   - 예외: Tailwind의 gradient stop(`from-`/`via-`/`to-`)도 `--background-color`를 읽어서(tailwindcss 4.3.5) `from-canvas`, `via-primary-solid` 같은 class가 생긴다. 배경색을 그대로 gradient에 쓰는 것이라 뜻이 어긋나지 않으므로 「의미 없는 조합」의 예외로 인정한다. 막는 테스트는 두지 않는다(2026-11-10 사용자 결정).
@@ -199,7 +201,12 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - shadow 색은 gray-950 8% / black 30%다.
   - alpha는 overlay와 shadow에만 쓰고 8자리 hex로 쓴다.
 - **Theme**: `:root`와 `[data-theme="light"]`는 light, `[data-theme="dark"]`는 dark다. 각각 `color-scheme`을 지정한다. `dark:` variant는 `data-theme=dark`를 따른다. `prefers-color-scheme` 자동 전환은 없다.
-- **대비**: WCAG 2.x 대비비만 쓴다. 텍스트는 4.5:1, UI 경계와 포커스는 3:1이다. 대비 쌍 목록(128쌍 이상)을 light와 dark에서 모두 검사한다. 장식용 border, disabled, overlay, shadow는 검사에서 제외한다.
+- **색 이름**([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md), [티켓 40](../tide-v0-impl/issues/40-open-color-families-and-app-brand-colors.md)):
+  - 색 이름(Color)은 Role 6개, Tide 색 계열 6개, 앱이 더한 계열이다. 타입은 `interface ColorRegistry`(Role + Tide 계열)와 `type Color = keyof ColorRegistry`다. 앱은 `declare module "@tide-tds/components" { interface ColorRegistry { brand: true } }`로 더한다.
+  - 색 계열마다 Theme 블록이 변수 묶음 `--tide-<계열>-<슬롯>`을 정한다. 슬롯은 `solid`/`-hover`/`-active`, `subtle`/`-hover`/`-active`, `text`, `border`, `on-solid`다. 규칙은 위 매핑과 같고(on-solid는 white), 계열마다 덮어쓸 값을 둘 수 있다.
+  - Role은 계열 + 덮어쓸 값의 별칭이다. Role Token은 계열 변수를 가리키고 덮어쓴 슬롯만 Primitive를 가리킨다. `neutral`은 `gray`와 다르다(dark subtle 900/800/700, text `default`, border `strong`).
+  - `[data-color="<이름>"]`는 accent 슬롯 `--tide-accent-<슬롯>`을 그 색의 변수로 꽂는다. Theme 블록의 기본값은 primary다. `data-color`는 `data-theme`과 같은 요소나 그 안쪽에서 그 Theme 값을 따른다.
+- **대비**: WCAG 2.x 대비비만 쓴다. 텍스트는 4.5:1, UI 경계와 포커스는 3:1이다. 대비 쌍 목록(128쌍 이상)을 light와 dark에서 모두 검사한다. 장식용 border, disabled, overlay, shadow는 검사에서 제외한다. 색 이름마다 같은 규칙(text × 표면 층·subtle 3단계, on-solid × solid 3단계, border × 표면 층)으로 light·dark를 검사하고, 앱 계열은 `tide-color`가 같은 규칙으로 검사한다.
 - **타이포그래피**([타이포그래피 Foundation 결정](issues/11-grilling-typography.md)):
   - font-family는 `sans`(Pretendard Variable 우선 스택)와 `mono`(시스템 스택) 두 개만 둔다. 웹폰트와 `@font-face`는 넣지 않는다.
   - Primitive 크기는 12/14/16/18/20/24/32/40/48/56px이고 rem으로 쓴다. class로 노출하지 않는다.
@@ -303,7 +310,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - props는 루트 DOM 요소의 props를 확장하고, 이름이 겹치는 HTML 속성(`color` 등)은 `Omit`한다.
 - **스타일 축**:
   - `variant`는 Component마다 정의되는 주된 스타일 축이다. Button류는 채움 방식(`solid`/`subtle`/`outline`/`ghost`)을, Typography는 텍스트 스타일 이름을 값으로 받는다.
-  - `color`는 Role 6개다. `size`는 `xs`/`sm`/`md`/`lg`다.
+  - `color`는 색 이름(`Color`)이다. Role, Tide 색 계열, 앱이 augmentation으로 더한 계열을 받는다. Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
+  - `Color`와 `ColorRegistry`는 `@tide-tds/components`에서도 다시 낸다. 앱의 augmentation 대상은 `@tide-tds/components`다(앱이 설치하는 패키지).
   - 공통 union 타입은 한 곳에서 정의하고, Component마다 `Extract`로 필요한 값만 고른다.
   - 채움 방식 union 이름은 `Variant`가 아니라 채움 방식을 드러내는 이름(예: `FillVariant`)으로 한다.
 - **size 표**:
@@ -316,7 +324,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   | `lg` | 48px | `label-lg`    |
   - 높이는 24px 밑으로 내려가지 않는다. 같은 size의 컨트롤은 높이가 같다. 세로 정렬은 고정 높이와 `items-center`로 한다.
 
-- **variant 정의**: 타입이 붙은 객체 맵과 `cn`으로 직접 쓴다. cva와 tailwind-variants는 쓰지 않는다. 모든 조합을 채웠는지는 타입 검사가 확인한다.
+- **variant 정의**: 타입이 붙은 객체 맵과 `cn`으로 직접 쓴다. cva와 tailwind-variants는 쓰지 않는다. 모든 조합을 채웠는지는 타입 검사가 확인한다. 색 축은 맵에 두지 않는다. 맵은 `Record<FillVariant, string>`이고 accent class(`bg-accent-solid`, `text-accent` 등)로 쓰며, 색은 루트의 `data-color`가 정한다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)).
+- **앱 확장점(색)**: 앱은 Tide 패키지를 고치지 않고 브랜드 색 계열을 더한다. `defineColorFamily` → `tide-color build` → Tide CSS 다음에 import → `ColorRegistry` augmentation 순서다. Component는 앱 계열 class를 쓰지 않으므로 Tailwind 자동완성과 tailwind-merge 설정은 앱 계열에 따라 바뀌지 않는다.
 - **className 병합**: `cn` = clsx + 생성된 설정으로 확장한 tailwind-merge. 사용자의 `className`은 항상 마지막에 넣는다.
 - **`render` prop**:
   - 루트가 DOM 요소 하나인 Component만 받는다. 요소를 넘기면 props, ref, className을 병합한다.
@@ -497,7 +506,7 @@ Component 하나는 다음을 모두 만족해야 완료다.
   1단계 Component까지 끝나면 0.1.0을 로컬에서 publish한다.
 
 - **문서 언어**: 문서, 주석, CHANGELOG는 한글로 쓴다. 변수명과 함수명은 영문이다.
-- **용어**: GLOSSARY의 용어를 쓴다. 특히 Role(`color` prop), 강도(Token의 solid/subtle), 채움 방식(Component `variant`), 표면 층, Elevation, 쌓임 단계, 포커스 표시(ring/field/highlight), 공개 계약, 릴리스를 구분한다.
+- **용어**: GLOSSARY의 용어를 쓴다. 특히 색 이름(`color` prop)과 Role, accent 슬롯, 강도(Token의 solid/subtle), 채움 방식(Component `variant`), 표면 층, Elevation, 쌓임 단계, 포커스 표시(ring/field/highlight), 공개 계약, 릴리스를 구분한다.
 - **ADR**: 새 결정이 되돌리기 어렵고, 맥락 없이는 놀랍고, 실제로 trade-off가 있었다면 ADR로 남긴다. ADR에는 `근거 원칙:` 줄을 둔다.
 - **외부 Component 라이브러리**: 도입이 필요해 보이면 구현을 멈추고 후보와 근거를 들고 사용자에게 묻는다(ADR 0004).
 - 원칙별 Do/Don't 예시를 Storybook에서 실제 Component로 보여 주는 작업은 해당 Component가 나온 뒤에 원칙 페이지에 붙인다.

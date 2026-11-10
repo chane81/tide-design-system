@@ -1,5 +1,7 @@
 # variant 맵은 직접 작성하고, 조합은 `render` prop으로 한다
 
+> **ADR 0011로 일부 정정됨(2026-11-10)**: [`color`는 열린 색 이름이고, `data-color`로 accent 슬롯에 꽂는다](0011-open-color-names-data-color-accent.md). 아래 「정정 (2026-11-10)」을 본다.
+
 근거 원칙: ③ 단순함이 유연함보다 우선한다, ④ 발견할 수 있음이 외워야 함보다 우선한다
 
 Component의 `variant` × `color` × `size` 클래스는 cva나 tailwind-variants 없이 **직접 작성한 객체 맵**으로 정의한다. 맵에는 타입을 붙인다(예: `Record<Variant, Record<Color, string>>`). 클래스 병합은 `cn()` 하나로 한다. `cn()`은 `clsx`와 `extendTailwindMerge`로 만들고, `extendTailwindMerge`에는 Token TS 원본에서 생성한 설정을 넣는다(ADR 0003).
@@ -28,3 +30,7 @@ Component의 `variant` × `color` × `size` 클래스는 cva나 tailwind-variant
 
 - `render`는 **루트가 DOM 요소 하나인 Component**에 둔다. 처음에는 "루트가 상호작용 요소 하나인 Component"로 한정했다. 그런데 Typography는 `<p>`, `<span>`, `<label>` 등으로 렌더할 수 있어야 한다. `as`를 따로 허용하면 조합 방식이 둘로 갈린다(③). 그래서 `render` 하나로 범위를 넓혔다.
 - 맵 타입 예시의 `Variant`는 채움 방식(`solid | subtle | outline | ghost`) 값 집합을 뜻한다. Variant가 "Component마다 정의되는 주된 스타일 축"으로 넓어졌으므로, 공통 타입 이름은 채움 방식을 드러내도록 바꾼다(GLOSSARY 참고).
+
+## 정정 (2026-11-10)
+
+[ADR 0011](0011-open-color-names-data-color-accent.md)에서 variant 맵의 색 축을 뺐다. `color`는 열린 색 이름(Color)이라 맵으로 모든 색을 채울 수 없다. 맵은 `Record<FillVariant, string>`이고 accent Utility class(`bg-accent-solid`, `text-accent` 등)로 쓴다. 색은 Component 루트에 붙인 `data-color`가 accent 슬롯에 꽂는다. Consequences의 「variant 4 × color 6 조합을 맵에 모두 손으로 채운다」는 「채움 방식 4개를 채운다」로 읽는다. 맵을 직접 작성하고 `cn` 하나로 병합한다는 결정은 그대로다.
