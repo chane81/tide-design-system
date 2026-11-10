@@ -15,6 +15,9 @@ const familyRole = Object.fromEntries(
 ) as Record<ColorFamily, Role>;
 const families = Object.values(roleFamily);
 
+// 칸 수를 고정하지 않고, 이름(`amber-950`)과 hex가 한 줄에 들어가는 최소 폭(6rem)으로 들어가는 만큼 둔다.
+const gridClass = "grid grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-2";
+
 function ratio(foreground: string, background: string): string {
   return contrastRatio(foreground, background).toFixed(2);
 }
@@ -48,7 +51,7 @@ export function ColorScale(): ReactElement {
           <h3 id={`color-scale-${family}`} className="mb-2">
             {family} <span className="text-muted">({familyRole[family]})</span>
           </h3>
-          <ul className="grid grid-cols-11 gap-2">
+          <ul className={gridClass}>
             {steps.map((step) => (
               <Swatch key={step} name={`${family}-${step}`} hex={color[family][step]} />
             ))}
@@ -59,7 +62,7 @@ export function ColorScale(): ReactElement {
         <h3 id="color-scale-base" className="mb-2">
           white, black
         </h3>
-        <ul className="grid grid-cols-11 gap-2">
+        <ul className={gridClass}>
           <Swatch name="white" hex={color.white} />
           <Swatch name="black" hex={color.black} />
         </ul>
