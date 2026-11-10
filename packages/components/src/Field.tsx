@@ -25,9 +25,14 @@ export interface FieldProps extends ComponentProps<"div"> {
   required?: boolean;
   /** 비활성. 입력창에 네이티브 `disabled`가 붙는다. */
   disabled?: boolean;
-  /** label이 가리킬 입력창 id. 주지 않으면 자동으로 만든다. 오류 요약에서 `#id`로 링크할 때 쓴다. */
+  /** label이 가리킬 입력창 id. 주지 않으면 자동으로 만든다. 오류 요약에서 `#id`로 링크할 때 쓴다. `group`이면 묶음의 id다. */
   htmlFor?: string;
-  /** 입력 Component 하나(Input, Textarea 등) */
+  /**
+   * 안에 둔 것이 묶음(`CheckboxGroup`, `RadioGroup`)일 때 `true`로 준다. 기본값은 `false`다.
+   * label이 `<label for>` 대신 `for` 없는 요소가 되고, 묶음이 `aria-labelledby`로 이 label을 이름으로 쓴다.
+   */
+  group?: boolean;
+  /** 입력 Component 하나(Input, Textarea, CheckboxGroup, RadioGroup 등) */
   children: ReactNode;
 }
 
@@ -37,7 +42,8 @@ const hasContent = (node: ReactNode): boolean =>
 
 /**
  * 입력 Component에 label, 설명, 오류 메시지를 붙인다. 안의 Input·Textarea에 `id`, `aria-describedby`,
- * `aria-invalid`, `required`, `disabled`가 자동으로 연결된다. 서버 컴포넌트로 쓸 수 있다.
+ * `aria-invalid`, `required`, `disabled`가 자동으로 연결된다. 묶음(CheckboxGroup·RadioGroup)은 `group`과 함께 쓴다.
+ * 서버 컴포넌트로 쓸 수 있다.
  */
 export function Field({
   label,
@@ -47,6 +53,7 @@ export function Field({
   required = false,
   disabled = false,
   htmlFor,
+  group = false,
   className,
   children,
   ...props
@@ -74,6 +81,17 @@ export function Field({
     required,
   };
 
+  const labelContent = (
+    <>
+      {label}
+      {required ? (
+        <span aria-hidden="true" className="ms-0.5 text-danger">
+          *
+        </span>
+      ) : null}
+    </>
+  );
+
   return (
     <div
       {...props}
@@ -81,14 +99,17 @@ export function Field({
       data-disabled={disabled ? "" : undefined}
       className={cn("flex flex-col gap-1.5", className)}
     >
-      <label id={labelId} htmlFor={controlId} className="text-label-md text-default">
-        {label}
-        {required ? (
-          <span aria-hidden="true" className="ms-0.5 text-danger">
-            *
-          </span>
-        ) : null}
-      </label>
+      {/* 묶음은 label 요소로 이름을 붙일 수 없다(label for는 입력 요소 하나만 가리킨다). for 없는 요소를 두고
+          묶음이 aria-labelledby로 가리킨다(ADR 0013 정정, 티켓 16). */}
+      {group ? (
+        <span id={labelId} className="text-label-md text-default">
+          {labelContent}
+        </span>
+      ) : (
+        <label id={labelId} htmlFor={controlId} className="text-label-md text-default">
+          {labelContent}
+        </label>
+      )}
       <FieldContext value={value}>{children}</FieldContext>
       {showDescription ? (
         <p id={descriptionId} className="text-body-sm text-muted">
