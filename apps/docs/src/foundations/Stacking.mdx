@@ -1,0 +1,85 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as StackingStories from "./Stacking.stories.tsx";
+
+<Meta of={StackingStories} />
+
+# 쌓임 단계
+
+겹치는 요소가 화면 앞뒤로 놓이는 순서를 다섯 단계로 나눕니다. 표면 층은 "어느 바닥 위에 놓이는가", Elevation(그림자)은 "얼마나 떠 보이는가", 쌓임 단계는 "무엇이 앞에 그려지는가"입니다.
+
+## 단계
+
+뒤에서부터 `z-sticky`, `z-modal`, `z-popover`, `z-toast`, `z-tooltip`입니다.
+
+<Canvas of={StackingStories.Tiers} sourceState="none" />
+
+- `popover`가 `modal`보다 위입니다. Dialog 안에서 연 Select 목록이 Dialog 위에 보여야 하기 때문입니다. Dialog가 열려 있으면 뒤 페이지를 조작할 수 없으므로, 뒤 페이지의 Popover가 Dialog 위로 올라오는 일은 없습니다.
+- Dialog 위에 AlertDialog를 띄우면 둘 다 `modal`이고, 나중에 연 쪽이 위에 옵니다.
+- Tide는 브라우저 top-layer(`<dialog>.showModal()`, popover API)를 쓰지 않습니다. 모든 오버레이를 `document.body`에 portal로 그리고 이 단계로 쌓습니다. 앱에서 top-layer를 함께 쓰면 그 위에 Tide 오버레이가 가려질 수 있습니다.
+
+## 내 단계 끼우기
+
+단계는 100씩 떨어져 있습니다. 앱만의 단계는 사이 값으로 끼웁니다.
+
+```tsx
+// modal(200)과 popover(300) 사이
+<div className="fixed z-[250]">…</div>
+```
+
+자주 쓰면 앱 CSS의 `@theme`에 이름을 붙입니다. `z-index`의 theme namespace는 `--z-index-*`입니다.
+
+```css
+@theme {
+  --z-index-banner: 150;
+}
+```
+
+이렇게 더한 이름(`z-banner`)은 `cn`이 모르는 이름이라 충돌을 풀지 않습니다. `cn`으로 덮어쓸 일이 있으면 `z-[150]`처럼 값을 직접 적습니다.
+
+숫자 class(`z-10`, `z-50`)도 Tailwind 기본 동작대로 남아 있습니다. Component 안의 겹침(예: 붙은 버튼 묶음에서 포커스된 버튼을 위로)은 루트에 `isolate`를 주고 안에서 `z-0`, `z-1`만 씁니다. 그래야 안쪽 z-index가 밖으로 새어 앱의 sticky 헤더 위로 올라가지 않습니다. 쌓임 단계 class는 오버레이 루트에만 씁니다.
+
+## sticky 헤더와 포커스
+
+sticky 헤더가 있으면 Tab으로 옮긴 요소가 스크롤되어 헤더 밑으로 완전히 숨을 수 있습니다(WCAG 2.4.11 Focus Not Obscured 실패). 스크롤 영역에 헤더 높이만큼 `scroll-padding-top`을 주면, 브라우저가 포커스된 요소를 헤더 아래까지 스크롤합니다.
+
+<Canvas of={StackingStories.StickyHeader} sourceState="none" />
+
+페이지 전체가 스크롤된다면 `<html>`에 줍니다. 헤더 높이(`h-14`, 56px)와 같거나 조금 크게 둡니다.
+
+```tsx
+// app/layout.tsx
+<html lang="ko" className="scroll-pt-16">
+  <body>
+    <header className="sticky top-0 z-sticky h-14 bg-surface">…</header>
+    <main>…</main>
+  </body>
+</html>
+```
+
+```css
+/* Tailwind 없이 */
+html {
+  scroll-padding-top: 4rem;
+}
+```
+
+- 헤더 높이가 바뀌면 `scroll-padding-top`도 함께 바꿉니다. 높이가 화면 크기마다 다르면 breakpoint variant(`md:scroll-pt-20`)를 씁니다.
+- 앵커 링크(`#section`)로 이동할 때도 같은 여백이 적용되어 제목이 헤더에 가리지 않습니다.
+- 아래쪽에 고정한 영역이 있으면 `scroll-padding-bottom`(`scroll-pb-*`)을 같은 방법으로 줍니다.
+
+## CSS 변수
+
+Tailwind 없이 쓸 때는 `@tide-tds/foundation/tokens.css`의 변수를 씁니다.
+
+- `--tide-z-sticky`(100), `--tide-z-modal`(200), `--tide-z-popover`(300), `--tide-z-toast`(400), `--tide-z-tooltip`(500)
+
+```css
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--tide-z-sticky);
+}
+```
+
+`cn`은 쌓임 단계 이름을 알아서, Component에 넘긴 `className="z-modal"`이 기본 class를 이깁니다.

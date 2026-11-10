@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ## 전환 순간에는 transition을 끕니다
 
-Component에는 hover 같은 상태 변화를 위한 transition이 있습니다. Theme을 바꿀 때 이 transition이 그대로 돌면 요소마다 색이 따로 천천히 바뀌어 화면이 어수선해집니다. 바꾸는 순간에만 transition을 끄면 모든 색이 한꺼번에 바뀝니다.
+Component에는 hover 같은 상태 변화를 위한 transition이 있습니다. 색 전환은 `transition-colors`이고 시간은 `duration-fast`(`--tide-duration-fast`, 150ms)입니다([움직임](?path=/docs/foundation-움직임--docs)). Theme을 바꿀 때 이 transition이 그대로 돌면 요소마다 색이 따로 천천히 바뀌어 화면이 어수선해집니다. 바꾸는 순간에만 transition을 끄면 모든 색이 한꺼번에 바뀝니다.
 
 ```ts
 // theme.ts — 사용자가 Theme을 고를 때 부르는 함수(클라이언트에서만 실행)
