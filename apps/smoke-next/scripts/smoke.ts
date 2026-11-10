@@ -327,13 +327,14 @@ try {
   );
 
   // Badge·Card·Separator(서버 컴포넌트)가 prerender한 HTML: Card가 render로 article이 되고,
-  // Badge에 data-color가 붙고, Separator가 네이티브 hr(의미 구분은 역할 속성 없음, 장식용은 role="none")이다(티켓 19).
+  // Badge에 data-color(Role, 앱 Role, 색 계열)가 붙고, Separator가 네이티브 hr(의미 구분은 역할 속성 없음, 장식용은 role="none")이다(티켓 19).
   const hrs = html ? [...html.matchAll(/<hr[^>]*>/g)].map((m) => m[0]) : [];
   assert(
     html !== undefined &&
       /<article[^>]*aria-label="배포"/.test(html) &&
       /<span[^>]*data-color="success"[^>]*>완료<\/span>/.test(html) &&
       /<span[^>]*data-color="brand"[^>]*>브랜드<\/span>/.test(html) &&
+      /<span[^>]*data-color="cyan"[^>]*>디자인<\/span>/.test(html) &&
       hrs.length === 2 &&
       hrs.some((hr) => !hr.includes("role=") && !hr.includes("aria-orientation")) &&
       hrs.some((hr) => hr.includes('role="none"') && !hr.includes("aria-orientation")),

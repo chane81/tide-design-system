@@ -86,8 +86,10 @@ const xsSwitch: SwitchProps = { size: "xs" };
 // @ts-expect-error Switch color는 Role만 받는다(색 계열 이름은 받지 않는다).
 const graySwitch: SwitchProps = { color: "gray" };
 const badgeProps: BadgeProps = { children: "완료", color: "brand", variant: "solid", size: "sm" };
-// @ts-expect-error Badge color는 Role만 받는다(색 계열 이름은 받지 않는다, ADR 0017).
-const blueBadge: BadgeProps = { children: "완료", color: "blue" };
+// Badge color는 Role과 색 계열 이름(Color)을 받는다(ADR 0016·0017).
+const blueBadge: BadgeProps = { children: "디자인", color: "blue" };
+// @ts-expect-error 등록하지 않은 이름은 Badge color가 아니다.
+const unknownBadge: BadgeProps = { children: "완료", color: "purple-ish" };
 // @ts-expect-error Badge는 상태 텍스트(children)가 필수다.
 const emptyBadge: BadgeProps = { color: "success" };
 const cardProps: CardProps = { children: null, id: "card" };
@@ -156,6 +158,7 @@ export const values = [
   Badge,
   badgeProps,
   blueBadge,
+  unknownBadge,
   emptyBadge,
   Card,
   cardProps,

@@ -109,7 +109,7 @@ export default function Page() {
       {/* Badge·Card·Separator는 서버 컴포넌트다(티켓 19). 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
       <Card render={<article aria-label="배포" />}>
         <p>
-          배포 상태 <Badge color="success">완료</Badge>
+          배포 상태 <Badge color="success">완료</Badge> <Badge color="cyan">디자인</Badge>
         </p>
         <Separator />
         <p>
