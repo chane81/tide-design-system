@@ -337,6 +337,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - 네이티브 pseudo-class가 있으면 그것을 쓴다(`hover:`, `focus-visible:`, `disabled:`).
   - 없으면 boolean `data-*` 속성으로 노출한다: `data-selected`, `data-open`, `data-invalid`, `data-pressed`, `data-disabled`.
 - **disabled**: 네이티브 `disabled`를 지원하는 요소에는 그것을 쓴다. 지원하지 않는 요소에는 `aria-disabled="true"`와 `data-disabled`를 붙이고 이벤트를 막는다. `cursor-not-allowed`는 공통으로 적용한다.
+- **커서**: 누를 수 있는 Component(Button류)는 활성 상태에서 `cursor-pointer`, 로딩 중에는 `cursor-wait`, 비활성에는 `cursor-not-allowed`다. Tailwind 4 preflight는 button 커서를 브라우저 기본값으로 두므로 Component가 직접 붙인다. `render`로 바꾼 요소도 같다([Button](../tide-v0-impl/issues/13-button.md)).
 - **raised 위 항목**: ghost 규칙을 따른다. 기본은 투명, hover는 `subtle-hover`, 선택 유지는 `subtle-active`다. 목록 안 항목의 hover와 키보드 위치 표시는 highlight다.
 - **여러 부분으로 된 Component**: 평평한 이름으로 export한다(`DialogTrigger`). 부분마다 `className`을 받는다. `classNames` 객체는 두지 않는다.
 - **IconButton**: 별도 Component로 둔다. `aria-label`은 타입상 필수다. 24×24 미만은 없다.

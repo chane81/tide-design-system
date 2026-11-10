@@ -63,3 +63,7 @@ Blocked by: 07 (motion·z-index Foundation), 08 (아이콘 패키지), 09 (Spinn
     3. 로딩 cursor를 `wait`로 했다(spec에는 disabled의 `not-allowed`만 있다).
     4. 링크 disabled에서 `href`를 지우지 않는다. 클릭·Enter는 막지만 가운데 클릭·새 탭 열기는 브라우저가 처리한다. 또 `render` 요소 자신에 준 `onClick`은 차단 상태에서도 먼저 불린다(render 병합 규칙). Button에 준 `onClick`만 막힌다.
     5. 아이콘 prop 이름은 `startIcon`/`endIcon`이다(RTL을 생각해 left/right가 아닌 start/end).
+- 2026-11-10 사용자 피드백 반영: 마우스를 올려도 커서가 손 모양이 아니었다.
+  - **원인**: tailwindcss 4.3.5 preflight는 button 커서를 정하지 않아 브라우저 기본값(`default`)이 된다. v4 upgrade guide 「Buttons use the default cursor」(context7 `/tailwindlabs/tailwindcss.com` upgrade-guide.mdx)와 설치본 `preflight.css`(cursor 규칙 없음)로 확인했다. Tide foundation base CSS에도 cursor 규칙은 없다. `<a href>`는 브라우저 기본값으로 이미 pointer였다.
+  - **결정(이후 버튼류 기준)**: 활성 상태 `cursor-pointer`, 로딩 `cursor-wait`, 비활성 `cursor-not-allowed`. 기본 button과 `render` 요소(Next Link, `<a>`) 모두 Component가 class로 직접 붙인다. spec 공통 API 절에 「커서」 규칙을 더했다.
+  - **테스트**: browser에 계산된 `cursor` 단언 2개 × instance 2(button 활성·disabled·loading, Next Link·`<a>` 활성·disabled·loading). 수정을 잠시 빼면 button 활성이 `expected 'default' to be 'pointer'`로 실패함을 확인하고 되돌렸다.
