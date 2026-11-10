@@ -230,7 +230,15 @@ try {
     /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
   // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(pressable.js)은 이벤트를 DOM에 넘기지 않는다.
   const clientFiles = ["Button.js", "IconButton.js"];
-  const serverFiles = ["Spinner.js", "Link.js", "pressable.js"];
+  // Badge·Card·Separator는 표시만 하는 서버 컴포넌트다(티켓 19).
+  const serverFiles = [
+    "Spinner.js",
+    "Link.js",
+    "pressable.js",
+    "Badge.js",
+    "Card.js",
+    "Separator.js",
+  ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 있어야 한다`);
@@ -266,6 +274,13 @@ try {
   assert(
     /peer-checked\\:translate-x-4/.test(css),
     "Switch 내부 class(peer-checked:translate-x-4)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    /\[\\&_svg\\\]\\:size-3/.test(css) &&
+      css.includes(".bg-surface") &&
+      css.includes(".self-stretch"),
+    "Badge·Card·Separator 내부 class([&_svg]:size-3, bg-surface, self-stretch)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -309,6 +324,20 @@ try {
       ) &&
       radios.filter((radio) => /\schecked=""/.test(radio)).length === 1,
     "Field group이 prerender한 HTML에서 radiogroup 이름·설명·name·checked·aria-invalid·required가 연결되지 않았다",
+  );
+
+  // Badge·Card·Separator(서버 컴포넌트)가 prerender한 HTML: Card가 render로 article이 되고,
+  // Badge에 data-color가 붙고, Separator가 네이티브 hr(의미 구분은 역할 속성 없음, 장식용은 role="none")이다(티켓 19).
+  const hrs = html ? [...html.matchAll(/<hr[^>]*>/g)].map((m) => m[0]) : [];
+  assert(
+    html !== undefined &&
+      /<article[^>]*aria-label="배포"/.test(html) &&
+      /<span[^>]*data-color="success"[^>]*>완료<\/span>/.test(html) &&
+      /<span[^>]*data-color="brand"[^>]*>브랜드<\/span>/.test(html) &&
+      hrs.length === 2 &&
+      hrs.some((hr) => !hr.includes("role=") && !hr.includes("aria-orientation")) &&
+      hrs.some((hr) => hr.includes('role="none"') && !hr.includes("aria-orientation")),
+    "Badge·Card·Separator가 prerender한 HTML에서 article·data-color·hr 역할이 기대와 다르다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.

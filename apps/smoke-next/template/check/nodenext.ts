@@ -1,6 +1,8 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
 import {
+  Badge,
   Button,
+  Card,
   Checkbox,
   CheckboxGroup,
   cn,
@@ -10,10 +12,13 @@ import {
   Link,
   Radio,
   RadioGroup,
+  Separator,
   Switch,
   Textarea,
   VisuallyHidden,
+  type BadgeProps,
   type ButtonProps,
+  type CardProps,
   type CheckboxGroupProps,
   type CheckboxProps,
   type RadioGroupProps,
@@ -22,6 +27,7 @@ import {
   type IconButtonProps,
   type InputProps,
   type LinkProps,
+  type SeparatorProps,
   type SwitchProps,
   type TextareaProps,
   type Color,
@@ -79,6 +85,15 @@ const switchProps: SwitchProps = {
 const xsSwitch: SwitchProps = { size: "xs" };
 // @ts-expect-error Switch color는 Role만 받는다(색 계열 이름은 받지 않는다).
 const graySwitch: SwitchProps = { color: "gray" };
+const badgeProps: BadgeProps = { children: "완료", color: "brand", variant: "solid", size: "sm" };
+// @ts-expect-error Badge color는 Role만 받는다(색 계열 이름은 받지 않는다, ADR 0017).
+const blueBadge: BadgeProps = { children: "완료", color: "blue" };
+// @ts-expect-error Badge는 상태 텍스트(children)가 필수다.
+const emptyBadge: BadgeProps = { color: "success" };
+const cardProps: CardProps = { children: null, id: "card" };
+const separatorProps: SeparatorProps = { orientation: "vertical", decorative: true };
+// @ts-expect-error Separator orientation은 horizontal/vertical만 받는다.
+const diagonalSeparator: SeparatorProps = { orientation: "diagonal" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -138,4 +153,13 @@ export const values = [
   switchProps,
   xsSwitch,
   graySwitch,
+  Badge,
+  badgeProps,
+  blueBadge,
+  emptyBadge,
+  Card,
+  cardProps,
+  Separator,
+  separatorProps,
+  diagonalSeparator,
 ] as const;

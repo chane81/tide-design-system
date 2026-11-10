@@ -2,7 +2,9 @@
 // 이 파일에는 Component 내부 class(예: VisuallyHidden의 class)를 직접 쓰지 않는다.
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
 import {
+  Badge,
   Button,
+  Card,
   Checkbox,
   CheckboxGroup,
   cn,
@@ -12,6 +14,7 @@ import {
   Link as TideLink,
   Radio,
   RadioGroup,
+  Separator,
   Spinner,
   Switch,
   Textarea,
@@ -103,6 +106,20 @@ export default function Page() {
           소식 받기
         </Switch>
       </form>
+      {/* Badge·Card·Separator는 서버 컴포넌트다(티켓 19). 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+      <Card render={<article aria-label="배포" />}>
+        <p>
+          배포 상태 <Badge color="success">완료</Badge>
+        </p>
+        <Separator />
+        <p>
+          알림 서버{" "}
+          <Badge color="brand" variant="solid" size="sm">
+            브랜드
+          </Badge>
+        </p>
+        <Separator orientation="vertical" decorative />
+      </Card>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>
