@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Typography } from "@tide-tds/desktop";
+import { textStyle, type TextStyleName } from "@tide-tds/foundation";
+
+const textStyleNames = Object.keys(textStyle) as TextStyleName[];
 
 // Typography 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
 // story는 문서·렌더·a11y만 맡는다. 동작 단언은 desktop의 `Typography.test.tsx`에 있다.
@@ -9,6 +12,40 @@ const meta = {
   args: {
     variant: "body-md",
     children: "다람쥐 헌 쳇바퀴에 타고파",
+  },
+  // props가 union 타입이라 react-docgen이 variant를 `unknown`으로 읽고 level·render·ref를 놓친다.
+  // 표와 Controls에 실제 props가 보이게 직접 적는다. 설명은 Typography.tsx의 JSDoc과 맞춘다.
+  argTypes: {
+    variant: {
+      description: "텍스트 스타일 이름. heading·display는 항상 `<h*>`로 렌더된다.",
+      control: "select",
+      options: textStyleNames,
+      table: {
+        type: {
+          summary: "TextStyleName",
+          detail: textStyleNames.map((name) => `"${name}"`).join(" | "),
+        },
+        defaultValue: { summary: '"body-md"' },
+      },
+    },
+    level: {
+      description:
+        "제목 단계. heading·display 스타일에만 있고, 주지 않으면 텍스트 스타일의 기본 단계를 쓴다.",
+      control: "inline-radio",
+      options: [1, 2, 3, 4, 5, 6],
+      table: { type: { summary: "1 | 2 | 3 | 4 | 5 | 6" } },
+    },
+    render: {
+      description:
+        '다른 요소로 렌더한다. 예: `render={<label htmlFor="name" />}`. props, ref, className을 그 요소에 병합하고 `level`과 기본 요소는 무시한다.',
+      control: false,
+      table: { type: { summary: "ReactElement" } },
+    },
+    ref: {
+      description: "루트 DOM 요소에 연결한다.",
+      control: false,
+      table: { type: { summary: "Ref<HTMLElement>" } },
+    },
   },
 } satisfies Meta<typeof Typography>;
 

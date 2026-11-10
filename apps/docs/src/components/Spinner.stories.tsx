@@ -9,6 +9,17 @@ const meta = {
   args: {
     size: "md",
   },
+  // react-docgen이 `Extract<Size, ...>` 별칭을 풀지 못해 size가 JSON 편집으로 나온다. 선택지와 타입을 직접 적는다.
+  argTypes: {
+    size: {
+      control: "inline-radio",
+      options: ["xs", "sm", "md", "lg"],
+      table: {
+        type: { summary: '"xs" | "sm" | "md" | "lg"' },
+        defaultValue: { summary: '"md"' },
+      },
+    },
+  },
 } satisfies Meta<typeof Spinner>;
 
 export default meta;

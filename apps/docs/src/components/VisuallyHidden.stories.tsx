@@ -7,6 +7,19 @@ import type { ReactElement } from "react";
 const meta = {
   title: "Component/VisuallyHidden",
   component: VisuallyHidden,
+  // props 타입이 `ComponentProps<"span">` 별칭이라 react-docgen이 읽지 못해 표가 빈다. 자주 쓰는 prop만 적는다.
+  argTypes: {
+    children: {
+      description: "보조 기술에 읽힐 텍스트.",
+      control: "text",
+      table: { type: { summary: "ReactNode" } },
+    },
+    className: {
+      description: "기본 class(`sr-only`) 뒤에 붙는다.",
+      control: false,
+      table: { type: { summary: "string" } },
+    },
+  },
 } satisfies Meta<typeof VisuallyHidden>;
 
 export default meta;
