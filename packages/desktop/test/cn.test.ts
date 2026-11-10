@@ -13,6 +13,12 @@ describe("cn", () => {
     expect(cn("bg-primary-solid", "bg-[#ffffff]")).toBe("bg-[#ffffff]");
   });
 
+  it("텍스트 스타일은 글자색과 따로 남고, 같은 그룹끼리는 사용자 class가 이긴다", () => {
+    expect(cn("text-body-md", "text-muted")).toBe("text-body-md text-muted");
+    expect(cn("text-body-md", "text-heading-lg")).toBe("text-heading-lg");
+    expect(cn("text-label-md", "font-bold")).toBe("text-label-md font-bold");
+  });
+
   it("거짓 값은 무시한다", () => {
     expect(cn("p-4", false, null, undefined, { "p-2": true })).toBe("p-2");
   });
