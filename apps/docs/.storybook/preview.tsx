@@ -54,7 +54,7 @@ const preview: Preview = {
         locales: "ko",
         order: [
           "시작하기",
-          ["설치", "폰트 로드", "Theme 전환"],
+          ["설치", "폰트 로드", "Theme 전환", "브랜드 색 더하기"],
           "원칙",
           "기준",
           "Foundation",

@@ -6,7 +6,7 @@ import * as ColorStories from "./Color.stories.tsx";
 
 # 컬러
 
-색은 용도를 나타내는 **Semantic Token**(`bg-primary-solid`)으로 고릅니다.
+색은 용도를 나타내는 **Semantic Token**(`bg-primary-solid`)이나 **색 이름**(`data-color="green"`)으로 고릅니다.
 
 Semantic Token은 색 자체인 **Primitive Token**(`blue-600`)을 가리킵니다. Theme(light, dark)이 바뀌면 가리키는 Primitive만 바뀌므로, Component와 앱은 Semantic Token을 씁니다.
 
@@ -37,11 +37,38 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 강�
 | 테두리  | `border-default`(장식용 구분선), `border-strong`(입력창 등 UI 경계), `border-raised`(raised 표면 경계. light는 투명, dark는 gray-800) |
 | 기타    | `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(포커스 표시)                                                                |
 
+## 색 이름으로 고르기
+
+요소에 `data-color`로 색 이름을 주고 `accent` class로 칠하면, 같은 class가 그 색으로 바뀝니다.
+
+```tsx
+<p data-color="green" className="bg-accent-subtle text-accent border border-accent">
+  저장했습니다
+</p>
+```
+
+색 이름은 Role 6개와 색 계열 6개(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)입니다. 앱의 브랜드 계열도 더할 수 있습니다([브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)).
+
+| 속성   | class                                        | 쓰는 곳                  |
+| ------ | -------------------------------------------- | ------------------------ |
+| 배경   | `bg-accent-<solid\|subtle>[-hover\|-active]` | 진한·옅은 배경과 상태    |
+| 글자   | `text-accent-on-solid`                       | solid 배경 위 글자       |
+| 글자   | `text-accent`                                | subtle 배경·표면 위 글자 |
+| 테두리 | `border-accent`                              | UI 경계                  |
+
+- `data-color`가 없으면 `primary`입니다.
+- 색 계열은 Role과 같은 단계 규칙을 따릅니다. `neutral`과 `gray`는 다른 색입니다. `neutral`은 dark subtle이 더 밝고, 글자와 테두리가 `text-default`, `border-strong`입니다.
+- `data-color`는 `data-theme`과 같은 요소나 그 안쪽에 둡니다. 그러면 그 Theme 값을 씁니다.
+- 계열 class(`bg-blue-solid`)는 없습니다. 색 계열은 `data-color`로만 고릅니다.
+
+<Canvas of={ColorStories.Names} sourceState="none" />
+
 ## 그 밖의 쓰임
 
 - gradient: 배경 Token 이름을 그대로 씁니다. 예: `from-canvas`, `to-primary-subtle`
 - 그림자 색: class 없이 CSS 변수 `--tide-shadow-color`만 있습니다. 그림자 단계는 Elevation에서 다룹니다.
 - Tailwind 없이: `@tide-tds/foundation/tokens.css`를 불러와 `--tide-<class 이름>` 변수를 씁니다. 예: `var(--tide-bg-primary-solid)`, Primitive는 `var(--tide-color-blue-600)`
+- Tailwind 없이 색 이름: accent는 `var(--tide-accent-<슬롯>)`, 색 계열은 `var(--tide-<계열>-<슬롯>)`입니다. 슬롯은 `solid`, `solid-hover`, `solid-active`, `subtle`, `subtle-hover`, `subtle-active`, `text`, `border`, `on-solid`입니다. 예: `var(--tide-accent-solid)`, `var(--tide-blue-subtle)`
 
 ## 색 스케일
 
@@ -60,6 +87,14 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 강�
 <Canvas of={ColorStories.LightPairs} sourceState="none" />
 
 <Canvas of={ColorStories.DarkPairs} sourceState="none" />
+
+### 색 이름별 대비
+
+색 이름마다 같은 규칙으로 검사합니다. 글자는 표면 층과 subtle 3단계, solid 위 글자는 solid 3단계, UI 경계는 표면 층 위에서 잽니다. 표는 그중 가장 낮은 값입니다.
+
+<Canvas of={ColorStories.LightNameContrast} sourceState="none" />
+
+<Canvas of={ColorStories.DarkNameContrast} sourceState="none" />
 
 ### 검사에서 뺀 Token
 

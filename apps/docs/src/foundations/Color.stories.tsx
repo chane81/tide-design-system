@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { ColorNameContrast, ColorNames } from "../docs-blocks/ColorNames.tsx";
 import { ColorScale } from "../docs-blocks/ColorScale.tsx";
 import { ContrastExclusions, ContrastPairs } from "../docs-blocks/ContrastPairs.tsx";
 
@@ -31,6 +32,24 @@ export const LightPairs: Story = {
 export const DarkPairs: Story = {
   name: "대비 쌍: dark",
   render: () => <ContrastPairs theme="dark" />,
+};
+
+/** 색 이름(Role과 색 계열)을 data-color로 고른 accent class 미리보기 */
+export const Names: Story = {
+  name: "색 이름",
+  render: () => <ColorNames />,
+};
+
+/** light Theme의 색 이름별 최저 대비비 */
+export const LightNameContrast: Story = {
+  name: "색 이름 대비: light",
+  render: () => <ColorNameContrast theme="light" />,
+};
+
+/** dark Theme의 색 이름별 최저 대비비 */
+export const DarkNameContrast: Story = {
+  name: "색 이름 대비: dark",
+  render: () => <ColorNameContrast theme="dark" />,
 };
 
 /** 대비 검사에서 뺀 Token */

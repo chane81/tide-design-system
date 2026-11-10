@@ -1,0 +1,159 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="시작하기/브랜드 색 더하기" />
+
+# 브랜드 색 더하기
+
+앱의 브랜드 색 계열을 정의하고 CSS를 만들면 `data-color="brand"`로 Tide 색 이름처럼 고를 수 있습니다.
+
+## 준비
+
+- [설치](?path=/docs/시작하기-설치--docs)를 마친 앱
+- 계열 파일을 `.ts`로 쓰면 Node.js 23.6 이상. 이 버전부터 Node가 TypeScript를 바로 읽습니다. `.js`·`.mjs`로 써도 됩니다.
+
+계열 정의 API와 CLI는 `@tide-tds/foundation`에 있습니다. `@tide-tds/components`와 같은 버전으로 개발 의존성에 더합니다.
+
+```sh
+pnpm add -D @tide-tds/foundation@<@tide-tds/components와 같은 버전>
+```
+
+## 1. 계열 정의하기
+
+50~950의 11단계 스케일 전체를 hex로 적습니다. 이름은 소문자 kebab-case이고 Tide 색 이름(`primary`, `blue` 등)과 겹치면 안 됩니다.
+
+```ts
+// brand.ts
+import { defineColorFamily } from "@tide-tds/foundation/color-family";
+
+export default defineColorFamily({
+  name: "brand",
+  scale: {
+    50: "#f5f3ff",
+    100: "#ede9fe",
+    200: "#ddd6fe",
+    300: "#c4b5fd",
+    400: "#a78bfa",
+    500: "#8b5cf6",
+    600: "#7c3aed",
+    700: "#6d28d9",
+    800: "#5b21b6",
+    900: "#4c1d95",
+    950: "#2e1065",
+  },
+});
+```
+
+## 2. CSS 만들기
+
+`tide-color build`가 Tide 계열과 같은 단계 규칙으로 light·dark CSS를 만듭니다.
+
+```sh
+pnpm exec tide-color build brand.ts > app/brand.css
+```
+
+대비도 Tide와 같은 기준으로 light·dark 모두 검사합니다. 기준에 못 미치면 모자란 짝을 출력하고, CSS를 만들지 않고 exit 1로 끝납니다. 스케일을 바꿀 때마다 다시 실행하도록 `package.json` script로 두면 편합니다.
+
+```json
+{
+  "scripts": {
+    "colors": "tide-color build brand.ts > app/brand.css"
+  }
+}
+```
+
+## 3. CSS 불러오기
+
+Tide CSS 다음 줄에 만든 CSS를 불러옵니다. 순서가 바뀌면 `data-color="brand"`가 적용되지 않습니다.
+
+```css
+/* app/globals.css */
+@import "tailwindcss";
+@import "@tide-tds/components/styles.css";
+@import "./brand.css";
+```
+
+## 4. 색 이름 타입에 더하기
+
+`ColorRegistry`에 이름을 더하면 `Color` 타입이 `"brand"`를 받습니다.
+
+```ts
+// app/colors.ts
+import type { Color } from "@tide-tds/components";
+
+declare module "@tide-tds/components" {
+  interface ColorRegistry {
+    brand: true;
+  }
+}
+
+export const brandColor: Color = "brand";
+```
+
+## 5. 쓰기
+
+`data-color`에 이름을 주고 accent class로 칠합니다. light·dark Theme도 따라 바뀝니다.
+
+```tsx
+<p data-color="brand" className="bg-accent-solid text-accent-on-solid">
+  새 기능
+</p>
+```
+
+## 상황별 안내
+
+### 대비가 모자랄 때
+
+`overrides`로 슬롯이 가리킬 단계를 바꿉니다. 예를 들어 밝은 노랑은 solid를 밝게 두고 그 위 글자를 진한 단계로 바꿉니다.
+
+```ts
+// brand.ts
+export default defineColorFamily({
+  name: "brand",
+  scale: yellowScale,
+  overrides: {
+    solid: { light: 400, dark: 400 },
+    "solid-hover": { light: 500, dark: 500 },
+    "solid-active": { light: 600, dark: 600 },
+    "on-solid": { light: 950, dark: 950 },
+    border: { light: 700 },
+  },
+});
+```
+
+슬롯과 기본 단계는 아래와 같습니다. 값은 단계 숫자나 `white`, `black`입니다.
+
+| 슬롯                                      | light         | dark          |
+| ----------------------------------------- | ------------- | ------------- |
+| `solid`, `solid-hover`, `solid-active`    | 600, 700, 800 | 600, 700, 800 |
+| `subtle`, `subtle-hover`, `subtle-active` | 50, 100, 200  | 950, 900, 800 |
+| `text`                                    | 800           | 200           |
+| `border`                                  | 600           | 400           |
+| `on-solid`                                | `white`       | `white`       |
+
+### 계열이 여러 개일 때
+
+default export를 배열로 두면 한 번에 만듭니다.
+
+```ts
+// colors.ts
+export default [brand, accentBrand];
+```
+
+### 계열 class를 직접 더할 때
+
+`bg-brand-solid` 같은 class가 꼭 필요하면 앱 CSS의 `@theme`에 직접 연결할 수 있습니다. 이 class는 Tide `cn`이 충돌을 풀지 않습니다. 같은 요소에 다른 배경 class와 함께 쓰면 둘 다 남습니다. 되도록 `data-color`와 accent class를 씁니다.
+
+```css
+/* app/globals.css */
+@theme inline {
+  --background-color-brand-solid: var(--tide-brand-solid);
+}
+```
+
+### Tailwind 없이 쓸 때
+
+계열 변수는 `var(--tide-brand-<슬롯>)`이고, `data-color="brand"` 안에서는 `var(--tide-accent-<슬롯>)`도 브랜드 색입니다.
+
+## 다음 단계
+
+- [컬러](?path=/docs/foundation-컬러--docs): 색 이름, accent class, 대비 기준을 봅니다.
