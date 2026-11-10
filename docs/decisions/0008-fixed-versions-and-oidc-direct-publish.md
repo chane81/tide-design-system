@@ -1,6 +1,6 @@
 # 세 패키지는 fixed 버전으로 묶고, CI는 OIDC 직접 publish로 배포한다
 
-근거 원칙: ③ 단순함이 풍부함보다 우선한다
+근거 원칙: ③ 단순함이 유연함보다 우선한다
 
 `@tide-tds/foundation`, `@tide-tds/desktop`, `@tide-tds/icons`는 changesets `fixed`로 묶는다. 바뀐 것이 없는 패키지도 함께 버전을 올리고 함께 publish한다. desktop은 foundation과 icons를 `workspace:*`(배포 시 정확한 버전)로 의존한다. 그래서 "Tide 0.3"이라는 말이 세 패키지 모두에 통한다.
 

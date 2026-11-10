@@ -94,4 +94,7 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ② 명확함, ③ 단순함, ④ 발견할 수 있음: [ADR 0003 Token 원본은 TS 객체, Semantic 색은 Tailwind 속성별 namespace로 노출](../decisions/0003-token-source-and-utility-namespaces.md)
 - ① 접근성, ③ 단순함: [ADR 0004 접근성 동작은 React Aria hooks, 구조와 스타일은 직접 구현](../decisions/0004-react-aria-hooks-own-markup.md)
 - ③ 단순함, ④ 발견할 수 있음: [ADR 0005 variant 맵은 직접 작성하고, 조합은 `render` prop으로 한다](../decisions/0005-hand-written-variant-maps-and-render-prop.md)
+- ② 명확함: [ADR 0006 패키지는 Foundation과 Target(desktop)으로 나눈다](../decisions/0006-foundation-and-target-packages.md) (ADR 0009로 대체됨)
+- ③ 단순함, ④ 발견할 수 있음: [ADR 0007 아이콘은 Lucide를 생성 복사한 `@tide-tds/icons`로 배포한다](../decisions/0007-lucide-generated-icons-package.md)
+- ③ 단순함: [ADR 0008 세 패키지는 fixed 버전으로 묶고, CI는 OIDC 직접 publish로 배포한다](../decisions/0008-fixed-versions-and-oidc-direct-publish.md)
 - ② 명확함, ③ 단순함: [ADR 0009 Component는 `@tide-tds/components` 한 패키지로 두고 Target으로 나누지 않는다](../decisions/0009-single-components-package.md)
