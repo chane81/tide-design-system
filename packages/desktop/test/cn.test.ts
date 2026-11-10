@@ -24,6 +24,15 @@ describe("cn", () => {
     expect(cn("rounded-lg shadow-md", "shadow-lg")).toBe("rounded-lg shadow-lg");
   });
 
+  it("쌓임 단계와 duration도 사용자 class가 이긴다", () => {
+    expect(cn("z-popover transition-colors duration-fast", "z-modal")).toBe(
+      "transition-colors duration-fast z-modal",
+    );
+    expect(cn("transition-colors duration-fast", "duration-normal")).toBe(
+      "transition-colors duration-normal",
+    );
+  });
+
   it("거짓 값은 무시한다", () => {
     expect(cn("p-4", false, null, undefined, { "p-2": true })).toBe("p-2");
   });
