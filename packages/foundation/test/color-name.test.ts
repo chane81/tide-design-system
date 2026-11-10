@@ -172,7 +172,9 @@ describe("색 이름 등록 타입", () => {
     expectTypeOf<ColorFamilyName>().toEqualTypeOf<ColorFamily | "test-accent">();
     expectTypeOf<ColorFamilyRegistry["test-accent"]>().toEqualTypeOf<true>();
     // ColorFamily는 Primitive 계열이라 augmentation으로 넓어지지 않는다.
-    expectTypeOf<ColorFamily>().toEqualTypeOf<"blue" | "gray" | "green" | "amber" | "red" | "cyan">();
+    expectTypeOf<ColorFamily>().toEqualTypeOf<
+      "blue" | "gray" | "green" | "amber" | "red" | "cyan"
+    >();
     // @ts-expect-error Role은 색 계열 이름이 아니다.
     const role: ColorFamilyName = "primary";
     expect(role).toBe("primary");
