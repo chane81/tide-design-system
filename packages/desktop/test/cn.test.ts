@@ -19,6 +19,11 @@ describe("cn", () => {
     expect(cn("text-label-md", "font-bold")).toBe("text-label-md font-bold");
   });
 
+  it("radius와 그림자도 사용자 class가 이긴다", () => {
+    expect(cn("rounded-md shadow-md", "rounded-lg")).toBe("shadow-md rounded-lg");
+    expect(cn("rounded-lg shadow-md", "shadow-lg")).toBe("rounded-lg shadow-lg");
+  });
+
   it("거짓 값은 무시한다", () => {
     expect(cn("p-4", false, null, undefined, { "p-2": true })).toBe("p-2");
   });
