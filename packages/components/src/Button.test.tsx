@@ -313,6 +313,34 @@ describe("Role(data-color)", () => {
     });
   });
 
+  describe("Tide Role 변수 덮어쓰기", () => {
+    // 「브랜드 색 더하기」 문서의 「Tide Role의 색을 바꿀 때」와 같다. 앱 CSS를 Tide CSS 뒤에 둔다.
+    // 별도 기능이 아니라 CSS 변수 덮어쓰기라 대비 검사는 받지 않는다.
+    let style: HTMLStyleElement | undefined;
+    afterEach(() => style?.remove());
+
+    test("Theme 블록에서 --tide-bg-primary-solid를 덮어쓰면 기본 Button이 그 색이 된다", async () => {
+      style = document.createElement("style");
+      style.textContent = '[data-theme="light"] { --tide-bg-primary-solid: #7c3aed; }';
+      document.head.append(style);
+      await render(
+        <div data-theme="light">
+          <Button data-testid="primary">저장</Button>
+          <Button data-testid="success" color="success">
+            저장
+          </Button>
+        </div>,
+      );
+      const accent = (testId: string): string =>
+        getComputedStyle(page.getByTestId(testId).element())
+          .getPropertyValue("--tide-accent-solid")
+          .trim();
+      expect(accent("primary")).toBe("#7c3aed");
+      // 다른 Role은 그대로다.
+      expect(accent("success")).toBe(color.green[600]);
+    });
+  });
+
   test("transition-colors는 Tide 기본값(fast 150ms)이다", async () => {
     await render(<Button>저장</Button>);
     const style = getComputedStyle(page.getByRole("button").element());
