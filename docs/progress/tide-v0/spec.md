@@ -250,8 +250,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **motion**:
   - duration은 `fast` 150ms, `normal` 300ms다(`--transition-duration-*`). easing은 `out` 하나다.
   - `--default-transition-duration`과 `--default-transition-timing-function`을 Tide 값으로 지정한다.
-  - 공개 계약: `--tide-duration-fast`, `--tide-duration-normal`, `--tide-ease-out`
-- **z-index**: `--z-index-*` namespace다. `sticky` 100, `modal` 200, `popover` 300, `toast` 400, `tooltip` 500. 공개 계약은 `--tide-z-*`다.
+  - 공개 계약: `--tide-duration-fast`, `--tide-duration-normal`, `--tide-ease-out`. Theme과 무관하므로 `:root` 블록에 둔다. `--default-transition-*`는 `--tide-duration-fast`, `--tide-ease-out`을 가리킨다. `ease-in`, `ease-in-out`과 숫자 duration(`duration-150`)은 Tailwind 기본값대로 남는다([motion·z-index Foundation](../tide-v0-impl/issues/07-motion-z-index-foundation.md)).
+- **z-index**: `--z-index-*` namespace다. `sticky` 100, `modal` 200, `popover` 300, `toast` 400, `tooltip` 500. 공개 계약은 `--tide-z-*`다. 숫자 class(`z-0`, `z-10`)와 임의 값(`z-[250]`)은 남는다([motion·z-index Foundation](../tide-v0-impl/issues/07-motion-z-index-foundation.md)).
 - **tailwind-merge 설정**: Token 원본에서 만든다. Tide가 새로 만든 이름(텍스트 스타일, radius, shadow, z-index, duration, Semantic 색 namespace)을 Tailwind 기본 그룹에 등록한다. 그래야 충돌을 해결할 수 있다.
 
 ### `@tide-tds/icons` ([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md))
