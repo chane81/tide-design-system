@@ -6,7 +6,7 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 # Badge
 
-항목의 상태를 짧은 텍스트로 보여 주는 라벨입니다. 누르거나 고르는 동작이 없습니다.
+항목의 상태나 분류를 짧은 텍스트로 보여 주는 라벨입니다. 누르거나 고르는 동작이 없습니다.
 
 <Canvas of={BadgeStories.Basic} />
 
@@ -14,21 +14,27 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 - 목록이나 제목 옆에 상태(완료, 지연, 실패)를 붙일 때
 - 새 기능, 베타처럼 항목의 성격을 알릴 때
+- 디자인·마케팅처럼 항목의 분류를 붙일 때
 
 ## 쓰지 않을 때
 
 - 사용자가 고르거나 지울 수 있는 값이면 Tag를 씁니다.
 - 눌러서 어딘가로 가거나 무언가를 바꾸면 Button이나 Link를 씁니다.
 - 화면 전체에 알릴 내용이면 Alert를 씁니다. 바뀌는 순간 읽어 줘야 하는 알림이면 Toast를 씁니다.
-- 뜻이 없는 분류 색(카테고리 색)을 칠하려면 Badge가 아니라 색 계열을 받는 Component(Tag 등)를 씁니다.
 
 ## 예시
 
-### 색 고르기
+### 상태 색 고르기(Role)
 
-`color`는 상태의 뜻을 담은 Role(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)입니다. 기본값은 `neutral`입니다. 색은 텍스트를 거들 뿐이고, 상태는 항상 텍스트로 적습니다. 앱이 `RoleRegistry`에 더한 Role(예: `brand`)도 받습니다([브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)). `blue` 같은 색 계열 이름은 받지 않습니다.
+상태에는 뜻을 담은 Role(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)을 씁니다. 기본값은 `neutral`입니다. 색은 텍스트를 거들 뿐이고, 상태는 항상 텍스트로 적습니다. 앱이 `RoleRegistry`에 더한 Role(예: `brand`)도 받습니다.
 
 <Canvas of={BadgeStories.Colors} />
+
+### 분류 색 고르기(색 계열)
+
+뜻이 없는 분류에는 색 계열 이름(`gray`, `blue`, `green`, `amber`, `red`, `cyan`)을 씁니다. 같은 분류는 어느 화면에서나 같은 색으로 둡니다. 앱이 `ColorFamilyRegistry`에 더한 장식 계열도 받습니다. 앱 색은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만들고, 대비는 `tide-color`가 검사합니다. `gray`는 `neutral`과 다른 색입니다(dark에서 배경이 다릅니다).
+
+<Canvas of={BadgeStories.Families} />
 
 ### 채움 방식 바꾸기
 
@@ -61,6 +67,16 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 <Canvas of={BadgeStories.DoTextState} />
 
+### Do: 상태는 Role, 분류는 색 이름으로 고른다
+
+<Canvas of={BadgeStories.DoRoleForStatus} />
+
+### Don't: 상태를 색 계열 이름으로 칠한다
+
+`green`·`red`는 뜻이 없는 색입니다. 앱이 Role 색을 바꾸거나 앱 Role을 더해도 따라가지 않아, 같은 상태가 화면마다 다른 색이 됩니다. 상태는 `success`·`danger`로 고릅니다.
+
+<Canvas of={BadgeStories.DontFamilyForStatus} />
+
 ### Don't: 색만으로 구분한다
 
 색을 구분하기 어려운 사용자와 스크린 리더 사용자는 두 Badge가 같은 상태로 보입니다.
@@ -78,7 +94,7 @@ Badge는 포커스와 키보드 동작이 없습니다. 지울 수 있는 값은
 ### 기본 제공
 
 - 역할: 없습니다(`span`). 텍스트가 주변 문장과 이름(버튼, 목록 항목)에 그대로 들어갑니다.
-- 대비: 글자와 배경이 4.5:1 이상입니다(Role마다 subtle·solid 대비 쌍).
+- 대비: 글자와 배경이 4.5:1 이상입니다(Role과 색 계열마다 subtle·solid 대비 쌍).
 - 고대비 모드(forced-colors): 배경 대신 시스템 글자색 경계가 그려져 라벨 모양이 남습니다.
 
 ### 앱이 할 일
@@ -88,6 +104,6 @@ Badge는 포커스와 키보드 동작이 없습니다. 지울 수 있는 값은
 
 ## Props
 
-서버 컴포넌트로 쓸 수 있습니다. `span`의 props를 모두 받습니다(`color`는 Role로 바뀝니다). `ref`는 `span`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `rounded-full`). 루트에는 `data-color`가 붙습니다.
+서버 컴포넌트로 쓸 수 있습니다. `span`의 props를 모두 받습니다(`color`는 색 이름 `Color`로 바뀝니다). `ref`는 `span`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `rounded-full`). 루트에는 `data-color`가 붙습니다.
 
 <ArgTypes of={BadgeStories} />

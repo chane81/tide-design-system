@@ -15,6 +15,16 @@ const roleLabel: Record<(typeof roles)[number], string> = {
   info: "안내",
 };
 
+const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+const familyLabel: Record<(typeof families)[number], string> = {
+  gray: "문서",
+  blue: "디자인",
+  green: "마케팅",
+  amber: "영업",
+  red: "보안",
+  cyan: "데이터",
+};
+
 const meta = {
   title: "Component/Badge",
   component: Badge,
@@ -39,8 +49,11 @@ const meta = {
     },
     color: {
       control: "select",
-      options: roles,
-      table: { type: { summary: "Role" }, defaultValue: { summary: '"neutral"' } },
+      options: [...roles, ...families],
+      table: {
+        type: { summary: "Color(Role | ColorFamilyName)" },
+        defaultValue: { summary: '"neutral"' },
+      },
     },
   },
 } satisfies Meta<typeof Badge>;
@@ -54,14 +67,28 @@ export const Basic: Story = {
   name: "기본",
 };
 
-/** Role 6개. 텍스트가 상태를 말하고 색은 뜻을 거든다. */
+/** 상태: Role 6개. 텍스트가 상태를 말하고 색은 뜻을 거든다. */
 export const Colors: Story = {
-  name: "Role",
+  name: "상태(Role)",
   render: () => (
     <div className="flex flex-wrap items-center gap-2">
       {roles.map((role) => (
         <Badge key={role} color={role}>
           {roleLabel[role]}
+        </Badge>
+      ))}
+    </div>
+  ),
+};
+
+/** 분류: 색 계열 6개. 색에 뜻이 없고 같은 분류를 같은 색으로 묶는다. */
+export const Families: Story = {
+  name: "분류(색 계열)",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      {families.map((family) => (
+        <Badge key={family} color={family}>
+          {familyLabel[family]}
         </Badge>
       ))}
     </div>
@@ -137,6 +164,28 @@ export const DoTextState: Story = {
     <div className="flex items-center gap-2">
       <Badge color="success">승인됨</Badge>
       <Badge color="danger">거절됨</Badge>
+    </div>
+  ),
+};
+
+/** Do: 상태는 Role, 분류는 색 이름 */
+export const DoRoleForStatus: Story = {
+  name: "Do: 상태는 Role, 분류는 색 이름",
+  render: () => (
+    <p className="flex items-center gap-2 text-body-md text-default">
+      로그인 화면 개편 <Badge color="blue">디자인</Badge>
+      <Badge color="success">완료</Badge>
+    </p>
+  ),
+};
+
+/** Don't: 상태를 색 계열 이름으로 칠한다. */
+export const DontFamilyForStatus: Story = {
+  name: "Don't: 상태를 색 이름으로",
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Badge color="green">완료</Badge>
+      <Badge color="red">실패</Badge>
     </div>
   ),
 };
