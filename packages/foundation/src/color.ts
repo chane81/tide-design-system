@@ -1,7 +1,7 @@
 // Primitive 색. 정본은 hex다(tide-v0 티켓 08·09, spec 「`@tide-tds/foundation`」 컬러).
 // 초안은 OKLCH L 계단(티켓 08의 A)으로 만들었고, 손으로 조정해도 된다. 조정하면 대비 쌍 검사가 다시 보장한다.
 // 계열 이름은 용도가 아니라 색상으로 짓는다. 어느 Role이 어느 계열을 쓰는지는 semantic.ts의 roleFamily에 있다.
-// 계열을 더하면 계열 변수 묶음, `[data-color]` 규칙, 대비 쌍, 색 이름 타입(ColorRegistry)이 함께 따라온다(티켓 40).
+// 계열을 더하면 계열 변수 묶음, `[data-color]` 규칙, 대비 쌍, 색 계열 이름 타입(ColorFamilyRegistry)이 함께 따라온다(티켓 40, 41).
 // blue-500은 Tide의 앵커 `#3183f5`이고 바꾸지 않는다.
 export const color = {
   white: "#ffffff",

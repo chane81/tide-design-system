@@ -7,13 +7,16 @@ export {
   semanticPrefix,
   type AlphaColor,
   type Color,
-  type ColorRegistry,
+  type ColorFamilyName,
+  type ColorFamilyRegistry,
   type Role,
+  type RoleRegistry,
   type SemanticColorName,
   type SemanticColorValue,
   type SemanticNamespace,
   type ThemeName,
   type ThemedColor,
+  type TideRole,
 } from "./semantic.ts";
 export { contrastPairs, type ContrastExclusion, type ContrastPair } from "./contrast.ts";
 export {

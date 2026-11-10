@@ -1,5 +1,5 @@
 import type { ColorSlot } from "./color-slot.ts";
-import { semanticHex, type Role, type SemanticColorName, type ThemeName } from "./semantic.ts";
+import { semanticHex, type SemanticColorName, type ThemeName, type TideRole } from "./semantic.ts";
 
 /** 함께 쓰이는 글자(또는 경계)와 배경의 짝. Utility class 이름으로 적는다. */
 export interface ContrastPair {
@@ -19,8 +19,8 @@ export interface ContrastExclusion {
 // 모든 text × 모든 bg 조합이 아니라 실제로 함께 쓰는 쌍만 적는다. light와 dark에서 모두 검사한다.
 // surface는 canvas와 같은 색이지만 이름이 다른 Token이므로 따로 등록한다.
 const surfaces = ["bg-canvas", "bg-surface", "bg-raised"] as const;
-const roles = ["primary", "success", "warning", "danger", "info"] as const satisfies Role[];
-const allRoles = ["neutral", ...roles] as const satisfies Role[];
+const roles = ["primary", "success", "warning", "danger", "info"] as const satisfies TideRole[];
+const allRoles = ["neutral", ...roles] as const satisfies TideRole[];
 const subtleStates = ["subtle", "subtle-hover", "subtle-active"] as const;
 const solidStates = ["solid", "solid-hover", "solid-active"] as const;
 

@@ -1,10 +1,19 @@
 // 색 이름(Color)과 색 계열(tide-v0-impl 티켓 40).
 // 1. Tide 색 이름마다 대비 쌍 규칙을 light·dark에서 검사한다.
 // 2. 테스트 전용 계열(violet)을 Primitive에 더하면 계열 변수, [data-color] 규칙, 대비 쌍이 따라오는지 본다.
-// 3. ColorRegistry 타입과 module augmentation(타입 검사는 `tsc --noEmit`이 이 파일도 본다).
+// 3. RoleRegistry·ColorFamilyRegistry 타입과 module augmentation(타입 검사는 `tsc --noEmit`이 이 파일도 본다).
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
-import type { Color, ColorFamily, ColorRegistry, Role } from "../src/index.ts";
+import type {
+  Color,
+  ColorFamily,
+  ColorFamilyName,
+  ColorFamilyRegistry,
+  Role,
+  RoleRegistry,
+  semantic,
+  TideRole,
+} from "../src/index.ts";
 import {
   checkColorContrast,
   colorSlotHex,
@@ -14,11 +23,15 @@ import {
   tideColorNames,
 } from "../src/internal.ts";
 
-// 앱이 브랜드 계열을 더하는 것과 같은 augmentation. re-export한 모듈(index)을 대상으로 해도 원래 interface에 합쳐진다
-// (TypeScript 7.0.2에서 확인, 티켓 40 Comments).
+// 앱이 Role과 장식용 계열을 더하는 것과 같은 augmentation. re-export한 모듈(index)을 대상으로 해도 원래 interface에
+// 합쳐진다(TypeScript 7.0.2에서 확인, 티켓 40·41 Comments). 이 augmentation은 foundation 타입 검사 전체에 걸린다.
+// 그래서 Tide 안의 계산(Semantic Token 이름)이 앱 Role로 넓어지지 않는지도 함께 본다.
 declare module "../src/index.ts" {
-  interface ColorRegistry {
+  interface RoleRegistry {
     "test-brand": true;
+  }
+  interface ColorFamilyRegistry {
+    "test-accent": true;
   }
 }
 
@@ -141,12 +154,42 @@ describe("테스트 전용 계열을 더하면", () => {
   });
 });
 
-describe("ColorRegistry 타입", () => {
-  it("Color는 Role, Tide 색 계열, augmentation으로 더한 이름이다", () => {
-    expectTypeOf<Color>().toEqualTypeOf<Role | ColorFamily | "test-brand">();
-    expectTypeOf<ColorRegistry["test-brand"]>().toEqualTypeOf<true>();
+describe("색 이름 등록 타입", () => {
+  it("Role은 Tide Role 6개와 RoleRegistry에 더한 이름이다", () => {
+    expectTypeOf<TideRole>().toEqualTypeOf<
+      "neutral" | "primary" | "success" | "warning" | "danger" | "info"
+    >();
+    expectTypeOf<Role>().toEqualTypeOf<TideRole | "test-brand">();
+    expectTypeOf<RoleRegistry["test-brand"]>().toEqualTypeOf<true>();
+    // @ts-expect-error 색 계열 이름은 Role이 아니다.
+    const family: Role = "blue";
+    // @ts-expect-error 장식용으로 등록한 계열도 Role이 아니다.
+    const accent: Role = "test-accent";
+    expect([family, accent]).toEqual(["blue", "test-accent"]);
+  });
+
+  it("색 계열 이름은 Tide 색 계열과 ColorFamilyRegistry에 더한 이름이다", () => {
+    expectTypeOf<ColorFamilyName>().toEqualTypeOf<ColorFamily | "test-accent">();
+    expectTypeOf<ColorFamilyRegistry["test-accent"]>().toEqualTypeOf<true>();
+    // ColorFamily는 Primitive 계열이라 augmentation으로 넓어지지 않는다.
+    expectTypeOf<ColorFamily>().toEqualTypeOf<"blue" | "gray" | "green" | "amber" | "red" | "cyan">();
+    // @ts-expect-error Role은 색 계열 이름이 아니다.
+    const role: ColorFamilyName = "primary";
+    expect(role).toBe("primary");
+  });
+
+  it("Color는 Role과 색 계열 이름을 합친 것이다", () => {
+    expectTypeOf<Color>().toEqualTypeOf<Role | ColorFamilyName>();
     // @ts-expect-error 등록하지 않은 색 이름은 Color가 아니다.
     const unknown: Color = "purple";
     expect(unknown).toBe("purple");
+  });
+
+  it("앱 Role은 Semantic Token 이름을 넓히지 않는다", () => {
+    type BackgroundName = keyof typeof semantic.background;
+    expectTypeOf<"primary-solid">().toExtend<BackgroundName>();
+    expectTypeOf<"test-brand-solid">().not.toExtend<BackgroundName>();
+    expectTypeOf<"primary">().toExtend<keyof typeof semantic.text>();
+    expectTypeOf<"test-brand">().not.toExtend<keyof typeof semantic.text>();
   });
 });

@@ -31,8 +31,11 @@ export interface ThemedColor {
   readonly dark: SemanticColorValue;
 }
 
-/** Role. Component의 `color`로 고르는 색 이름(Color) 중 용도를 나타내는 여섯 가지다. */
-export type Role = "neutral" | "primary" | "success" | "warning" | "danger" | "info";
+/**
+ * Tide가 정한 Role 6개. 앱이 `RoleRegistry`에 더한 Role은 들어 있지 않다.
+ * Tide 안의 계산(Semantic Token 이름, 대비 쌍)은 이 타입을 쓴다. 앱 Role에는 Role Token이 생기지 않기 때문이다.
+ */
+export type TideRole = "neutral" | "primary" | "success" | "warning" | "danger" | "info";
 
 /**
  * Role이 참조하는 Primitive 계열.
@@ -47,7 +50,7 @@ export const roleFamily = {
   info: "cyan",
 } as const;
 
-roleFamily satisfies Record<Role, ColorFamily>;
+roleFamily satisfies Record<TideRole, ColorFamily>;
 
 // Role은 「색 계열 + 덮어쓸 값」의 별칭이다(tide-v0-impl 티켓 40, ADR 0011).
 // neutral은 gray와 다른 색이다(2026-11-10 사용자 결정). gray는 일반 계열 규칙을 따른다.
@@ -65,7 +68,7 @@ export const roleOverrides = {
   },
 } as const;
 
-roleOverrides satisfies { readonly [Name in Role]?: SlotOverrides };
+roleOverrides satisfies { readonly [Name in TideRole]?: SlotOverrides };
 
 /**
  * 역할 Token 대신 공통 Semantic Token을 쓰는 Role 슬롯. on-solid는 모든 Role이 `text-on-solid`를 쓴다.
@@ -75,24 +78,53 @@ export const roleSharedSlots = {
   neutral: { text: "text-default", border: "border-strong" },
 } as const;
 
+// 색 이름 등록은 둘로 나뉜다(tide-v0-impl 티켓 41, ADR 0016).
+// - RoleRegistry: 뜻이 있는 색. 행동·의미 Component(Button, IconButton, Link 등)의 `color`가 받는다.
+// - ColorFamilyRegistry: 뜻이 없는 색 계열. 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다.
+// 둘 다 augmentation 대상이라 type이 아니라 interface여야 한다. 같은 이름을 양쪽에 등록해도 된다.
+
 /**
- * 색 이름 목록. Role과 Tide 색 계열이 들어 있고, 앱은 module augmentation으로 자기 브랜드 계열을 더한다.
+ * Role 목록. Tide Role 6개가 들어 있고, 앱은 module augmentation으로 자기 Role(예: `brand`)을 더한다.
+ * 앱 Role의 색은 `@tide-tds/foundation/color-family`의 `defineColorFamily`와 `tide-color build`로 만든다.
  *
  * ```ts
  * declare module "@tide-tds/components" {
- *   interface ColorRegistry {
+ *   interface RoleRegistry {
  *     brand: true;
  *   }
  * }
  * ```
- *
- * Tide가 색 계열을 더하면 이 타입도 함께 넓어진다.
  */
-// augmentation 대상이라 type이 아니라 interface여야 한다. 키는 Role과 Tide 색 계열에서 만든다.
-export interface ColorRegistry extends Record<Role | ColorFamily, true> {}
+export interface RoleRegistry extends Record<TideRole, true> {}
 
-/** 색 이름(Color). Component의 `color`로 고르고, `data-color` 속성으로 accent 슬롯에 꽂는다. */
-export type Color = keyof ColorRegistry;
+/**
+ * Role. 뜻이 있는 색이다. 행동·의미 Component의 `color`로 고르고, `data-color` 속성으로 accent 슬롯에 꽂는다.
+ * Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role이다.
+ */
+export type Role = keyof RoleRegistry;
+
+/**
+ * 색 계열 목록. Tide 색 계열 6개가 들어 있고, 앱은 module augmentation으로 장식용 계열을 더한다.
+ * Tide가 Primitive 계열을 더하면 이 목록도 함께 넓어진다.
+ *
+ * ```ts
+ * declare module "@tide-tds/components" {
+ *   interface ColorFamilyRegistry {
+ *     brand: true;
+ *   }
+ * }
+ * ```
+ */
+export interface ColorFamilyRegistry extends Record<ColorFamily, true> {}
+
+/**
+ * 색 계열 이름. 뜻이 없는 색이라 장식·분류 Component가 쓴다.
+ * Tide 색 계열(`ColorFamily`)과 앱이 `ColorFamilyRegistry`에 더한 계열이다.
+ */
+export type ColorFamilyName = keyof ColorFamilyRegistry;
+
+/** 색 이름(Color). `data-color` 속성이 받는 모든 이름이다(Role과 색 계열). */
+export type Color = Role | ColorFamilyName;
 
 // 타입 수준에서 Role 슬롯이 가리키는 Primitive를 계산한다. 런타임 계산(roleSlotColor)과 같은 규칙이다.
 // 그래서 `semantic.background["primary-solid"].light`의 타입이 `"blue-600"` 그대로 남는다.
@@ -110,7 +142,7 @@ type FamilyStep<Family, Slot extends ColorSlot, Theme extends ThemeName> = Looku
   Theme,
   (typeof slotRule)[Slot][Theme]
 >;
-type RoleStep<Name extends Role, Slot extends ColorSlot, Theme extends ThemeName> = Lookup<
+type RoleStep<Name extends TideRole, Slot extends ColorSlot, Theme extends ThemeName> = Lookup<
   typeof roleOverrides,
   Name,
   Slot,
@@ -118,16 +150,16 @@ type RoleStep<Name extends Role, Slot extends ColorSlot, Theme extends ThemeName
   FamilyStep<(typeof roleFamily)[Name], Slot, Theme>
 >;
 type StepName<Family extends string, Step> = Step extends number ? `${Family}-${Step}` : Step;
-type RoleSlotColor<Name extends Role, Slot extends ColorSlot> = {
+type RoleSlotColor<Name extends TideRole, Slot extends ColorSlot> = {
   readonly light: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "light">>;
   readonly dark: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "dark">>;
 };
 /** 역할 text·border Token이 있는 Role(neutral 제외) */
-type AccentRole = Exclude<Role, keyof typeof roleSharedSlots>;
+type AccentRole = Exclude<TideRole, keyof typeof roleSharedSlots>;
 type RoleBackgroundTokens = {
   readonly [
-    Key in `${Role}-${BackgroundSlot}`
-  ]: Key extends `${infer Name extends Role}-${infer Slot extends BackgroundSlot}`
+    Key in `${TideRole}-${BackgroundSlot}`
+  ]: Key extends `${infer Name extends TideRole}-${infer Slot extends BackgroundSlot}`
     ? RoleSlotColor<Name, Slot>
     : never;
 };
@@ -135,18 +167,18 @@ type RoleSlotTokens<Slot extends "text" | "border"> = {
   readonly [Name in AccentRole]: RoleSlotColor<Name, Slot>;
 };
 
-const roles = Object.keys(roleFamily) as Role[];
+const roles = Object.keys(roleFamily) as TideRole[];
 const backgroundSlots = colorSlots.filter(
   (slot): slot is BackgroundSlot => slot !== "text" && slot !== "border" && slot !== "on-solid",
 );
 const accentRoles = roles.filter((role): role is AccentRole => !(role in roleSharedSlots));
 
 /** Role 슬롯이 가리키는 Primitive. 계열 규칙 → 계열 덮어쓸 값 → Role 덮어쓸 값 순서로 얹는다. */
-function roleSlotColor(role: Role, slot: ColorSlot): ThemedColor {
+function roleSlotColor(role: TideRole, slot: ColorSlot): ThemedColor {
   const family = roleFamily[role];
   const steps = resolveSlotSteps(
     (familyOverrides as { [Family in ColorFamily]?: SlotOverrides })[family],
-    (roleOverrides as { [Name in Role]?: SlotOverrides })[role],
+    (roleOverrides as { [Name in TideRole]?: SlotOverrides })[role],
   )[slot];
   return {
     light: slotPrimitive(family, steps.light) as PrimitiveColorName,
