@@ -1,4 +1,5 @@
-import type { Role, SemanticColorName } from "./semantic.ts";
+import type { ColorSlot } from "./color-slot.ts";
+import { semanticHex, type Role, type SemanticColorName, type ThemeName } from "./semantic.ts";
 
 /** 함께 쓰이는 글자(또는 경계)와 배경의 짝. Utility class 이름으로 적는다. */
 export interface ContrastPair {
@@ -85,6 +86,66 @@ export const contrastExclusions: readonly ContrastExclusion[] = [
   },
   { token: "bg-overlay", reason: "modal 뒤를 가리는 반투명 막이다. 위에 글자를 두지 않는다." },
 ];
+
+// 색 이름(Color) 하나의 대비 쌍 규칙(tide-v0-impl 티켓 40). Role 대비 쌍과 같은 규칙을 슬롯 이름으로 적는다.
+// Tide 색 계열, 테스트 전용 계열, 앱 브랜드 계열(tide-color CLI)이 모두 이 규칙으로 light·dark를 검사한다.
+// - text × 표면 층, 같은 색 subtle 3단계: 4.5
+// - on-solid × 같은 색 solid 3단계: 4.5
+// - border × 표면 층: 3
+/** 색 이름 하나에서 함께 쓰는 슬롯 짝. 배경은 같은 색의 슬롯이거나 표면 층 Token이다. */
+export interface ColorContrastRule {
+  readonly foreground: ColorSlot;
+  readonly background: ColorSlot | (typeof surfaces)[number];
+  /** 텍스트는 4.5, UI 경계는 3 */
+  readonly minRatio: 4.5 | 3;
+}
+
+/**
+ * 색 이름 하나의 대비 쌍 규칙.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
+export const colorContrastRules: readonly ColorContrastRule[] = [
+  ...[...surfaces, ...subtleStates].map((background) => ({
+    foreground: "text" as const,
+    background,
+    minRatio: 4.5 as const,
+  })),
+  ...solidStates.map((background) => ({
+    foreground: "on-solid" as const,
+    background,
+    minRatio: 4.5 as const,
+  })),
+  ...surfaces.map((background) => ({
+    foreground: "border" as const,
+    background,
+    minRatio: 3 as const,
+  })),
+];
+
+/** 대비 쌍 규칙 하나를 Theme 하나에서 검사한 결과 */
+export interface ColorContrastResult extends ColorContrastRule {
+  readonly theme: ThemeName;
+  readonly ratio: number;
+  readonly pass: boolean;
+}
+
+/**
+ * 색 이름 하나의 슬롯 hex로 대비 쌍 규칙을 light·dark에서 검사한다. 표면 층은 Tide Token 값을 쓴다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
+export function checkColorContrast(
+  slotHex: Readonly<Record<ThemeName, Readonly<Record<ColorSlot, string>>>>,
+): ColorContrastResult[] {
+  return (["light", "dark"] as const).flatMap((theme) =>
+    colorContrastRules.map((rule) => {
+      const background = rule.background.startsWith("bg-")
+        ? semanticHex(rule.background as SemanticColorName, theme)
+        : slotHex[theme][rule.background as ColorSlot];
+      const ratio = contrastRatio(slotHex[theme][rule.foreground], background);
+      return { ...rule, theme, ratio, pass: ratio >= rule.minRatio };
+    }),
+  );
+}
 
 /** WCAG 2.x 상대 휘도. `#rrggbb`만 받는다. */
 function relativeLuminance(hex: string): number {

@@ -1,4 +1,14 @@
 import { primitiveHex, type ColorFamily, type PrimitiveColorName } from "./color.ts";
+import {
+  colorSlots,
+  familyOverrides,
+  resolveSlotSteps,
+  slotPrimitive,
+  slotRule,
+  type BackgroundSlot,
+  type ColorSlot,
+  type SlotOverrides,
+} from "./color-slot.ts";
 
 /** Theme 이름 */
 export type ThemeName = "light" | "dark";
@@ -21,7 +31,7 @@ export interface ThemedColor {
   readonly dark: SemanticColorValue;
 }
 
-/** Role. Component에서는 `color` prop으로 고른다. */
+/** Role. Component의 `color`로 고르는 색 이름(Color) 중 용도를 나타내는 여섯 가지다. */
 export type Role = "neutral" | "primary" | "success" | "warning" | "danger" | "info";
 
 /**
@@ -39,100 +49,174 @@ export const roleFamily = {
 
 roleFamily satisfies Record<Role, ColorFamily>;
 
-// Semantic 색. Tailwind 속성별 namespace로 노출한다(ADR 0003).
-// 키는 Utility class에서 접두사(bg-, text- 등)를 뺀 이름이다. 공개 계약은 `--tide-<Utility class 이름>`이다.
-// 매핑은 tide-v0 티켓 09(컬러 Foundation 결정)와 spec 「`@tide-tds/foundation`」 매핑을 따른다.
-// - solid / hover / active: 두 Theme 모두 600 / 700 / 800(흰 글자 대비를 지키려고 dark도 진해지는 방향)
-// - subtle / hover / active: light 50 / 100 / 200, dark 950 / 900 / 800. dark neutral만 900 / 800 / 700(950은 canvas와 같은 색)
-// - 역할 text: light 800, dark 200. 역할 border: light 600, dark 400. neutral은 text·border를 두지 않는다(default·strong을 쓴다).
-// Token을 더하면 contrast.ts에 대비 쌍이나 제외 사유를 함께 등록한다. 등록하지 않으면 테스트가 실패한다.
-export const semantic = {
-  background: {
-    // 표면 층. surface는 canvas와 같은 색이고 border로 구분한다. dark raised는 밝기로 높이를 나타낸다.
-    canvas: { light: "white", dark: "gray-950" },
-    surface: { light: "white", dark: "gray-950" },
-    raised: { light: "white", dark: "gray-900" },
-    disabled: { light: "gray-100", dark: "gray-900" },
-    overlay: {
-      light: { primitive: "gray-950", alpha: 0.5 },
-      dark: { primitive: "gray-950", alpha: 0.7 },
-    },
-
-    "neutral-solid": { light: "gray-600", dark: "gray-600" },
-    "neutral-solid-hover": { light: "gray-700", dark: "gray-700" },
-    "neutral-solid-active": { light: "gray-800", dark: "gray-800" },
-    "neutral-subtle": { light: "gray-50", dark: "gray-900" },
-    "neutral-subtle-hover": { light: "gray-100", dark: "gray-800" },
-    "neutral-subtle-active": { light: "gray-200", dark: "gray-700" },
-
-    "primary-solid": { light: "blue-600", dark: "blue-600" },
-    "primary-solid-hover": { light: "blue-700", dark: "blue-700" },
-    "primary-solid-active": { light: "blue-800", dark: "blue-800" },
-    "primary-subtle": { light: "blue-50", dark: "blue-950" },
-    "primary-subtle-hover": { light: "blue-100", dark: "blue-900" },
-    "primary-subtle-active": { light: "blue-200", dark: "blue-800" },
-
-    "success-solid": { light: "green-600", dark: "green-600" },
-    "success-solid-hover": { light: "green-700", dark: "green-700" },
-    "success-solid-active": { light: "green-800", dark: "green-800" },
-    "success-subtle": { light: "green-50", dark: "green-950" },
-    "success-subtle-hover": { light: "green-100", dark: "green-900" },
-    "success-subtle-active": { light: "green-200", dark: "green-800" },
-
-    "warning-solid": { light: "amber-600", dark: "amber-600" },
-    "warning-solid-hover": { light: "amber-700", dark: "amber-700" },
-    "warning-solid-active": { light: "amber-800", dark: "amber-800" },
-    "warning-subtle": { light: "amber-50", dark: "amber-950" },
-    "warning-subtle-hover": { light: "amber-100", dark: "amber-900" },
-    "warning-subtle-active": { light: "amber-200", dark: "amber-800" },
-
-    "danger-solid": { light: "red-600", dark: "red-600" },
-    "danger-solid-hover": { light: "red-700", dark: "red-700" },
-    "danger-solid-active": { light: "red-800", dark: "red-800" },
-    "danger-subtle": { light: "red-50", dark: "red-950" },
-    "danger-subtle-hover": { light: "red-100", dark: "red-900" },
-    "danger-subtle-active": { light: "red-200", dark: "red-800" },
-
-    "info-solid": { light: "cyan-600", dark: "cyan-600" },
-    "info-solid-hover": { light: "cyan-700", dark: "cyan-700" },
-    "info-solid-active": { light: "cyan-800", dark: "cyan-800" },
-    "info-subtle": { light: "cyan-50", dark: "cyan-950" },
-    "info-subtle-hover": { light: "cyan-100", dark: "cyan-900" },
-    "info-subtle-active": { light: "cyan-200", dark: "cyan-800" },
-  },
-  text: {
-    default: { light: "gray-900", dark: "gray-50" },
-    muted: { light: "gray-600", dark: "gray-300" },
-    disabled: { light: "gray-400", dark: "gray-600" },
-    // solid 배경 위 글자. 모든 Role이 같이 쓴다.
-    "on-solid": { light: "white", dark: "white" },
-
-    primary: { light: "blue-800", dark: "blue-200" },
-    success: { light: "green-800", dark: "green-200" },
-    warning: { light: "amber-800", dark: "amber-200" },
-    danger: { light: "red-800", dark: "red-200" },
-    info: { light: "cyan-800", dark: "cyan-200" },
-  },
-  border: {
-    // 구분선(장식용). 대비 검사에서 제외한다.
-    default: { light: "gray-200", dark: "gray-800" },
-    // 입력창 등 UI 식별용 경계. 3:1
-    strong: { light: "gray-500", dark: "gray-400" },
-    // raised 표면 경계. light는 그림자가 경계를 맡고 투명 border는 forced-colors에서 시스템 색으로 그려진다.
-    // dark는 그림자가 잘 보이지 않아 border가 경계를 맡는다(tide-v0 티켓 20, 2026-11-10 사용자 결정). 장식용이라 대비 검사에서 제외한다.
-    raised: { light: "transparent", dark: "gray-800" },
-
-    primary: { light: "blue-600", dark: "blue-400" },
-    success: { light: "green-600", dark: "green-400" },
-    warning: { light: "amber-600", dark: "amber-400" },
-    danger: { light: "red-600", dark: "red-400" },
-    info: { light: "cyan-600", dark: "cyan-400" },
-  },
-  outline: {
-    // 포커스 표시 색. 오류 상태에서도 바꾸지 않는다.
-    focus: { light: "blue-600", dark: "blue-400" },
+// Role은 「색 계열 + 덮어쓸 값」의 별칭이다(tide-v0-impl 티켓 40, ADR 0011).
+// neutral은 gray와 다른 색이다(2026-11-10 사용자 결정). gray는 일반 계열 규칙을 따른다.
+// - dark subtle 3단계: 900 / 800 / 700(gray 규칙의 950은 dark canvas와 같은 색이다)
+// - text, border: 역할 Token을 두지 않고 text-default, border-strong을 쓴다(roleSharedSlots)
+/**
+ * Role별로 계열 규칙에서 덮어쓸 값.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
+export const roleOverrides = {
+  neutral: {
+    subtle: { dark: 900 },
+    "subtle-hover": { dark: 800 },
+    "subtle-active": { dark: 700 },
   },
 } as const;
+
+roleOverrides satisfies { readonly [Name in Role]?: SlotOverrides };
+
+/**
+ * 역할 Token 대신 공통 Semantic Token을 쓰는 Role 슬롯. on-solid는 모든 Role이 `text-on-solid`를 쓴다.
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
+export const roleSharedSlots = {
+  neutral: { text: "text-default", border: "border-strong" },
+} as const;
+
+/**
+ * 색 이름 목록. Role과 Tide 색 계열이 들어 있고, 앱은 module augmentation으로 자기 브랜드 계열을 더한다.
+ *
+ * ```ts
+ * declare module "@tide-tds/components" {
+ *   interface ColorRegistry {
+ *     brand: true;
+ *   }
+ * }
+ * ```
+ *
+ * Tide가 색 계열을 더하면 이 타입도 함께 넓어진다.
+ */
+// augmentation 대상이라 type이 아니라 interface여야 한다. 키는 Role과 Tide 색 계열에서 만든다.
+export interface ColorRegistry extends Record<Role | ColorFamily, true> {}
+
+/** 색 이름(Color). Component의 `color`로 고르고, `data-color` 속성으로 accent 슬롯에 꽂는다. */
+export type Color = keyof ColorRegistry;
+
+// 타입 수준에서 Role 슬롯이 가리키는 Primitive를 계산한다. 런타임 계산(roleSlotColor)과 같은 규칙이다.
+// 그래서 `semantic.background["primary-solid"].light`의 타입이 `"blue-600"` 그대로 남는다.
+type Lookup<Table, K1, K2, K3, Fallback> = K1 extends keyof Table
+  ? K2 extends keyof Table[K1]
+    ? K3 extends keyof Table[K1][K2]
+      ? Table[K1][K2][K3]
+      : Fallback
+    : Fallback
+  : Fallback;
+type FamilyStep<Family, Slot extends ColorSlot, Theme extends ThemeName> = Lookup<
+  typeof familyOverrides,
+  Family,
+  Slot,
+  Theme,
+  (typeof slotRule)[Slot][Theme]
+>;
+type RoleStep<Name extends Role, Slot extends ColorSlot, Theme extends ThemeName> = Lookup<
+  typeof roleOverrides,
+  Name,
+  Slot,
+  Theme,
+  FamilyStep<(typeof roleFamily)[Name], Slot, Theme>
+>;
+type StepName<Family extends string, Step> = Step extends number ? `${Family}-${Step}` : Step;
+type RoleSlotColor<Name extends Role, Slot extends ColorSlot> = {
+  readonly light: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "light">>;
+  readonly dark: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "dark">>;
+};
+/** 역할 text·border Token이 있는 Role(neutral 제외) */
+type AccentRole = Exclude<Role, keyof typeof roleSharedSlots>;
+type RoleBackgroundTokens = {
+  readonly [
+    Key in `${Role}-${BackgroundSlot}`
+  ]: Key extends `${infer Name extends Role}-${infer Slot extends BackgroundSlot}`
+    ? RoleSlotColor<Name, Slot>
+    : never;
+};
+type RoleSlotTokens<Slot extends "text" | "border"> = {
+  readonly [Name in AccentRole]: RoleSlotColor<Name, Slot>;
+};
+
+const roles = Object.keys(roleFamily) as Role[];
+const backgroundSlots = colorSlots.filter(
+  (slot): slot is BackgroundSlot => slot !== "text" && slot !== "border" && slot !== "on-solid",
+);
+const accentRoles = roles.filter((role): role is AccentRole => !(role in roleSharedSlots));
+
+/** Role 슬롯이 가리키는 Primitive. 계열 규칙 → 계열 덮어쓸 값 → Role 덮어쓸 값 순서로 얹는다. */
+function roleSlotColor(role: Role, slot: ColorSlot): ThemedColor {
+  const family = roleFamily[role];
+  const steps = resolveSlotSteps(
+    (familyOverrides as { [Family in ColorFamily]?: SlotOverrides })[family],
+    (roleOverrides as { [Name in Role]?: SlotOverrides })[role],
+  )[slot];
+  return {
+    light: slotPrimitive(family, steps.light) as PrimitiveColorName,
+    dark: slotPrimitive(family, steps.dark) as PrimitiveColorName,
+  };
+}
+
+// Semantic 색. Tailwind 속성별 namespace로 노출한다(ADR 0003).
+// 키는 Utility class에서 접두사(bg-, text- 등)를 뺀 이름이다. 공개 계약은 `--tide-<Utility class 이름>`이다.
+// 공통 Token은 아래에 직접 적고, Role Token은 Role 별칭 규칙(roleSlotColor)으로 만든다.
+// Token을 더하면 contrast.ts에 대비 쌍이나 제외 사유를 함께 등록한다. 등록하지 않으면 테스트가 실패한다.
+const commonBackground = {
+  // 표면 층. surface는 canvas와 같은 색이고 border로 구분한다. dark raised는 밝기로 높이를 나타낸다.
+  canvas: { light: "white", dark: "gray-950" },
+  surface: { light: "white", dark: "gray-950" },
+  raised: { light: "white", dark: "gray-900" },
+  disabled: { light: "gray-100", dark: "gray-900" },
+  overlay: {
+    light: { primitive: "gray-950", alpha: 0.5 },
+    dark: { primitive: "gray-950", alpha: 0.7 },
+  },
+} as const;
+
+const commonText = {
+  default: { light: "gray-900", dark: "gray-50" },
+  muted: { light: "gray-600", dark: "gray-300" },
+  disabled: { light: "gray-400", dark: "gray-600" },
+  // solid 배경 위 글자. 모든 Role이 같이 쓴다.
+  "on-solid": { light: "white", dark: "white" },
+} as const;
+
+const commonBorder = {
+  // 구분선(장식용). 대비 검사에서 제외한다.
+  default: { light: "gray-200", dark: "gray-800" },
+  // 입력창 등 UI 식별용 경계. 3:1
+  strong: { light: "gray-500", dark: "gray-400" },
+  // raised 표면 경계. light는 그림자가 경계를 맡고 투명 border는 forced-colors에서 시스템 색으로 그려진다.
+  // dark는 그림자가 잘 보이지 않아 border가 경계를 맡는다(tide-v0 티켓 20, 2026-11-10 사용자 결정). 장식용이라 대비 검사에서 제외한다.
+  raised: { light: "transparent", dark: "gray-800" },
+} as const;
+
+const commonOutline = {
+  // 포커스 표시 색. 오류 상태에서도 바꾸지 않는다.
+  focus: { light: "blue-600", dark: "blue-400" },
+} as const;
+
+export const semantic: {
+  readonly background: typeof commonBackground & RoleBackgroundTokens;
+  readonly text: typeof commonText & RoleSlotTokens<"text">;
+  readonly border: typeof commonBorder & RoleSlotTokens<"border">;
+  readonly outline: typeof commonOutline;
+} = {
+  background: {
+    ...commonBackground,
+    ...Object.fromEntries(
+      roles.flatMap((role) =>
+        backgroundSlots.map((slot) => [`${role}-${slot}`, roleSlotColor(role, slot)]),
+      ),
+    ),
+  } as typeof commonBackground & RoleBackgroundTokens,
+  text: {
+    ...commonText,
+    ...Object.fromEntries(accentRoles.map((role) => [role, roleSlotColor(role, "text")])),
+  } as typeof commonText & RoleSlotTokens<"text">,
+  border: {
+    ...commonBorder,
+    ...Object.fromEntries(accentRoles.map((role) => [role, roleSlotColor(role, "border")])),
+  } as typeof commonBorder & RoleSlotTokens<"border">,
+  outline: commonOutline,
+};
 
 // isolatedDeclarations에서는 export 값에 satisfies를 쓸 수 없어서, 모양 검사를 따로 둔다.
 semantic satisfies Record<SemanticNamespace, Record<string, ThemedColor>>;

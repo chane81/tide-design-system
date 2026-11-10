@@ -6,12 +6,56 @@
  */
 export { primitiveHex } from "./color.ts";
 export {
+  colorSlots,
+  familyOverrides,
+  familySlotSteps,
+  resolveSlotSteps,
+  slotPrimitive,
+  slotRule,
+  type BackgroundSlot,
+  type SlotOverrides,
+  type SlotRule,
+  type SlotStep,
+} from "./color-slot.ts";
+export {
   colorValueHex,
   roleFamily,
+  roleOverrides,
+  roleSharedSlots,
   semanticEntries,
   semanticHex,
   shadowColor,
 } from "./semantic.ts";
-export { contrastExclusions, contrastRatio } from "./contrast.ts";
+export {
+  colorFamilyNames,
+  colorSlotHex,
+  colorSlotValues,
+  isRole,
+  roleNames,
+  roleSlotToken,
+  tideColorNames,
+  type TideColor,
+} from "./color-name.ts";
+export {
+  accentDefaultDeclarations,
+  accentUtilities,
+  accentVar,
+  dataColorRule,
+  familyThemeDeclarations,
+  familyVar,
+  primitiveVar,
+  roleAliasCss,
+  semanticVar,
+  tideFamilyThemeDeclarations,
+  type AccentUtility,
+} from "./color-css.ts";
+export {
+  checkColorContrast,
+  colorContrastRules,
+  contrastExclusions,
+  contrastRatio,
+  type ColorContrastResult,
+  type ColorContrastRule,
+} from "./contrast.ts";
 export { fontFamilyCss } from "./typography.ts";
 export { shadowCss } from "./shape.ts";

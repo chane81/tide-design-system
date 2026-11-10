@@ -22,11 +22,18 @@ import {
   type ThemeName,
 } from "../src/index.ts";
 import {
+  accentDefaultDeclarations,
+  accentUtilities,
+  accentVar,
   colorValueHex,
+  dataColorRule,
   fontFamilyCss,
+  roleAliasCss,
   semanticEntries,
   shadowColor,
   shadowCss,
+  tideColorNames,
+  tideFamilyThemeDeclarations,
 } from "../src/internal.ts";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
@@ -113,18 +120,26 @@ const motionDeclarations: string[] = [
 const shadowNames = Object.keys(shadow) as ShadowName[];
 const tideShadowVar = (name: string): string => `--tide-shadow-${name}`;
 
+// 색 계열 변수 묶음과 accent 슬롯(tide-v0-impl 티켓 40, ADR 0011).
+// - 계열 변수(--tide-blue-solid 등)는 Theme 블록마다 정한다. Role Token은 계열 변수의 별칭이고,
+//   덮어쓴 슬롯(neutral dark subtle)만 Primitive를 직접 가리킨다.
+// - accent 슬롯(--tide-accent-*)의 기본값은 primary다. Theme 블록마다 다시 선언해서 요소 단위 data-theme에서도
+//   그 Theme 값을 읽는다. [data-color] 규칙은 Theme과 무관한 별칭이라 Theme 블록 뒤에 한 번씩만 둔다.
 function themeBlock(theme: ThemeName): string[] {
   return [
     `  color-scheme: ${theme};`,
+    ...tideFamilyThemeDeclarations(theme),
     ...semantic.map(
-      (entry) => `  ${tideSemanticVar(entry.className)}: ${cssValue(entry.value[theme])};`,
+      (entry) =>
+        `  ${tideSemanticVar(entry.className)}: ${roleAliasCss(entry.className, theme) ?? cssValue(entry.value[theme])};`,
     ),
+    ...accentDefaultDeclarations(),
     `  --tide-shadow-color: ${cssValue(shadowColor[theme])};`,
     ...shadowNames.map((name) => `  ${tideShadowVar(name)}: ${shadowCss(name)};`),
   ];
 }
 
-// tokens.css: --tide-* 변수와 [data-theme] 덮어쓰기만 담는다. Tailwind 문법은 쓰지 않는다.
+// tokens.css: --tide-* 변수와 [data-theme] 덮어쓰기, [data-color] 규칙만 담는다. Tailwind 문법은 쓰지 않는다.
 // Theme 블록은 속성 선택자라서 요소 단위 data-theme에도 적용된다. prefers-color-scheme으로 자동 전환하지 않는다.
 const tokensCss = [
   header,
@@ -143,6 +158,7 @@ const tokensCss = [
   ...themeBlock("dark"),
   "}",
   "",
+  ...tideColorNames.flatMap((name) => [dataColorRule(name), ""]),
 ].join("\n");
 
 // tailwind.css: tokens.css 위에 dark variant, Tailwind 기본값 제거, @theme inline 연결, base CSS를 얹는다.
@@ -189,6 +205,11 @@ const tailwindCss = [
   ...semantic.map(
     (entry) =>
       `  ${tailwindNamespace[entry.namespace]}-${entry.key}: var(${tideSemanticVar(entry.className)});`,
+  ),
+  // accent Utility class(bg-accent-solid, text-accent 등). 계열 Utility class(bg-blue-solid)는 노출하지 않는다.
+  ...accentUtilities.map(
+    (utility) =>
+      `  ${tailwindNamespace[utility.namespace]}-${utility.key}: var(${accentVar(utility.slot)});`,
   ),
   ...fontFamilyNames.map((name) => `  --font-${name}: var(${tideFontFamilyVar(name)});`),
   ...Object.keys(fontWeight).map(
@@ -247,8 +268,13 @@ const tailwindCss = [
 // - Semantic 색: Tailwind namespace마다 쓰는 class group에 그 namespace의 키만 더한다.
 //   그래서 bg-canvas는 배경색, text-muted는 글자색으로 분류되고 text-canvas 같은 이름은 분류되지 않는다.
 //   --border-color는 border의 모든 방향과 divide가 함께 읽는다(tailwindcss 4.3.5 themeKeys).
-const semanticKeys = (namespace: SemanticNamespace): string[] =>
-  semantic.filter((entry) => entry.namespace === namespace).map((entry) => entry.key);
+// accent Utility class도 같은 group에 넣는다(bg-accent-solid는 배경색, text-accent-on-solid는 글자색).
+const semanticKeys = (namespace: SemanticNamespace): string[] => [
+  ...semantic.filter((entry) => entry.namespace === namespace).map((entry) => entry.key),
+  ...accentUtilities
+    .filter((utility) => utility.namespace === namespace)
+    .map((utility) => utility.key),
+];
 
 const borderSides = ["x", "y", "s", "e", "bs", "be", "t", "r", "b", "l"];
 // - 텍스트 스타일·굵기·font-family: theme의 text, font-weight, font를 Tide 이름으로 바꾼다.
