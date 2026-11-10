@@ -5,13 +5,13 @@
 
 import type { AriaAttributes, ComponentProps, MouseEvent, ReactElement } from "react";
 
-import type { Color, FillVariant } from "./types.ts";
+import type { FillVariant, Role } from "./types.ts";
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 모든 variant에 border 1px를 둔다. 색이 없는 variant는 투명 border라 forced-colors에서 경계로 보인다.
 
 // 색 축은 맵에 두지 않는다. 루트의 data-color가 accent 슬롯(--tide-accent-*)을 고르고, 맵은 accent class만 쓴다(ADR 0011).
-// 그래서 Tide가 색 계열을 더하거나 앱이 브랜드 계열을 더해도 이 파일은 바뀌지 않는다.
+// 그래서 앱이 Role(예: `brand`)을 더해도 이 파일은 바뀌지 않는다.
 
 /** 기본 색(배경, 글자, 경계). 색 이름마다 Foundation이 같은 대비 규칙으로 검사한다. */
 const colorClass: Record<FillVariant, string> = {
@@ -49,7 +49,7 @@ const pressScaleClass =
 /** `pressableState`의 인자. Component가 받은 props 중 상태와 관련된 것만 넘긴다. */
 export interface PressableOptions {
   readonly variant: FillVariant;
-  readonly color: Color;
+  readonly color: Role;
   readonly disabled: boolean;
   readonly loading: boolean;
   readonly noPressScale: boolean;

@@ -7,7 +7,7 @@ import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { pressableBaseClass, pressableState } from "./pressable.ts";
 import { renderElement } from "./render.ts";
 import { Spinner } from "./Spinner.tsx";
-import type { Color, FillVariant, Size } from "./types.ts";
+import type { FillVariant, Role, Size } from "./types.ts";
 import { VisuallyHidden } from "./VisuallyHidden.tsx";
 
 /** Button의 채움 방식. 4개를 모두 받는다. */
@@ -20,10 +20,11 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   /** 채움 방식. 기본값은 `solid`다. */
   variant?: ButtonVariant;
   /**
-   * 색 이름. Role 6개, 색 계열(`gray`, `blue` 등), 앱이 더한 브랜드 계열을 받는다. 기본값은 `primary`다.
+   * Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `primary`다.
+   * 색 계열 이름(`blue` 등)은 받지 않는다. 행동의 뜻을 색으로 전하기 때문이다(ADR 0016).
    * 루트에 `data-color`로 붙어 accent 색을 정한다. 바깥 요소의 색을 물려받지 않는다.
    */
-  color?: Color;
+  color?: Role;
   /** 높이 `xs` 24px, `sm` 32px, `md` 40px, `lg` 48px. 기본값은 `md`다. */
   size?: ButtonSize;
   /** 텍스트 앞 아이콘. 장식용으로 숨겨지고 size에 맞는 크기가 된다. 다른 라이브러리의 아이콘도 받는다. */
@@ -76,7 +77,7 @@ function Icon({ size, children }: { size: ButtonSize; children: ReactNode }): Re
 }
 
 /**
- * 누르면 동작을 실행하는 버튼. 채움 방식(`variant`) × 색 이름(`color`) × `size`로 모양을 고른다.
+ * 누르면 동작을 실행하는 버튼. 채움 방식(`variant`) × Role(`color`) × `size`로 모양을 고른다.
  * 링크로 렌더해야 하면 `render={<Link href="/x" />}`를 쓴다.
  */
 export function Button({

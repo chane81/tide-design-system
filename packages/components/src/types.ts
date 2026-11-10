@@ -10,10 +10,15 @@ export type Size = "xs" | "sm" | "md" | "lg";
  */
 export type FillVariant = "solid" | "subtle" | "outline" | "ghost";
 
-/** Role 6개. 색 이름(`Color`)의 일부다. 정의는 foundation이 가진다. */
-export type { Role } from "@tide-tds/foundation";
-
-// 색 이름(Color). foundation의 ColorRegistry를 그대로 다시 낸다(tide-v0-impl 티켓 40, ADR 0011).
-// 앱은 `declare module "@tide-tds/components" { interface ColorRegistry { brand: true } }`로 브랜드 계열을 더한다.
+// 색 이름 타입. 정의는 foundation이 가지고 여기서 그대로 다시 낸다(tide-v0-impl 티켓 40·41, ADR 0016).
+// - Role: 행동·의미 Component(Button, IconButton, Link 등)의 `color`. Tide Role 6개 + 앱 Role
+// - ColorFamilyName: 장식·분류 Component(Badge, Tag, Avatar 등)가 쓰는 색 계열. Tide 색 계열 6개 + 앱 장식 계열
+// 앱은 `declare module "@tide-tds/components" { interface RoleRegistry { brand: true } }`로 Role을 더한다.
 // re-export한 interface에 한 augmentation도 원래 interface에 합쳐진다(TypeScript 7.0.2에서 확인).
-export type { Color, ColorRegistry } from "@tide-tds/foundation";
+export type {
+  Color,
+  ColorFamilyName,
+  ColorFamilyRegistry,
+  Role,
+  RoleRegistry,
+} from "@tide-tds/foundation";

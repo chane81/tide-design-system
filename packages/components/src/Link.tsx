@@ -1,17 +1,18 @@
 import type { ComponentProps, ReactElement } from "react";
 
 import { renderElement } from "./render.ts";
-import type { Color } from "./types.ts";
+import type { Role } from "./types.ts";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 사용자가 준 onClick 등은 그대로 넘기기만 한다(서버 컴포넌트에서는 Next 규칙대로 함수를 넘길 수 없다).
 
 export interface LinkProps extends Omit<ComponentProps<"a">, "color"> {
   /**
-   * 색 이름. Role 6개, 색 계열(`gray`, `blue` 등), 앱이 더한 브랜드 계열을 받는다. 기본값은 `primary`다.
+   * Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `primary`다.
+   * 색 계열 이름(`blue` 등)은 받지 않는다. 행동의 뜻을 색으로 전하기 때문이다(ADR 0016).
    * 루트에 `data-color`로 붙어 글자색(`text-accent`)을 정한다. 바깥 요소의 색을 물려받지 않는다.
    */
-  color?: Color;
+  color?: Role;
   /**
    * 다른 요소로 렌더한다. 예: `render={<NextLink href="/x" />}`.
    * props, ref, className을 그 요소에 병합한다.

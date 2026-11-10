@@ -7,7 +7,7 @@ import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { pressableBaseClass, pressableState } from "./pressable.ts";
 import { renderElement } from "./render.ts";
 import { Spinner } from "./Spinner.tsx";
-import type { Color, FillVariant, Size } from "./types.ts";
+import type { FillVariant, Role, Size } from "./types.ts";
 
 /** IconButton의 채움 방식. Button과 같은 4개를 받는다. */
 type IconButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;
@@ -26,10 +26,11 @@ export interface IconButtonProps extends Omit<
   /** 채움 방식. 기본값은 Button과 같은 `solid`다. 툴바·닫기 버튼처럼 약한 동작은 `ghost`를 쓴다. */
   variant?: IconButtonVariant;
   /**
-   * 색 이름. Role 6개, 색 계열(`gray`, `blue` 등), 앱이 더한 브랜드 계열을 받는다. 기본값은 `primary`다.
+   * Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `primary`다.
+   * 색 계열 이름(`blue` 등)은 받지 않는다. 행동의 뜻을 색으로 전하기 때문이다(ADR 0016).
    * 루트에 `data-color`로 붙어 accent 색을 정한다. 바깥 요소의 색을 물려받지 않는다.
    */
-  color?: Color;
+  color?: Role;
   /** 정사각형 크기 `xs` 24px, `sm` 32px, `md` 40px, `lg` 48px. 아이콘은 16/16/20/24px다. 기본값은 `md`다. */
   size?: IconButtonSize;
   /**
@@ -69,7 +70,7 @@ const iconSizeClass: Record<IconButtonSize, string> = {
 
 /**
  * 아이콘만 있는 버튼. `aria-label`이 필수라 이름이 빠지지 않는다.
- * Button과 같은 채움 방식(`variant`) × 색 이름(`color`) × `size` 축을 쓴다.
+ * Button과 같은 채움 방식(`variant`) × Role(`color`) × `size` 축을 쓴다.
  */
 export function IconButton({
   variant = "solid",
