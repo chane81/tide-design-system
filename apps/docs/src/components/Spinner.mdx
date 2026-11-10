@@ -25,7 +25,13 @@ import * as SpinnerStories from "./Spinner.stories.tsx";
 
 ### 크기 바꾸기
 
-`size`는 `xs`·`sm` 14px, `md` 16px, `lg` 20px입니다. 선 두께는 모두 2px입니다. 같은 size Component의 텍스트 옆 아이콘과 크기가 같아, Button 로딩 상태의 아이콘 자리에 그대로 들어갑니다.
+| `size`     | 크기 | 선 두께 |
+| ---------- | ---- | ------- |
+| `xs`, `sm` | 14px | 2px     |
+| `md`(기본) | 16px | 2px     |
+| `lg`       | 20px | 2px     |
+
+같은 size Component의 텍스트 옆 아이콘과 크기가 같아, Button 로딩 상태의 아이콘 자리에 그대로 들어갑니다.
 
 <Canvas of={SpinnerStories.Sizes} />
 

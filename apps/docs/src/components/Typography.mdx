@@ -6,48 +6,54 @@ import * as TypographyStories from "./Typography.stories.tsx";
 
 # Typography
 
-텍스트 스타일 하나로 크기, 행간, 굵기를 정하고, 그 스타일에 맞는 시맨틱 요소(`h1`~`h6`, `p`, `span`)로 렌더합니다. `variant`는 [텍스트 스타일](?path=/docs/foundation-타이포그래피--docs) 이름이고, `variant="body-md"`는 `text-body-md` class와 같습니다. 서버 컴포넌트로 쓸 수 있습니다.
+텍스트 스타일과 그에 맞는 시맨틱 요소(`h1`~`h6`, `p`, `span`)를 한 번에 정하는 텍스트 Component입니다.
 
 <Canvas of={TypographyStories.Basic} />
 
 ## 사용 시점
 
 - 제목, 본문, 보조 설명처럼 글의 구조가 있는 텍스트를 쓸 때
-- 텍스트 스타일과 시맨틱 요소를 따로 고르지 않고 한 번에 정하고 싶을 때
+- 텍스트 스타일과 시맨틱 요소를 한 번에 정하고 싶을 때
 
 ## 쓰지 않을 때
 
-- 버튼, 입력창, 배지처럼 Component 안의 텍스트에는 쓰지 않습니다. Component가 이미 알맞은 텍스트 스타일을 씁니다.
-- 요소를 직접 써야 하는 곳(`<td>`, `<li>` 등)에서 스타일만 필요하면 `text-<이름>` class를 바로 씁니다.
+- 버튼, 입력창, 배지 같은 Component 안의 텍스트. Component가 이미 알맞은 텍스트 스타일을 씁니다.
+- `<td>`, `<li>`처럼 요소를 직접 써야 하는 곳. 스타일만 필요하면 `text-<이름>` class를 씁니다.
 
 ## 예시
 
-### 텍스트 스타일과 기본 요소
+### 텍스트 스타일 고르기
 
-기본 요소는 다음과 같습니다.
+`variant`는 [텍스트 스타일](?path=/docs/foundation-타이포그래피--docs) 이름입니다. `variant="body-md"`는 `text-body-md` class와 같습니다. 스타일마다 기본 요소가 정해져 있습니다.
 
-- `display-*`, `heading-xl`: `h1`
-- `heading-lg` / `heading-md` / `heading-sm` / `heading-xs`: `h2` / `h3` / `h4` / `h5`
-- `body-*`, `caption`: `p`
-- `label-*`: `span`
+| 텍스트 스타일                                             | 기본 요소                 |
+| --------------------------------------------------------- | ------------------------- |
+| `display-*`, `heading-xl`                                 | `h1`                      |
+| `heading-lg` / `heading-md` / `heading-sm` / `heading-xs` | `h2` / `h3` / `h4` / `h5` |
+| `body-*`, `caption`                                       | `p`                       |
+| `label-*`                                                 | `span`                    |
 
 <Canvas of={TypographyStories.Variants} />
 
 ### level로 제목 단계 바꾸기
 
-heading·display 스타일은 `level`(1~6)을 받습니다. 보이는 크기는 그대로 두고 문서 구조상 단계만 바꿉니다. heading·display 스타일은 항상 `<h*>`로 렌더되므로, 보이기만 하고 제목으로 읽히지 않는 텍스트가 생기지 않습니다. 다른 스타일에 `level`을 주면 타입 오류입니다.
+heading·display 스타일은 `level`(1~6)로 보이는 크기는 그대로 두고 문서 구조상 단계만 바꿉니다. 다른 스타일에 `level`을 주면 타입 오류입니다.
+
+heading·display 스타일은 항상 `<h*>`로 렌더됩니다. 보이기만 하고 제목으로 읽히지 않는 텍스트가 생기지 않습니다.
 
 <Canvas of={TypographyStories.Level} />
 
 ### render로 다른 요소 쓰기
 
-`render`에 요소를 넘기면 그 요소로 렌더합니다. Typography의 props, `ref`, `className`을 그 요소에 병합합니다. heading·display 스타일도 `render`를 주면 `<h*>`가 아니라 넘긴 요소가 됩니다.
+`render`에 요소를 넘기면 그 요소로 렌더하고, Typography의 props, `ref`, `className`을 병합합니다. heading·display 스타일도 `<h*>`가 아니라 넘긴 요소가 됩니다.
 
-- `className`: 텍스트 스타일 class, 넘긴 요소의 class, Typography의 `className` 순서로 합칩니다. 충돌하면 뒤의 것이 이깁니다.
-- 이벤트 핸들러: 둘 다 있으면 넘긴 요소의 것을 먼저, Typography의 것을 나중에 부릅니다.
-- `ref`: 둘 다 같은 요소를 받습니다.
-- children: Typography의 children을 쓰고, 없으면 넘긴 요소의 children을 씁니다.
-- 그 밖의 props는 Typography 쪽이 이깁니다.
+| 항목          | 병합 방식                                                                              |
+| ------------- | -------------------------------------------------------------------------------------- |
+| `className`   | 텍스트 스타일 class → 넘긴 요소의 class → Typography의 `className`. 뒤의 것이 이깁니다 |
+| 이벤트 핸들러 | 넘긴 요소의 것을 먼저, Typography의 것을 나중에 부릅니다                               |
+| `ref`         | 둘 다 같은 요소를 받습니다                                                             |
+| children      | Typography의 children. 없으면 넘긴 요소의 children                                     |
+| 그 밖의 props | Typography 쪽이 이깁니다                                                               |
 
 <Canvas of={TypographyStories.Render} />
 
@@ -71,7 +77,7 @@ heading·display 스타일은 `level`(1~6)을 받습니다. 보이는 크기는 
 
 ### Do: 반응형은 class로 바꾼다
 
-스케일은 고정입니다. 화면 크기에 따라 바꿔야 하면 `md:text-heading-xl`처럼 반응형 variant를 `className`에 줍니다.
+스케일은 고정입니다. 화면 크기에 따라 바꾸려면 `className`에 `md:text-heading-xl`처럼 반응형 variant를 줍니다.
 
 <Canvas of={TypographyStories.DoResponsive} />
 
@@ -83,14 +89,19 @@ Tide에는 Tailwind 기본 크기 class(`text-xl` 등)가 없습니다. 임의 �
 
 ## 접근성
 
-- 제목의 단계는 보이는 크기가 아니라 문서 구조를 따릅니다. 단계를 건너뛰지 않도록 `level`로 맞춥니다.
-- 크기와 행간은 rem이라서 사용자가 브라우저 글자 크기를 키우면 함께 커집니다(WCAG 1.4.4).
-- 한글은 어절 단위로 줄을 바꾸고, 긴 영문이나 URL은 칸 끝에서 끊습니다(`word-break: keep-all`, `overflow-wrap: break-word`).
-- Typography는 포커스를 받지 않고 색을 정하지 않습니다. 글자색 대비는 쓰는 글자색 Token의 대비 쌍이 보장합니다.
+### 기본 제공
+
+- 글자 크기 확대: 크기와 행간이 rem이라 브라우저 글자 크기를 키우면 함께 커집니다(WCAG 1.4.4).
+- 줄바꿈: 한글은 어절 단위로 바꾸고, 긴 영문이나 URL은 칸 끝에서 끊습니다(`word-break: keep-all`, `overflow-wrap: break-word`).
+- 포커스와 색: 포커스를 받지 않고 색을 정하지 않습니다. 대비는 쓰는 글자색 Token의 대비 쌍이 보장합니다.
+
+### 앱이 할 일
+
+- 제목 단계는 보이는 크기가 아니라 문서 구조를 따릅니다. 단계를 건너뛰지 않도록 `level`로 맞춥니다.
 
 ## Props
 
-루트 요소의 HTML 속성을 모두 받습니다. `ref`는 일반 prop으로 받아 루트 요소에 연결하고, `className`은 텍스트 스타일 class 뒤에 붙어 충돌할 때 이깁니다.
+서버 컴포넌트로 쓸 수 있습니다. 루트 요소의 HTML 속성을 모두 받습니다. `ref`는 루트 요소에 연결되고, `className`은 텍스트 스타일 class 뒤에 붙어 충돌하면 이깁니다.
 
 - `variant`: 텍스트 스타일 이름 14개 중 하나. 기본값 `body-md`. 다른 값은 타입 오류입니다.
 - `level`: 1~6. heading·display 스타일에만 있고, 주지 않으면 스타일의 기본 단계를 씁니다.

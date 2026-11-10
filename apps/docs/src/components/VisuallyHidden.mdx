@@ -6,7 +6,7 @@ import * as VisuallyHiddenStories from "./VisuallyHidden.stories.tsx";
 
 # VisuallyHidden
 
-화면에는 보이지 않지만 스크린 리더 같은 보조 기술에는 읽히는 텍스트입니다. 서버 컴포넌트로 쓸 수 있습니다.
+화면에는 보이지 않고 스크린 리더 같은 보조 기술에만 읽히는 텍스트입니다.
 
 ## 사용 시점
 
@@ -16,7 +16,7 @@ import * as VisuallyHiddenStories from "./VisuallyHidden.stories.tsx";
 ## 쓰지 않을 때
 
 - 모든 사용자에게 필요한 정보라면 화면에 보이게 씁니다.
-- 요소 자체에 `aria-label`을 줄 수 있고 번역이나 검색이 필요 없는 짧은 이름이라면 `aria-label`도 괜찮습니다.
+- 번역이나 검색이 필요 없는 짧은 이름이면 요소에 `aria-label`을 줘도 됩니다.
 - 포커스를 받는 요소(링크, 버튼)를 숨기는 데 쓰지 않습니다. 보이지 않는 곳으로 포커스가 이동합니다.
 
 ## 예시
@@ -43,12 +43,17 @@ import * as VisuallyHiddenStories from "./VisuallyHidden.stories.tsx";
 
 ## 접근성
 
+### 기본 제공
+
 - 텍스트는 접근성 트리에 남아 이름으로 읽힙니다. `display: none`이나 `hidden`과 달리 보조 기술에서도 사라지지 않습니다.
-- 아이콘은 `aria-hidden="true"`로 숨기고, 이름은 VisuallyHidden 텍스트로 줍니다.
 - 루트 요소는 `span`입니다. 문장 안이나 버튼 안 어디에 넣어도 레이아웃을 바꾸지 않습니다.
+
+### 앱이 할 일
+
+- 아이콘은 `aria-hidden="true"`로 숨기고, 이름은 VisuallyHidden 텍스트로 줍니다.
 
 ## Props
 
-`span`의 모든 props를 받습니다. `ref`는 일반 prop으로 받아 `span`에 연결하고, `className`은 기본 class 뒤에 붙어 충돌할 때 이깁니다.
+서버 컴포넌트로 쓸 수 있습니다. `span`의 props를 모두 받습니다. `ref`는 `span`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다.
 
 <ArgTypes of={VisuallyHiddenStories} />
