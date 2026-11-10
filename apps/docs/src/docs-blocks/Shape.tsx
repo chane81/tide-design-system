@@ -53,7 +53,7 @@ export function Radii(): ReactElement {
   );
 }
 
-/** 한 Theme의 그림자 3단계. raised 표면(bg-raised + border 1px) 위에 그린다. */
+/** 한 Theme의 그림자 3단계. raised 표면(bg-raised + border-raised 1px) 위에 그린다. */
 function ShadowPanel({ theme }: { theme: "light" | "dark" }): ReactElement {
   return (
     <section data-theme={theme} className="flex-1 bg-canvas p-6 text-default">
@@ -62,7 +62,7 @@ function ShadowPanel({ theme }: { theme: "light" | "dark" }): ReactElement {
         {shadowNames.map((name) => (
           <li key={name}>
             <div
-              className="rounded-lg border border-transparent bg-raised p-4 dark:border-default"
+              className="rounded-lg border border-raised bg-raised p-4"
               style={{ boxShadow: `var(--tide-shadow-${name})` }}
             >
               <span className="font-mono">shadow-{name}</span>

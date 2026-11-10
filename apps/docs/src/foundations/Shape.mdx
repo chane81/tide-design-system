@@ -28,12 +28,10 @@ radius, 그림자(Elevation), 포커스 표시를 다룹니다. 단계를 적게
 - 같은 class가 Theme에 따라 색만 바뀝니다(light는 gray-950 8%, dark는 black 30%). Component에 Theme 분기를 두지 않습니다. dark에서도 그림자를 그리고, 잘 보이지 않는 경계는 raised의 border가 맡습니다.
 - shadow 색은 class로 고를 수 없습니다.
 
-raised 표면은 두 Theme 모두 border 1px를 둡니다. light는 투명 border, dark는 `border-default`입니다.
+raised 표면은 두 Theme 모두 `border-raised` 1px를 둡니다. light는 투명, dark는 gray-800입니다. Theme 분기(`dark:`)가 없으므로 요소 단위 Theme에서도 맞게 나옵니다.
 
 ```tsx
-<div className="rounded-lg border border-transparent bg-raised shadow-md dark:border-default">
-  …
-</div>
+<div className="rounded-lg border border-raised bg-raised shadow-md">…</div>
 ```
 
 Windows 고대비 모드(forced-colors)는 그림자를 모두 지웁니다. 투명 border는 이 모드에서 시스템 색으로 그려지므로 popover와 dialog의 경계가 남습니다. 그래서 테두리를 `0 0 0 1px` 그림자로 그리지 않습니다.
