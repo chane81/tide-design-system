@@ -1,0 +1,83 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as SpinnerStories from "./Spinner.stories.tsx";
+
+<Meta of={SpinnerStories} />
+
+# Spinner
+
+작업이 끝나기를 기다리는 동안 로딩 중임을 알리는 회전 표시입니다. 접근 가능한 이름 「로딩 중」이 기본으로 붙고, 색은 주변 글자색을 따릅니다. 서버 컴포넌트로 쓸 수 있습니다.
+
+<Canvas of={SpinnerStories.Basic} />
+
+## 사용 시점
+
+- 끝나는 시점을 알 수 없는 짧은 기다림(요청 보내기, 목록 불러오기)을 보여 줄 때
+- 버튼을 누른 뒤 결과를 기다리는 동안 버튼 안에서 진행 중임을 보여 줄 때
+
+## 쓰지 않을 때
+
+- 진행률을 알 수 있으면 Progress를 씁니다.
+- 불러올 내용의 자리와 모양을 미리 보여 줄 수 있으면 Skeleton을 씁니다. 화면이 덜 흔들립니다.
+- 한 화면에 여러 개를 동시에 두지 않습니다. 영역 하나에 하나만 둡니다.
+
+## 예시
+
+### size
+
+`size`는 같은 size Component의 텍스트 옆 아이콘 크기와 같습니다. `xs`·`sm` 14px, `md` 16px, `lg` 20px이고 선 두께는 모두 2px입니다. Button 로딩 상태에서 아이콘 자리에 그대로 들어갑니다.
+
+<Canvas of={SpinnerStories.Sizes} />
+
+### 이름 바꾸기
+
+`aria-label`로 이름을 바꿉니다. 무엇을 불러오는지 적으면 스크린 리더 사용자가 문맥을 알 수 있습니다.
+
+<Canvas of={SpinnerStories.Label} />
+
+### 보이는 텍스트를 이름으로
+
+옆에 보이는 설명이 있으면 `aria-labelledby`로 그 텍스트를 이름으로 씁니다. 번역 도구도 함께 옮깁니다.
+
+<Canvas of={SpinnerStories.LabelledBy} />
+
+### 글자색 따르기
+
+색은 `currentColor`입니다. 바꾸려면 `className`이나 부모에 글자색 Semantic Token(`text-muted`, `text-primary` 등)을 줍니다. 대비는 그 글자색 Token의 대비 쌍이 보장합니다.
+
+<Canvas of={SpinnerStories.WithColor} />
+
+### 버튼 안에서
+
+보이는 텍스트가 이미 로딩 중임을 말하면 Spinner에 `aria-hidden="true"`를 줘서 이름이 겹치지 않게 합니다. 버튼의 로딩 상태 동작은 Button에서 정합니다.
+
+<Canvas of={SpinnerStories.InButton} />
+
+## Do/Don't
+
+### Do: 무엇을 불러오는지 적는다
+
+<Canvas of={SpinnerStories.DoSpecificLabel} />
+
+### Don't: 보이는 텍스트와 이름을 겹친다
+
+스크린 리더가 「로딩 중」을 두 번 읽습니다. 보이는 텍스트를 `aria-labelledby`로 연결하거나 Spinner를 `aria-hidden="true"`로 숨깁니다.
+
+<Canvas of={SpinnerStories.DontDuplicateLabel} />
+
+## 접근성
+
+- 루트는 `svg` 하나이고 역할은 `status`입니다. 이름은 기본 「로딩 중」이고 `aria-label`이나 `aria-labelledby`로 바꿉니다.
+- 포커스를 받지 않습니다(`focusable="false"`, tabindex 없음).
+- `status`는 정중한(polite) 알림 영역이지만, 화면에 새로 넣은 알림 영역을 바로 읽는지는 스크린 리더마다 다릅니다. 로딩이 끝났다는 사실이나 결과처럼 꼭 들어야 하는 내용은 처음부터 있던 알림 영역에 텍스트로 넣습니다.
+- 회전은 keyframe(`animate-spin`, 1초에 한 바퀴)입니다. 로딩 여부 자체가 정보이므로 움직임 줄이기를 켠 사용자에게도 멈추지 않습니다([움직임](?path=/docs/foundation-움직임--docs)). 이동·확대가 없고 크기가 작아 화면을 흔들지 않습니다.
+- 색은 `currentColor`라서 고대비 모드(forced-colors)에서는 시스템 글자색으로 그려집니다.
+
+## Props
+
+`svg`의 모든 props를 받습니다(`children` 제외). `ref`는 일반 prop으로 받아 `svg`에 연결하고, `className`은 기본 class 뒤에 붙어 충돌할 때 이깁니다(예: `size-8`).
+
+- `size`: `xs` / `sm` / `md` / `lg`. 기본값 `md`. 다른 값은 타입 오류입니다.
+- `aria-label`: 접근 가능한 이름. 기본값 `"로딩 중"`.
+
+<ArgTypes of={SpinnerStories} />
