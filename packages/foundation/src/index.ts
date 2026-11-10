@@ -24,3 +24,11 @@ export {
   type TextStyleName,
   type TextStyleValue,
 } from "./typography.ts";
+export {
+  focusRing,
+  radius,
+  shadow,
+  type RadiusName,
+  type ShadowLayer,
+  type ShadowName,
+} from "./shape.ts";

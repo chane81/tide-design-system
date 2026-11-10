@@ -84,4 +84,34 @@ describe("tailwind-merge 설정", () => {
       expect(twMerge("text-body-md text-xl")).toBe("text-body-md text-xl");
     });
   });
+
+  describe("radius·Elevation", () => {
+    it("radius 단계끼리는 뒤에 온 것이 이긴다", () => {
+      expect(twMerge("rounded-sm rounded-md")).toBe("rounded-md");
+      expect(twMerge("rounded-lg rounded-full")).toBe("rounded-full");
+      expect(twMerge("rounded-xl rounded-[10px]")).toBe("rounded-[10px]");
+      expect(twMerge("rounded-md rounded-none")).toBe("rounded-none");
+      // 방향별 radius는 전체 radius 뒤에서 그 방향만 덮는다.
+      expect(twMerge("rounded-lg rounded-t-sm")).toBe("rounded-lg rounded-t-sm");
+      expect(twMerge("rounded-t-sm rounded-lg")).toBe("rounded-lg");
+    });
+
+    it("그림자 단계끼리는 뒤에 온 것이 이긴다", () => {
+      expect(twMerge("shadow-sm shadow-lg")).toBe("shadow-lg");
+      expect(twMerge("shadow-md shadow-none")).toBe("shadow-none");
+      expect(twMerge("hover:shadow-md hover:shadow-lg")).toBe("hover:shadow-lg");
+    });
+
+    it("radius·그림자와 다른 속성은 서로 지우지 않는다", () => {
+      expect(twMerge("rounded-md shadow-md border-default bg-raised")).toBe(
+        "rounded-md shadow-md border-default bg-raised",
+      );
+    });
+
+    it("지운 Tailwind 기본 이름은 분류하지 않는다", () => {
+      expect(twMerge("rounded-md rounded-2xl")).toBe("rounded-md rounded-2xl");
+      expect(twMerge("shadow-md shadow-xl")).toBe("shadow-md shadow-xl");
+      expect(twMerge("drop-shadow-md drop-shadow-lg")).toBe("drop-shadow-md drop-shadow-lg");
+    });
+  });
 });

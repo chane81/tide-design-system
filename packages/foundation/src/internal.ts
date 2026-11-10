@@ -14,3 +14,4 @@ export {
 } from "./semantic.ts";
 export { contrastExclusions, contrastRatio } from "./contrast.ts";
 export { fontFamilyCss } from "./typography.ts";
+export { shadowCss } from "./shape.ts";

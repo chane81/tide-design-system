@@ -5,16 +5,26 @@ import { fileURLToPath } from "node:url";
 
 import {
   color,
+  focusRing,
   fontFamily,
   fontSize,
   fontWeight,
+  radius,
+  shadow,
   textStyle,
   type FontFamilyName,
   type SemanticColorValue,
   type SemanticNamespace,
+  type ShadowName,
   type ThemeName,
 } from "../src/index.ts";
-import { colorValueHex, fontFamilyCss, semanticEntries, shadowColor } from "../src/internal.ts";
+import {
+  colorValueHex,
+  fontFamilyCss,
+  semanticEntries,
+  shadowColor,
+  shadowCss,
+} from "../src/internal.ts";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
 const header = "/* 이 파일은 @tide-tds/foundation 빌드 스크립트가 만든다. 직접 고치지 않는다. */\n";
@@ -68,6 +78,22 @@ const typographyDeclarations: string[] = [
   ]),
 ];
 
+// radius와 포커스 ring 공개 계약. Theme과 무관하므로 :root 블록에 둔다.
+// 이름은 `--tide-<Utility class 이름>` 규칙을 따른다(rounded-md → --tide-rounded-md).
+// 포커스 ring은 class가 아니라 utility의 구성 값이라 spec이 정한 이름(--tide-focus-ring-width/offset)을 쓴다.
+const tideRadiusVar = (name: string): string => `--tide-rounded-${name}`;
+const shapeDeclarations: string[] = [
+  ...Object.entries(radius).map(([name, value]) => `  ${tideRadiusVar(name)}: ${value};`),
+  `  --tide-focus-ring-width: ${focusRing.width};`,
+  `  --tide-focus-ring-offset: ${focusRing.offset};`,
+];
+
+// Elevation 공개 계약(shadow-md → --tide-shadow-md).
+// --tide-shadow-color를 참조하는 값이라 Theme 블록마다 다시 선언한다. 사용자 정의 속성의 var()는 선언한 요소에서
+// 계산되어 상속되므로, :root에만 두면 요소 단위 data-theme="dark" 안에서도 light 그림자 색이 남는다.
+const shadowNames = Object.keys(shadow) as ShadowName[];
+const tideShadowVar = (name: string): string => `--tide-shadow-${name}`;
+
 function themeBlock(theme: ThemeName): string[] {
   return [
     `  color-scheme: ${theme};`,
@@ -75,6 +101,7 @@ function themeBlock(theme: ThemeName): string[] {
       (entry) => `  ${tideSemanticVar(entry.className)}: ${cssValue(entry.value[theme])};`,
     ),
     `  --tide-shadow-color: ${cssValue(shadowColor[theme])};`,
+    ...shadowNames.map((name) => `  ${tideShadowVar(name)}: ${shadowCss(name)};`),
   ];
 }
 
@@ -85,6 +112,7 @@ const tokensCss = [
   ":root {",
   ...primitiveEntries.map((entry) => `  ${tidePrimitiveVar(entry.name)}: ${entry.hex};`),
   ...typographyDeclarations,
+  ...shapeDeclarations,
   "}",
   "",
   ':root,\n[data-theme="light"] {',
@@ -106,6 +134,12 @@ const tokensCss = [
 // - --leading-*, --tracking-*는 지우지 않는다(드문 경우의 확장 수단). tabular-nums는 theme 변수가 없는 class다.
 // - --font-sans를 정의하면 Tailwind preflight의 기본 글꼴(--default-font-family)도 Tide sans를 따른다.
 // 텍스트 스타일은 --text-<이름>--line-height, --font-weight 하위 변수로 class 하나에 묶는다(Tailwind font-size 문서).
+// - --radius-*: initial은 rounded-xs·2xl·3xl·4xl과 단계 없는 rounded를 지운다. rounded-none은 theme 변수가 없는 class라 남는다.
+//   rounded-full은 --radius-full을 정의하면 그 값을 쓴다.
+// - 그림자 기본값은 자기 색(검정 alpha)을 써서 Theme 매핑과 어긋나므로 모두 지운다(tide-v0 티켓 12 「교체」):
+//   --shadow-*(단계 없는 shadow 포함), --inset-shadow-*, --drop-shadow-*, --text-shadow-*. shadow-none은 theme 변수가 없는 class라 남는다.
+// - shadow-md는 --tw-shadow: var(--tide-shadow-md)가 된다. 값이 var() 하나라 Tailwind가 색을 --tw-shadow-color로 바꾸지 않으므로
+//   shadow-<색> class로 그림자 색을 바꿀 수 없다(spec: shadow 색은 class로 노출하지 않는다).
 const tailwindCss = [
   header,
   '@import "./tokens.css";',
@@ -117,6 +151,11 @@ const tailwindCss = [
   "  --text-*: initial;",
   "  --font-*: initial;",
   "  --font-weight-*: initial;",
+  "  --radius-*: initial;",
+  "  --shadow-*: initial;",
+  "  --inset-shadow-*: initial;",
+  "  --drop-shadow-*: initial;",
+  "  --text-shadow-*: initial;",
   ...primitiveEntries.map(
     (entry) => `  --color-${entry.name}: var(${tidePrimitiveVar(entry.name)});`,
   ),
@@ -133,6 +172,30 @@ const tailwindCss = [
     `  --text-${name}--line-height: var(${tideTextVar(name)}--line-height);`,
     `  --text-${name}--font-weight: var(${tideTextVar(name)}--font-weight);`,
   ]),
+  ...Object.keys(radius).map((name) => `  --radius-${name}: var(${tideRadiusVar(name)});`),
+  ...shadowNames.map((name) => `  --shadow-${name}: var(${tideShadowVar(name)});`),
+  "}",
+  "",
+  // 포커스 표시(tide-v0 티켓 20). @utility로 정의해서 focus-visible:focus-ring, focus:focus-field처럼 variant와 함께 쓴다.
+  // - ring: outline 2px, offset 2px. 요소의 radius를 따른다.
+  // - field: offset 없이 border를 focus 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다(레이아웃이 그대로다).
+  //   투명 outline은 평소에는 보이지 않고, forced-colors 모드에서 시스템 색으로 그려져 포커스 표시가 남는다
+  //   (그 모드는 border 색과 box-shadow를 덮어쓴다).
+  // - error+focus: 오류 입력창(aria-invalid="true")에서도 포커스 중에는 field가 이긴다. 선택자 순서에 기대지 않도록
+  //   [aria-invalid="true"] 조합을 따로 적어 aria-invalid:border-danger(0,2,0)보다 우선순위(0,3,0)를 높인다.
+  "@utility focus-ring {",
+  "  outline: var(--tide-focus-ring-width) solid var(--tide-outline-focus);",
+  "  outline-offset: var(--tide-focus-ring-offset);",
+  "}",
+  "",
+  "@utility focus-field {",
+  "  border-color: var(--tide-outline-focus);",
+  "  box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",
+  "  outline: var(--tide-focus-ring-width) solid transparent;",
+  '  &[aria-invalid="true"] {',
+  "    border-color: var(--tide-outline-focus);",
+  "    box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",
+  "  }",
   "}",
   "",
   // 한글은 어절 단위로 줄을 바꾸고, 공백 없이 긴 영문·URL은 끊는다. 루트 font-size는 바꾸지 않는다.
@@ -167,6 +230,13 @@ const tailwindMergeConfig = {
       text: Object.keys(textStyle),
       "font-weight": Object.keys(fontWeight),
       font: fontFamilyNames,
+      // radius·Elevation: Tide 단계만 둔다. rounded-2xl, shadow-xl처럼 지운 이름은 분류하지 않는다.
+      radius: Object.keys(radius),
+      shadow: shadowNames,
+      // CSS에서 지운 그림자 기본값. 남은 class는 none과 임의 값뿐이다.
+      "inset-shadow": [],
+      "drop-shadow": [],
+      "text-shadow": [],
     },
   },
   extend: {

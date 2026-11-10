@@ -77,11 +77,34 @@ const typographyVars = [
   ]),
 ];
 
+// spec 「`@tide-tds/foundation`」 radius·Elevation·포커스 표시. [이름, 값]
+const radii = [
+  ["sm", "0.25rem"],
+  ["md", "0.375rem"],
+  ["lg", "0.5rem"],
+  ["xl", "0.75rem"],
+  ["full", "9999px"],
+] as const;
+// [단계, 가까운 레이어, 비율, 먼 레이어, 비율]
+const shadows = [
+  ["sm", "0 1px 1px", 60, "0 1px 2px", 100],
+  ["md", "0 1px 3px", 50, "0 4px 12px -2px", 100],
+  ["lg", "0 2px 6px -1px", 50, "0 12px 24px -6px", 100],
+] as const;
+const shapeVars = [
+  ...radii.map(([name]) => `--tide-rounded-${name}`),
+  "--tide-focus-ring-width",
+  "--tide-focus-ring-offset",
+];
+const shadowVars = shadows.map(([name]) => `--tide-shadow-${name}`);
+
 const contractVars = [
   ...primitiveVars,
   ...typographyVars,
+  ...shapeVars,
   ...semanticClasses.map((name) => `--tide-${name}`),
   "--tide-shadow-color",
+  ...shadowVars,
 ];
 
 const rem = (px: number): string => `${px / 16}rem`;
@@ -117,8 +140,10 @@ describe("tokens.css", () => {
     expect([...new Set(defined)].sort()).toEqual([...contractVars].sort());
   });
 
-  it("Theme과 무관한 :root 블록은 Primitive 색과 타이포그래피만 담는다", () => {
-    expect([...root.keys()].sort()).toEqual([...primitiveVars, ...typographyVars].sort());
+  it("Theme과 무관한 :root 블록은 Primitive 색, 타이포그래피, radius, 포커스 ring만 담는다", () => {
+    expect([...root.keys()].sort()).toEqual(
+      [...primitiveVars, ...typographyVars, ...shapeVars].sort(),
+    );
   });
 
   it("Primitive는 6계열 11단계와 white, black이고 hex가 정본이다", () => {
@@ -134,7 +159,8 @@ describe("tokens.css", () => {
     expect(light.get("color-scheme")).toBe("light");
     expect(dark.get("color-scheme")).toBe("dark");
     expect([...light.keys()].sort()).toEqual([...dark.keys()].sort());
-    expect(light.size).toBe(semanticClasses.length + 2);
+    // color-scheme, --tide-shadow-color, 그림자 3단계
+    expect(light.size).toBe(semanticClasses.length + 2 + shadowVars.length);
   });
 
   it("Theme은 속성 선택자로만 바꾼다(요소 단위 data-theme, prefers-color-scheme 없음)", () => {
@@ -232,6 +258,27 @@ describe("tokens.css", () => {
     it("자간 하위 변수와 루트 font-size가 없다", () => {
       expect(css).not.toContain("letter-spacing");
       expect(css).not.toMatch(/^\s*font-size:/m);
+    });
+  });
+
+  describe("radius·Elevation·포커스 표시", () => {
+    it.each(radii)("radius %s는 %s다", (name, value) => {
+      expect(root.get(`--tide-rounded-${name}`)).toBe(value);
+    });
+
+    it("포커스 ring은 2px 두께, 2px offset이다", () => {
+      expect(root.get("--tide-focus-ring-width")).toBe("2px");
+      expect(root.get("--tide-focus-ring-offset")).toBe("2px");
+    });
+
+    it.each(shadows)("그림자 %s: %s %i% + %s %i%", (name, near, nearMix, far, farMix) => {
+      const mix = (percent: number): string =>
+        `color-mix(in srgb, var(--tide-shadow-color) ${percent}%, transparent)`;
+      const expected = `${near} ${mix(nearMix)}, ${far} ${mix(farMix)}`;
+      // 같은 값이 두 Theme 블록에 다시 선언되어 요소 단위 data-theme에서도 그 Theme의 shadow 색을 읽는다.
+      expect(light.get(`--tide-shadow-${name}`)).toBe(expected);
+      expect(dark.get(`--tide-shadow-${name}`)).toBe(expected);
+      expect(root.has(`--tide-shadow-${name}`)).toBe(false);
     });
   });
 });

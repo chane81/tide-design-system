@@ -263,3 +263,132 @@ describe("tailwind.css 타이포그래피", () => {
     for (const rule of htmlRules) expect(rule).not.toMatch(/(^|[^-])font-size:/);
   });
 });
+
+// spec 「`@tide-tds/foundation`」 radius·Elevation·포커스 표시. 기대 목록은 spec을 그대로 적는다.
+const radii = ["sm", "md", "lg", "xl", "full"];
+const shadows = ["sm", "md", "lg"];
+// Tailwind 기본값 중 지워야 하는 것
+const removedShapeClasses = [
+  "rounded",
+  "rounded-xs",
+  "rounded-2xl",
+  "rounded-3xl",
+  "rounded-4xl",
+  "rounded-t-2xl",
+  "shadow",
+  "shadow-2xs",
+  "shadow-xs",
+  "shadow-xl",
+  "shadow-2xl",
+  "inset-shadow-2xs",
+  "inset-shadow-xs",
+  "inset-shadow-sm",
+  "drop-shadow-xs",
+  "drop-shadow-sm",
+  "drop-shadow-md",
+  "drop-shadow-lg",
+  "drop-shadow-xl",
+  "drop-shadow-2xl",
+  "text-shadow-2xs",
+  "text-shadow-xs",
+  "text-shadow-sm",
+  "text-shadow-md",
+  "text-shadow-lg",
+];
+const removedShapeVars = [
+  "--radius-xs",
+  "--radius-2xl",
+  "--radius-3xl",
+  "--radius-4xl",
+  "--shadow-2xs",
+  "--shadow-xs",
+  "--shadow-xl",
+  "--shadow-2xl",
+  "--inset-shadow-",
+  "--drop-shadow-",
+  "--text-shadow-",
+];
+
+describe("tailwind.css radius·Elevation·포커스 표시", () => {
+  let css: string;
+
+  beforeAll(async () => {
+    css = await buildCss([
+      ...radii.map((name) => `rounded-${name}`),
+      "rounded-t-lg",
+      ...shadows.map((name) => `shadow-${name}`),
+      ...removedShapeClasses,
+      "rounded-none",
+      "shadow-none",
+      "focus-ring",
+      "focus-field",
+      "focus-visible:focus-ring",
+      "focus:focus-field",
+      "aria-invalid:border-danger",
+      "dark:shadow-md",
+    ]);
+  });
+
+  it.each(radii)("radius rounded-%s가 --tide-* 공개 계약을 가리킨다", (name) => {
+    expect(ruleBody(css, `rounded-${name}`)).toContain(
+      `border-radius: var(--tide-rounded-${name})`,
+    );
+  });
+
+  it("방향별 radius도 Tide 단계를 쓴다", () => {
+    const body = ruleBody(css, "rounded-t-lg");
+    expect(body).toContain("border-top-left-radius: var(--tide-rounded-lg)");
+    expect(body).toContain("border-top-right-radius: var(--tide-rounded-lg)");
+  });
+
+  it.each(shadows)("그림자 shadow-%s가 --tide-* 공개 계약을 가리킨다", (name) => {
+    const body = ruleBody(css, `shadow-${name}`);
+    expect(body).toContain(`--tw-shadow: var(--tide-shadow-${name})`);
+    expect(body).toContain("box-shadow:");
+  });
+
+  it("Theme 분기 없이 같은 class가 dark variant에서도 같은 공개 계약을 쓴다", () => {
+    expect(css).toMatch(
+      /\.dark\\:shadow-md:where\(\[data-theme=dark\], \[data-theme=dark\] \*\)\s*\{\s*--tw-shadow: var\(--tide-shadow-md\)/,
+    );
+  });
+
+  it("Tailwind 기본 radius와 그림자가 남지 않는다", () => {
+    for (const name of removedShapeClasses) expect(ruleBody(css, name), name).toBeUndefined();
+    for (const name of removedShapeVars) expect(css, name).not.toContain(name);
+  });
+
+  it("theme 변수가 없는 rounded-none, shadow-none은 남는다", () => {
+    expect(ruleBody(css, "rounded-none")).toContain("border-radius: 0");
+    expect(ruleBody(css, "shadow-none")).toContain("--tw-shadow: 0 0 #0000");
+  });
+
+  it("focus-ring은 outline 2px, offset 2px이고 focus 색을 쓴다", () => {
+    const body = ruleBody(css, "focus-ring");
+    expect(body).toContain("outline: var(--tide-focus-ring-width) solid var(--tide-outline-focus)");
+    expect(body).toContain("outline-offset: var(--tide-focus-ring-offset)");
+  });
+
+  it("focus-field는 border 색과 inset 1px, 투명 outline을 함께 둔다", () => {
+    const body = ruleBody(css, "focus-field");
+    expect(body).toContain("border-color: var(--tide-outline-focus)");
+    expect(body).toContain("box-shadow: inset 0 0 0 1px var(--tide-outline-focus)");
+    expect(body).toContain("outline: var(--tide-focus-ring-width) solid transparent");
+  });
+
+  it("variant와 함께 쓸 수 있다", () => {
+    expect(css).toMatch(/\.focus-visible\\:focus-ring:focus-visible\s*\{\s*outline:/);
+    expect(css).toMatch(/\.focus\\:focus-field:focus\s*\{\s*border-color:/);
+  });
+
+  it("error+focus 조합을 명시해서 오류 border보다 우선한다", () => {
+    // 오류 border는 [aria-invalid="true"] 하나(0,2,0)이고, focus-field는 그 조합을 따로 적어(0,3,0) 이긴다.
+    expect(css).toMatch(
+      /\.aria-invalid\\:border-danger\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\)/,
+    );
+    const field = /\.focus\\:focus-field:focus\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? "";
+    expect(field).toMatch(
+      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-outline-focus\);\s*box-shadow: inset 0 0 0 1px var\(--tide-outline-focus\);/,
+    );
+  });
+});

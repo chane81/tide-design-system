@@ -9,11 +9,14 @@ describe("exports", () => {
       [
         "color",
         "contrastPairs",
+        "focusRing",
         "fontFamily",
         "fontSize",
         "fontWeight",
+        "radius",
         "semantic",
         "semanticPrefix",
+        "shadow",
         "textStyle",
       ].sort(),
     );
@@ -32,6 +35,7 @@ describe("exports", () => {
         "semanticEntries",
         "semanticHex",
         "shadowColor",
+        "shadowCss",
       ].sort(),
     );
   });
