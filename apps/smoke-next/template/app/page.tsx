@@ -21,6 +21,10 @@ export default function Page() {
         </button>
         <input aria-label="이름" className="border border-default focus:focus-field" />
       </section>
+      {/* motion·쌓임 단계 Utility class를 앱 코드에서 직접 쓴다. */}
+      <header className="sticky top-0 z-sticky transition-colors">
+        <p className="transition-opacity duration-normal ease-out">헤더</p>
+      </header>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

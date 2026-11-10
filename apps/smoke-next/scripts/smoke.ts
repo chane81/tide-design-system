@@ -155,6 +155,21 @@ try {
     "포커스 표시 utility(focus-ring, focus-field)가 없다",
   );
   assert(!/--radius-2xl\b|--shadow-xl\b/.test(css), "Tailwind 기본 radius나 그림자가 남아 있다");
+  assert(
+    css.includes(".duration-normal") && css.includes("--tide-duration-normal"),
+    "duration class(duration-normal)나 --tide-duration-normal이 없다",
+  );
+  assert(
+    css.includes(".transition-colors") &&
+      css.includes("--tide-duration-fast") &&
+      css.includes("--tide-ease-out") &&
+      !css.includes("--default-transition-duration"),
+    "시간을 적지 않은 transition-colors가 Tide 기본값(--tide-duration-fast, --tide-ease-out)을 쓰지 않는다",
+  );
+  assert(
+    css.includes(".z-sticky") && css.includes("--tide-z-sticky"),
+    "쌓임 단계 class(z-sticky)나 --tide-z-sticky가 없다",
+  );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
