@@ -22,10 +22,14 @@
     ├── research/        ← 리서치 결과 (출처 인용)
     ├── progress/        ← wayfinder 지도, 스펙, 티켓 (이슈 트래커)
     ├── principles/      ← 산출물: 디자인 원칙
-    ├── standards/       ← 산출물: 측정 가능한 기준 (접근성 등)
+    ├── standards/       ← 산출물: 측정 가능한 기준 (접근성, 문서 작성 등)
     ├── foundations/     ← 산출물: 컬러, 타이포, 간격 등 파운데이션
     └── components/      ← 산출물: 컴포넌트 문서
 ```
+
+## Storybook 문서는 작성 기준을 따른다
+
+`apps/docs/src/**/*.mdx`와 Storybook이 불러오는 원문을 쓰거나 고칠 때는 [문서 작성 기준](../standards/docs-writing.md)을 따른다.
 
 ## ADR에는 근거 원칙을 적는다
 

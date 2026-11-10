@@ -50,8 +50,9 @@ Storybook 문서(`apps/docs/src/**/*.mdx`)를 쓸 때 지킬 기준이다. 참�
 ## 표·코드
 
 - 코드는 복사해서 바로 쓸 수 있게 쓰고, 첫 줄에 파일 경로 주석을 단다(`// app/layout.tsx`).
-- 비교할 축이 둘 이상이면 표를 쓴다. 목록 항목이 「이름: 설명」 모양으로 4개를 넘으면 표를 고려한다.
-- **주의**: 지금 Storybook 설정에는 `remark-gfm`이 없어 MDX 안의 Markdown 표가 표로 그려지지 않는다(Storybook 10.6.6 문서 「remarkPlugins」, 빌드 결과에서 확인). 고치기 전까지 MDX에서는 표 대신 목록을 쓴다.
+- 비교할 축이 둘 이상이면(값마다 크기·쓰는 곳·기본값이 다르면) 표를 쓴다. 목록 항목이 「이름: 설명」 모양으로 4개를 넘어도 표를 고려한다.
+- 표는 Markdown 표로 쓴다. Storybook에 `remark-gfm`을 넣어 MDX의 Markdown 표가 `<table>`로 그려진다(`apps/docs/.storybook/main.ts`). JSX `<table>`은 쓰지 않는다.
+- 표 칸 안의 코드에 `|`가 있으면 `\|`로 적는다.
 - Props는 `ArgTypes` 블록이 그린다. 같은 내용을 문장 목록으로 되풀이하지 않는다. 설명이 부족하면 Component 소스의 JSDoc을 고친다.
 
 ## Do/Don't
@@ -64,4 +65,4 @@ Storybook 문서(`apps/docs/src/**/*.mdx`)를 쓸 때 지킬 기준이다. 참�
 ## 범위
 
 - 이 기준은 Storybook MDX 페이지에 적용한다.
-- `docs/principles/`, `docs/standards/`의 원문은 Storybook이 그대로 불러와 보여 주지만, 저장소 문서이기도 해서 이 기준을 아직 적용하지 않았다.
+- `docs/principles/`, `docs/standards/`의 원문은 Storybook이 그대로 불러와 보여 준다. 원문에는 맨 위 한 문장 요약만 지키고, 결정 경위는 쓰지 않는다(경위는 티켓·ADR에 있다).
