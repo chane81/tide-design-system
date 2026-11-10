@@ -1,0 +1,138 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as IconButtonStories from "./IconButton.stories.tsx";
+
+<Meta of={IconButtonStories} />
+
+# IconButton
+
+아이콘 하나로 동작을 실행하는 버튼입니다. `aria-label`이 필수라 이름이 빠지지 않습니다.
+
+<Canvas of={IconButtonStories.Basic} />
+
+## 사용 시점
+
+- 툴바, 표의 행 동작처럼 자리가 좁고 아이콘 뜻이 널리 알려져 있을 때
+- 닫기, 더 보기처럼 같은 화면에서 자주 반복되는 동작일 때
+
+## 쓰지 않을 때
+
+- 아이콘 뜻이 낯설면 텍스트가 있는 Button을 씁니다.
+- 영역의 주요 동작은 텍스트가 있는 Button을 씁니다.
+- 다른 페이지로 가는 문장 속 링크는 Link를 씁니다.
+
+## 예시
+
+### 채움 방식 고르기
+
+`variant`는 Button과 같은 4개입니다. 기본값은 `solid`입니다. 툴바처럼 여러 개 모이면 `ghost`를 씁니다.
+
+<Canvas of={IconButtonStories.Variants} />
+
+### 색 고르기
+
+`color`는 Button과 같은 색 이름(Role, 색 계열, 앱 브랜드 색)을 받습니다. 기본값은 `primary`입니다.
+
+<Canvas of={IconButtonStories.Colors} />
+
+<Canvas of={IconButtonStories.Families} />
+
+앱의 브랜드 계열은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)로 만든 뒤 `color="brand"`로 씁니다.
+
+<Canvas of={IconButtonStories.Brand} />
+
+### 크기 바꾸기
+
+| `size`     | 크기    | 아이콘 |
+| ---------- | ------- | ------ |
+| `xs`       | 24×24px | 16px   |
+| `sm`       | 32×32px | 16px   |
+| `md`(기본) | 40×40px | 20px   |
+| `lg`       | 48×48px | 24px   |
+
+같은 size의 Button과 높이가 같습니다. 가장 작은 `xs`도 24×24px라 손가락이나 마우스로 누르기 쉽습니다.
+
+<Canvas of={IconButtonStories.Sizes} />
+
+### 다른 아이콘 넣기
+
+다른 라이브러리의 아이콘이나 `svg`도 `children`으로 넣습니다. 크기는 size가 맞춥니다.
+
+<Canvas of={IconButtonStories.OtherIcon} />
+
+### 로딩 상태 보이기
+
+`loading`을 주면 아이콘 자리에 Spinner가 보이고 클릭이 막힙니다. 두 번째 버튼을 눌러 보세요.
+
+<Canvas of={IconButtonStories.Loading} />
+
+### 비활성으로 두기
+
+`disabled`를 주면 누를 수 없고 커서가 바뀝니다.
+
+<Canvas of={IconButtonStories.Disabled} />
+
+### 링크로 렌더하기
+
+`render`에 요소를 넘기면 그 요소로 렌더합니다. Next.js에서는 `render={<Link href="/settings" />}`처럼 씁니다.
+
+```tsx
+// app/page.tsx
+import { IconButton } from "@tide-tds/components";
+import { SettingsIcon } from "@tide-tds/icons";
+import Link from "next/link";
+
+<IconButton aria-label="설정으로 이동" variant="outline" render={<Link href="/settings" />}>
+  <SettingsIcon />
+</IconButton>;
+```
+
+<Canvas of={IconButtonStories.AsLink} />
+
+### 누름 축소 끄기
+
+누르면 살짝 줄어듭니다. `noPressScale`로 끕니다.
+
+<Canvas of={IconButtonStories.NoPressScale} />
+
+## Do/Don't
+
+### Do: 툴바는 ghost로 둔다
+
+<Canvas of={IconButtonStories.DoToolbarGhost} />
+
+### Do: 동작을 이름으로 쓴다
+
+<Canvas of={IconButtonStories.DoActionName} />
+
+### Don't: 아이콘 모양을 이름으로 쓴다
+
+「X 아이콘」은 무엇을 하는지 말하지 않습니다. 「닫기」처럼 동작을 적습니다.
+
+<Canvas of={IconButtonStories.DontIconName} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: `button`. 이름은 `aria-label`이고, 빠뜨리면 타입 오류가 납니다.
+- 키보드: Tab으로 포커스하고 Enter, Space로 실행합니다.
+- 포커스 표시: 키보드 포커스에 2px ring이 보입니다(`focus-ring`).
+- 크기: 가장 작은 size도 24×24px입니다(WCAG 2.5.8).
+- 아이콘: 장식용으로 숨겨 이름에 들어가지 않습니다.
+- 로딩: `aria-disabled="true"`가 붙고 이름 뒤에 「로딩 중」이 붙습니다(`loadingLabel`로 바꿉니다).
+- 비활성: `button`은 `disabled`, 링크 등은 `aria-disabled="true"`로 알립니다.
+- 커서: 누를 수 있으면 `pointer`, 로딩 중에는 `wait`, 비활성에는 `not-allowed`입니다.
+- 움직임 줄이기: 켜면 누름 축소가 사라집니다.
+- 고대비 모드(forced-colors): 모든 채움 방식에 경계가 보입니다.
+
+### 앱이 할 일
+
+- `aria-label`에 동작을 적습니다(「설정」, 「닫기」, 「행 삭제」).
+- 같은 아이콘이 여러 개면 무엇에 대한 동작인지 적습니다(「3행 삭제」).
+
+## Props
+
+`button`의 props를 모두 받습니다(`color`는 색 이름으로 바뀌고, `aria-label`과 `children`은 필수입니다). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 루트에는 `data-color`가 붙습니다.
+
+<ArgTypes of={IconButtonStories} />
