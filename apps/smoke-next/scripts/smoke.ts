@@ -205,6 +205,17 @@ try {
       css.includes("--tide-color-brand-600"),
     "tide-color가 만든 앱 브랜드 계열 CSS([data-color=brand], --tide-brand-solid)가 없다",
   );
+  assert(
+    /motion-safe\\:active\\:scale-96/.test(css) && css.includes(".text-label-sm"),
+    "Button 내부 class(motion-safe:active:scale-96, text-label-sm)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
+  const componentsDist = join(consumerDir, "node_modules/@tide-tds/components/dist");
+  const startsWithUseClient = async (file: string): Promise<boolean> =>
+    /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
+  if (!(await startsWithUseClient("Button.js")) || (await startsWithUseClient("Spinner.js"))) {
+    throw new Error('"use client" 확인 실패: Button.js에만 지시어가 있어야 한다');
+  }
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.

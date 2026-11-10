@@ -2,6 +2,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
+import { mouseDownOn, mouseUp } from "./test/commands.ts";
+
 // Vitest projects(vitest 5 docs/guide/projects.md, docs/config/browser/playwright.md).
 // - unit: Node에서 공개 함수(cn 등)를 본다.
 // - browser: 실제 Chromium에서 Component 동작을 본다. 두 번째 instance는 forced-colors와 reduced-motion을 켠다.
@@ -18,6 +20,9 @@ export default defineConfig({
       },
       {
         plugins: [tailwindcss()],
+        // next/link(CJS)를 처음부터 사전 번들한다. 실행 중에 발견하면 Vite가 다시 최적화하며 페이지를 새로 고쳐
+        // 차가운 캐시에서 테스트 파일 import가 실패한다(2026-11-10 로컬에서 재현).
+        optimizeDeps: { include: ["next/link.js"] },
         test: {
           name: "browser",
           include: ["src/**/*.test.tsx"],
@@ -26,6 +31,8 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright(),
+            // `:active`를 붙잡아 둘 마우스 명령(Button press 축소 단언용)
+            commands: { mouseDownOn, mouseUp },
             instances: [
               { browser: "chromium", name: "chromium" },
               {

@@ -1,8 +1,9 @@
 // 서버 컴포넌트에서 래퍼 없이 바로 import한다.
 // 이 파일에는 Component 내부 class(예: VisuallyHidden의 class)를 직접 쓰지 않는다.
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
-import { cn, Spinner, Typography, VisuallyHidden } from "@tide-tds/components";
+import { Button, cn, Spinner, Typography, VisuallyHidden } from "@tide-tds/components";
 import { PlusIcon } from "@tide-tds/icons";
+import Link from "next/link";
 
 import { brandColor } from "./colors";
 
@@ -33,6 +34,11 @@ export default function Page() {
       <p data-color={brandColor} className="bg-accent-solid text-accent-on-solid">
         브랜드
       </p>
+      {/* Button은 client Component다. 서버 컴포넌트에서 Next Link를 render로 넘긴다. 누름 축소 class는 이 파일에 쓰지 않는다. */}
+      <Button variant="outline" size="sm">
+        저장
+      </Button>
+      <Button render={<Link href="/settings" />}>설정</Button>
       {/* 아이콘은 PlusIcon 하나만 쓴다. 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>
