@@ -340,7 +340,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **raised 위 항목**: ghost 규칙을 따른다. 기본은 투명, hover는 `subtle-hover`, 선택 유지는 `subtle-active`다. 목록 안 항목의 hover와 키보드 위치 표시는 highlight다.
 - **여러 부분으로 된 Component**: 평평한 이름으로 export한다(`DialogTrigger`). 부분마다 `className`을 받는다. `classNames` 객체는 두지 않는다.
 - **IconButton**: 별도 Component로 둔다. `aria-label`은 타입상 필수다. 24×24 미만은 없다.
-- **press 축소**: Button과 IconButton은 활성 상태에서 누르면 0.96으로 줄어든다(`motion-safe:`일 때만). boolean prop으로 끌 수 있다. prop 이름(초안 `static`)은 Button 구현 때 공통 규칙에 맞는지 다시 본다.
+- **press 축소**: Button과 IconButton은 활성 상태에서 누르면 0.96으로 줄어든다(`motion-safe:`일 때만). boolean prop `noPressScale`로 끌 수 있다(초안 `static`에서 바꿈, [ADR 0010](../../decisions/0010-press-scale-opt-out-prop-name.md)).
 - **`"use client"`**: hook, state, 이벤트 처리를 쓰는 파일에만 붙인다. 표시만 하는 Component는 서버 컴포넌트로 남긴다.
 - **접근성 동작**:
   - 네이티브로 완결되는 요소(Button, Input, Textarea, Checkbox, Radio, Switch, Table 등)에는 hook을 쓰지 않는다.

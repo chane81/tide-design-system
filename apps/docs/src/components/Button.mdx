@@ -1,0 +1,146 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ButtonStories from "./Button.stories.tsx";
+
+<Meta of={ButtonStories} />
+
+# Button
+
+누르면 저장, 제출, 열기 같은 동작을 바로 실행하는 버튼입니다.
+
+<Canvas of={ButtonStories.Basic} />
+
+## 사용 시점
+
+- 폼 제출, 저장, 대화상자 열기처럼 동작을 실행할 때
+- 다른 페이지로 가는 동작을 버튼 모양으로 보여야 할 때(`render`로 링크로 렌더)
+
+## 쓰지 않을 때
+
+- 아이콘만 있으면 IconButton을 씁니다.
+- 문장 안에서 다른 페이지로 가면 Link를 씁니다.
+- 켜고 끄는 설정이면 Switch를 씁니다.
+
+## 예시
+
+### 채움 방식 고르기
+
+`variant`로 채움 방식을 고릅니다. 기본값은 `solid`입니다.
+
+| `variant` | 모양                    | 쓰는 곳                  |
+| --------- | ----------------------- | ------------------------ |
+| `solid`   | 진한 배경, 흰 글자      | 영역의 주요 동작 하나    |
+| `subtle`  | 옅은 배경               | 자주 쓰는 보조 동작      |
+| `outline` | 테두리                  | 주요 동작 옆의 보조 동작 |
+| `ghost`   | 배경 없음, hover에 배경 | 툴바, 취소처럼 약한 동작 |
+
+<Canvas of={ButtonStories.Variants} />
+
+### Role 고르기
+
+`color`로 Role 6개 중 하나를 고릅니다. 기본값은 `primary`입니다. 되돌릴 수 없는 동작은 `danger`를 씁니다.
+
+<Canvas of={ButtonStories.Colors} />
+
+### 크기 바꾸기
+
+| `size`     | 높이 | 텍스트 스타일 | 아이콘 |
+| ---------- | ---- | ------------- | ------ |
+| `xs`       | 24px | `label-sm`    | 14px   |
+| `sm`       | 32px | `label-sm`    | 14px   |
+| `md`(기본) | 40px | `label-md`    | 16px   |
+| `lg`       | 48px | `label-lg`    | 20px   |
+
+같은 size의 Input, Select와 한 줄에서 높이가 같습니다. 모서리는 모든 size에서 `rounded-md`(6px)입니다.
+
+<Canvas of={ButtonStories.Sizes} />
+
+### 아이콘 넣기
+
+`startIcon`과 `endIcon`에 아이콘을 넣습니다. 크기는 size가 정하고, 스크린 리더는 읽지 않습니다.
+
+<Canvas of={ButtonStories.WithIcons} />
+
+다른 라이브러리의 아이콘이나 `svg`도 넣을 수 있습니다. 크기는 같은 규칙으로 맞춰집니다.
+
+<Canvas of={ButtonStories.OtherIcon} />
+
+### 로딩 상태 보이기
+
+`loading`을 주면 앞 아이콘 자리에 Spinner가 보이고 클릭이 막힙니다. 포커스는 그대로 남습니다. 세 번째 버튼을 눌러 보세요.
+
+<Canvas of={ButtonStories.Loading} />
+
+### 비활성으로 두기
+
+`disabled`를 주면 누를 수 없고 커서가 바뀝니다. 링크로 렌더해도 같은 모양으로 막힙니다.
+
+<Canvas of={ButtonStories.Disabled} />
+
+### 링크로 렌더하기
+
+`render`에 요소를 넘기면 그 요소로 렌더합니다. Next.js에서는 `render={<Link href="/settings" />}`처럼 씁니다.
+
+```tsx
+// app/page.tsx
+import { Button } from "@tide-tds/components";
+import Link from "next/link";
+
+<Button variant="outline" render={<Link href="/settings" />}>
+  설정으로 이동
+</Button>;
+```
+
+<Canvas of={ButtonStories.AsLink} />
+
+### 누름 축소 끄기
+
+누르면 살짝 줄어듭니다. 한 화면에 버튼이 아주 많아 반응이 산만하면 `noPressScale`로 끕니다.
+
+<Canvas of={ButtonStories.NoPressScale} />
+
+## Do/Don't
+
+### Do: 주요 동작 하나만 solid로 둔다
+
+<Canvas of={ButtonStories.DoOnePrimary} />
+
+### Don't: solid를 여러 개 나란히 둔다
+
+무엇이 주요 동작인지 알 수 없습니다. 나머지는 `outline`이나 `ghost`로 낮춥니다.
+
+<Canvas of={ButtonStories.DontManySolid} />
+
+### Do: 위험한 동작은 무엇을 하는지 적는다
+
+<Canvas of={ButtonStories.DoDangerLabel} />
+
+### Don't: 아이콘만 넣는다
+
+이름이 없는 버튼이 됩니다. 아이콘만 쓰려면 IconButton을 씁니다. `aria-label`이 필수입니다.
+
+<Canvas of={ButtonStories.DontIconOnly} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: `button`. 이름은 텍스트입니다. `type` 기본값은 `"button"`이라 폼 안에서 뜻하지 않게 제출하지 않습니다.
+- 키보드: Tab으로 포커스하고 Enter, Space로 실행합니다. 링크로 렌더하면 Enter로 실행합니다.
+- 포커스 표시: 키보드 포커스에 2px ring이 보입니다(`focus-ring`).
+- 아이콘: 장식용으로 숨겨 이름에 들어가지 않습니다.
+- 로딩: `aria-disabled="true"`가 붙고 이름 뒤에 「로딩 중」이 붙습니다(`loadingLabel`로 바꿉니다). 포커스를 잃지 않습니다.
+- 비활성: `button`은 `disabled`, 링크 등은 `aria-disabled="true"`로 알립니다. 링크는 포커스를 받지만 실행되지 않습니다.
+- 움직임 줄이기: 켜면 누름 축소가 사라집니다. 색 변화는 남습니다.
+- 고대비 모드(forced-colors): 모든 채움 방식에 경계가 보입니다.
+
+### 앱이 할 일
+
+- 텍스트로 무엇을 하는지 적습니다(「확인」보다 「저장」).
+- 로딩이 끝난 결과(저장됨, 실패)는 처음부터 있던 알림 영역에 텍스트로 넣습니다.
+
+## Props
+
+`button`의 props를 모두 받습니다(`color` 제외). `ref`는 루트 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `px-8`). 상태는 `disabled:`, `data-loading`, `data-disabled`(링크로 렌더했을 때)로 덮어씁니다.
+
+<ArgTypes of={ButtonStories} />
