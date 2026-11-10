@@ -4,14 +4,45 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # 설치
 
-Next.js App Router 앱에 패키지 하나를 설치하고 CSS 두 줄을 넣으면 Tide Utility class와 Component를 쓸 수 있습니다.
+Next.js App Router 앱에 Tide 패키지를 설치하고 CSS 두 줄을 넣으면 Tide Utility class와 Component를 쓸 수 있습니다.
 
 ## 준비
 
 - React 19
-- Tailwind CSS 4.3 이상과 `@tailwindcss/postcss`
+- Tailwind CSS 4.3 이상과 Tailwind 플러그인 하나(`@tailwindcss/turbopack` 또는 `@tailwindcss/postcss`)
 
-`create-next-app`에서 Tailwind CSS를 골랐다면 이미 준비되어 있습니다. 아니라면 먼저 설치하고 PostCSS 설정을 둡니다.
+`create-next-app`에서 Tailwind CSS를 골랐다면 이미 준비되어 있습니다. Tide CSS는 아래 두 구성 모두에서 동작합니다.
+
+| 구성                                | 플러그인                 | 설정 파일            |
+| ----------------------------------- | ------------------------ | -------------------- |
+| Turbopack(`create-next-app` 기본값) | `@tailwindcss/turbopack` | `next.config.ts`     |
+| PostCSS                             | `@tailwindcss/postcss`   | `postcss.config.mjs` |
+
+### Tailwind CSS를 직접 설치할 때: Turbopack
+
+```sh
+pnpm add -D tailwindcss @tailwindcss/turbopack
+```
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  turbopack: {
+    rules: {
+      "*.css": {
+        loaders: ["@tailwindcss/turbopack"],
+        as: "*.css",
+      },
+    },
+  },
+};
+
+export default nextConfig;
+```
+
+### Tailwind CSS를 직접 설치할 때: PostCSS
 
 ```sh
 pnpm add -D tailwindcss @tailwindcss/postcss
@@ -24,11 +55,15 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 ## 1. 패키지 설치
 
-`@tide-tds/components` 하나만 설치합니다. `@tide-tds/foundation`(Token, CSS)과 `@tide-tds/icons`(아이콘)는 의존성으로 함께 설치됩니다.
+`@tide-tds/components`와 `@tide-tds/icons`를 함께 설치합니다. 아이콘을 쓰지 않으면 icons는 빼도 됩니다.
 
 ```sh
-pnpm add @tide-tds/components
+pnpm add @tide-tds/components @tide-tds/icons
 ```
+
+- `@tide-tds/foundation`(Token, CSS)은 components의 의존성으로 함께 설치됩니다. 앱에서 직접 import하지 않으므로 따로 설치하지 않아도 됩니다.
+- icons는 components의 의존성이지만, pnpm은 앱이 직접 설치하지 않은 패키지를 import하지 못하게 합니다.
+- npm처럼 의존성을 끌어올리는 매니저에서는 components만 설치해도 import될 수 있습니다. 그래도 직접 설치합니다. 전이 의존성에 기대면 components의 의존성이 바뀔 때 앱이 깨집니다.
 
 ## 2. 앱 CSS 두 줄
 
@@ -87,7 +122,7 @@ export default function Page() {
 
 ## 패키지를 직접 설치할 때는 같은 버전으로
 
-`@tide-tds/components`, `@tide-tds/foundation`, `@tide-tds/icons`는 항상 같은 버전으로 함께 릴리스되고, components는 나머지 둘을 정확히 같은 버전으로 의존합니다. foundation이나 icons를 앱에 직접 설치한다면 components와 같은 버전을 적습니다.
+`@tide-tds/components`, `@tide-tds/foundation`, `@tide-tds/icons`는 항상 같은 버전으로 함께 릴리스되고, components는 나머지 둘을 정확히 같은 버전으로 의존합니다. icons나 foundation을 앱에 직접 설치할 때는 components와 같은 버전을 적습니다.
 
 ```sh
 # 예: 0.1.0을 쓰는 경우. 세 패키지의 버전을 맞춘다.
