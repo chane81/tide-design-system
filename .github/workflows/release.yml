@@ -1,0 +1,187 @@
+# main에 push될 때마다 changesets 상태를 보고 Version PR을 만들거나, Version PR이 머지된 뒤라면
+# 전체 검사 → npm publish(trusted publishing, OIDC) → GitHub Release 하나 → 문서 배포를 잇는다.
+# (spec 릴리스 절, ADR 0008, changesets.dev 「Automating Changesets」 Trusted Publishing 예시 구조)
+#
+# - 액션 버전: actions/checkout v7, pnpm/action-setup v6, actions/setup-node v7(ci.yml과 같음),
+#   changesets/action v2.1.2(Changesets v3 전용, 하위 액션 select-mode·version·pack·publish). 2026-11-10 확인.
+# - npm trusted publisher 설정의 workflow 파일 이름은 이 파일(`release.yml`)이다. 이름을 바꾸면 npm 설정도 바꾼다.
+# - `id-token: write`는 publish job에만 준다. 다른 job은 필요한 권한만 받는다.
+# - publish job은 저장소 변수 NPM_TRUSTED_PUBLISHING이 'true'일 때만 돈다. 첫 publish(0.1.0)는 사람이 로컬에서
+#   2FA로 하고(티켓 12), trusted publisher를 설정하는 릴리스(티켓 18)부터 켠다.
+# - workflow_dispatch로 실행하면 문서 배포만 다시 한다(문서 배포가 실패했을 때, 첫 문서 배포).
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# 기본 권한을 비우고 job마다 필요한 것만 준다.
+permissions: {}
+
+# 같은 브랜치의 릴리스가 겹치지 않게 한다. 진행 중인 publish를 끊지 않도록 취소하지 않는다.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  select-mode:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
+      publish-plan-artifact-id: ${{ steps.select-mode.outputs.publish-plan-artifact-id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      # changeset이 있으면 version, 없고 registry에 없는 버전이 있으면 publish, 둘 다 아니면 none.
+      # empty changeset만 있으면 none이다(changesets/action v2.1.2 src/select-mode).
+      - id: select-mode
+        uses: changesets/action/select-mode@v2
+
+  version:
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Version PR 브랜치에 커밋
+      pull-requests: write # Version PR 만들기·갱신
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          # @changesets/changelog-github가 changeset을 더한 커밋과 PR을 찾으려면 히스토리가 필요하다.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      # changeset version 뒤에 CHANGELOG의 고정 영어 문구를 한글로 바꾼다(scripts/changelog-ko.ts).
+      # 액션이 GITHUB_TOKEN을 환경 변수로 넘겨서 changelog-github가 PR 링크와 작성자를 찾는다.
+      - uses: changesets/action/version@v2
+        with:
+          script: pnpm release:version
+          commit-message: "chore: 릴리스 버전 올리기"
+          pr-title: "chore: 릴리스 버전 올리기"
+
+  # Version PR이 머지된 뒤: 전체 검사를 다시 돌리고 tarball을 만든다(spec Testing Decisions 「CI」).
+  pack:
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      pack-dir-artifact-id: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tide-tds/desktop exec playwright install --with-deps --only-shell chromium
+      # --affected 없이 전체를 돌린다. build 결과(dist)가 그대로 pack에 들어간다.
+      - run: pnpm turbo run typecheck test build smoke
+      # changeset pack이 pnpm pack을 불러서 workspace:·catalog:가 실제 버전으로 바뀐다(@changesets/cli 3.0.3).
+      - id: pack
+        uses: changesets/action/pack@v2
+        with:
+          publish-plan-artifact-id: ${{ needs.select-mode.outputs.publish-plan-artifact-id }}
+
+  publish:
+    needs: pack
+    if: vars.NPM_TRUSTED_PUBLISHING == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 패키지별 git tag push
+      id-token: write # npm trusted publishing(OIDC). provenance도 이것으로 붙는다.
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+      published-packages: ${{ steps.publish.outputs.published-packages }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      # pack job의 tarball을 `changeset publish --from-pack-dir`로 올린다. 실제 업로드는
+      # `pnpm publish <tarball> --access public --tag latest`이고, pnpm 12가 OIDC 토큰을 받아 인증하고
+      # 공개 저장소의 공개 패키지에 provenance를 붙인다(pnpm publish 문서 --provenance).
+      # tag는 패키지마다(`@tide-tds/foundation@0.2.0` …) 만들고, GitHub Release는 아래 job에서 하나로 만든다.
+      - id: publish
+        uses: changesets/action/publish@v2
+        with:
+          pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
+          create-github-releases: false
+          push-git-tags: true
+
+  github-release:
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Release와 그 tag(v0.2.0) 만들기
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - id: notes
+        env:
+          PUBLISHED_PACKAGES: ${{ needs.publish.outputs.published-packages }}
+        run: echo "version=$(node scripts/release-notes.ts "$RUNNER_TEMP/release-notes.md")" >> "$GITHUB_OUTPUT"
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.notes.outputs.version }}
+        run: >-
+          gh release create "v$VERSION"
+          --repo "$GITHUB_REPOSITORY"
+          --target "$GITHUB_SHA"
+          --title "v$VERSION"
+          --notes-file "$RUNNER_TEMP/release-notes.md"
+
+  # 실제로 publish되었을 때(또는 수동 실행)만 Dokploy에 문서 배포를 요청한다. Dokploy는 main을 받아
+  # apps/docs/Dockerfile로 빌드한다(Autodeploy는 꺼 둔다). 이 job이 실패해도 npm 릴리스는 되돌리지 않는다.
+  # 실패하면 workflow_dispatch로 다시 돌린다.
+  docs:
+    needs: publish
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.publish.outputs.published == 'true') }}
+    runs-on: ubuntu-latest
+    environment: docs
+    permissions: {}
+    steps:
+      # Dokploy API: POST /api/application.deploy, `x-api-key` 헤더, 본문 { applicationId }
+      # (docs.dokploy.com API 「Authentication」, 「Application」 reference). 배포는 Dokploy 큐에서 이어진다.
+      - env:
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --request POST "${DOKPLOY_URL%/}/api/application.deploy" \
+            --header "x-api-key: $DOKPLOY_API_KEY" \
+            --header "Content-Type: application/json" \
+            --data "{\"applicationId\":\"$DOKPLOY_APPLICATION_ID\"}"
