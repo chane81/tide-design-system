@@ -1,12 +1,12 @@
 {
-  "name": "@tide-tds/desktop",
+  "name": "@tide-tds/components",
   "version": "0.0.0",
-  "description": "Tide 디자인 시스템의 desktop React Component",
+  "description": "Tide 디자인 시스템의 React Component",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chane81/tide-design-system.git",
-    "directory": "packages/desktop"
+    "directory": "packages/components"
   },
   "files": [
     "dist"

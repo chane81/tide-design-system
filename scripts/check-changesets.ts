@@ -19,7 +19,7 @@ import {
 } from "../packages/icons/scripts/name-removal.ts";
 
 const NAME_TABLE = "packages/icons/icon-names.json";
-const PUBLISHED = ["foundation", "icons", "desktop"] as const;
+const PUBLISHED = ["foundation", "icons", "components"] as const;
 
 const base = process.argv[2];
 if (!base) {

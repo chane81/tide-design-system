@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Spinner } from "@tide-tds/desktop";
+import { Spinner } from "@tide-tds/components";
 
 // Spinner 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
 // story는 문서·렌더·a11y만 맡는다. 동작 단언은 desktop의 `Spinner.test.tsx`에 있다.

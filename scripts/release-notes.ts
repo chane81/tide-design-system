@@ -9,7 +9,7 @@ import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 // 문서와 같은 순서(Token → 아이콘 → Component)로 붙인다.
-const ORDER = ["@tide-tds/foundation", "@tide-tds/icons", "@tide-tds/desktop"];
+const ORDER = ["@tide-tds/foundation", "@tide-tds/icons", "@tide-tds/components"];
 
 const outPath = process.argv[2];
 const published = JSON.parse(process.env.PUBLISHED_PACKAGES ?? "[]") as Array<{

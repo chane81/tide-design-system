@@ -1,7 +1,7 @@
 // 서버 컴포넌트에서 래퍼 없이 바로 import한다.
 // 이 파일에는 Component 내부 class(예: VisuallyHidden의 class)를 직접 쓰지 않는다.
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
-import { cn, Spinner, Typography, VisuallyHidden } from "@tide-tds/desktop";
+import { cn, Spinner, Typography, VisuallyHidden } from "@tide-tds/components";
 import { PlusIcon } from "@tide-tds/icons";
 
 export default function Page() {

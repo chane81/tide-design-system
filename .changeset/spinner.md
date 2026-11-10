@@ -1,5 +1,5 @@
 ---
-"@tide-tds/desktop": patch
+"@tide-tds/components": patch
 ---
 
 로딩 표시 Component `Spinner`를 더했다. 서버 컴포넌트로 쓸 수 있다.

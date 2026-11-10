@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",
-    "@tide-tds/desktop": "workspace:*",
+    "@tide-tds/components": "workspace:*",
     "@tide-tds/foundation": "workspace:*",
     "@tide-tds/icons": "workspace:*",
     "@types/node": "catalog:",

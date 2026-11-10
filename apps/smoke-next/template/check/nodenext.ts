@@ -1,5 +1,5 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
-import { cn, VisuallyHidden, type VisuallyHiddenProps } from "@tide-tds/desktop";
+import { cn, VisuallyHidden, type VisuallyHiddenProps } from "@tide-tds/components";
 import { color, semantic } from "@tide-tds/foundation";
 import { tailwindMergeConfig } from "@tide-tds/foundation/tailwind-merge";
 import { PlusIcon, type IconProps } from "@tide-tds/icons";

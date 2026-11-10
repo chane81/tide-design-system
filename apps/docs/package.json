@@ -16,7 +16,7 @@
     "@storybook/addon-vitest": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@tailwindcss/vite": "catalog:",
-    "@tide-tds/desktop": "workspace:*",
+    "@tide-tds/components": "workspace:*",
     "@tide-tds/foundation": "workspace:*",
     "@tide-tds/icons": "workspace:*",
     "@types/node": "catalog:",

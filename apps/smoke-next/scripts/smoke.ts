@@ -11,7 +11,7 @@ const appDir = fileURLToPath(new URL("../", import.meta.url));
 const repoRoot = join(appDir, "../..");
 
 /** tarball로 만들 배포 패키지. 의존 순서와 무관하다. */
-const tidePackages = ["foundation", "icons", "desktop"] as const;
+const tidePackages = ["foundation", "icons", "components"] as const;
 
 /** 임시 앱에 설치할 외부 패키지. 버전은 workspace에 설치된 것(catalog)을 그대로 쓴다. */
 const appDependencies = ["next", "react", "react-dom"];

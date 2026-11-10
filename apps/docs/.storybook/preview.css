@@ -7,7 +7,7 @@
 @import "@tide-tds/foundation/tailwind.css";
 
 /* desktop 원본. 경로는 이 CSS 파일 위치 기준이다. */
-@source "../../../packages/desktop/src";
+@source "../../../packages/components/src";
 
 /*
  * Docs 페이지 배경과 예시 영역을 Tide Theme에 맞춘다. 글·표·코드 색은 ThemedDocsContainer가 Storybook theme으로 바꾼다.

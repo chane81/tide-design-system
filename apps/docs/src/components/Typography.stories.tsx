@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Typography } from "@tide-tds/desktop";
+import { Typography } from "@tide-tds/components";
 import { textStyle, type TextStyleName } from "@tide-tds/foundation";
 
 const textStyleNames = Object.keys(textStyle) as TextStyleName[];
