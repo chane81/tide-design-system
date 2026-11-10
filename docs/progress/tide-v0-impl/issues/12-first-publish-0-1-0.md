@@ -1,6 +1,6 @@
 # 12: 0.1.0 첫 publish
 
-Status: claimed
+Status: done
 Blocked by: 05 (타이포그래피 Foundation과 Typography), 09 (Spinner), 10 (문서: 시작하기·원칙·기준), 11 (릴리스 파이프라인), 38 (`@tide-tds/desktop`을 `@tide-tds/components`로 바꾸기)
 
 ## What to build
@@ -13,7 +13,7 @@ Blocked by: 05 (타이포그래피 Foundation과 Typography), 09 (Spinner), 10 (
 - [x] 세 패키지(`@tide-tds/foundation`, `@tide-tds/icons`, `@tide-tds/components`)를 0.1.0으로 로컬에서 2FA로 publish한다.
 - [x] 세 패키지 모두 `access: public`이고 패키지 2FA 설정이 되어 있음을 확인한다.
 - [x] components가 foundation·icons를 정확한 버전(0.1.0)으로 의존함을 npm에서 확인한다.
-- [ ] 새 Next 앱에 npm에서 설치해 설치 페이지 절차대로 동작함을 확인한다.
+- [x] 새 Next 앱에 npm에서 설치해 설치 페이지 절차대로 동작함을 확인한다.
 - [x] `tide-tds.lakegreen.net`에 문서를 첫 배포하고, 문서가 0.1.0을 설명한다.
 - [x] trusted publisher는 아직 설정하지 않는다(18에서 다음 CI 릴리스 직전에 한다).
 
@@ -29,3 +29,6 @@ Blocked by: 05 (타이포그래피 Foundation과 Typography), 09 (Spinner), 10 (
     - 새 패키지는 npm이 placeholder `0.0.0-stage`를 먼저 공개하고, 실제 버전은 레지스트리 반영에 몇 분 걸린다(icons가 가장 늦었다). Staged Packages 승인은 필요 없었다.
     - Version PR 머지 뒤 Release workflow의 Playwright 설치 단계가 30분 가까이 멈춰 취소 후 재실행했다(재실행은 정상). 단계에 `timeout-minutes`를 두는 것을 검토한다.
     - GitHub Actions가 PR을 만들려면 저장소 설정 「Allow GitHub Actions to create and approve pull requests」가 켜져 있어야 한다(2026-11-10 켬).
+- 2026-11-10 새 Next 앱 설치 확인(Next 16.4.5 Turbopack, Tailwind 4.3.5, React 19.3.0, pnpm 12): 설치 페이지 절차(components 설치, CSS 두 줄, layout, `cn`·VisuallyHidden)로 `next build`·`tsc --noEmit`·`next start`가 통과했다. Typography·Spinner·아이콘·`data-theme`도 HTML과 CSS에서 확인했다. Tailwind 기본 팔레트는 0개이고 foundation은 한 벌이다. 이로써 `done`.
+  - 어긋난 점 1: pnpm에서는 components만 설치하면 `@tide-tds/icons`를 import할 수 없다(`Module not found: Can't resolve '@tide-tds/icons'`). 문서의 "같은 버전으로 직접 설치" 명령을 실행하면 통과한다. 문서 수정은 39로 넘긴다.
+  - 어긋난 점 2: create-next-app 16.4 기본값은 `postcss.config.mjs` 대신 `@tailwindcss/turbopack`(`next.config.ts`의 `turbopack.rules`)을 쓴다. 동작은 정상이지만 "준비" 절이 `@tailwindcss/postcss`를 필수처럼 쓴다. 39에서 고친다.

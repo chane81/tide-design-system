@@ -2,7 +2,7 @@
 
 근거 spec: [Tide v0 spec](../tide-v0/spec.md). 결정 기록은 [Tide v0 지도](../tide-v0/map.md)와 그 티켓에 있다.
 
-> **상태: 발행됨 (2026-11-10). 36·37·38은 2026-11-10 추가(사용자 결정: tsdown 빌드, 문서 문체 개편, components 단일 패키지).** `issues/01~35` 티켓 파일을 만들었다. 프런티어는 「실행 규칙」대로 계산한다.
+> **상태: 발행됨 (2026-11-10). 36·37·38·39는 2026-11-10 추가(사용자 결정: tsdown 빌드, 문서 문체 개편, components 단일 패키지, 12 설치 확인 후속).** `issues/01~35` 티켓 파일을 만들었다. 프런티어는 「실행 규칙」대로 계산한다.
 
 ## 실행 규칙 (멀티 에이전트)
 
@@ -57,6 +57,7 @@
 | 36  | 패키지 빌드를 tsdown으로 전환                         | 03             | foundation·desktop(이후 icons도) 빌드를 tsdown(unbundle, oxc d.ts)으로 통일. Vite 라이브러리 빌드와 d.ts 후처리를 걷어 내고 smoke·publint·"use client" 보존 유지. spec과 tide-v0 티켓 16 기록 정정                                                                                                              | agent    |
 | 37  | Storybook 브라우저 점검과 문서 문체 개편              | 10             | 문서 작성 기준(첫 줄 요약, 할 일 소제목, 표), MDX 12개 개편, remark-gfm, 브라우저 점검 8건 수정                                                                                                                                                                                                                 | agent    |
 | 38  | `@tide-tds/desktop`을 `@tide-tds/components`로 바꾸기 | 37             | Target 패키지를 두지 않고 Component 패키지 하나로(ADR 0009). 첫 publish(12) 전에 처리                                                                                                                                                                                                                           | agent    |
+| 39  | 설치 문서 정정(pnpm icons, Turbopack Tailwind)        | 12             | 12 설치 확인에서 찾은 어긋남 2건: icons 직접 설치 안내, `@tailwindcss/turbopack` 기본값 반영                                                                                                                                                                                                                    | agent    |
 
 병렬로 열리는 곳: 03 뒤의 36 ‖ 10, 36 뒤의 [04→05→06→07] ‖ 08, 08 뒤의 11 / 2단계의 [13→14] ‖ [15→16, 17] / 3단계 19~24 전부 / 4단계 [25→26, 27→28→29, 30] ‖ 31 ‖ 32 ‖ 33.
 
