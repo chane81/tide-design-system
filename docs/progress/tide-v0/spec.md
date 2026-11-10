@@ -229,6 +229,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **radius**: `sm` 4px, `md` 6px, `lg` 8px, `xl` 12px, `full`. 나머지 Tailwind 기본값은 지운다.
   - 쓰는 곳: 작은 표시 요소와 목록 안 항목은 `sm`, 조작 요소는 모든 size에서 `md`, 담는 요소(Card, Alert, Popover, 목록, Toast, Accordion)는 `lg`, Dialog류는 `xl`, 원·알약형은 `full`이다.
   - 중첩 규칙: 바깥 radius = 안쪽 radius + padding + border. 그래서 목록 padding은 3px다.
+  - 공개 계약: `--tide-rounded-<단계>`(`--tide-<Utility class 이름>` 규칙). theme 변수가 없는 `rounded-none`은 남는다([radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).
 - **Elevation**: `shadow-sm`/`md`/`lg`이고 raised 표면에서만 쓴다. 단계마다 2레이어이고, 두 레이어 모두 `--tide-shadow-color`를 `color-mix`로 낮춰 쓴다.
 
   | 단계 | 가까운 레이어        | 먼 레이어               | 쓰는 곳                       |
@@ -237,13 +238,14 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   | `md` | `0 1px 3px` 50%      | `0 4px 12px -2px` 100%  | Popover, 목록, Tooltip, Toast |
   | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% | Dialog류                      |
   - dark에서도 그림자를 그린다. light raised에도 투명 border 1px를 둔다(forced-colors에서 경계가 남게 하려고).
+  - 공개 계약: `--tide-shadow-<단계>`. `--tide-shadow-color`를 참조하므로 Theme 블록마다 다시 선언한다. Tailwind 기본 그림자(`--shadow-*`, `--inset-shadow-*`, `--drop-shadow-*`, `--text-shadow-*`)는 모두 지운다. theme 변수가 없는 `shadow-none`은 남는다([radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).
 
 - **포커스 표시**:
   - ring: `outline` 2px, offset 2px, `:focus-visible`. 버튼류와 나머지 전부에 쓴다.
   - field: border를 focus-ring 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다. 투명 outline을 함께 둔다. `:focus`(클릭 포함). 입력창과 Select·Combobox 트리거에 쓴다.
   - highlight: primary subtle 배경과 primary text 글자. 투명 outline을 함께 둔다. 목록 안 항목에 쓰고, hover도 같은 모양이다.
   - `focus-ring`과 `focus-field`를 `@utility`로 노출한다. `--tide-focus-ring-width`와 `--tide-focus-ring-offset`도 둔다.
-  - error 입력창에서도 포커스 중에는 focus-field가 이겨야 한다. error+focus 조합을 명시적으로 정의한다.
+  - error 입력창에서도 포커스 중에는 focus-field가 이겨야 한다. error+focus 조합을 명시적으로 정의한다. 오류 상태는 `aria-invalid="true"`로 나타내고, `focus-field`가 `[aria-invalid="true"]` 조합을 따로 적어 오류 border보다 우선한다([radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).
 - **motion**:
   - duration은 `fast` 150ms, `normal` 300ms다(`--transition-duration-*`). easing은 `out` 하나다.
   - `--default-transition-duration`과 `--default-transition-timing-function`을 Tide 값으로 지정한다.
