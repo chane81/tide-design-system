@@ -6,33 +6,8 @@ import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events";
 import { addons, useEffect } from "storybook/preview-api";
 
 import { DocsAnchor } from "../src/docs-blocks/DocsAnchor.tsx";
-
-// Theme은 `<html data-theme>`로 적용한다. 기본은 light이고 OS 설정(prefers-color-scheme)은 따르지 않는다.
-const THEMES = ["light", "dark"] as const;
-type ThemeName = (typeof THEMES)[number];
-const DEFAULT_THEME: ThemeName = "light";
-
-function toTheme(value: unknown): ThemeName {
-  return THEMES.find((theme) => theme === value) ?? DEFAULT_THEME;
-}
-
-/**
- * Theme을 바꾸는 유일한 함수. 툴바 decorator와 globals 채널 구독이 함께 쓴다.
- * 전환 순간에는 transition을 꺼서 색이 한꺼번에 바뀌게 한다.
- */
-function applyTheme(theme: ThemeName): void {
-  const root = document.documentElement;
-  if (root.dataset.theme === theme) return;
-
-  const style = document.createElement("style");
-  style.textContent = "*, *::before, *::after { transition: none !important; }";
-  document.head.append(style);
-
-  root.dataset.theme = theme;
-  // reflow를 강제해 transition 없는 상태로 새 계산값을 확정한 뒤, 다음 frame에 원래대로 돌린다.
-  void root.offsetHeight;
-  requestAnimationFrame(() => style.remove());
-}
+import { applyTheme, DEFAULT_THEME, THEMES, toTheme } from "./theme.ts";
+import { ThemedDocsContainer } from "./ThemedDocsContainer.tsx";
 
 // addon-themes 툴바(storybook 10.6.6 DecoratorHelpers): 툴바에 Theme 목록을 등록하고 story마다 global을 읽는다.
 // story parameters의 `themes.themeOverride`가 있으면 그것을 먼저 쓴다.
@@ -86,8 +61,10 @@ const preview: Preview = {
       },
     },
     // MDX의 Markdown 문법 링크도 외부 주소는 새 탭으로 연다(storybook 10.6.6 `parameters.docs.components`).
+    // container는 Docs 페이지의 Storybook 색을 툴바 Theme에 맞춘다(storybook 10.6.6 `parameters.docs.container`).
     docs: {
       components: { a: DocsAnchor },
+      container: ThemedDocsContainer,
     },
     // 모든 story에 axe 검사를 돌리고 위반을 테스트 실패로 다룬다(storybook 10.6.6 A11yParameters).
     // 의도적으로 잘못된 Don't story만 story parameters에서 `a11y: { test: "off" }`로 끈다.
