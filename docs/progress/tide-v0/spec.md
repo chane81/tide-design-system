@@ -84,7 +84,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 ### Component 공통 API
 
 47. 앱 개발자로서, 모든 Component가 `ref`를 일반 prop으로 받아 루트 DOM 요소에 연결하기를 원한다(React 19).
-48. 앱 개발자로서, Button류에서 `variant`(`solid`/`subtle`/`outline`/`ghost`), `color`(색 이름: Role, 색 계열, 앱 브랜드 계열. [ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)), `size`(`xs`/`sm`/`md`/`lg`)로 스타일을 고르기를 원한다.
+48. 앱 개발자로서, Button류에서 `variant`(`solid`/`subtle`/`outline`/`ghost`), `color`(Role: Tide Role 6개와 앱이 더한 Role. [ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)), `size`(`xs`/`sm`/`md`/`lg`)로 스타일을 고르기를 원한다.
 49. 앱 개발자로서, Component가 지원하지 않는 값(예: Input의 `xs`)은 타입 오류로 바로 알기를 원한다.
 50. 앱 개발자로서, 같은 size의 Button, Input, Select가 한 줄에서 같은 높이(24/32/40/48px)이기를 원한다.
 51. 앱 개발자로서, 내가 넘긴 `className`이 Tide class와 충돌하면 내 쪽이 이기기를 원한다(`p-2`가 기본 padding을 이김). 커스텀 이름(`rounded-md`, `text-body-md`, `shadow-lg`, `z-modal`, `duration-fast`)에서도 마찬가지여야 한다.
@@ -201,8 +201,10 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - shadow 색은 gray-950 8% / black 30%다.
   - alpha는 overlay와 shadow에만 쓰고 8자리 hex로 쓴다.
 - **Theme**: `:root`와 `[data-theme="light"]`는 light, `[data-theme="dark"]`는 dark다. 각각 `color-scheme`을 지정한다. `dark:` variant는 `data-theme=dark`를 따른다. `prefers-color-scheme` 자동 전환은 없다.
-- **색 이름**([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md), [티켓 40](../tide-v0-impl/issues/40-open-color-families-and-app-brand-colors.md)):
-  - 색 이름(Color)은 Role 6개, Tide 색 계열 6개, 앱이 더한 계열이다. 타입은 `interface ColorRegistry`(Role + Tide 계열)와 `type Color = keyof ColorRegistry`다. 앱은 `declare module "@tide-tds/components" { interface ColorRegistry { brand: true } }`로 더한다.
+- **색 이름**([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md), [ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md), [티켓 40](../tide-v0-impl/issues/40-open-color-families-and-app-brand-colors.md), [티켓 41](../tide-v0-impl/issues/41-role-scoped-color-and-app-roles.md)):
+  - 색 이름(Color)은 Role과 색 계열이다. Role은 Tide Role 6개와 앱 Role이고 타입은 `interface RoleRegistry`·`type Role = keyof RoleRegistry`다. 색 계열은 Tide 색 계열 6개와 앱 장식 계열이고 타입은 `interface ColorFamilyRegistry`·`type ColorFamilyName = keyof ColorFamilyRegistry`다. `type Color = Role | ColorFamilyName`이다.
+  - 앱은 `declare module "@tide-tds/components" { interface RoleRegistry { brand: true } }`(행동·의미 Component용)나 `interface ColorFamilyRegistry { brand: true }`(장식·분류 Component용)로 이름을 더한다. 둘 다 같은 `tide-color build` CSS를 쓴다.
+  - Tide 안의 계산(Semantic Token 이름, 대비 쌍, `semantic` 객체 타입)은 닫힌 타입 `TideRole`·`ColorFamily`를 쓴다. 앱 Role에는 Role Token이 생기지 않는다.
   - 색 계열마다 Theme 블록이 변수 묶음 `--tide-<계열>-<슬롯>`을 정한다. 슬롯은 `solid`/`-hover`/`-active`, `subtle`/`-hover`/`-active`, `text`, `border`, `on-solid`다. 규칙은 위 매핑과 같고(on-solid는 white), 계열마다 덮어쓸 값을 둘 수 있다.
   - Role은 계열 + 덮어쓸 값의 별칭이다. Role Token은 계열 변수를 가리키고 덮어쓴 슬롯만 Primitive를 가리킨다. `neutral`은 `gray`와 다르다(dark subtle 900/800/700, text `default`, border `strong`).
   - `[data-color="<이름>"]`는 accent 슬롯 `--tide-accent-<슬롯>`을 그 색의 변수로 꽂는다. Theme 블록의 기본값은 primary다. `data-color`는 `data-theme`과 같은 요소나 그 안쪽에서 그 Theme 값을 따른다.
@@ -310,8 +312,8 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - props는 루트 DOM 요소의 props를 확장하고, 이름이 겹치는 HTML 속성(`color` 등)은 `Omit`한다.
 - **스타일 축**:
   - `variant`는 Component마다 정의되는 주된 스타일 축이다. Button류는 채움 방식(`solid`/`subtle`/`outline`/`ghost`)을, Typography는 텍스트 스타일 이름을 값으로 받는다.
-  - `color`는 색 이름(`Color`)이다. Role, Tide 색 계열, 앱이 augmentation으로 더한 계열을 받는다. Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
-  - `Color`와 `ColorRegistry`는 `@tide-tds/components`에서도 다시 낸다. 앱의 augmentation 대상은 `@tide-tds/components`다(앱이 설치하는 패키지).
+  - `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)). 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Alert, Toast)는 `Role`(앱 Role 포함)만 받는다. 장식·분류 Component(Badge, Tag, Avatar)는 `ColorFamilyName`을 받고, Role도 받을지는 그 Component 티켓에서 정한다(둘 다 받으면 `Color`). Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
+  - `Role`, `RoleRegistry`, `ColorFamilyName`, `ColorFamilyRegistry`, `Color`는 `@tide-tds/components`에서도 다시 낸다. 앱의 augmentation 대상은 `@tide-tds/components`다(앱이 설치하는 패키지).
   - 공통 union 타입은 한 곳에서 정의하고, Component마다 `Extract`로 필요한 값만 고른다.
   - 채움 방식 union 이름은 `Variant`가 아니라 채움 방식을 드러내는 이름(예: `FillVariant`)으로 한다.
 - **size 표**:
@@ -325,7 +327,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - 높이는 24px 밑으로 내려가지 않는다. 같은 size의 컨트롤은 높이가 같다. 세로 정렬은 고정 높이와 `items-center`로 한다.
 
 - **variant 정의**: 타입이 붙은 객체 맵과 `cn`으로 직접 쓴다. cva와 tailwind-variants는 쓰지 않는다. 모든 조합을 채웠는지는 타입 검사가 확인한다. 색 축은 맵에 두지 않는다. 맵은 `Record<FillVariant, string>`이고 accent class(`bg-accent-solid`, `text-accent` 등)로 쓰며, 색은 루트의 `data-color`가 정한다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)).
-- **앱 확장점(색)**: 앱은 Tide 패키지를 고치지 않고 브랜드 색 계열을 더한다. `defineColorFamily` → `tide-color build` → Tide CSS 다음에 import → `ColorRegistry` augmentation 순서다. Component는 앱 계열 class를 쓰지 않으므로 Tailwind 자동완성과 tailwind-merge 설정은 앱 계열에 따라 바뀌지 않는다.
+- **앱 확장점(색)**: 앱은 Tide 패키지를 고치지 않고 브랜드 색을 더한다. `defineColorFamily` → `tide-color build` → Tide CSS 다음에 import → `RoleRegistry`(Button 등에 쓸 때) 또는 `ColorFamilyRegistry`(Badge 등에 쓸 때) augmentation 순서다. Tide Role의 색을 바꾸려면 Role CSS 변수(`--tide-bg-primary-*`, `--tide-text-primary`, `--tide-border-primary` 등)를 Theme별로 덮어쓴다. 이 값은 대비 검사를 받지 않는다. 계열 변수(`--tide-blue-*`)는 덮어쓰지 않는다. Component는 앱 계열 class를 쓰지 않으므로 Tailwind 자동완성과 tailwind-merge 설정은 앱 계열에 따라 바뀌지 않는다.
 - **className 병합**: `cn` = clsx + 생성된 설정으로 확장한 tailwind-merge. 사용자의 `className`은 항상 마지막에 넣는다.
 - **`render` prop**:
   - 루트가 DOM 요소 하나인 Component만 받는다. 요소를 넘기면 props, ref, className을 병합한다.
@@ -507,7 +509,7 @@ Component 하나는 다음을 모두 만족해야 완료다.
   1단계 Component까지 끝나면 0.1.0을 로컬에서 publish한다.
 
 - **문서 언어**: 문서, 주석, CHANGELOG는 한글로 쓴다. 변수명과 함수명은 영문이다.
-- **용어**: GLOSSARY의 용어를 쓴다. 특히 색 이름(`color` prop)과 Role, accent 슬롯, 강도(Token의 solid/subtle), 채움 방식(Component `variant`), 표면 층, Elevation, 쌓임 단계, 포커스 표시(ring/field/highlight), 공개 계약, 릴리스를 구분한다.
+- **용어**: GLOSSARY의 용어를 쓴다. 특히 색 이름과 Role(행동·의미 Component의 `color` prop), 색 계열, accent 슬롯, 강도(Token의 solid/subtle), 채움 방식(Component `variant`), 표면 층, Elevation, 쌓임 단계, 포커스 표시(ring/field/highlight), 공개 계약, 릴리스를 구분한다.
 - **ADR**: 새 결정이 되돌리기 어렵고, 맥락 없이는 놀랍고, 실제로 trade-off가 있었다면 ADR로 남긴다. ADR에는 `근거 원칙:` 줄을 둔다.
 - **외부 Component 라이브러리**: 도입이 필요해 보이면 구현을 멈추고 후보와 근거를 들고 사용자에게 묻는다(ADR 0004).
 - 원칙별 Do/Don't 예시를 Storybook에서 실제 Component로 보여 주는 작업은 해당 Component가 나온 뒤에 원칙 페이지에 붙인다.
