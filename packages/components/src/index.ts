@@ -16,6 +16,7 @@ export {
 } from "./CheckboxGroup.tsx";
 export { Radio, type RadioProps } from "./Radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./RadioGroup.tsx";
+export { Switch, type SwitchProps } from "./Switch.tsx";
 export type {
   Color,
   ColorFamilyName,
