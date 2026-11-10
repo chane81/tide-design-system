@@ -185,7 +185,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - **Semantic 색**: Tailwind 속성별 namespace(`--background-color-*`, `--text-color-*`, `--border-color-*`, `--outline-color-*`)로 노출한다.
   - `bg-<역할>-<solid|subtle>[-hover|-active]`. 강도는 생략하지 않는다.
   - `text-<역할>`, `border-<역할>`. neutral은 이 둘을 두지 않는다.
-  - 공통: `bg-canvas`, `bg-surface`, `bg-raised`, `bg-disabled`, `bg-overlay`, `text-default`, `text-muted`, `text-disabled`, `text-on-solid`, `border-default`, `border-strong`, `outline-focus`
+  - 공통: `bg-canvas`, `bg-surface`, `bg-raised`, `bg-disabled`, `bg-overlay`, `text-default`, `text-muted`, `text-disabled`, `text-on-solid`, `border-default`, `border-strong`, `border-raised`, `outline-focus`
   - shadow 색은 class로 노출하지 않는다. `--tide-shadow-color`만 둔다.
   - 예외: Tailwind의 gradient stop(`from-`/`via-`/`to-`)도 `--background-color`를 읽어서(tailwindcss 4.3.5) `from-canvas`, `via-primary-solid` 같은 class가 생긴다. 배경색을 그대로 gradient에 쓰는 것이라 뜻이 어긋나지 않으므로 「의미 없는 조합」의 예외로 인정한다. 막는 테스트는 두지 않는다(2026-11-10 사용자 결정).
 - **매핑**([컬러 Foundation 결정](issues/09-grilling-color-foundation.md)):
@@ -193,6 +193,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - subtle은 light 50/100/200, dark 950/900/800이다. dark의 neutral만 900/800/700이다.
   - 역할 text는 light 800, dark 200이다. 역할 border는 light 600, dark 400이다.
   - 표면: canvas는 white / gray-950, surface는 canvas와 같은 색 + border, raised는 white(+shadow) / gray-900(+border)이다.
+  - `border-raised`는 transparent / gray-800이다. raised 표면 경계를 Theme 분기 없이 쓰려고 둔다. 장식용 경계라 대비 검사에서 제외한다(2026-11-10 사용자 결정, [radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).
   - focus-ring은 blue-600 / blue-400이다.
   - overlay는 gray-950의 alpha 50% / 70%다.
   - shadow 색은 gray-950 8% / black 30%다.
@@ -237,7 +238,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   | `sm` | `0 1px 1px` 60%      | `0 1px 2px` 100%        | Switch thumb                  |
   | `md` | `0 1px 3px` 50%      | `0 4px 12px -2px` 100%  | Popover, 목록, Tooltip, Toast |
   | `lg` | `0 2px 6px -1px` 50% | `0 12px 24px -6px` 100% | Dialog류                      |
-  - dark에서도 그림자를 그린다. light raised에도 투명 border 1px를 둔다(forced-colors에서 경계가 남게 하려고).
+  - dark에서도 그림자를 그린다. light raised에도 투명 border 1px를 둔다(forced-colors에서 경계가 남게 하려고). raised 표면은 `border border-raised`로 쓴다.
   - 공개 계약: `--tide-shadow-<단계>`. `--tide-shadow-color`를 참조하므로 Theme 블록마다 다시 선언한다. Tailwind 기본 그림자(`--shadow-*`, `--inset-shadow-*`, `--drop-shadow-*`, `--text-shadow-*`)는 모두 지운다. theme 변수가 없는 `shadow-none`은 남는다([radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).
 
 - **포커스 표시**:
