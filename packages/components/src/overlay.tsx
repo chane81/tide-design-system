@@ -6,7 +6,7 @@
 // 오버레이 하나는 이렇게 짠다(Popover.tsx가 예시다).
 //   1. 바깥 Component: `useOverlayPresence(state.isOpen, ref)`로 DOM에 둘지 정한다. 닫혀도 퇴장 전환이 끝날 때까지 남긴다.
 //   2. 안쪽 Component(DOM에 있을 때만 렌더): 위치는 `usePopover`(dismiss·aria-hide·스크롤 잠금 포함) 또는
-//      `useOverlayPosition`(Tooltip처럼 dismiss가 따로인 경우)으로 구하고, 그 결과를 `overlayPositionProps`로 Tide 규칙에 맞춘다.
+//      `useOverlayPosition`(Tooltip처럼 dismiss가 따로인 경우, Tooltip.tsx가 예시다)으로 구하고, 그 결과를 `overlayPositionProps`로 Tide 규칙에 맞춘다.
 //      역할 hook(useDialog, useMenu, useListBox …)의 props를 같은 요소에 합친다.
 //   3. 안쪽 Component를 `<OverlayPortal isExiting={!state.isOpen}>`(React Aria `Overlay`)으로 감싸 `document.body`에 portal하고
 //      포커스를 되돌린다. 역할 hook이 portal의 context로 포커스 가두기를 요청하므로 hook은 portal 안쪽에서 부른다.
@@ -164,6 +164,12 @@ export function useOverlayTheme(
 export interface OverlayPortalProps {
   /** 퇴장 중이면 `true`. 포커스 가두기를 풀어 바깥으로 포커스가 돌아갈 수 있게 한다. */
   readonly isExiting: boolean;
+  /**
+   * `false`면 포커스를 다루지 않는다(`FocusScope`로 감싸지 않음). 포커스를 받지 않는 Tooltip이 쓴다.
+   * 감싸면 Tooltip이 열린 Popover 안에서 FocusScope가 하나 더 생기고, 닫힐 때 포커스 복귀를 시도한다.
+   * 기본값은 `true`다(티켓 26).
+   */
+  readonly focusManagement?: boolean;
   readonly children: ReactNode;
 }
 
@@ -171,7 +177,16 @@ export interface OverlayPortalProps {
  * 오버레이를 `document.body`에 portal한다(React Aria `Overlay`). top-layer(`<dialog>`, popover API)는 쓰지 않는다.
  * 안을 `FocusScope`(`restoreFocus`)로 감싸서, DOM에서 빠질 때 포커스가 열기 전 요소(보통 트리거)로 돌아간다.
  * 역할 hook이 포커스 가두기를 요청하면(`useDialog` 등) Tab이 안에서 돈다. 서버 렌더에서는 아무것도 그리지 않는다.
+ * `focusManagement={false}`면 FocusScope 없이 portal만 한다(Tooltip).
  */
-export function OverlayPortal({ isExiting, children }: OverlayPortalProps): ReactElement | null {
-  return <Overlay isExiting={isExiting}>{children}</Overlay>;
+export function OverlayPortal({
+  isExiting,
+  focusManagement = true,
+  children,
+}: OverlayPortalProps): ReactElement | null {
+  return (
+    <Overlay isExiting={isExiting} disableFocusManagement={!focusManagement}>
+      {children}
+    </Overlay>
+  );
 }

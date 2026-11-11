@@ -7,7 +7,8 @@
 //   Tooltip은 같은 표면에 padding만 다르고, Dialog는 shadow-lg·radius xl이라 자기 class를 쓴다.
 // - 쌓임 단계는 표면 class에 넣지 않는다. 오버레이마다 다르므로(z-popover, z-tooltip, z-toast, z-modal) 부르는 쪽이 붙인다.
 // - motion(popoverMotionClass): 「가끔 씀」 오버레이(Popover, Toast)의 등장·퇴장. 「자주 씀」(Menu, Select·Combobox 목록,
-//   Tooltip)은 바로 나타나고 opacity fast로만 사라지므로 같은 구조로 시작 상태(starting:)와 이동·blur만 뺀 class를 더한다.
+//   Tooltip)은 바로 나타나고 opacity fast로만 사라지므로 같은 구조로 시작 상태(starting:)와 이동·blur를 뺀
+//   frequentMotionClass를 쓴다(티켓 26).
 
 /**
  * 오버레이 표면. raised 표면(`bg-raised`), `shadow-md`, radius `lg`, 경계 `border-raised`(light 투명 / dark gray-800).
@@ -44,4 +45,21 @@ export const popoverMotionClass: string = [
   "starting:opacity-0 motion-safe:starting:blur-xs",
   "motion-safe:data-[placement=bottom]:starting:-translate-y-1 motion-safe:data-[placement=top]:starting:translate-y-1",
   "motion-safe:data-[placement=right]:starting:-translate-x-1 motion-safe:data-[placement=left]:starting:translate-x-1",
+].join(" ");
+
+/**
+ * 「자주 씀」 오버레이(Tooltip, Menu, Select·Combobox 목록)의 등장·퇴장(spec 「motion 적용」, 티켓 26).
+ * 요소에 `data-open`(열림)이 있어야 한다.
+ *
+ * - 등장: 바로 나타난다. 열린 동안은 `transition-none`이라 퇴장 중에 다시 열려도 바로 불투명해진다.
+ *   새로 넣은 요소는 이전 스타일이 없어 전환이 생기지 않으므로 `starting:`도 두지 않는다.
+ * - 퇴장: `data-open`이 빠지면 opacity만 `fast`(150ms), out으로 사라진다. 전환 대상은 opacity와 display다.
+ *   duration·전환 대상은 도착 상태의 값을 쓰므로 닫힌 상태에서만 전환이 있다.
+ * - 닫힌 상태는 `display: none`(`hidden`)이고 `transition-discrete`로 퇴장이 끝날 때 사라진다(popoverMotionClass와 같다).
+ *   DOM에서 빼는 시점은 `useOverlayPresence`가 정한다. 퇴장 중에는 `pointer-events-none`이다.
+ * - reduced-motion: 이동·blur·확대가 없으므로 바꿀 것이 없다. opacity 전환은 그대로 둔다.
+ */
+export const frequentMotionClass: string = [
+  "transition-[opacity,display] transition-discrete duration-fast ease-out data-open:transition-none",
+  "not-data-open:pointer-events-none not-data-open:hidden not-data-open:opacity-0",
 ].join(" ");
