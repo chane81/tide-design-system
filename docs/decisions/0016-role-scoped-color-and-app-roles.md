@@ -17,6 +17,8 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 >
 > 덧붙임(2026-11-11, 티켓 21, [ADR 0017 후속](0017-badge-color-accepts-role-and-color-family.md)): Avatar는 Role을 받지 않는다. Avatar의 `color`는 `ColorFamilyName`(기본 `gray`)이다.
 >
+> 덧붙임(2026-11-11, 티켓 33, [ADR 0017 후속](0017-badge-color-accepts-role-and-color-family.md)): Tag도 Role을 받지 않는다. Tag의 `color`는 `ColorFamilyName`(기본 `gray`)이고 태그마다 준다. 상태를 칠해야 하면 Badge를 쓴다.
+>
 > 덧붙임(2026-11-11, [티켓 22](../progress/tide-v0-impl/issues/22-skeleton-and-progress.md)): Progress는 행동·의미 Component로 본다. 진행 상태(진행 중·완료·실패)는 뜻이 있는 표시라 `color`는 `Role`(앱 Role 포함, 기본 `primary`)이고 색 계열 이름은 받지 않는다. Skeleton은 뜻 없는 회색 자리 표시라 `color`를 두지 않는다(`bg-neutral-subtle-active` 고정).
 
 > 덧붙임(2026-11-11, [티켓 23](../progress/tide-v0-impl/issues/23-table.md)): Table은 데이터를 담는 구조 Component로 본다. 행동·의미도 장식·분류도 아니어서 `color`를 두지 않는다. 글자는 `text-default`, 행 구분선은 `border-default`, 본문 행 hover는 ghost 규칙의 neutral `subtle-hover`로 고정이다. 행·칸에 색으로 뜻을 붙이려면 안에 Badge를 넣는다.

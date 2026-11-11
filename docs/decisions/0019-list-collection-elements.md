@@ -34,3 +34,8 @@ Menu·Select·Combobox는 항목 목록을 React Stately 상태(`useTreeState`, 
 >
 > - **패널은 컬렉션 밖이다**: `TabPanel`은 `TabList` 밖의 형제라 `useTabPanel`이 요구하는 같은 상태 객체(`useTabList`가 WeakMap에 탭 id 앞부분을 묶는다)를 받을 수 없다. 그래서 루트 `Tabs`가 `useId`로 id 앞부분을 짓고 탭 id·`aria-controls`(고른 탭만)와 패널 id·`aria-labelledby`를 그 값으로 덮어쓴다. React Aria 탭 키보드 이동은 id가 아니라 `data-key`로 요소를 찾으므로 영향이 없다(react-aria 3.53.1 `useTab`·`useSelectableItem` 소스).
 > - **타입어헤드 없음**: `TabsKeyboardDelegate`에 `getKeyForSearch`가 없어 탭 목록은 글자 이동을 하지 않는다. 그래서 `Tab`은 `textValue`를 받지 않는다(공통 props에서 뺀다).
+
+> 덧붙임(2026-11-11, [티켓 33](../progress/tide-v0-impl/issues/33-tag.md)): Tag가 `list-collection.ts`를 고치지 않고 썼다. `Tag`는 `valueItemCollectionNode`(태그 `value` = 컬렉션 key = `onRemove`에 넘어오는 값)이고 `TagGroup`이 `resolveCollectionChildren`으로 모아 `useListState`(react-stately 3.51.0)에 넘긴다. Select·Tabs처럼 렌더할 때 모으므로 서버 컴포넌트 page의 prerender HTML에 grid·row가 그려진다(smoke 확인).
+>
+> - **지운 뒤 포커스는 React Stately가 정한다**: 앱이 `onRemove`에서 항목을 빼면 컬렉션이 바뀌고, `useListState`의 `useFocusedKeyReset`이 이전 컬렉션에서 지운 key의 다음(없으면 앞) 활성 항목으로 focusedKey를 옮긴다. 그래서 항목 key가 렌더마다 같아야 한다(자리 번호 key면 다른 태그로 간다). `value` key가 그 조건을 맞춘다.
+> - **선택 없음**: `useListState`의 `selectionMode`를 주지 않아(none) 같은 key 다시 고르기 문제(티켓 31)가 없다.

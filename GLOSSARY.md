@@ -51,7 +51,7 @@ Semantic Token이 나타내는 의미 범주. Tide Role은 `neutral`, `primary`,
 _Avoid_: 컬러 그룹, intent, tone
 
 **색 이름 (Color)**:
-`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). Avatar는 색 계열만 받는다(티켓 21). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
+`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). Avatar·Tag는 색 계열만 받는다(티켓 21·33). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
 _Avoid_: 팔레트, color scheme(`color-scheme` CSS와 혼동), tone
 
 **accent 슬롯 (Accent slot)**:
@@ -173,7 +173,7 @@ _Avoid_: Segmented control(값을 고르는 입력과 혼동), Tab bar(앱 하�
 _Avoid_: Collapse·Collapsible(항목 하나짜리 펼침과 혼동), Disclosure(React Aria 내부 이름, 공개 API에 쓰지 않음), 펼침 메뉴(Menu와 혼동)
 
 **Tag (태그)**:
-사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
+사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다. 묶음(`TagGroup`)은 이름 있는 `grid`이고 태그(`Tag`)는 `row`다. ←→로 옮기고 `onRemove`가 있으면 Delete·Backspace와 지우기 버튼으로 지우며, 지운 뒤 포커스는 옆 태그로 간다. 색은 뜻 없는 색 계열(`ColorFamilyName`, 기본 `gray`)만 받는다(티켓 33). 상호작용이 없는 상태 표시는 Badge다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
 
 **묶음 (Group)**:
