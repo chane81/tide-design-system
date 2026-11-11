@@ -70,3 +70,13 @@
 - 트리거의 `data-theme`을 portal로 옮김.
 - 포커스 복귀는 퇴장 전환이 끝난 뒤(최대 150ms).
 - 뒤집힌 경우 첫 프레임 등장 방향이 요청 placement 기준(4px).
+
+## 26 Tooltip
+
+- 「바로 나타남」은 motion으로 해석, hover `delay` 기본 500ms·`closeDelay` 300ms(prop 공개).
+- 모달 Popover·Dialog의 inert 회피에 비공개 속성 `data-react-aria-top-layer` 사용.
+- `placement` 기본 `top`, `offset` 4px, 여백 4px·8px, `text-body-sm`, `max-w-60`, radius `lg`, arrow 없음.
+- 기본 트리거는 class 없는 `<button>`, 모양은 `render`. 비활성 요소 Tooltip 미지원(문서 안내).
+- 트리거 스크롤 시 바로 닫음.
+- 트리거에 `data-open` 없음.
+- `trigger: focus`·`shouldCloseOnPress` 옵션 비공개.
