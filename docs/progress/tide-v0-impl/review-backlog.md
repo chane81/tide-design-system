@@ -80,3 +80,15 @@
 - 트리거 스크롤 시 바로 닫음.
 - 트리거에 `data-open` 없음.
 - `trigger: focus`·`shouldCloseOnPress` 옵션 비공개.
+
+## 27 Menu
+
+- 항목 모으기는 React Stately 요소 방식(감싸기 불가), 서버 컴포넌트는 React lazy 내부 필드를 풀어 지원(ADR 0019).
+- 실행 prop은 `onClick`(키보드 실행 포함), `Menu` 단위 `onAction` 없음.
+- 위치를 옮기는 hover는 highlight, 키보드 위치가 따로 있을 때 다른 항목 hover는 neutral `subtle-hover`, 선택 유지는 neutral `subtle-active`.
+- 위치 표시는 `:focus`가 아닌 `data-highlighted`.
+- 선택 항목·하위 메뉴·링크 항목·단축키 표시·위험 항목 색·`closeOnClick` 없음.
+- DismissButton 없음. Tab은 닫고 트리거로 포커스 복귀.
+- 비활성 항목은 키보드 위치가 건너뜀(React Aria 기본).
+- 한글 타입어헤드 미지원(IME, 문서 안내).
+- `placement` 기본 `bottom start`, `offset` 4px, 폭 10~20rem, 항목 `text-body-md`·36px, 아이콘 16px.
