@@ -73,3 +73,4 @@ Blocked by: 18 (trusted publisher 설정과 0.2.0 CI 릴리스)
     4. 이니셜(글자) fallback, 상태 점(온라인), AvatarGroup은 두지 않았다. 이니셜은 `children`을 받게 되면 이름 중복 읽기 규칙을 다시 정해야 한다.
     5. IconButton 안에 넣으면 IconButton의 아이콘 칸(`*:size-full`, md 20px·lg 24px)이 Avatar 크기를 덮는다. Do story는 `lg`(24px)로 두었다.
   - **다음 티켓 메모**: 33(Tag)은 ADR 0017 후속에 따라 Role을 받을지 따로 정한다(Avatar는 받지 않음). 표시만 하는 Component가 「불러오기 실패」 같은 브라우저 동작을 단언해야 하면 `screenshotTestId` 명령으로 화면을 찍어 비교한다(픽셀은 `pixelAt` 방식으로 canvas에서 읽는다). 22(Skeleton)는 Avatar 자리 표시용으로 `rounded-full` 크기를 Avatar size와 맞추면 된다.
+- 2026-11-11 사용자 결정: 판단 보류 1(CSS 배경 이미지 방식)은 그대로 둔다(A안). v0는 서버 컴포넌트·JS 없는 fallback을 우선하고, lazy loading·`srcSet`·Next `<Image>`가 필요해지면 이미지 슬롯(`render` 등) 확장을 별도 티켓으로 다룬다.
