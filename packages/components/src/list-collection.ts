@@ -1,5 +1,6 @@
 // 목록 Component의 항목을 React Stately 컬렉션으로 모으는 공통 부분(tide-v0-impl 티켓 27, ADR 0019).
-// Menu가 처음 쓰고 Select·Combobox(28·29)가 옵션·묶음에 다시 쓴다. hook·state를 쓰지 않으므로 "use client"가 없다.
+// Menu가 처음 쓰고 Select·Combobox(28·29)가 옵션·묶음에 다시 쓴다. 옵션은 `value`를 key로 쓰는
+// `valueItemCollectionNode`(티켓 28)를 붙인다. hook·state를 쓰지 않으므로 "use client"가 없다.
 //
 // React Stately의 `useTreeState`·`useListState`는 children 요소의 type에 붙은 `getCollectionNode`로 항목을 모은다
 // (react-stately 3.51.0 `Item`·`Section`과 같은 방식, 설치본 CollectionBuilder 소스로 확인). Tide 항목 Component
@@ -21,6 +22,8 @@ import {
 /** React Stately 컬렉션 빌더가 읽는 부분 node. react-stately 3.51.0 `PartialNode`의 쓰는 필드만 적는다. */
 interface PartialNode {
   readonly type: "item" | "section";
+  /** 컬렉션 key. 없으면 빌더가 요소 key 또는 자리 번호로 만든다. */
+  readonly key?: string;
   readonly props?: object;
   readonly rendered?: ReactNode;
   readonly textValue?: string;
@@ -120,6 +123,22 @@ export function* itemCollectionNode(props: CollectionItemProps): Generator<Parti
     "aria-label": props["aria-label"],
     hasChildNodes: false,
   };
+}
+
+/** 값을 고르는 옵션 Component(Select·Combobox 옵션)의 공통 props. `value`가 컬렉션 key가 된다. */
+export interface CollectionValueItemProps extends CollectionItemProps {
+  /** 옵션의 값. 고르면 이 값이 목록의 값이 되고 폼에 제출된다. 같은 목록 안에서 겹치지 않아야 한다. */
+  value: string;
+}
+
+/**
+ * 옵션 Component의 `getCollectionNode`. `itemCollectionNode`와 같고, `value`를 node의 key로 yield한다.
+ * 컬렉션 빌더는 yield한 node에 key가 있으면 요소 key·자리 번호 대신 그 값을 쓴다(react-stately 3.51.0
+ * `CollectionBuilder.getFullNode`). 그래서 목록 상태의 선택 key가 곧 앱의 값이고, 묶음 안에 있어도 앞에 묶음 key가
+ * 붙지 않는다(묶음은 key 없는 부분 node로 항목을 넘긴다).
+ */
+export function* valueItemCollectionNode(props: CollectionValueItemProps): Generator<PartialNode> {
+  for (const node of itemCollectionNode(props)) yield { ...node, key: props.value };
 }
 
 /** 묶음 Component의 `getCollectionNode`. 안의 항목도 `resolveCollectionChildren`으로 고쳐 넘긴다. */

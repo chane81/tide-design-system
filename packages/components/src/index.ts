@@ -85,6 +85,14 @@ export {
   type PopoverTriggerProps,
 } from "./Popover.tsx";
 export {
+  Select,
+  SelectItem,
+  SelectSection,
+  type SelectItemProps,
+  type SelectProps,
+  type SelectSectionProps,
+} from "./Select.tsx";
+export {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
