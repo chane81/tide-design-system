@@ -1,6 +1,6 @@
 {
   "name": "@tide-tds/foundation",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Tide 디자인 시스템의 Token과 CSS",
   "license": "MIT",
   "repository": {
