@@ -3,6 +3,7 @@
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
 import {
   Alert,
+  AlertDialog,
   Avatar,
   Badge,
   Breadcrumb,
@@ -14,6 +15,13 @@ import {
   Checkbox,
   CheckboxGroup,
   cn,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
   Field,
   IconButton,
   Input,
@@ -251,6 +259,29 @@ export default function Page() {
         <PopoverTrigger render={<Button variant="outline" />}>공유 범위</PopoverTrigger>
         <PopoverContent placement="bottom start">링크가 있는 사람은 볼 수 있습니다.</PopoverContent>
       </Popover>
+      {/* Dialog·AlertDialog는 client Component다(티켓 30). 서버 컴포넌트에서 함수 없이 요소만 넘긴다.
+          닫힌 채로 prerender되고 막·내용은 열 때 body로 portal된다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <Dialog>
+        <DialogTrigger render={<Button variant="outline" />}>이름 바꾸기</DialogTrigger>
+        <DialogContent size="sm">
+          <DialogTitle>이름 바꾸기</DialogTitle>
+          <DialogDescription>새 이름은 모든 멤버에게 보입니다.</DialogDescription>
+          <DialogFooter>
+            <DialogClose render={<Button variant="ghost" color="neutral" />}>취소</DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <AlertDialog>
+        <DialogTrigger render={<Button color="danger" variant="outline" />}>
+          프로젝트 삭제
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>프로젝트를 삭제할까요?</DialogTitle>
+          <DialogFooter>
+            <DialogClose render={<Button color="danger" />}>삭제</DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </AlertDialog>
       {/* Tooltip은 client Component다(티켓 26). 서버 컴포넌트에서 IconButton 요소를 render로 넘긴다.
           닫힌 채로 prerender되고 설명은 열 때 body로 portal된다. 내부 class는 이 파일에 쓰지 않는다. */}
       <Tooltip>

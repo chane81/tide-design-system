@@ -39,6 +39,14 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  AlertDialog,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
   Separator,
   Skeleton,
   Switch,
@@ -90,6 +98,15 @@ import {
   type PaginationPreviousProps,
   type PaginationProps,
   type PopoverContentProps,
+  type AlertDialogProps,
+  type DialogCloseProps,
+  type DialogContentProps,
+  type DialogDescriptionProps,
+  type DialogFooterProps,
+  type DialogProps,
+  type DialogSize,
+  type DialogTitleProps,
+  type DialogTriggerProps,
   type PopoverPlacement,
   type PopoverProps,
   type PopoverTriggerProps,
@@ -236,6 +253,21 @@ const placement: PopoverPlacement = "right bottom";
 const popoverContentProps: PopoverContentProps = { placement, offset: 4, "aria-label": "공유" };
 // @ts-expect-error Popover 내용의 역할은 dialog로 고정이다.
 const menuPopover: PopoverContentProps = { role: "menu" };
+const dialogProps: DialogProps = { open: true, onOpenChange: (open) => void open, children: null };
+const alertDialogProps: AlertDialogProps = { defaultOpen: false, children: null };
+const dialogTriggerProps: DialogTriggerProps = { disabled: true };
+const dialogSize: DialogSize = "lg";
+const dialogContentProps: DialogContentProps = { size: dialogSize, closeLabel: "설정 닫기" };
+const dialogTitleProps: DialogTitleProps = { id: "title" };
+const dialogDescriptionProps: DialogDescriptionProps = { id: "desc" };
+const dialogFooterProps: DialogFooterProps = { className: "justify-start" };
+const dialogCloseProps: DialogCloseProps = { onClick: (event) => event.preventDefault() };
+// @ts-expect-error Dialog size는 sm·md·lg다.
+const xlDialog: DialogContentProps = { size: "xl" };
+// @ts-expect-error Dialog 내용의 역할은 고정이다(AlertDialog를 쓴다).
+const roleDialog: DialogContentProps = { role: "alertdialog" };
+// @ts-expect-error React Aria 이름(isDismissable)은 드러내지 않는다.
+const dismissableDialog: DialogContentProps = { isDismissable: true };
 const tooltipProps: TooltipProps = { delay: 0, closeDelay: 100, disabled: false, children: null };
 const tooltipTriggerProps: TooltipTriggerProps = { "aria-describedby": "hint" };
 const tooltipPlacement: TooltipPlacement = "top end";
@@ -427,6 +459,25 @@ export const values = [
   popoverTriggerProps,
   popoverContentProps,
   menuPopover,
+  AlertDialog,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+  dialogProps,
+  alertDialogProps,
+  dialogTriggerProps,
+  dialogContentProps,
+  dialogTitleProps,
+  dialogDescriptionProps,
+  dialogFooterProps,
+  dialogCloseProps,
+  xlDialog,
+  roleDialog,
+  dismissableDialog,
   Tooltip,
   TooltipTrigger,
   TooltipContent,

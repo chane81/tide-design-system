@@ -2,7 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
-import { mouseDownOn, mouseUp, screenshotTestId } from "./test/commands.ts";
+import { mouseDownAtCorner, mouseDownOn, mouseUp, screenshotTestId } from "./test/commands.ts";
 
 // Vitest projects(vitest 5 docs/guide/projects.md, docs/config/browser/playwright.md).
 // - unit: Node에서 공개 함수(cn 등)를 본다.
@@ -32,8 +32,9 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright(),
-            // `:active`를 붙잡아 둘 마우스 명령(Button press 축소 단언용)과 요소 화면 찍기(Avatar fallback 단언용)
-            commands: { mouseDownOn, mouseUp, screenshotTestId },
+            // `:active`를 붙잡아 둘 마우스 명령(Button press 축소 단언용), 가려진 요소의 모서리 누름(Dialog 바깥 막 단언용),
+            // 요소 화면 찍기(Avatar fallback 단언용)
+            commands: { mouseDownOn, mouseDownAtCorner, mouseUp, screenshotTestId },
             instances: [
               { browser: "chromium", name: "chromium" },
               {

@@ -292,6 +292,9 @@ try {
     "listbox.js",
     // Combobox도 React Aria hooks·state를 쓰므로 client다(티켓 29).
     "Combobox.js",
+    // Dialog·AlertDialog도 React Aria hooks·state를 쓰므로 client다(티켓 30).
+    "Dialog.js",
+    "AlertDialog.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -349,6 +352,15 @@ try {
       /not-data-open\\:hidden/.test(css) &&
       /motion-safe\\:starting\\:blur-xs/.test(css),
     "Popover 내부 class(z-popover, starting:, transition-discrete, not-data-open:hidden, motion-safe:starting:blur-xs)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes(".z-modal") &&
+      css.includes("--tide-z-modal") &&
+      css.includes(".bg-overlay") &&
+      /motion-safe\\:starting\\:scale-96/.test(css) &&
+      /motion-safe\\:not-data-open\\:scale-98/.test(css) &&
+      css.includes(".max-w-128"),
+    "Dialog 내부 class(z-modal, bg-overlay, motion-safe:starting:scale-96, motion-safe:not-data-open:scale-98, max-w-128)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes(".z-tooltip") &&
@@ -548,6 +560,30 @@ try {
       !popoverTrigger.includes("data-open") &&
       !html?.includes('role="dialog"'),
     "Popover가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
+  );
+
+  // Dialog·AlertDialog(client)가 prerender한 HTML(티켓 30). 트리거는 Button 모양의 type=button이고 닫혀 있다
+  // (aria-expanded="false", aria-controls·data-open 없음, React Aria는 dialog 트리거에 aria-haspopup을 붙이지 않는다).
+  // 막과 내용은 열 때 body로 portal되므로 HTML에 alertdialog 요소와 제목 요소가 없다(제목 글자는 서버 컴포넌트가
+  // 넘긴 children으로 RSC payload에는 들어 있다).
+  const buttonWith = (text: string): string =>
+    html?.match(new RegExp(`<button(?:(?!</button>).)*${text}(?:(?!</button>).)*</button>`))?.[0] ??
+    "";
+  const dialogTrigger = buttonWith("이름 바꾸기");
+  const alertDialogTrigger = buttonWith("프로젝트 삭제");
+  assert(
+    [dialogTrigger, alertDialogTrigger].every(
+      (trigger) =>
+        trigger.includes('type="button"') &&
+        trigger.includes('aria-expanded="false"') &&
+        !trigger.includes("aria-haspopup") &&
+        !trigger.includes("aria-controls") &&
+        !trigger.includes("data-open"),
+    ) &&
+      alertDialogTrigger.includes('data-color="danger"') &&
+      !html?.includes('role="alertdialog"') &&
+      !html?.includes("프로젝트를 삭제할까요?</h2>"),
+    "Dialog·AlertDialog가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
   );
 
   // Select(client)가 Field 안에서 prerender한 HTML(티켓 28). 서버 컴포넌트가 넘긴 옵션(lazy 참조)이 prerender 때

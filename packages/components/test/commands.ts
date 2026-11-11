@@ -14,6 +14,20 @@ export const mouseDownOn: BrowserCommand<[testId: string]> = async (context, tes
   await context.page.mouse.down();
 };
 
+/**
+ * data-testid로 찾은 요소의 왼쪽 위 모서리(안쪽 4px)에서 마우스 왼쪽 버튼을 누른 채로 둔다.
+ * 가운데가 다른 요소로 덮인 요소(Dialog 뒤의 막)를 누를 때 쓴다(티켓 30).
+ */
+export const mouseDownAtCorner: BrowserCommand<[testId: string]> = async (context, testId) => {
+  if (context.provider.name !== "playwright") {
+    throw new Error(`playwright provider만 지원한다: ${context.provider.name}`);
+  }
+  const box = await context.iframe.getByTestId(testId).boundingBox();
+  if (!box) throw new Error(`요소를 찾지 못했다: ${testId}`);
+  await context.page.mouse.move(box.x + 4, box.y + 4);
+  await context.page.mouse.down();
+};
+
 /** 눌러 둔 마우스 버튼을 뗀다. */
 export const mouseUp: BrowserCommand<[]> = async (context) => {
   if (context.provider.name !== "playwright") {
@@ -37,6 +51,7 @@ export const screenshotTestId: BrowserCommand<[testId: string]> = async (context
 declare module "vitest/browser" {
   interface BrowserCommands {
     mouseDownOn: (testId: string) => Promise<void>;
+    mouseDownAtCorner: (testId: string) => Promise<void>;
     mouseUp: () => Promise<void>;
     screenshotTestId: (testId: string) => Promise<string>;
   }

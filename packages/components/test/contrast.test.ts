@@ -391,3 +391,28 @@ describe("Combobox 대비 쌍", () => {
     }
   });
 });
+
+// Dialog·AlertDialog(tide-v0-impl 티켓 30)가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다.
+// 닫기 IconButton(ghost neutral)과 Footer의 Button 색은 Button·IconButton 대비 쌍이 맡는다.
+describe("Dialog·AlertDialog 대비 쌍", () => {
+  it("제목·본문 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("설명 글자: text-muted × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-muted", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("안의 조작 요소 포커스 표시: outline-focus × bg-raised가 3:1로 등록되어 있다", () => {
+    expect(registered("outline-focus", "bg-raised", 3)).toBe(true);
+  });
+
+  it("뒤를 가리는 막(bg-overlay)과 경계(border-raised)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["bg-overlay", "border-raised"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});
