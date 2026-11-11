@@ -295,6 +295,8 @@ try {
     // Dialog·AlertDialog도 React Aria hooks·state를 쓰므로 client다(티켓 30).
     "Dialog.js",
     "AlertDialog.js",
+    // Tabs도 React Aria hooks·state를 쓰므로 client다(티켓 31).
+    "Tabs.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -361,6 +363,13 @@ try {
       /motion-safe\\:not-data-open\\:scale-98/.test(css) &&
       css.includes(".max-w-128"),
     "Dialog 내부 class(z-modal, bg-overlay, motion-safe:starting:scale-96, motion-safe:not-data-open:scale-98, max-w-128)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes("motion-safe\\:data-selected\\:after\\:scale-x-100") &&
+      css.includes("data-selected\\:after\\:opacity-100") &&
+      css.includes("forced-colors\\:after\\:border-\\[Highlight\\]") &&
+      css.includes("after\\:border-primary"),
+    "Tabs 내부 class(motion-safe:data-selected:after:scale-x-100, data-selected:after:opacity-100, forced-colors:after:border-[Highlight], after:border-primary)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes(".z-tooltip") &&
@@ -584,6 +593,33 @@ try {
       !html?.includes('role="alertdialog"') &&
       !html?.includes("프로젝트를 삭제할까요?</h2>"),
     "Dialog·AlertDialog가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
+  );
+
+  // Tabs(client)가 prerender한 HTML(티켓 31). 서버 컴포넌트가 넘긴 탭(lazy 참조)이 prerender 때 모여 tablist 안에
+  // type=button 탭으로 그려지고, defaultValue의 탭이 고른 상태이며 그 패널만 tabpanel로 있다(id로 서로 잇는다).
+  // 고르지 않은 패널의 글자는 서버 컴포넌트가 넘긴 children으로 RSC payload에는 있으므로 패널 요소의 부재로 본다.
+  const tabWith = (text: string): string =>
+    html?.match(new RegExp(`<button[^>]*role="tab"[^>]*>${text}</button>`))?.[0] ?? "";
+  const activityTab = tabWith("활동 기록");
+  const overviewTab = tabWith("개요");
+  const archiveTab = tabWith("보관함");
+  const activityPanel = html?.match(/<div[^>]*role="tabpanel"[^>]*>활동 패널<\/div>/)?.[0] ?? "";
+  const attribute = (element: string, name: string): string | undefined =>
+    element.match(new RegExp(`${name}="([^"]*)"`))?.[1];
+  assert(
+    html?.includes('role="tablist"') === true &&
+      html.includes('aria-label="프로젝트 보기"') &&
+      activityTab.includes('aria-selected="true"') &&
+      activityTab.includes("data-selected") &&
+      activityTab.includes('type="button"') &&
+      overviewTab.includes('aria-selected="false"') &&
+      !overviewTab.includes("aria-controls") &&
+      archiveTab.includes("disabled") &&
+      activityPanel !== "" &&
+      attribute(activityTab, "aria-controls") === attribute(activityPanel, "id") &&
+      attribute(activityPanel, "aria-labelledby") === attribute(activityTab, "id") &&
+      (html.match(/role="tabpanel"/g) ?? []).length === 1,
+    "Tabs가 prerender한 HTML에서 탭·패널 역할·고른 상태·연결이 기대와 다르다",
   );
 
   // Select(client)가 Field 안에서 prerender한 HTML(티켓 28). 서버 컴포넌트가 넘긴 옵션(lazy 참조)이 prerender 때

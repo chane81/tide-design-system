@@ -50,6 +50,10 @@ import {
   Separator,
   Skeleton,
   Switch,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
   Table,
   TableBody,
   TableCell,
@@ -108,6 +112,12 @@ import {
   type DialogTitleProps,
   type DialogTriggerProps,
   type PopoverPlacement,
+  type TabListProps,
+  type TabPanelProps,
+  type TabProps,
+  type TabsActivationMode,
+  type TabsOrientation,
+  type TabsProps,
   type PopoverProps,
   type PopoverTriggerProps,
   type SeparatorProps,
@@ -268,6 +278,23 @@ const xlDialog: DialogContentProps = { size: "xl" };
 const roleDialog: DialogContentProps = { role: "alertdialog" };
 // @ts-expect-error React Aria 이름(isDismissable)은 드러내지 않는다.
 const dismissableDialog: DialogContentProps = { isDismissable: true };
+const tabsOrientation: TabsOrientation = "vertical";
+const tabsActivation: TabsActivationMode = "manual";
+const tabsProps: TabsProps = {
+  defaultValue: "a",
+  orientation: tabsOrientation,
+  activationMode: tabsActivation,
+  onValueChange: (value) => void value,
+};
+const tabListProps: TabListProps = { "aria-label": "보기" };
+const tabProps: TabProps = { value: "a", disabled: true };
+const tabPanelProps: TabPanelProps = { value: "a", tabIndex: -1 };
+// @ts-expect-error Tabs는 value나 defaultValue 하나를 꼭 받는다.
+const noValueTabs: TabsProps = { orientation: "horizontal" };
+// @ts-expect-error React Aria 이름(keyboardActivation)은 드러내지 않는다.
+const ariaTabs: TabsProps = { defaultValue: "a", keyboardActivation: "manual" };
+// @ts-expect-error 탭 역할은 tab으로 고정이다.
+const roleTab: TabProps = { value: "a", role: "option" };
 const tooltipProps: TooltipProps = { delay: 0, closeDelay: 100, disabled: false, children: null };
 const tooltipTriggerProps: TooltipTriggerProps = { "aria-describedby": "hint" };
 const tooltipPlacement: TooltipPlacement = "top end";
@@ -478,6 +505,17 @@ export const values = [
   xlDialog,
   roleDialog,
   dismissableDialog,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  tabsProps,
+  tabListProps,
+  tabProps,
+  tabPanelProps,
+  noValueTabs,
+  ariaTabs,
+  roleTab,
   Tooltip,
   TooltipTrigger,
   TooltipContent,

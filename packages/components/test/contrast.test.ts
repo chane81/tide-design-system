@@ -416,3 +416,35 @@ describe("Dialog·AlertDialog 대비 쌍", () => {
     }
   });
 });
+
+// Tabs(tide-v0-impl 티켓 31)가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 탭은 놓인 표면 층 위에 그린다.
+// - 글자: 고르지 않은 탭 text-muted(hover text-default), 고른 탭 text-primary. 비활성 text-disabled는 제외 Token이다.
+// - 고른 표시 막대: border-primary(UI 경계 3:1, WCAG 1.4.11). 탭 목록 선 border-default는 장식용 구분선이다.
+// - 포커스 표시: 탭과 패널의 outline-focus.
+describe("Tabs 대비 쌍", () => {
+  it.each(["text-muted", "text-default", "text-primary"])(
+    "탭 글자 %s × 표면 층 3개가 4.5:1로 등록되어 있다",
+    (foreground) => {
+      for (const background of surfaces) {
+        expect(registered(foreground, background, 4.5), `${foreground} × ${background}`).toBe(true);
+      }
+    },
+  );
+
+  it("고른 표시 막대(border-primary)와 포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const foreground of ["border-primary", "outline-focus"]) {
+      for (const background of surfaces) {
+        expect(registered(foreground, background, 3), `${foreground} × ${background}`).toBe(true);
+      }
+    }
+  });
+
+  it("탭 목록 선(border-default)과 비활성 글자(text-disabled)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["border-default", "text-disabled"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});

@@ -53,6 +53,10 @@ import {
   Skeleton,
   Spinner,
   Switch,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
   Table,
   TableBody,
   TableCell,
@@ -282,6 +286,20 @@ export default function Page() {
           </DialogFooter>
         </DialogContent>
       </AlertDialog>
+      {/* Tabs는 client Component다(티켓 31). 서버 컴포넌트가 만든 탭(lazy 참조)이 prerender 때 모여 고른 탭과
+          그 패널만 HTML에 있다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <Tabs defaultValue="activity">
+        <TabList aria-label="프로젝트 보기">
+          <Tab value="overview">개요</Tab>
+          <Tab value="activity">활동 기록</Tab>
+          <Tab value="archive" disabled>
+            보관함
+          </Tab>
+        </TabList>
+        <TabPanel value="overview">개요 패널</TabPanel>
+        <TabPanel value="activity">활동 패널</TabPanel>
+        <TabPanel value="archive">보관 패널</TabPanel>
+      </Tabs>
       {/* Tooltip은 client Component다(티켓 26). 서버 컴포넌트에서 IconButton 요소를 render로 넘긴다.
           닫힌 채로 prerender되고 설명은 열 때 body로 portal된다. 내부 class는 이 파일에 쓰지 않는다. */}
       <Tooltip>
