@@ -9,6 +9,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, styleSnapshot, transitions } from "../test/motion.ts";
+
 import { IconButton } from "./IconButton.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover.tsx";
 import {
@@ -412,23 +414,8 @@ describe("표면", () => {
   });
 });
 
-/** 요소에서 도는 CSS transition을 속성 이름으로 찾는다. */
-function transitions(element: Element): Map<string, CSSTransition> {
-  const found = new Map<string, CSSTransition>();
-  for (const animation of element.getAnimations()) {
-    if (animation instanceof CSSTransition) found.set(animation.transitionProperty, animation);
-  }
-  return found;
-}
-
-/** transition의 끝(to) 값 */
-function end(animation: CSSTransition | undefined): Record<string, unknown> {
-  const frames = (animation?.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
-  return frames.at(-1) ?? {};
-}
-
 describe("등장과 퇴장 motion", () => {
-  // 전환 중 값을 읽어야 하므로 Playwright 입력 대신 제어 prop을 바꾸고 곧바로 읽는다(Popover.test.tsx 참고).
+  // 퇴장 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts).
   test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
     const screen = await render(<Example open={false} />);
     await screen.rerender(<Example open />);
@@ -444,17 +431,22 @@ describe("등장과 퇴장 motion", () => {
     await expect.element(page.getByRole("tooltip")).toBeVisible();
     const element = content();
 
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다(test/motion.ts).
+    const exit = captureExit(element, () => ({
+      connected: element.isConnected,
+      style: styleSnapshot(element),
+      running: transitions(element),
+    }));
     await screen.rerender(<Example open={false} />);
+    const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
-    expect(element.isConnected).toBe(true);
-    const style = getComputedStyle(element);
+    expect(connected).toBe(true);
     expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
     expect(style.transitionBehavior).toContain("allow-discrete");
     expect(style.pointerEvents).toBe("none");
-    const running = transitions(element);
-    expect(end(running.get("opacity"))["opacity"]).toBe("0");
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
     expect(running.has("display")).toBe(true);
     // 이동·blur·확대는 없다(움직임 줄이기와 같은 값).
     expect(running.has("filter")).toBe(false);

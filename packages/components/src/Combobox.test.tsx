@@ -11,6 +11,8 @@ import { describe, expect, test, vi } from "vitest";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, styleSnapshot } from "../test/motion.ts";
+
 import { Button } from "./Button.tsx";
 import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./Combobox.tsx";
 import { Field } from "./Field.tsx";
@@ -831,9 +833,14 @@ describe("모양", () => {
     const popover = listbox()!.parentElement!;
     expect(getComputedStyle(popover).opacity).toBe("1");
     expect(getComputedStyle(popover).transitionProperty).toBe("none");
+    // 닫힌 직후(퇴장 전환 중)의 계산값. Escape 명령이 돌아온 뒤에 읽으면 부하에 따라 퇴장이 이미 끝나 있다(test/motion.ts).
+    const exit = captureExit(popover, () => ({
+      connected: popover.isConnected,
+      style: styleSnapshot(popover),
+    }));
     await userEvent.keyboard("{Escape}");
-    // 닫힌 직후(퇴장 전환 중)의 계산값
-    const style = getComputedStyle(popover);
+    const { connected, style } = await exit;
+    expect(connected).toBe(true);
     expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");

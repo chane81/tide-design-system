@@ -10,6 +10,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../test/motion.ts";
+
 import { Button } from "./Button.tsx";
 import { Dialog, DialogContent, DialogTitle } from "./Dialog.tsx";
 import {
@@ -467,33 +469,21 @@ describe("위치·표면·색", () => {
   });
 });
 
-/** 요소에서 도는 CSS transition을 속성 이름으로 찾는다. */
-function transitions(element: Element): Map<string, CSSTransition> {
-  const found = new Map<string, CSSTransition>();
-  for (const animation of element.getAnimations()) {
-    if (animation instanceof CSSTransition) found.set(animation.transitionProperty, animation);
-  }
-  return found;
-}
-
-/** transition의 시작(from) 또는 끝(to) 값 */
-function edge(animation: CSSTransition | undefined, at: "from" | "to"): Record<string, unknown> {
-  const frames = (animation?.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
-  return (at === "from" ? frames[0] : frames.at(-1)) ?? {};
-}
-
 describe("등장과 퇴장 motion", () => {
   test("등장: opacity + blur 4px + 아래 4px에서 normal(300ms)로 떠오른다. 움직임 줄이기에서는 opacity만", async () => {
     const queue = await setup();
+    // 전환 중 값(등장 300ms)은 Toast가 DOM에 들어온 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 등장이 끝나 있다(test/motion.ts).
+    const toastNow = (): HTMLElement | null => document.querySelector("[role='alertdialog']");
+    const entered = captureWhen(
+      () => toastNow() !== null,
+      () => ({ style: styleSnapshot(toastNow()!), running: transitions(toastNow()!) }),
+    );
     queue.add({ title: "저장했습니다" });
-    await expect.poll(() => document.querySelector("[role='alertdialog']")).not.toBeNull();
-    const toast = document.querySelector("[role='alertdialog']") as HTMLElement;
-    const style = getComputedStyle(toast);
+    const { style, running } = await entered;
     expect(style.transitionDuration.split(", ")[0]).toBe("0.3s");
     expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
     expect(style.transitionProperty).not.toContain("all");
-    const running = transitions(toast);
-    expect(edge(running.get("opacity"), "from")["opacity"]).toBe("0");
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
     if (reducedMotion()) {
       expect(style.transitionProperty).toBe("opacity, display");
       expect(running.has("filter")).toBe(false);
@@ -501,8 +491,8 @@ describe("등장과 퇴장 motion", () => {
       return;
     }
     expect(style.transitionProperty).toBe("opacity, filter, translate, display");
-    expect(edge(running.get("filter"), "from")["filter"]).toBe("blur(4px)");
-    expect(edge(running.get("translate"), "from")["translate"]).toBe("0px 4px");
+    expect(running.get("filter")?.from["filter"]).toBe("blur(4px)");
+    expect(running.get("translate")?.from["translate"]).toBe("0px 4px");
   });
 
   test("퇴장: 같은 조합의 절반으로 fast(150ms)에 사라진 뒤 DOM에서 빠진다", async () => {
@@ -513,23 +503,28 @@ describe("등장과 퇴장 motion", () => {
       return toastByName("저장했습니다").element() as HTMLElement;
     })();
     await settle(toast);
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다(test/motion.ts).
+    const exit = captureExit(toast, () => ({
+      connected: toast.isConnected,
+      role: toast.getAttribute("role"),
+      style: styleSnapshot(toast),
+      running: transitions(toast),
+    }));
     queue.close(key);
-    await expect.poll(() => toast.hasAttribute("data-open")).toBe(false);
-    expect(toast.isConnected).toBe(true);
+    const { connected, role, style, running } = await exit;
+    expect(connected).toBe(true);
     // 퇴장 중에는 역할이 빠져 스크린 리더·포커스 이동에서 빠진다.
-    expect(toast).not.toHaveAttribute("role");
-    const style = getComputedStyle(toast);
+    expect(role).toBeNull();
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");
-    const running = transitions(toast);
-    expect(edge(running.get("opacity"), "to")["opacity"]).toBe("0");
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
     expect(running.has("display")).toBe(true);
     if (reducedMotion()) {
       expect(running.has("filter")).toBe(false);
       expect(running.has("translate")).toBe(false);
     } else {
-      expect(edge(running.get("filter"), "to")["filter"]).toBe("blur(2px)");
-      expect(edge(running.get("translate"), "to")["translate"]).toBe("0px 2px");
+      expect(running.get("filter")?.to["filter"]).toBe("blur(2px)");
+      expect(running.get("translate")?.to["translate"]).toBe("0px 2px");
     }
     await expect.poll(() => toast.isConnected).toBe(false);
     // 마지막 Toast가 빠지면 영역도 빠진다.

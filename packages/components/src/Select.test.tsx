@@ -9,6 +9,8 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, styleSnapshot } from "../test/motion.ts";
+
 import { Button } from "./Button.tsx";
 import { Field } from "./Field.tsx";
 import { Input } from "./Input.tsx";
@@ -617,9 +619,14 @@ describe("모양", () => {
     const popover = listbox()!.parentElement!;
     expect(getComputedStyle(popover).opacity).toBe("1");
     expect(getComputedStyle(popover).transitionProperty).toBe("none");
-    // 전환 중 값을 읽어야 하므로 제어 prop을 바꾸고 곧바로 읽는다(Menu 테스트와 같다).
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts). rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
+    const exit = captureExit(popover, () => ({
+      connected: popover.isConnected,
+      style: styleSnapshot(popover),
+    }));
     await rerender(<Fruits open={false} />);
-    const style = getComputedStyle(popover);
+    const { connected, style } = await exit;
+    expect(connected).toBe(true);
     expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");

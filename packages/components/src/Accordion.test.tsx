@@ -6,6 +6,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureWhen } from "../test/motion.ts";
+
 import {
   Accordion,
   AccordionItem,
@@ -357,10 +359,16 @@ describe("chevron motion", () => {
     }
     expect(getComputedStyle(chevron()).transitionProperty).toBe("rotate");
     expect(getComputedStyle(chevron()).transitionDuration).toBe("0.15s");
+    // 펼친 순간에 도는 전환을 붙잡는다. click 명령이 돌아온 뒤에 읽으면 부하에 따라 전환이 끝나 있다(test/motion.ts).
+    const expanded = captureWhen(
+      () => byTestId("shipping").getAttribute("aria-expanded") === "true",
+      () =>
+        byTestId("shipping")
+          .getAnimations({ subtree: true })
+          .map((animation) => (animation as CSSTransition).transitionProperty),
+    );
     await userEvent.click(page.getByTestId("shipping"));
-    const animations = byTestId("shipping")
-      .getAnimations({ subtree: true })
-      .map((animation) => (animation as CSSTransition).transitionProperty);
+    const animations = await expanded;
     expect(animations).toEqual(["rotate"]);
     // 패널은 이미 보인다.
     await expect.element(page.getByRole("region", { name: "배송" })).toBeVisible();

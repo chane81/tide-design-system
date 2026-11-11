@@ -9,6 +9,8 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, styleSnapshot, transitions } from "../test/motion.ts";
+
 import { Button } from "./Button.tsx";
 import { listItemClass } from "./list-style.ts";
 import {
@@ -643,17 +645,8 @@ describe("위치와 표면", () => {
   });
 });
 
-/** 요소에서 도는 CSS transition을 속성 이름으로 찾는다. */
-function transitions(element: Element): Map<string, CSSTransition> {
-  const found = new Map<string, CSSTransition>();
-  for (const animation of element.getAnimations()) {
-    if (animation instanceof CSSTransition) found.set(animation.transitionProperty, animation);
-  }
-  return found;
-}
-
 describe("등장과 퇴장 motion", () => {
-  // 전환 중 값을 읽어야 하므로 Playwright 입력 대신 제어 prop을 바꾸고 곧바로 읽는다(Popover.test.tsx 참고).
+  // 퇴장 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts).
   test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
     const screen = await render(<Example open={false} />);
     await screen.rerender(<Example open />);
@@ -667,15 +660,20 @@ describe("등장과 퇴장 motion", () => {
     const screen = await render(<Example open />);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다(test/motion.ts).
+    const exit = captureExit(element, () => ({
+      connected: element.isConnected,
+      style: styleSnapshot(element),
+      running: transitions(element),
+    }));
     await screen.rerender(<Example open={false} />);
+    const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
-    expect(element.isConnected).toBe(true);
-    const style = getComputedStyle(element);
+    expect(connected).toBe(true);
     expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.transitionBehavior).toContain("allow-discrete");
     expect(style.pointerEvents).toBe("none");
-    const running = transitions(element);
     expect(running.has("opacity")).toBe(true);
     expect(running.has("filter")).toBe(false);
     expect(running.has("translate")).toBe(false);

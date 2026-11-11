@@ -9,6 +9,8 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../test/motion.ts";
+
 import { Button } from "./Button.tsx";
 import {
   Popover,
@@ -417,35 +419,23 @@ describe("표면", () => {
   });
 });
 
-/** 요소에서 도는 CSS transition을 속성 이름으로 찾는다. */
-function transitions(element: Element): Map<string, CSSTransition> {
-  const found = new Map<string, CSSTransition>();
-  for (const animation of element.getAnimations()) {
-    if (animation instanceof CSSTransition) found.set(animation.transitionProperty, animation);
-  }
-  return found;
-}
-
-/** transition의 시작(from) 또는 끝(to) 값 */
-function edge(animation: CSSTransition | undefined, at: "from" | "to"): Record<string, unknown> {
-  const frames = (animation?.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
-  return (at === "from" ? frames[0] : frames.at(-1)) ?? {};
-}
-
 describe("등장과 퇴장 motion", () => {
-  // 전환 중 값을 읽어야 하므로(등장 300ms, 퇴장 150ms) Playwright 입력 대신 제어 prop을 바꾸고 곧바로 읽는다.
-  // 입력 명령은 부하가 크면 수 초가 걸려 전환이 먼저 끝난다(전체 실행에서 재현).
+  // 전환 중 값(등장 300ms, 퇴장 150ms)은 data-open이 붙거나 빠지는 순간에 붙잡는다(test/motion.ts).
+  // 입력 명령이나 rerender가 돌아온 뒤에 읽으면 부하가 클 때 전환이 먼저 끝난다(전체 실행에서 재현).
   test("등장: opacity + blur 4px + 트리거 쪽 4px에서 normal(300ms)로 들어온다", async () => {
     const screen = await render(<Example open={false} />);
+    const entered = captureWhen(
+      () => document.querySelector("[data-testid='content'][data-open]") !== null,
+      () => ({ style: styleSnapshot(content()), running: transitions(content()) }),
+    );
     await screen.rerender(<Example open />);
-    const style = getComputedStyle(content());
+    const { style, running } = await entered;
     expect(style.transitionBehavior).toContain("allow-discrete");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.3s");
     expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
     expect(style.transitionProperty).not.toContain("all");
 
-    const running = transitions(content());
-    expect(edge(running.get("opacity"), "from")["opacity"]).toBe("0");
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
     if (reducedMotion()) {
       // 움직임 줄이기: 이동·blur 없이 opacity만 바뀐다.
       expect(style.transitionProperty).toBe("opacity, display");
@@ -454,9 +444,9 @@ describe("등장과 퇴장 motion", () => {
       return;
     }
     expect(style.transitionProperty).toBe("opacity, filter, translate, display");
-    expect(edge(running.get("filter"), "from")["filter"]).toBe("blur(4px)");
+    expect(running.get("filter")?.from["filter"]).toBe("blur(4px)");
     // placement bottom: 트리거 쪽(위)으로 4px 떨어진 곳에서 시작한다.
-    expect(edge(running.get("translate"), "from")["translate"]).toBe("0px -4px");
+    expect(running.get("translate")?.from["translate"]).toBe("0px -4px");
   });
 
   test("퇴장: 같은 조합의 절반(blur 2px, 2px)으로 fast(150ms)에 사라진 뒤 DOM에서 빠진다", async () => {
@@ -469,23 +459,27 @@ describe("등장과 퇴장 motion", () => {
     );
     const element = content();
 
+    const exit = captureExit(element, () => ({
+      connected: element.isConnected,
+      style: styleSnapshot(element),
+      running: transitions(element),
+    }));
     await screen.rerender(<Example open={false} />);
+    const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
     // 퇴장 중에도 DOM에 남아 전환을 그린다.
-    expect(element.isConnected).toBe(true);
-    const style = getComputedStyle(element);
+    expect(connected).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");
-    const running = transitions(element);
-    expect(edge(running.get("opacity"), "to")["opacity"]).toBe("0");
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
     // display는 allow-discrete로 전환 끝까지 none이 되지 않는다.
     expect(running.has("display")).toBe(true);
     if (reducedMotion()) {
       expect(running.has("filter")).toBe(false);
       expect(running.has("translate")).toBe(false);
     } else {
-      expect(edge(running.get("filter"), "to")["filter"]).toBe("blur(2px)");
-      expect(edge(running.get("translate"), "to")["translate"]).toBe("0px -2px");
+      expect(running.get("filter")?.to["filter"]).toBe("blur(2px)");
+      expect(running.get("translate")?.to["translate"]).toBe("0px -2px");
     }
     await expect.poll(() => element.isConnected).toBe(false);
   });

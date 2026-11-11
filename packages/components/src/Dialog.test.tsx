@@ -9,6 +9,8 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../test/motion.ts";
+
 import { AlertDialog } from "./AlertDialog.tsx";
 import { Button } from "./Button.tsx";
 import {
@@ -512,37 +514,30 @@ describe("표면과 쌓임", () => {
   });
 });
 
-/** 요소에서 도는 CSS transition을 속성 이름으로 찾는다. */
-function transitions(element: Element): Map<string, CSSTransition> {
-  const found = new Map<string, CSSTransition>();
-  for (const animation of element.getAnimations()) {
-    if (animation instanceof CSSTransition) found.set(animation.transitionProperty, animation);
-  }
-  return found;
-}
-
-/** transition의 시작(from) 또는 끝(to) 값 */
-function edge(animation: CSSTransition | undefined, at: "from" | "to"): Record<string, unknown> {
-  const frames = (animation?.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
-  return (at === "from" ? frames[0] : frames.at(-1)) ?? {};
-}
-
 describe("등장과 퇴장 motion", () => {
-  // 전환 중 값을 읽어야 하므로(등장 300ms, 퇴장 150ms) Playwright 입력 대신 제어 prop을 바꾸고 곧바로 읽는다.
+  // 전환 중 값(등장 300ms, 퇴장 150ms)은 data-open이 붙거나 빠지는 순간에 붙잡는다(test/motion.ts).
+  // rerender가 돌아온 뒤에 읽으면 부하가 클 때 전환이 먼저 끝난다.
   test("등장: opacity + scale 0.96 → 1을 normal(300ms)로, 막은 opacity로 들어온다", async () => {
     const screen = await render(<Example open={false} />);
+    const entered = captureWhen(
+      () => document.querySelector("[data-testid='content'][data-open]") !== null,
+      () => ({
+        style: styleSnapshot(content()),
+        running: transitions(content()),
+        backdropStyle: styleSnapshot(backdrop()),
+        backdropRunning: transitions(backdrop()),
+      }),
+    );
     await screen.rerender(<Example open />);
-    const style = getComputedStyle(content());
+    const { style, running, backdropStyle, backdropRunning } = await entered;
     expect(style.transitionDuration.split(", ")[0]).toBe("0.3s");
     expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
     expect(style.transitionProperty).not.toContain("all");
-    const running = transitions(content());
-    expect(edge(running.get("opacity"), "from")["opacity"]).toBe("0");
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
 
-    const backdropStyle = getComputedStyle(backdrop());
     expect(backdropStyle.transitionDuration.split(", ")[0]).toBe("0.3s");
     expect(backdropStyle.transitionBehavior).toContain("allow-discrete");
-    expect(edge(transitions(backdrop()).get("opacity"), "from")["opacity"]).toBe("0");
+    expect(backdropRunning.get("opacity")?.from["opacity"]).toBe("0");
 
     if (reducedMotion()) {
       // 움직임 줄이기: 확대 없이 opacity만 바뀐다.
@@ -551,7 +546,7 @@ describe("등장과 퇴장 motion", () => {
       return;
     }
     expect(style.transitionProperty).toBe("opacity, scale");
-    expect(edge(running.get("scale"), "from")["scale"]).toBe("0.96");
+    expect(running.get("scale")?.from["scale"]).toBe("0.96");
   });
 
   test("퇴장: opacity + scale 0.98로 fast(150ms)에 사라진 뒤 DOM에서 빠진다", async () => {
@@ -565,22 +560,28 @@ describe("등장과 퇴장 motion", () => {
     const element = content();
     const layer = backdrop();
 
+    const exit = captureExit(element, () => ({
+      connected: element.isConnected,
+      style: styleSnapshot(element),
+      running: transitions(element),
+      layerStyle: styleSnapshot(layer),
+      layerRunning: transitions(layer),
+    }));
     await screen.rerender(<Example open={false} />);
+    const { connected, style, running, layerStyle, layerRunning } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
-    expect(element.isConnected).toBe(true);
-    const style = getComputedStyle(element);
+    expect(connected).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
-    expect(getComputedStyle(layer).transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(layerStyle.transitionDuration.split(", ")[0]).toBe("0.15s");
     // 퇴장 중에는 막과 Dialog가 눌리지 않는다.
-    expect(getComputedStyle(layer).pointerEvents).toBe("none");
+    expect(layerStyle.pointerEvents).toBe("none");
     expect(style.pointerEvents).toBe("none");
-    const running = transitions(element);
-    expect(edge(running.get("opacity"), "to")["opacity"]).toBe("0");
-    expect(transitions(layer).has("display")).toBe(true);
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
+    expect(layerRunning.has("display")).toBe(true);
     if (reducedMotion()) {
       expect(running.has("scale")).toBe(false);
     } else {
-      expect(edge(running.get("scale"), "to")["scale"]).toBe("0.98");
+      expect(running.get("scale")?.to["scale"]).toBe("0.98");
     }
     await expect.poll(() => layer.isConnected).toBe(false);
   });

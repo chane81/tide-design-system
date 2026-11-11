@@ -7,6 +7,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { captureWhen } from "../test/motion.ts";
+
 import {
   Tab,
   TabList,
@@ -421,11 +423,17 @@ describe("막대 motion", () => {
     expect(after.scale).toBe("0 1");
     expect(getComputedStyle(byTestId("account"), "::after").scale).toBe("1");
 
+    // 막 고른 탭의 막대가 전환 중이다. 고른 순간에 붙잡는다. click 명령이 돌아온 뒤에 읽으면 부하에 따라 전환이
+    // 끝나 있다(test/motion.ts).
+    const selected = captureWhen(
+      () => byTestId("security").getAttribute("aria-selected") === "true",
+      () =>
+        byTestId("security")
+          .getAnimations({ subtree: true })
+          .map((animation) => (animation as CSSTransition).transitionProperty),
+    );
     await userEvent.click(page.getByTestId("security"));
-    // 막 고른 탭의 막대가 전환 중이다.
-    const animations = byTestId("security")
-      .getAnimations({ subtree: true })
-      .map((animation) => (animation as CSSTransition).transitionProperty);
+    const animations = await selected;
     expect(animations).toEqual(expect.arrayContaining(["opacity", "scale"]));
     await wait(250);
     expect(getComputedStyle(byTestId("security"), "::after").scale).toBe("1");
