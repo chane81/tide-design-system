@@ -38,6 +38,9 @@ import {
   TableHeaderCell,
   TableRow,
   Textarea,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   VisuallyHidden,
   type AlertProps,
   type BreadcrumbCurrentProps,
@@ -77,6 +80,10 @@ import {
   type TableProps,
   type TableRowProps,
   type TextareaProps,
+  type TooltipContentProps,
+  type TooltipPlacement,
+  type TooltipProps,
+  type TooltipTriggerProps,
   type Color,
   type ColorFamilyName,
   type FillVariant,
@@ -206,6 +213,12 @@ const placement: PopoverPlacement = "right bottom";
 const popoverContentProps: PopoverContentProps = { placement, offset: 4, "aria-label": "공유" };
 // @ts-expect-error Popover 내용의 역할은 dialog로 고정이다.
 const menuPopover: PopoverContentProps = { role: "menu" };
+const tooltipProps: TooltipProps = { delay: 0, closeDelay: 100, disabled: false, children: null };
+const tooltipTriggerProps: TooltipTriggerProps = { "aria-describedby": "hint" };
+const tooltipPlacement: TooltipPlacement = "top end";
+const tooltipContentProps: TooltipContentProps = { placement: tooltipPlacement, offset: 6 };
+// @ts-expect-error Tooltip 설명의 역할은 tooltip으로 고정이다.
+const dialogTooltip: TooltipContentProps = { role: "dialog" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -333,4 +346,11 @@ export const values = [
   popoverTriggerProps,
   popoverContentProps,
   menuPopover,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  tooltipProps,
+  tooltipTriggerProps,
+  tooltipContentProps,
+  dialogTooltip,
 ] as const;

@@ -41,6 +41,9 @@ import {
   TableHeaderCell,
   TableRow,
   Textarea,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   Typography,
   VisuallyHidden,
 } from "@tide-tds/components";
@@ -206,6 +209,18 @@ export default function Page() {
         <PopoverTrigger render={<Button variant="outline" />}>공유 범위</PopoverTrigger>
         <PopoverContent placement="bottom start">링크가 있는 사람은 볼 수 있습니다.</PopoverContent>
       </Popover>
+      {/* Tooltip은 client Component다(티켓 26). 서버 컴포넌트에서 IconButton 요소를 render로 넘긴다.
+          닫힌 채로 prerender되고 설명은 열 때 body로 portal된다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <IconButton aria-label="새 항목" variant="ghost" color="neutral">
+              <PlusIcon />
+            </IconButton>
+          }
+        />
+        <TooltipContent placement="bottom">새 항목을 만듭니다</TooltipContent>
+      </Tooltip>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

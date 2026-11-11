@@ -295,3 +295,14 @@ describe("Popover(오버레이 표면) 대비 쌍", () => {
     expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
   });
 });
+
+// Tooltip(tide-v0-impl 티켓 26)은 Popover와 같은 raised 표면을 쓴다. 안에 조작 요소가 없으므로 포커스 표시 쌍은 쓰지 않는다.
+describe("Tooltip 대비 쌍", () => {
+  it("글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("경계(border-raised)는 장식용이라 대비 검사에서 제외되어 있다", () => {
+    expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
+  });
+});

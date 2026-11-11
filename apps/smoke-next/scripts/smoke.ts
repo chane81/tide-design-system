@@ -280,6 +280,8 @@ try {
     // Popover와 오버레이 공통 hook은 React Aria hooks·state를 쓰므로 client다(티켓 25).
     "Popover.js",
     "overlay.js",
+    // Tooltip도 React Aria hooks·state를 쓰므로 client다(티켓 26).
+    "Tooltip.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -337,6 +339,12 @@ try {
       /not-data-open\\:hidden/.test(css) &&
       /motion-safe\\:starting\\:blur-xs/.test(css),
     "Popover 내부 class(z-popover, starting:, transition-discrete, not-data-open:hidden, motion-safe:starting:blur-xs)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes(".z-tooltip") &&
+      css.includes("--tide-z-tooltip") &&
+      /data-open\\:transition-none/.test(css),
+    "Tooltip 내부 class(z-tooltip, data-open:transition-none)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -521,6 +529,17 @@ try {
       !popoverTrigger.includes("data-open") &&
       !html?.includes('role="dialog"'),
     "Popover가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
+  );
+
+  // Tooltip(client)이 prerender한 HTML(티켓 26). 트리거는 IconButton 모양의 type=button이고 닫혀 있어
+  // aria-describedby가 없다. 설명은 열 때 body로 portal되므로 HTML에 tooltip 역할이 없다.
+  const tooltipTrigger = html?.match(/<button[^>]*aria-label="새 항목"[^>]*>/)?.[0] ?? "";
+  assert(
+    tooltipTrigger.includes('type="button"') &&
+      tooltipTrigger.includes('data-color="neutral"') &&
+      !tooltipTrigger.includes("aria-describedby") &&
+      !html?.includes('role="tooltip"'),
+    "Tooltip이 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
