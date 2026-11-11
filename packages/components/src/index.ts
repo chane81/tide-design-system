@@ -85,6 +85,14 @@ export {
   type PopoverTriggerProps,
 } from "./Popover.tsx";
 export {
+  Combobox,
+  ComboboxItem,
+  ComboboxSection,
+  type ComboboxItemProps,
+  type ComboboxProps,
+  type ComboboxSectionProps,
+} from "./Combobox.tsx";
+export {
   Select,
   SelectItem,
   SelectSection,
