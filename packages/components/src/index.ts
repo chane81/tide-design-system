@@ -119,6 +119,17 @@ export {
   type DialogTriggerProps,
 } from "./Dialog.tsx";
 export {
+  Accordion,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
+  type AccordionHeadingLevel,
+  type AccordionItemProps,
+  type AccordionPanelProps,
+  type AccordionProps,
+  type AccordionTriggerProps,
+} from "./Accordion.tsx";
+export {
   Tab,
   TabList,
   TabPanel,
