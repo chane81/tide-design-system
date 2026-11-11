@@ -58,3 +58,15 @@
 - 번호 hover는 Button 규칙(transition-colors), 「목록 항목 즉시 hover」로 보지 않음.
 - 페이지 범위 계산 함수 비공개(문서 예시만).
 - 처음·마지막 쪽 버튼 없음.
+
+## 25 Popover
+
+- 단계 경계: 0.3.0 Version PR 머지 전에 진행함. 0.3.0 머지 후 이 브랜치를 머지해야 Popover가 0.3.0에 섞이지 않음.
+- 모달 popover(바깥 inert·스크롤 잠금·Tab 순환), 비모달 옵션 비공개(내부 `nonModal`만).
+- 이름 fallback은 트리거 글자, `PopoverTitle`·`PopoverClose` 없음.
+- 기본 트리거는 class 없는 `<button>`, Button 모양은 `render`.
+- `placement` 기본 `bottom`, `offset` 8px, 여백 16px, `max-w-80`, `text-body-md`, arrow 없음.
+- 내용 자신의 포커스 표시 없음(`outline-none`).
+- 트리거의 `data-theme`을 portal로 옮김.
+- 포커스 복귀는 퇴장 전환이 끝난 뒤(최대 150ms).
+- 뒤집힌 경우 첫 프레임 등장 방향이 요청 placement 기준(4px).
