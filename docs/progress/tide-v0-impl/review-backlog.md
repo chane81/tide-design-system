@@ -139,3 +139,16 @@
 - `size`·`variant`(밑줄형만)·루트 `disabled`·탭 목록 넘침 스크롤 없음.
 - 세로 탭에서도 ←→ 동작(React Aria 기본, APG는 ↓↑만 적음).
 - 탭 글자색은 전환 없이 바로 바뀜, 막대만 opacity `fast`.
+
+## 32 Accordion
+
+- 값은 단일 펼침에서도 늘 `string[]`(`type="single"` 분기·`string | null` 없음).
+- 단일 펼침에서도 펼친 항목을 다시 누르면 접힘(늘 모두 접기 가능), 하나를 늘 펼쳐 두는 옵션 없음.
+- 패널 기본 역할 `region`(React Aria 기본 `group`과 다름), 앱이 `role="group"`으로 바꿈(개수로 자동 전환 없음).
+- 트리거 사이 화살표·Home/End 이동 없음(APG 현재판은 Enter·Space·Tab만).
+- 트리거 `ref`·`className`·props는 버튼에 감(제목 요소 `flex` 고정, 기본 `<h3>`).
+- 루트 배경 없음(Card는 `bg-surface`), 루트 `disabled`·`size`·`variant` 없음.
+- 트리거 hover는 neutral `subtle-hover`(radius `md`, 전환 없음), hover 때 chevron `text-default`.
+- chevron 회전은 움직임 줄이기에서 opacity 대체 없이 바로 바뀜(Switch thumb 규칙).
+- 패널은 늘 렌더(Tabs는 고른 패널만), `hidden="until-found"` 페이지 찾기 펼침은 지원 브라우저에서만.
+- `multiple`이 아닌데 값이 둘 이상이면 첫 값만 남기며 `onValueChange` 호출(React Stately 동작).
