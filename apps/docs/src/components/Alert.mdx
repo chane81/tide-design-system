@@ -1,0 +1,107 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as AlertStories from "./Alert.stories.tsx";
+
+<Meta of={AlertStories} />
+
+# Alert
+
+화면 안에서 상태(안내, 성공, 경고, 오류)나 알릴 내용을 보여 주는 표면입니다. 상태 아이콘, 제목, 본문으로 이뤄지고, 닫기 버튼을 둘 수 있습니다.
+
+<Canvas of={AlertStories.Basic} />
+
+## 사용 시점
+
+- 폼이나 화면 위쪽에 오류 요약, 저장 결과처럼 그 화면에 관한 상태를 보여 줄 때
+- 점검 예정, 읽기 전용처럼 사용자가 알고 있어야 하는 내용을 화면 안에 둘 때
+- 사용자 동작(저장, 제출) 뒤에 결과를 그 자리에서 알릴 때
+
+## 쓰지 않을 때
+
+- 화면과 상관없이 잠깐 떴다 사라지는 알림이면 Toast를 씁니다.
+- 사용자가 확인해야 다음으로 넘어갈 수 있으면(삭제 확인 등) AlertDialog를 씁니다.
+- 항목 하나의 짧은 상태(완료, 지연)면 Badge를 씁니다.
+- 입력창 하나의 오류면 Field의 `error`를 씁니다.
+
+## 예시
+
+### 상태 고르기
+
+`color`에 Role을 줍니다. 상태 알림은 `info`(기본), `success`, `warning`, `danger`를 씁니다. 상태마다 모양이 다른 아이콘(원 안 i, 원 안 체크, 삼각형, 팔각형)이 붙어 색을 구분하기 어려워도 종류를 알 수 있습니다. 색 계열 이름(`blue` 등)은 받지 않습니다.
+
+<Canvas of={AlertStories.States} />
+
+### 일반 알림
+
+상태가 아닌 알림은 `neutral`이나 `primary`를 씁니다. 아이콘은 `info`와 같습니다. 앱이 `RoleRegistry`에 더한 Role(예: `brand`)도 받고, 아이콘은 `info`와 같습니다.
+
+<Canvas of={AlertStories.OtherRoles} />
+
+### 제목만·본문만
+
+`title`과 `children`은 둘 다 고를 수 있습니다. 짧은 결과는 제목만, 덧붙이는 설명은 본문만 씁니다.
+
+<Canvas of={AlertStories.TitleOrBody} />
+
+### 목록과 링크
+
+본문에는 목록이나 링크를 넣을 수 있습니다. 링크는 Alert와 같은 Role(`<Link color="danger">`)로 칠합니다. 등록된 대비 쌍이 그 조합뿐입니다.
+
+<Canvas of={AlertStories.RichContent} />
+
+### 닫기
+
+`onClose`를 주면 끝쪽에 닫기 버튼이 생깁니다. Alert를 화면에서 빼는 일은 앱이 합니다(제어형). 버튼 이름은 `closeLabel`(기본 `"닫기"`)이고, 한 화면에 Alert가 여럿이면 `"새 기능 알림 닫기"`처럼 구분합니다. 닫은 뒤 포커스가 사라지지 않게, 필요하면 앱이 포커스를 옮깁니다.
+
+<Canvas of={AlertStories.Dismissible} />
+
+### 동작 뒤에 알리기
+
+기본 Alert는 역할이 없는 정적 표시입니다. 사용자 동작 뒤에 새로 나타나 스크린 리더에 바로 알려야 하면 `role`을 줍니다. 급하고 중요한 오류는 `role="alert"`(읽던 것을 끊고 알림), 끊지 않아도 되는 결과는 `role="status"`(정중하게 알림)입니다.
+
+<Canvas of={AlertStories.LiveRegion} />
+
+## Do/Don't
+
+### Do: 상태를 텍스트로 말한다
+
+<Canvas of={AlertStories.DoStateInText} />
+
+### Do: 링크는 같은 Role로 칠한다
+
+<Canvas of={AlertStories.DoLinkSameRole} />
+
+### Don't: 처음부터 있는 Alert에 role을 붙인다
+
+페이지가 열릴 때 이미 있는 Alert는 스크린 리더가 알리지 않습니다. `role="alert"`는 새로 나타나는 알림에만 씁니다. 자주 쓰면 사용자가 하던 일을 계속 끊습니다.
+
+<Canvas of={AlertStories.DontStaticAlertRole} />
+
+### Don't: 색과 아이콘에 맡긴다
+
+아이콘은 스크린 리더가 읽지 않습니다. 무엇이 잘못됐는지 텍스트로 적습니다.
+
+<Canvas of={AlertStories.DontColorOnly} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 기본은 없습니다(`div`, 정적 표시). `role`로 `alert`·`status`를 줄 수 있습니다.
+- 상태 아이콘: 장식용이라 읽히지 않습니다(`aria-hidden`). 상태마다 모양이 달라 색만으로 구분하지 않습니다.
+- 닫기 버튼: 이름이 있는 IconButton(`closeLabel`)이고 키보드로 누를 수 있습니다. 포커스 표시가 Alert 배경 위에서 3:1 이상입니다.
+- 대비: 글자·아이콘과 배경이 4.5:1, 경계와 바깥·안쪽 배경이 3:1 이상입니다(Role마다 대비 쌍).
+- 고대비 모드(forced-colors): 배경 대신 시스템 글자색 경계가 그려져 영역이 남습니다.
+
+### 앱이 할 일
+
+- 상태를 제목이나 본문 텍스트로 적습니다.
+- 새로 나타나 알려야 하는 Alert에만 `role`을 줍니다. 처음부터 있는 Alert에는 주지 않습니다.
+- 자동으로 사라지게 하지 않습니다. 사라지는 알림은 Toast를 씁니다.
+- 닫은 뒤 포커스가 갈 곳을 정합니다(닫기 버튼이 사라지므로).
+
+## Props
+
+서버 컴포넌트로 쓸 수 있습니다(`onClose`를 넘기는 곳은 앱의 client Component입니다). `div`의 props를 받습니다(`color`는 Role, `title`은 제목, `role`은 `alert`·`status`, `onClose`는 닫기 콜백으로 바뀝니다). `ref`는 `div`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `p-6`). 루트에는 `data-color`가 붙습니다.
+
+<ArgTypes of={AlertStories} />

@@ -104,6 +104,10 @@ _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
 상태나 분류를 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다. 상태는 Role, 분류는 색 계열 이름으로 색을 고른다(ADR 0017).
 _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 
+**Alert (알림)**:
+화면 안에 머무는 상태 알림 표면. 상태 아이콘, 제목, 본문, 닫기 버튼으로 이뤄지고 Role로 색을 고른다. 기본은 정적 표시이고, 새로 나타나 알려야 할 때만 live region 역할(`alert`·`status`)을 준다. 스스로 사라지는 알림은 Toast, 확인을 받아야 하는 알림은 AlertDialog다.
+_Avoid_: Banner, Callout, Notice, SectionMessage
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge

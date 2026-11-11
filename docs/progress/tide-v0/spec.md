@@ -395,6 +395,7 @@ Component별로 이미 정한 범위:
 - **Tag**: 지울 수 있는 라벨이다. 묶음 탐색과 Delete 제거는 `useTagGroup`이 맡는다. 상호작용이 없는 상태 표시는 Badge다.
 - **AlertDialog**: Dialog 위의 얇은 변형이다.
 - **Badge**: 상호작용 없는 상태·분류 라벨(`span`)이다. `color`는 `Color`(상태는 Role, 분류는 색 계열 이름, 기본 `neutral`), `variant`는 `subtle`/`solid`, `size`는 `sm`(20px)/`md`(24px), radius `sm`. 뜻은 텍스트(`children` 필수)로 전한다([티켓 19](../tide-v0-impl/issues/19-badge-card-separator.md)).
+- **Alert**: 화면 안 상태 알림(`div`)이다. `color`는 `Role`(기본 `info`), radius `lg`, 역할 경계 + subtle 배경 + 역할 글자. info·success·warning·danger 상태 아이콘은 모양이 다르고 장식용이다. 기본은 역할 없는 정적 표시이고 `role`로 `alert`·`status`를 준다. 닫기는 제어형 `onClose`와 IconButton이다. 스타일은 Toast와 내부 모듈(`alert-style.ts`)로 나눠 쓴다([티켓 20](../tide-v0-impl/issues/20-alert.md)).
 - **Card**: surface 표면 컨테이너이고 border만 쓴다. 그림자는 없다. radius `lg`, 여백 16px, 기본 `div`이고 `render`로 요소를 바꾼다.
 - **Separator**: 네이티브 `<hr>`이다(`useSeparator` 없음). 기본은 separator 역할, 세로는 `aria-orientation`, `decorative`면 `role="none"`. 선은 장식용 `border-default`다.
 - **Toast**:
