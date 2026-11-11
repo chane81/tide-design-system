@@ -179,3 +179,8 @@
 - 영역은 문서 Theme만 따름(트리거 없음).
 - 퇴장 중 Toast는 역할만 빠지고 `inert` 없음.
 - 위치는 아래 끝쪽 하나(`placement` prop 없음, `className`으로 조정).
+
+## 퇴장 전환 flaky 수정(fix-exit-transition-flaky)
+
+- 「퇴장 중에 다시 열면 같은 요소가…」(Menu·Tooltip·Popover)는 두 `rerender` 사이에 150ms가 지나면 요소가 빠질 수 있는 같은 꼴의 race가 남았다. 두 rerender가 페이지 안(Playwright 왕복 없음)이라 확률이 낮아 이번에는 두었다. 실패가 보이면 닫기·다시 열기를 한 task에서 하는 harness로 바꾼다.
+- Toast 「자동 닫힘 > 영역에 마우스를 올린 동안 멈추고, 떠나면 남은 시간이 지나 닫힌다」가 전체 turbo `--force` 1/3회에서 `locator.hover` 15초 timeout(`getByLabel('저장했습니다')`를 못 찾음)으로 실패했다. 가짜 타이머 테스트로 이번 수정과 별건이다. 원인 조사 필요.
