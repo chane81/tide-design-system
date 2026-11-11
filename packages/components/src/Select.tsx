@@ -179,7 +179,6 @@ export function Select({
       id: control.id,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledBy ?? field?.labelId,
-      "aria-describedby": control["aria-describedby"],
       isDisabled,
       isRequired,
       validationBehavior: "native",
@@ -201,6 +200,9 @@ export function Select({
       <button
         {...mergeProps(props, buttonProps)}
         ref={mergedRef}
+        // useSelect(useField)는 자기 설명·오류 요소 자리의 id를 aria-describedby에 넣는다. Tide는 그 요소를 그리지 않고
+        // Field가 설명·오류를 그리므로 Field 연결 값만 쓴다(서버 HTML에 없는 id를 가리키지 않게).
+        aria-describedby={control["aria-describedby"]}
         aria-invalid={showInvalid ? true : control["aria-invalid"]}
         data-invalid={showInvalid ? "" : undefined}
         data-open={state.isOpen ? "" : undefined}

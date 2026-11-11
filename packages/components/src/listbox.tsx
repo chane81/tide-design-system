@@ -47,8 +47,9 @@ interface ListBoxNodesProps {
 }
 
 /**
- * 목록 상태의 옵션·묶음을 그린다. 묶음과 이웃한 옵션·묶음 사이에 장식용 구분선(`role="separator"`)을 둔다.
- * 목록의 처음·끝과 이어진 구분선은 그리지 않는다(Menu와 같다).
+ * 목록 상태의 옵션·묶음을 그린다. 묶음과 이웃한 옵션·묶음 사이에 장식용 구분선을 둔다. 목록의 처음·끝과 이어진
+ * 구분선은 그리지 않는다(Menu와 같다). listbox의 자식은 option·group만 될 수 있어(WAI-ARIA, axe
+ * aria-required-children) Menu와 달리 구분선은 `separator` 역할 없이 보조기술에서 숨긴다. 묶음 경계는 group이 알린다.
  */
 export function ListBoxNodes({ state }: ListBoxNodesProps): ReactNode {
   const nodes = [...state.collection];
@@ -64,7 +65,12 @@ export function ListBoxNodes({ state }: ListBoxNodesProps): ReactNode {
       );
     if (!separator) return element;
     return [
-      <div key={`${String(node.key)}-separator`} role="separator" className={listSeparatorClass} />,
+      <div
+        key={`${String(node.key)}-separator`}
+        role="presentation"
+        aria-hidden="true"
+        className={listSeparatorClass}
+      />,
       element,
     ];
   });
