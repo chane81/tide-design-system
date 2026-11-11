@@ -71,6 +71,15 @@ export {
   type PopoverProps,
   type PopoverTriggerProps,
 } from "./Popover.tsx";
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  type TooltipContentProps,
+  type TooltipPlacement,
+  type TooltipProps,
+  type TooltipTriggerProps,
+} from "./Tooltip.tsx";
 export type {
   Color,
   ColorFamilyName,
