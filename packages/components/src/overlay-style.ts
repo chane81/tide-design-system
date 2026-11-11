@@ -1,10 +1,10 @@
-// 오버레이 공통 class(tide-v0-impl 티켓 25). Popover가 처음 쓰고 Tooltip·Menu·Select·Combobox·Toast가 다시 쓴다.
+// 오버레이 공통 class(tide-v0-impl 티켓 25). Popover가 처음 쓰고 Tooltip·Menu·Select·Combobox·Dialog·Toast가 다시 쓴다.
 // 이 파일은 class 문자열만 있으므로 "use client"가 없다.
 //
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 나누는 기준(spec 「오버레이」·「motion 적용」):
 // - 표면(overlaySurfaceClass): raised 표면 + shadow-md + radius lg + 투명 border. Menu·Select 목록·Toast가 같다.
-//   Tooltip은 같은 표면에 padding만 다르고, Dialog는 shadow-lg·radius xl이라 자기 class를 쓴다.
+//   Tooltip은 같은 표면에 padding만 다르고, Dialog류는 shadow-lg·radius xl이라 dialogSurfaceClass를 쓴다(티켓 30).
 // - 쌓임 단계는 표면 class에 넣지 않는다. 오버레이마다 다르므로(z-popover, z-tooltip, z-toast, z-modal) 부르는 쪽이 붙인다.
 // - motion(popoverMotionClass): 「가끔 씀」 오버레이(Popover, Toast)의 등장·퇴장. 「자주 씀」(Menu, Select·Combobox 목록,
 //   Tooltip)은 바로 나타나고 opacity fast로만 사라지므로 같은 구조로 시작 상태(starting:)와 이동·blur를 뺀
@@ -62,4 +62,44 @@ export const popoverMotionClass: string = [
 export const frequentMotionClass: string = [
   "transition-[opacity,display] transition-discrete duration-fast ease-out data-open:transition-none",
   "not-data-open:pointer-events-none not-data-open:hidden not-data-open:opacity-0",
+].join(" ");
+
+/**
+ * Dialog류(Dialog, AlertDialog) 표면(spec radius·Elevation, 티켓 30). 가운데에 뜨는 모달이라 트리거에 붙는
+ * 오버레이보다 한 단계 높다. raised 표면(`bg-raised`), `shadow-lg`, radius `xl`, 경계 `border-raised`.
+ * 글자·경계·forced-colors 처리는 `overlaySurfaceClass`와 같다(`text-default × bg-raised` 4.5:1 등록, `border-raised`는 장식용).
+ */
+export const dialogSurfaceClass =
+  "rounded-xl border border-raised bg-raised text-default shadow-lg";
+
+/**
+ * 모달 뒤를 가리는 반투명 막(backdrop, `bg-overlay`)의 등장·퇴장(티켓 30). 요소에 `data-open`이 있어야 한다.
+ *
+ * - 등장: `starting:`에서 opacity 0으로 시작해 `normal`(300ms)로 나타난다. 퇴장: `data-open`이 빠지면 `fast`(150ms)로 사라진다.
+ * - 닫힌 상태는 `display: none`(`hidden`) + `transition-discrete`로 퇴장이 끝날 때 사라지고, 퇴장 중에는
+ *   `pointer-events-none`이다(popoverMotionClass와 같은 구조). 안의 Dialog도 이 값을 물려받아 눌리지 않는다.
+ * - opacity만 바뀌므로 움직임 줄이기에서도 같다.
+ * - `useOverlayPresence`는 이 요소(막)의 전환이 끝나기를 기다린다. 안의 Dialog 전환(`dialogMotionClass`)도 같은
+ *   duration이라 함께 끝난다.
+ */
+export const backdropMotionClass: string = [
+  "transition-[opacity,display] transition-discrete duration-fast ease-out data-open:duration-normal",
+  "not-data-open:pointer-events-none not-data-open:hidden not-data-open:opacity-0",
+  "starting:opacity-0",
+].join(" ");
+
+/**
+ * Dialog류의 등장·퇴장(spec 「motion 적용」 「가끔 씀」 Dialog류, 티켓 30). 요소에 `data-open`이 있어야 한다.
+ *
+ * - 등장: `starting:`에서 opacity 0 + scale 0.96(`scale-96`)으로 시작해 `normal`(300ms), out으로 제자리에 온다.
+ * - 퇴장: `data-open`이 빠지면 같은 조합을 약하게(scale 0.98, `scale-98`) `fast`(150ms)로 사라진다.
+ *   duration은 도착 상태의 값을 쓰므로 기본 `duration-fast`에 열림만 `data-open:duration-normal`이다.
+ * - 화면에서 빼는 일(display)은 바깥 막(`backdropMotionClass`)이 한다. 이 요소는 opacity·scale만 전환한다.
+ * - reduced-motion: 확대(scale)와 그 전환 대상은 `motion-safe:`일 때만 둔다. 움직임 줄이기에서는 opacity만 바뀐다.
+ * - `transition-all`은 쓰지 않는다.
+ */
+export const dialogMotionClass: string = [
+  "transition-[opacity] duration-fast ease-out data-open:duration-normal motion-safe:transition-[opacity,scale]",
+  "not-data-open:opacity-0 motion-safe:not-data-open:scale-98",
+  "starting:opacity-0 motion-safe:starting:scale-96",
 ].join(" ");

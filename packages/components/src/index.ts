@@ -100,6 +100,24 @@ export {
   type SelectProps,
   type SelectSectionProps,
 } from "./Select.tsx";
+export { AlertDialog, type AlertDialogProps } from "./AlertDialog.tsx";
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+  type DialogCloseProps,
+  type DialogContentProps,
+  type DialogDescriptionProps,
+  type DialogFooterProps,
+  type DialogProps,
+  type DialogSize,
+  type DialogTitleProps,
+  type DialogTriggerProps,
+} from "./Dialog.tsx";
 export {
   Tooltip,
   TooltipContent,

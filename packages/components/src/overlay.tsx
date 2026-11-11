@@ -13,6 +13,8 @@
 //   4. class: 표면 `overlaySurfaceClass`, 쌓임 단계(`z-popover` 등), motion(`popoverMotionClass` 등, overlay-style.ts).
 //   5. 트리거가 있는 Theme을 portal에 옮기려면 `useOverlayTheme(triggerRef, overlayRef)`.
 //   6. 목록 오버레이(Menu, Select)는 `useCloseOnTab(overlayRef, state.close)`로 Tab에 닫는다.
+//   7. 가운데 뜨는 모달(Dialog류)은 위치 hook 대신 React Aria `useModalOverlay`(Esc·바깥 누름·inert·스크롤 잠금)를 쓰고,
+//      DOM에 둘지는 바깥 막(backdrop) 요소로 정한다(Dialog.tsx가 예시다, 티켓 30).
 
 import {
   useEffect,
