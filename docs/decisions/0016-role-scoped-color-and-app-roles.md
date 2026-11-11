@@ -21,6 +21,8 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 
 > 덧붙임(2026-11-11, [티켓 23](../progress/tide-v0-impl/issues/23-table.md)): Table은 데이터를 담는 구조 Component로 본다. 행동·의미도 장식·분류도 아니어서 `color`를 두지 않는다. 글자는 `text-default`, 행 구분선은 `border-default`, 본문 행 hover는 ghost 규칙의 neutral `subtle-hover`로 고정이다. 행·칸에 색으로 뜻을 붙이려면 안에 Badge를 넣는다.
 
+> 덧붙임(2026-11-11, [티켓 24](../progress/tide-v0-impl/issues/24-breadcrumb-and-pagination.md)): Breadcrumb·Pagination은 탐색 구조 Component로 본다. 링크·버튼을 담지만 동작의 뜻(위험, 성공 등)이 없는 이동이라 `color`를 두지 않는다(③). Breadcrumb 링크는 `text-muted`(hover `text-default`), 현재 페이지는 `text-default`다. Pagination 번호·이전/다음은 neutral ghost, 현재 쪽 번호는 primary subtle로 고정이다. 앱 브랜드 색으로 현재 쪽을 칠하는 요구가 생기면 `Pagination`에 `color?: Role`을 더하는 것을 그때 검토한다.
+
 이렇게 바꾼 이유는 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)이다. Atlassian은 「Color roles are applied to buttons to differentiate between primary, secondary, warning, or dangerous actions」라고 Role을 버튼에 쓰고, accent 색은 「colors that don't have any specific meaning … exchange one accent color for another, and the experience would remain unchanged」라고 뜻이 없는 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
 
 - **등록 interface 두 개**: foundation이 `RoleRegistry`(Tide Role 6개)와 `ColorFamilyRegistry`(Tide 색 계열 6개)를 둔다. `Role = keyof RoleRegistry`, `ColorFamilyName = keyof ColorFamilyRegistry`, `Color = Role | ColorFamilyName`이다. ADR 0011의 `ColorRegistry`는 없앤다.

@@ -124,6 +124,14 @@ _Avoid_: ProgressBar, LoadingBar, Meter
 행과 열로 된 데이터를 시맨틱 `<table>`로 보여 주는 Component 묶음(`Table`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`). 칸은 같은 열의 머리 칸과 같은 행의 행 머리에 이어져 읽힌다. 정렬·행 선택·키보드 칸 이동이 없어 grid 위젯이 아니다. 화면 배치에는 쓰지 않는다. 머리 칸 부분 이름은 `<thead>`(`TableHead`)와 헷갈리지 않게 `TableHeaderCell`(`<th>`)이다.
 _Avoid_: DataTable(정렬·선택이 있는 v0 이후 후보), Grid, DataGrid
 
+**Breadcrumb (이동 경로)**:
+현재 페이지가 사이트 구조에서 어디에 있는지 상위 페이지 링크로 보여 주는 탐색 영역(`Breadcrumb`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbCurrent`). 마지막 항목은 링크가 아닌 현재 페이지이고 `aria-current="page"`로 읽힌다. 항목 사이 구분자는 장식용 아이콘이라 읽히지 않는다. 지나온 순서(방문 기록)가 아니라 구조상의 위치다.
+_Avoid_: 빵 부스러기, Path, Trail, 방문 기록
+
+**Pagination (페이지 이동)**:
+여러 쪽으로 나눈 목록에서 쪽 사이를 이동하는 탐색 영역(`Pagination`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`). 쪽 번호는 링크(Button 모양)이고 현재 쪽은 `aria-current="page"`, 이전/다음은 이름 있는 IconButton이다. 어떤 번호를 보일지는 앱이 정한다. 단계를 차례로 진행하는 표시(Stepper)와 다르다.
+_Avoid_: Pager, Paginator, Stepper
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
