@@ -246,6 +246,8 @@ try {
     // Skeleton·Progress는 표시만 하는 서버 컴포넌트다(티켓 22).
     "Skeleton.js",
     "Progress.js",
+    // Table은 시맨틱 표 요소만 쓰는 서버 컴포넌트다(티켓 23).
+    "Table.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -307,6 +309,11 @@ try {
       /motion-safe\\:transition-\\\[width\\\]/.test(css) &&
       /forced-colors\\:text-\\\[Highlight\\\]/.test(css),
     "Skeleton·Progress 내부 class(motion-safe:animate-pulse, h-[1em], motion-safe:transition-[width], forced-colors:text-[Highlight])가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    css.includes(".border-collapse") && css.includes(":where(tbody>") && css.includes(".py-2\\.5"),
+    "Table 내부 class(border-collapse, [:where(tbody>&)]:hover:bg-neutral-subtle-hover, py-2.5)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -433,6 +440,19 @@ try {
       progress.includes('data-color="success"') &&
       /<span aria-hidden="true"[^>]*style="width:50%"/.test(progress),
     "Skeleton·Progress가 prerender한 HTML에서 숨김·역할·이름·값·data-color·막대 너비가 기대와 다르다",
+  );
+
+  // Table(서버 컴포넌트)이 prerender한 HTML(티켓 23). 시맨틱 표 요소이고 머리 칸은 기본 scope="col",
+  // 행 머리는 scope="row"다. 기본 class가 없는 thead·tbody에는 class 속성이 없다.
+  const table = html?.match(/<table[^>]*aria-label="요금제"[^>]*>.*?<\/table>/)?.[0] ?? "";
+  assert(
+    /<thead>/.test(table) &&
+      /<tbody>/.test(table) &&
+      (table.match(/<th scope="col"/g) ?? []).length === 2 &&
+      (table.match(/<th scope="row"/g) ?? []).length === 1 &&
+      (table.match(/<td /g) ?? []).length === 1 &&
+      (table.match(/<tr /g) ?? []).length === 2,
+    "Table이 prerender한 HTML에서 표 요소·머리 칸 scope가 기대와 다르다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.

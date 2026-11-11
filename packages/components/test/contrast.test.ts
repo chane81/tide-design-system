@@ -229,3 +229,21 @@ describe("Skeleton 대비 쌍", () => {
     expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
   });
 });
+
+// Table(tide-v0-impl 티켓 23)의 글자는 text-default 하나다(머리 칸도 같다). 배경은 놓인 표면 층과 본문 행 hover(neutral subtle-hover)다.
+// 행 사이 선은 장식용 border-default라 대비 검사에서 제외된 Token이다.
+describe("Table 대비 쌍", () => {
+  it("글자(text-default) × 표면 층 3개가 4.5:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("text-default", background, 4.5), background).toBe(true);
+    }
+  });
+
+  it("hover 행: text-default × bg-neutral-subtle-hover가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  });
+
+  it("행 경계 border-default는 장식용으로 대비 검사에서 제외되어 있다", () => {
+    expect(contrastExclusions.some((exclusion) => exclusion.token === "border-default")).toBe(true);
+  });
+});

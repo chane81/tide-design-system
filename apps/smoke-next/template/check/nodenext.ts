@@ -18,6 +18,12 @@ import {
   Separator,
   Skeleton,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
   Textarea,
   VisuallyHidden,
   type AlertProps,
@@ -37,6 +43,12 @@ import {
   type SeparatorProps,
   type SkeletonProps,
   type SwitchProps,
+  type TableBodyProps,
+  type TableCellProps,
+  type TableHeadProps,
+  type TableHeaderCellProps,
+  type TableProps,
+  type TableRowProps,
   type TextareaProps,
   type Color,
   type ColorFamilyName,
@@ -131,6 +143,17 @@ const progressProps: ProgressProps = { value: 3, max: 10, color: "brand", "aria-
 const unnamedProgress: ProgressProps = { value: 3 };
 // @ts-expect-error Progress color는 색 계열 이름을 받지 않는다.
 const blueProgress: ProgressProps = { value: 3, "aria-label": "업로드", color: "blue" };
+// Table은 부분마다 요소 props를 받고 머리 칸 scope는 HTML 값만 받는다. 스타일 축은 없다(티켓 23).
+const tableProps: TableProps = { "aria-label": "요금제", className: "w-auto" };
+const tableHeadProps: TableHeadProps = { className: "bg-neutral-subtle" };
+const tableBodyProps: TableBodyProps = { id: "rows" };
+const tableRowProps: TableRowProps = { className: "hover:bg-transparent" };
+const tableHeaderCellProps: TableHeaderCellProps = { scope: "row" };
+const tableCellProps: TableCellProps = { headers: "q1", className: "tabular-nums text-end" };
+// @ts-expect-error TableHeaderCell scope는 HTML scope 값만 받는다.
+const wrongScope: TableHeaderCellProps = { scope: "column" };
+// @ts-expect-error Table에는 variant가 없다.
+const variantTable: TableProps = { variant: "striped" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -215,4 +238,18 @@ export const values = [
   progressProps,
   unnamedProgress,
   blueProgress,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+  tableProps,
+  tableHeadProps,
+  tableBodyProps,
+  tableRowProps,
+  tableHeaderCellProps,
+  tableCellProps,
+  wrongScope,
+  variantTable,
 ] as const;

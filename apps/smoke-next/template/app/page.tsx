@@ -21,6 +21,12 @@ import {
   Skeleton,
   Spinner,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
   Textarea,
   Typography,
   VisuallyHidden,
@@ -140,6 +146,21 @@ export default function Page() {
         <Skeleton />
       </div>
       <Progress value={30} max={60} color="success" aria-label="업로드" />
+      {/* Table은 서버 컴포넌트다(티켓 23). 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+      <Table aria-label="요금제">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>요금제</TableHeaderCell>
+            <TableHeaderCell>월 요금</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableHeaderCell scope="row">기본</TableHeaderCell>
+            <TableCell>10,000원</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>
