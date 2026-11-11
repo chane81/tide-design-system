@@ -1,5 +1,22 @@
 # @tide-tds/components
 
+## 0.4.0
+
+### 호환되지 않는 변경 (minor)
+
+- [`0f57f28`](https://github.com/chane81/tide-design-system/commit/0f57f28d0c6718e8cf6c5fe44475a78f09164423) [@chane81](https://github.com/chane81) - 4단계 Component 묶음(0.4.0): 오버레이(Popover·Tooltip·Menu·Select·Combobox·Dialog·AlertDialog)와 Tabs·Accordion·Tag가 들어갑니다. 오버레이는 React Aria hooks 위에 Tide 마크업을 얹은 client Component이고 위치 계산·portal·포커스 관리·퇴장 motion을 공통 모듈로 나눠 씁니다. Popover는 0.3.1에서 먼저 나갔고, 0.3.2는 publish되지 않아 그 내용(Combobox·Dialog·AlertDialog)도 이 릴리스에 들어갑니다. 각 Component의 자세한 변경은 같은 릴리스의 다른 항목에 있습니다.
+
+### 기능 추가와 수정 (patch)
+
+- [`65af92f`](https://github.com/chane81/tide-design-system/commit/65af92fe5b514c207234e717130515cd95978126) [@chane81](https://github.com/chane81) - `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionPanel`을 추가했습니다. 제목을 눌러 내용을 펼치고 접는 client Component이고 React Aria hooks(`useDisclosure`, `useDisclosureGroupState`, `useDisclosureState`, `useButton`)로 만들었습니다. `Accordion`은 루트 `<div>`(radius `lg`, 장식용 경계)이고 `value`/`defaultValue`(펼친 항목 값 목록 `string[]`)/`onValueChange(value)`, `multiple`(기본 `false`: 한 번에 한 항목)을 받습니다. 펼친 항목을 다시 누르면 접힙니다. `AccordionItem`은 `value`(필수)와 `disabled`를 받습니다. `AccordionTrigger`는 제목 요소(`level`, 기본 `<h3>`) 안의 `<button type="button">`이고 `aria-expanded`·`aria-controls`로 패널과 이어지며 Enter·Space로 펼치고 접습니다. 끝의 장식용 chevron은 펼치면 180° 돌고(움직임 줄이기에서는 바로) 높이 애니메이션은 없습니다. `AccordionPanel`은 `role="region"`(또는 `group`)이고 트리거 글자가 이름이며, 접히면 숨고 브라우저 페이지 찾기로 펼쳐집니다(`hidden="until-found"`). 포커스 표시는 `focus-ring`입니다. 상태는 `data-open`(항목·트리거·패널)·`data-disabled`(항목)·`aria-expanded`·`:disabled`(트리거)로 노출합니다.
+
+- [`3a5c1b2`](https://github.com/chane81/tide-design-system/commit/3a5c1b24dfe6c1db46413a4d9ae1a9876d4be940) [@chane81](https://github.com/chane81) - `Tabs`, `TabList`, `Tab`, `TabPanel`을 추가했습니다. 같은 영역의 여러 패널 중 하나를 골라 보여 주는 client Component이고 React Aria hooks(`useTabList`, `useTab`, `useTabListState`)로 만들었습니다. `Tabs`는 루트 `<div>`이고 `value`/`defaultValue`(둘 중 하나는 필수)/`onValueChange(value)`, `orientation`(`horizontal` 기본·`vertical`), `activationMode`(`automatic` 기본·`manual`)를 받습니다. `TabList`는 `role="tablist"`이고 →←(세로면 ↓↑, 끝에서 처음으로 돎)·Home/End로 탭을 옮기며 비활성 탭은 건너뜁니다. RTL locale에서는 ←가 다음 탭입니다. `Tab`은 `<button type="button" role="tab">`이고 `value`(필수)와 `disabled`를 받으며, 같은 `value`의 `TabPanel`(`role="tabpanel"`, `tabIndex` 기본 `0`)과 `aria-controls`·`aria-labelledby`로 이어집니다. 고른 탭은 primary 글자와 2px `border-primary` 막대로 보이고(고대비 모드에서는 시스템 강조색), 막대는 opacity 150ms에 움직임 줄이기가 아니면 가운데에서 펼쳐집니다. 포커스 표시는 `focus-ring`입니다. 고른 탭의 패널만 렌더합니다. 상태는 `data-orientation`(루트)·`data-selected`(탭)·`:disabled`로 노출합니다.
+
+- [`0ccbd31`](https://github.com/chane81/tide-design-system/commit/0ccbd3166ddde52871fc0e4eb5cb85f62ac7f560) [@chane81](https://github.com/chane81) - `TagGroup`과 `Tag`를 추가했습니다. 사용자가 고르거나 입력한 값을 보여 주고 지울 수 있는 라벨 묶음이며, React Aria hooks(`useTagGroup`, `useTag`, `useListState`)로 만든 client Component입니다. `TagGroup`은 `role="grid"`(태그가 없으면 `group`)이고 이름(`aria-label` 또는 `aria-labelledby`)이 타입상 필수입니다. ←→(끝에서 처음으로 돌고 RTL locale은 반대)·Home/End로 태그를 옮기고 비활성 태그는 건너뛰며, Tab 자리는 하나입니다. `onRemove(value)`를 주면 Delete·Backspace와 끝의 지우기 IconButton(24×24, 이름은 「`removeLabel`(기본 「제거」) + 태그 글자」)으로 지우고, 지운 뒤 포커스는 다음(없으면 앞) 태그로 옮겨 갑니다. `Tag`는 `value`·`children`(필수), `disabled`, 색 계열 `color`(`ColorFamilyName`, 기본 `gray`, Role은 받지 않음)를 받고 높이 32px·radius `sm`·subtle 배경입니다. 포커스 표시는 `focus-ring`이고 상태는 `aria-disabled`·`data-color`로 노출합니다.
+- 의존성 업데이트 []:
+  - @tide-tds/foundation@0.4.0
+  - @tide-tds/icons@0.4.0
+
 ## 0.3.2
 
 ### 기능 추가와 수정 (patch)
