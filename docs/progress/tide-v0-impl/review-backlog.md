@@ -92,3 +92,15 @@
 - 비활성 항목은 키보드 위치가 건너뜀(React Aria 기본).
 - 한글 타입어헤드 미지원(IME, 문서 안내).
 - `placement` 기본 `bottom start`, `offset` 4px, 폭 10~20rem, 항목 `text-body-md`·36px, 아이콘 16px.
+
+## 28 Select
+
+- 부분 Component 없이 단일 `Select`(루트 = 트리거 버튼), `placement`·`offset` 비공개(`bottom start` 4px).
+- 역할은 React Aria 방식 `button` + `aria-haspopup="listbox"`(APG Select-Only Combobox의 `combobox` 아님).
+- `required`는 네이티브 제약 검사(제출 막음·트리거 포커스·`aria-invalid`, 말풍선 없음). 보조기술에 필수 여부가 전해지지 않음(문서 안내).
+- 고른 옵션에 체크 아이콘 추가(spec은 subtle-active만).
+- `placeholder` 기본 「선택하세요」, `value`는 `string | null`, 비우기로는 `onValueChange`가 불리지 않음.
+- 목록 폭 min = 트리거 폭(최소 10rem, 최대 20rem).
+- listbox 안 구분선은 숨긴 장식 요소(Menu의 `separator`와 다름).
+- `useCloseOnTab`이 Tab 전파를 멈춤(Menu에도 적용), Tab은 트리거로 포커스 복귀.
+- 한글 타입어헤드 미지원, 옵션 300개 초과 시 hidden input(자동 완성 없음).
