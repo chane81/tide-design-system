@@ -3,6 +3,7 @@
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
 import {
   Alert,
+  Avatar,
   Badge,
   Button,
   Card,
@@ -126,6 +127,11 @@ export default function Page() {
         11월 15일 새벽 2시에 점검합니다.
       </Alert>
       <Alert color="brand" role="status" title="새 요금제" />
+      {/* Avatar는 서버 컴포넌트다(티켓 21). 로드 실패 fallback도 JS 없이 처리한다. 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+      <p>
+        <Avatar alt="홍길동" src="/avatar.png" size="lg" color="cyan" />
+        <Avatar alt="" />
+      </p>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

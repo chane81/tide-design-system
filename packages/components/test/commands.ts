@@ -22,9 +22,22 @@ export const mouseUp: BrowserCommand<[]> = async (context) => {
   await context.page.mouse.up();
 };
 
+/**
+ * data-testid로 찾은 요소를 PNG로 찍어 base64로 돌려준다(Playwright `Locator.screenshot`).
+ * 브라우저 JS는 그려진 픽셀을 읽을 수 없어서, 이미지가 실제로 그려졌는지는 화면을 찍어 비교한다(Avatar fallback 단언용).
+ */
+export const screenshotTestId: BrowserCommand<[testId: string]> = async (context, testId) => {
+  if (context.provider.name !== "playwright") {
+    throw new Error(`playwright provider만 지원한다: ${context.provider.name}`);
+  }
+  const buffer = await context.iframe.getByTestId(testId).screenshot({ animations: "disabled" });
+  return buffer.toString("base64");
+};
+
 declare module "vitest/browser" {
   interface BrowserCommands {
     mouseDownOn: (testId: string) => Promise<void>;
     mouseUp: () => Promise<void>;
+    screenshotTestId: (testId: string) => Promise<string>;
   }
 }

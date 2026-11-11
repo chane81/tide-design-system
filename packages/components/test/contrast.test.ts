@@ -168,3 +168,30 @@ describe("Alert 대비 쌍", () => {
     for (const background of surfaces) expect(rule("border", background, 3)).toBe(true);
   });
 });
+
+// Avatar(tide-v0-impl 티켓 21)의 fallback은 색 계열의 text(아이콘) × subtle(배경)이다. 색 이름 규칙으로 검사된다.
+// 이미지 층은 사용자 사진이라 대비 검사 대상이 아니다.
+describe("Avatar 대비 쌍", () => {
+  it("색 계열 6개의 fallback 아이콘(text) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
+    for (const family of colorFamilyNames) {
+      const used = checkColorContrast({
+        light: colorSlotHex(family, "light"),
+        dark: colorSlotHex(family, "dark"),
+      }).filter((result) => result.foreground === "text" && result.background === "subtle");
+      // Theme 2개
+      expect(used, family).toHaveLength(2);
+      expect(
+        used.filter((result) => !result.pass),
+        family,
+      ).toEqual([]);
+    }
+  });
+
+  it("앱 장식 계열은 text × subtle 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(
+      colorContrastRules.some(
+        (r) => r.foreground === "text" && r.background === "subtle" && r.minRatio === 4.5,
+      ),
+    ).toBe(true);
+  });
+});

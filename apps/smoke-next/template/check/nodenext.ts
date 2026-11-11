@@ -1,6 +1,7 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
 import {
   Alert,
+  Avatar,
   Badge,
   Button,
   Card,
@@ -18,6 +19,7 @@ import {
   Textarea,
   VisuallyHidden,
   type AlertProps,
+  type AvatarProps,
   type BadgeProps,
   type ButtonProps,
   type CardProps,
@@ -110,6 +112,12 @@ const alertProps: AlertProps = {
 const blueAlert: AlertProps = { color: "blue" };
 // @ts-expect-error Alert role은 alert·status만 받는다.
 const buttonAlert: AlertProps = { role: "button" };
+// Avatar color는 색 계열 이름만 받는다(Role은 받지 않는다, 티켓 21). alt는 필수다.
+const avatarProps: AvatarProps = { alt: "홍길동", src: "/a.png", size: "xs", color: "cyan" };
+// @ts-expect-error Avatar color는 Role을 받지 않는다.
+const primaryAvatar: AvatarProps = { alt: "", color: "primary" };
+// @ts-expect-error Avatar는 alt가 필수다.
+const noAltAvatar: AvatarProps = { src: "/a.png" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -183,4 +191,8 @@ export const values = [
   alertProps,
   blueAlert,
   buttonAlert,
+  Avatar,
+  avatarProps,
+  primaryAvatar,
+  noAltAvatar,
 ] as const;
