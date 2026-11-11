@@ -482,3 +482,52 @@ describe("Accordion 대비 쌍", () => {
     }
   });
 });
+
+// Tag(tide-v0-impl 티켓 33)는 색 계열의 text(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
+// 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(text × subtle 3단계)으로 검사된다.
+describe("Tag 대비 쌍", () => {
+  it("색 계열 6개의 글자(text) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
+    for (const family of colorFamilyNames) {
+      const used = checkColorContrast({
+        light: colorSlotHex(family, "light"),
+        dark: colorSlotHex(family, "dark"),
+      }).filter(
+        (result) =>
+          result.foreground === "text" &&
+          ["subtle", "subtle-hover", "subtle-active"].includes(result.background),
+      );
+      // 배경 3단계 × Theme 2개
+      expect(used, family).toHaveLength(6);
+      expect(
+        used.filter((result) => !result.pass),
+        family,
+      ).toEqual([]);
+    }
+  });
+
+  it("앱 장식 계열도 text × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
+      expect(
+        colorContrastRules.some(
+          (r) => r.foreground === "text" && r.background === background && r.minRatio === 4.5,
+        ),
+        background,
+      ).toBe(true);
+    }
+  });
+
+  it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("outline-focus", background, 3), background).toBe(true);
+    }
+  });
+
+  it("비활성 태그의 배경·글자(bg-disabled·text-disabled)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["bg-disabled", "text-disabled"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});

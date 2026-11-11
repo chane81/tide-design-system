@@ -58,6 +58,8 @@ import {
   TabList,
   TabPanel,
   Tabs,
+  Tag,
+  TagGroup,
   Table,
   TableBody,
   TableCell,
@@ -127,6 +129,8 @@ import {
   type TabsActivationMode,
   type TabsOrientation,
   type TabsProps,
+  type TagGroupProps,
+  type TagProps,
   type PopoverProps,
   type PopoverTriggerProps,
   type SeparatorProps,
@@ -321,6 +325,16 @@ const stringAccordion: AccordionProps = { value: "a" };
 const ariaAccordion: AccordionProps = { allowsMultipleExpanded: true };
 // @ts-expect-error 패널 역할은 region·group이다.
 const dialogPanel: AccordionPanelProps = { role: "dialog" };
+const tagGroupProps: TagGroupProps = {
+  "aria-label": "고른 필터",
+  removeLabel: "지우기",
+  onRemove: (value) => void value,
+};
+const tagProps: TagProps = { value: "a", children: "가", color: "cyan", disabled: true };
+// @ts-expect-error 묶음 이름(aria-label 또는 aria-labelledby)은 필수다.
+const unnamedTagGroup: TagGroupProps = {};
+// @ts-expect-error Tag는 뜻 없는 분류 색이라 Role은 받지 않는다.
+const roleTag: TagProps = { value: "a", children: "가", color: "danger" };
 const tooltipPlacement: TooltipPlacement = "top end";
 const tooltipContentProps: TooltipContentProps = { placement: tooltipPlacement, offset: 6 };
 // @ts-expect-error Tooltip 설명의 역할은 tooltip으로 고정이다.
@@ -463,6 +477,12 @@ export const values = [
   stringAccordion,
   ariaAccordion,
   dialogPanel,
+  TagGroup,
+  Tag,
+  tagGroupProps,
+  tagProps,
+  unnamedTagGroup,
+  roleTag,
   Alert,
   alertProps,
   blueAlert,

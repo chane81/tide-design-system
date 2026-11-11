@@ -61,6 +61,8 @@ import {
   TabList,
   TabPanel,
   Tabs,
+  Tag,
+  TagGroup,
   Table,
   TableBody,
   TableCell,
@@ -308,6 +310,17 @@ export default function Page() {
           <AccordionPanel>보관 패널</AccordionPanel>
         </AccordionItem>
       </Accordion>
+      {/* TagGroup은 client Component다(티켓 33). 서버 컴포넌트가 만든 태그(lazy 참조)가 prerender 때 모여 grid·row로
+          그려진다. 서버 컴포넌트는 함수(onRemove)를 넘길 수 없어 지우기 버튼 없는 묶음이다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <TagGroup aria-label="입력한 키워드">
+        <Tag value="react">리액트</Tag>
+        <Tag value="design" color="blue">
+          디자인
+        </Tag>
+        <Tag value="archive" disabled>
+          보관
+        </Tag>
+      </TagGroup>
       <Tabs defaultValue="activity">
         <TabList aria-label="프로젝트 보기">
           <Tab value="overview">개요</Tab>

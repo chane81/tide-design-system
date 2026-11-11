@@ -299,6 +299,8 @@ try {
     "Tabs.js",
     // Accordion도 React Aria hooks·state를 쓰므로 client다(티켓 32).
     "Accordion.js",
+    // Tag도 React Aria hooks·state를 쓰므로 client다(티켓 33).
+    "Tag.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -379,6 +381,13 @@ try {
       css.includes("\\[\\&\\[hidden\\]\\]\\:p-0") &&
       css.includes("forced-colors\\:text-current"),
     "Accordion 내부 class(group-aria-expanded:rotate-180, motion-safe:transition-[rotate], [&[hidden]]:p-0, forced-colors:text-current)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes("hover\\:bg-\\(--tag-remove-hover\\)") &&
+      css.includes("--tag-remove-hover") &&
+      css.includes("aria-disabled\\:bg-disabled") &&
+      css.includes("pe-0\\.75"),
+    "Tag 내부 class(hover:bg-(--tag-remove-hover), [--tag-remove-hover:…], aria-disabled:bg-disabled, pe-0.75)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes(".z-tooltip") &&
@@ -658,6 +667,31 @@ try {
       htmlAttribute(shippingPanel, "aria-labelledby") === htmlAttribute(shippingTrigger, "id") &&
       htmlAttribute(refundTrigger, "aria-controls") === htmlAttribute(refundPanel, "id"),
     "Accordion이 prerender한 HTML에서 트리거·패널 역할·펼침 상태·연결이 기대와 다르다",
+  );
+
+  // TagGroup(client)이 prerender한 HTML(티켓 33). 서버 컴포넌트가 넘긴 태그(lazy 참조)가 prerender 때 모여
+  // 이름 있는 grid 안의 row·gridcell로 그려진다. 태그 색은 data-color(기본 gray), 비활성 태그는 aria-disabled다.
+  // onRemove가 없어 지우기 버튼이 없다.
+  const tagGroupName = html?.indexOf('aria-label="입력한 키워드"') ?? -1;
+  const tagGroupStart = tagGroupName >= 0 ? (html?.lastIndexOf("<div", tagGroupName) ?? -1) : -1;
+  const tagGroupEnd = tagGroupStart >= 0 ? (html?.indexOf("보관</span>", tagGroupStart) ?? -1) : -1;
+  const tagGroupHtml =
+    tagGroupStart >= 0 && tagGroupEnd >= 0
+      ? (html?.slice(tagGroupStart, tagGroupEnd + 20) ?? "")
+      : "";
+  const tagRow = (text: string): string =>
+    tagGroupHtml.match(
+      new RegExp(`<div[^>]*role="row"[^>]*><div[^>]*role="gridcell"[^>]*><span[^>]*>${text}<`),
+    )?.[0] ?? "";
+  assert(
+    tagGroupHtml !== "" &&
+      (tagGroupHtml.match(/role="row"/g) ?? []).length === 3 &&
+      tagRow("리액트").includes('data-color="gray"') &&
+      tagRow("디자인").includes('data-color="blue"') &&
+      tagRow("보관").includes('aria-disabled="true"') &&
+      tagGroupHtml.slice(0, tagGroupHtml.indexOf(">")).includes('role="grid"') &&
+      !tagGroupHtml.includes("<button"),
+    "TagGroup이 prerender한 HTML에서 grid·row·gridcell 역할, 색, 비활성 상태가 기대와 다르다",
   );
 
   // Select(client)가 Field 안에서 prerender한 HTML(티켓 28). 서버 컴포넌트가 넘긴 옵션(lazy 참조)이 prerender 때
