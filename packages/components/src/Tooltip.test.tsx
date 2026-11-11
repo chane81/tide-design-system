@@ -76,8 +76,9 @@ async function expectClosed(): Promise<void> {
 
 /**
  * 마우스를 트리거에 올린다. 먼저 앞 버튼으로 옮겨 포인터가 트리거 밖에서 들어오게 한다.
- * 앞 테스트에서 마우스가 같은 자리에 남아 있으면 새로 그린 트리거에 pointerenter가 생기지 않고,
  * React Aria는 마지막 입력이 포인터(pointermove)일 때만 hover로 연다.
+ * 테스트 시작 때 마우스는 페이지 밖에 있다(test/browser-setup.ts). 앞 테스트 자리에 마우스가 남아 있으면 Chromium이
+ * 새로 그린 트리거에 약 0.1초 뒤 pointerenter를 보내 render 직후 Tooltip이 저절로 열린다.
  */
 async function hoverTrigger(): Promise<void> {
   await userEvent.hover(page.getByTestId("before"));

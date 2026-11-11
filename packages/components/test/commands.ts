@@ -28,6 +28,18 @@ export const mouseDownAtCorner: BrowserCommand<[testId: string]> = async (contex
   await context.page.mouse.down();
 };
 
+/**
+ * 마우스를 페이지 바깥(-1, -1)으로 뺀다. 테스트 iframe이 viewport 전체(0,0 기준)를 덮어 안쪽에는 빈 자리가 없다.
+ * 마우스가 앞 테스트 자리에 멈춰 있으면, 새로 그린 요소가 그 아래에 올 때 Chromium이 약 0.1초 뒤 가짜 mouse move로
+ * pointerenter를 보낸다(2026-11-11 실험). 바깥으로 빼면 포인터가 문서를 떠나서 다음 hover 전까지 아무 요소에도 들어가지 않는다.
+ */
+export const mouseLeavePage: BrowserCommand<[]> = async (context) => {
+  if (context.provider.name !== "playwright") {
+    throw new Error(`playwright provider만 지원한다: ${context.provider.name}`);
+  }
+  await context.page.mouse.move(-1, -1);
+};
+
 /** 눌러 둔 마우스 버튼을 뗀다. */
 export const mouseUp: BrowserCommand<[]> = async (context) => {
   if (context.provider.name !== "playwright") {
@@ -52,6 +64,7 @@ declare module "vitest/browser" {
   interface BrowserCommands {
     mouseDownOn: (testId: string) => Promise<void>;
     mouseDownAtCorner: (testId: string) => Promise<void>;
+    mouseLeavePage: () => Promise<void>;
     mouseUp: () => Promise<void>;
     screenshotTestId: (testId: string) => Promise<string>;
   }

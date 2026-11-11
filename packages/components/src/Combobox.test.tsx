@@ -408,7 +408,12 @@ describe("닫기와 자유 입력 없음", () => {
     const onValueChange = vi.fn();
     await render(<Fruits onValueChange={onValueChange} />);
     await tabToInput();
-    await userEvent.keyboard("포{ArrowDown}");
+    // 거른 목록이 열린 것을 본 뒤에 ↓를 누른다. 입력으로 목록을 여는 것은 React Stately가 render 뒤 effect에서 하므로,
+    // 그 전에 ↓가 도착하면 「닫힌 목록을 ↓로 연다」가 되어 거르지 않은 전체 목록의 첫 옵션(사과)에 간다
+    // (useComboBoxState open(…, 'manual') → showAllItems). 한 번에 "포{ArrowDown}"을 보내면 부하에 따라 그렇게 됐다.
+    await userEvent.keyboard("포");
+    await expect.poll(optionNames).toEqual(["포도"]);
+    await userEvent.keyboard("{ArrowDown}");
     await expect.poll(activeOption).toBe(byTestId("grape"));
     await userEvent.tab();
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith("grape");
