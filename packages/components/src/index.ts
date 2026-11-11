@@ -63,6 +63,19 @@ export {
   type PaginationProps,
 } from "./Pagination.tsx";
 export {
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuSection,
+  MenuTrigger,
+  type MenuContentProps,
+  type MenuItemProps,
+  type MenuPlacement,
+  type MenuProps,
+  type MenuSectionProps,
+  type MenuTriggerProps,
+} from "./Menu.tsx";
+export {
   Popover,
   PopoverContent,
   PopoverTrigger,
