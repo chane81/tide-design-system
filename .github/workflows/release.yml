@@ -103,6 +103,10 @@ jobs:
     needs: select-mode
     if: needs.select-mode.outputs.mode == 'publish'
     runs-on: ubuntu-latest
+    # ci.yml과 같은 Playwright 공식 이미지에서 돌려 apt(Ubuntu 미러)에 기대지 않는다.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      options: --user 1001
     permissions:
       contents: read
     outputs:
@@ -117,7 +121,7 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tide-tds/components exec playwright install --with-deps --only-shell chromium
+      - run: pnpm --filter @tide-tds/components exec playwright install --only-shell chromium
       # --affected 없이 전체를 돌린다. build 결과(dist)가 그대로 pack에 들어간다.
       - run: pnpm turbo run typecheck test build smoke
       # changeset pack이 pnpm pack을 불러서 workspace:·catalog:가 실제 버전으로 바뀐다(@changesets/cli 3.0.3).

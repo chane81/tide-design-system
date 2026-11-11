@@ -41,4 +41,12 @@ PR #7(Release 0.4.0) CI run 43021954463이 네 번 연속으로 같은 단계에
 
 ## 이번 결정
 
-CI 설정은 바꾸지 않고, 장애가 회복된 뒤 재실행한다(2026-11-11 사용자 선택). 같은 장애가 반복되면 3번을 검토한다.
+- 2026-11-11 처음에는 CI 설정을 그대로 두고 재실행하기로 했다.
+- 장애가 자주 반복될 것으로 보고 3번을 적용했다(사용자 선택).
+  - 바꾼 곳: `ci.yml`의 ci job, `release.yml`의 pack job
+  - 이미지: `container: mcr.microsoft.com/playwright:v1.65.0-noble`, `options: --user 1001`(playwright.dev/docs/ci의 GitHub Actions 예시)
+  - `playwright install`에서 `--with-deps`를 뺐다.
+- 확인한 근거:
+  - Playwright v1.65.0의 `utils/docker/Dockerfile.noble`에 git·zstd(actions/cache용)와 `install-deps`(폰트 포함)가 들어 있다. chromium을 설치하면 chromium-headless-shell도 함께 깔린다. `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright`(권한 777)이다.
+  - MCR 태그 목록에 `v1.65.0-noble`이 있다.
+- 남은 일: 이미지 태그를 catalog의 playwright 버전과 함께 올려야 한다. 어긋나도 `install --only-shell chromium`이 apt 없이 브라우저를 받으므로 CI가 깨지지는 않는다.
