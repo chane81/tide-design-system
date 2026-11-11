@@ -152,3 +152,16 @@
 - chevron 회전은 움직임 줄이기에서 opacity 대체 없이 바로 바뀜(Switch thumb 규칙).
 - 패널은 늘 렌더(Tabs는 고른 패널만), `hidden="until-found"` 페이지 찾기 펼침은 지원 브라우저에서만.
 - `multiple`이 아닌데 값이 둘 이상이면 첫 값만 남기며 `onValueChange` 호출(React Stately 동작).
+
+## 33 Tag
+
+- `color`는 `ColorFamilyName`만(Role 없음, 기본 `gray`, 태그마다), 묶음 단위 `color` 없음.
+- 선택(켜고 끄기) 없음, `onRemove`는 값 하나 `(value: string)`.
+- 지우기 버튼은 Tab 순서에서 빠짐(키보드는 Delete·Backspace만).
+- 지우기 버튼 기본 이름 「제거」 + 태그 글자, Delete 안내 설명은 React Aria 번역(locale 따름).
+- `size`·`variant` 없음, 높이 32px 하나(Badge md 24px보다 큼).
+- 지우기 버튼 radius `sm`(중첩 규칙대로면 0).
+- 지우기 버튼 hover·누름은 태그 색 subtle-hover·subtle-active, 내부 custom property(`--tag-remove-*`)로 넘김.
+- 묶음 이름은 `aria-label`·`aria-labelledby` 중 하나 타입상 필수, 보이는 `label`·설명·오류 문구 prop 없음.
+- 태그 행 hover 모양 없음, 비활성은 `bg-disabled`·`text-disabled`.
+- 지우지 않는 묶음도 grid 화살표 탐색(client), 탐색이 필요 없으면 Badge.
