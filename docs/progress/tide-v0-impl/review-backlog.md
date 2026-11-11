@@ -46,3 +46,15 @@
 - hover neutral `subtle-hover`, 머리 칸 글자 `text-default`(`text-muted`는 대비 쌍 추가 필요).
 - 칸 높이 40px·가로 12px 한 가지, 밀도 축 없음.
 - 가로 스크롤 감싸개 없음(문서 안내만).
+
+## 24 Breadcrumb·Pagination
+
+- 기본 이름(「이동 경로」·「페이지 이동」·「이전/다음 페이지」·「페이지 생략」), 이름 타입 필수 아님.
+- 현재 페이지는 링크 아닌 `BreadcrumbCurrent`(span + aria-current).
+- 구분자 자동(`BreadcrumbSeparator` 없음), 모양 바꾸기 없음.
+- Breadcrumb 링크 `text-muted` + 항상 밑줄.
+- `ol`·`ul`은 루트가 렌더(`BreadcrumbList`·`PaginationContent` 없음).
+- 번호·이전/다음 32px 한 가지, 현재 쪽 primary subtle 고정, `color`·`size` 없음.
+- 번호 hover는 Button 규칙(transition-colors), 「목록 항목 즉시 hover」로 보지 않음.
+- 페이지 범위 계산 함수 비공개(문서 예시만).
+- 처음·마지막 쪽 버튼 없음.
