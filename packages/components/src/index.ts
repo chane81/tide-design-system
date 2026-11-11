@@ -38,6 +38,30 @@ export {
   type TableProps,
   type TableRowProps,
 } from "./Table.tsx";
+export {
+  Breadcrumb,
+  BreadcrumbCurrent,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  type BreadcrumbCurrentProps,
+  type BreadcrumbItemProps,
+  type BreadcrumbLinkProps,
+  type BreadcrumbProps,
+} from "./Breadcrumb.tsx";
+export {
+  Pagination,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  type PaginationEllipsisProps,
+  type PaginationItemProps,
+  type PaginationLinkProps,
+  type PaginationNextProps,
+  type PaginationPreviousProps,
+  type PaginationProps,
+} from "./Pagination.tsx";
 export type {
   Color,
   ColorFamilyName,
