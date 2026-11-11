@@ -1,0 +1,97 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as TableStories from "./Table.stories.tsx";
+
+<Meta of={TableStories} />
+
+# Table
+
+행과 열로 된 데이터를 시맨틱 `<table>`로 보여 줍니다. `Table`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`을 조합합니다. 본문 행에 마우스를 올리면 배경이 바로 바뀝니다. 정렬, 행 선택, 가상화는 없습니다.
+
+<Canvas of={TableStories.Basic} />
+
+## 사용 시점
+
+- 여러 항목을 같은 속성(열)으로 나란히 비교할 때(구성원 목록, 청구 내역, 요금제 비교)
+- 숫자를 열로 맞춰 읽어야 할 때
+
+## 쓰지 않을 때
+
+- 데이터가 아니라 화면 배치(이름표와 값을 나란히 놓기)를 위한 것이면 flex·grid를 씁니다.
+- 항목마다 모양이 다르거나 열이 한두 개뿐이면 목록(`ul`)이나 Card를 씁니다.
+- 정렬·행 선택·키보드 칸 이동·수천 행 가상화가 필요하면 Table로는 부족합니다(v0 이후 DataTable 후보).
+
+## 예시
+
+### 부분
+
+| Component         | 요소      | 하는 일                                                                   |
+| ----------------- | --------- | ------------------------------------------------------------------------- |
+| `Table`           | `<table>` | 부모 너비를 채우고 경계를 합칩니다. 글자는 `body-sm`입니다.               |
+| `TableHead`       | `<thead>` | 머리 행 묶음. 안의 행은 hover로 바뀌지 않습니다.                          |
+| `TableBody`       | `<tbody>` | 본문 행 묶음. 바로 아래 행에 hover 배경이 있습니다.                       |
+| `TableRow`        | `<tr>`    | 아래에 1px 구분선이 있습니다.                                             |
+| `TableHeaderCell` | `<th>`    | 머리 칸. 기본 `scope="col"`, 글자는 `label-md`입니다.                     |
+| `TableCell`       | `<td>`    | 데이터 칸. 높이 40px(세로 여백 10px), 가로 여백 12px, 시작 쪽 정렬입니다. |
+
+바닥 행(합계)은 네이티브 `<tfoot>`에 `TableRow`를 넣습니다. 이 행도 hover로 바뀌지 않습니다.
+
+### 숫자 열
+
+숫자 칸과 그 열의 머리 칸에 `className="tabular-nums text-end"`를 줍니다. 숫자 폭이 같아져 자릿수가 세로로 맞습니다.
+
+<Canvas of={TableStories.Numeric} />
+
+### 행 머리
+
+본문 행의 첫 칸이 그 행의 이름이면 `TableHeaderCell`에 `scope="row"`를 줍니다. 스크린 리더가 칸을 읽을 때 행 이름과 열 이름을 함께 읽습니다. 머리가 여러 줄인 복잡한 표는 머리 칸의 `id`와 데이터 칸의 `headers`로 직접 잇습니다.
+
+<Canvas of={TableStories.RowHeaders} />
+
+### Card 안에서, 가로 스크롤
+
+표는 배경이 없어 놓인 표면을 그대로 보입니다. Card에 넣을 때는 Card 여백을 `p-0`으로 두고, 좁은 화면에서는 `overflow-x-auto` 영역으로 감쌉니다. 스크롤 영역은 키보드로도 스크롤할 수 있게 `tabIndex={0}`과 이름(`role="region"` + `aria-label`)을 줍니다.
+
+<Canvas of={TableStories.InCard} />
+
+## Do/Don't
+
+### Do: 표에 이름을 붙이고 머리 칸을 `TableHeaderCell`로 둔다
+
+`<caption>`(보이지 않게 하려면 `sr-only`)이나 `aria-label`로 표의 이름을 줍니다. 머리 칸이 있어야 칸마다 어느 열·행의 값인지 읽힙니다.
+
+<Canvas of={TableStories.DoCaption} />
+
+### Don't: 배치에 표를 쓴다
+
+스크린 리더가 표로 알리고 행·열 수를 읽어 내용이 오히려 어려워집니다. 배치는 flex·grid로 합니다.
+
+<Canvas of={TableStories.DontLayout} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 시맨틱 표 요소라 table·rowgroup·row·columnheader·rowheader·cell 역할이 그대로 나옵니다. 칸은 같은 열의 머리 칸, 같은 행의 행 머리와 이어집니다.
+- 머리 칸 범위: `TableHeaderCell`은 기본 `scope="col"`입니다. 보조 기술마다 scope 추측이 달라 범위를 늘 적습니다.
+- hover: 본문 행 배경이 transition 없이 바로 바뀝니다(반복되는 목록 항목 규칙). 움직임이 없어 움직임 줄이기와 관계없습니다. hover는 꾸밈이라 정보를 전하지 않습니다.
+- 대비: 글자(`text-default`)가 표면 층과 hover 행 배경(`bg-neutral-subtle-hover`) 위에서 4.5:1 이상입니다. 행 구분선은 장식용(`border-default`)이라 대비 검사 대상이 아닙니다.
+- 고대비 모드(forced-colors): 행 구분선이 시스템 글자색으로 그려집니다. hover 배경은 시스템 배경색으로 덮입니다.
+
+### 앱이 할 일
+
+- 표에 `<caption>`이나 `aria-label`·`aria-labelledby`로 이름을 줍니다.
+- 행 머리에는 `scope="row"`를 줍니다.
+- 가로 스크롤 영역에는 `tabIndex={0}`과 이름을 줍니다.
+- 행 전체를 누를 수 있게 만들지 않습니다. 행 안의 링크·버튼을 씁니다(행 선택은 v0에 없습니다).
+
+## Props
+
+모두 서버 컴포넌트로 쓸 수 있습니다. 부분마다 자기 요소(`table`, `thead`, `tbody`, `tr`, `th`, `td`)의 props를 모두 받습니다. `ref`는 그 요소에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: 칸의 `px-4`, 행의 `border-b-0`, 행의 `hover:bg-transparent`). 색·`variant`·`size` prop은 없습니다.
+
+| Component         | 추가·바뀐 prop                                        | 기본값  |
+| ----------------- | ----------------------------------------------------- | ------- |
+| `TableHeaderCell` | `scope`: `"col" \| "row" \| "colgroup" \| "rowgroup"` | `"col"` |
+| 나머지            | 없음(요소 props 그대로)                               |         |
+
+<ArgTypes of={TableStories} />

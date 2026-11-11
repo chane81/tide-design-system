@@ -120,6 +120,10 @@ _Avoid_: Placeholder(input `placeholder`와 혼동), Shimmer, LoadingBox
 전체 양을 아는 작업이 얼마나 진행됐는지 보여 주는 막대(`role="progressbar"`). 값을 모르는 기다림은 Spinner이고, 정해진 범위 안의 측정값(디스크 사용량 등)은 진행이 아니라 meter다. 진행 상태는 뜻이 있는 표시라 Role로 색을 고른다.
 _Avoid_: ProgressBar, LoadingBar, Meter
 
+**Table (표)**:
+행과 열로 된 데이터를 시맨틱 `<table>`로 보여 주는 Component 묶음(`Table`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`). 칸은 같은 열의 머리 칸과 같은 행의 행 머리에 이어져 읽힌다. 정렬·행 선택·키보드 칸 이동이 없어 grid 위젯이 아니다. 화면 배치에는 쓰지 않는다. 머리 칸 부분 이름은 `<thead>`(`TableHead`)와 헷갈리지 않게 `TableHeaderCell`(`<th>`)이다.
+_Avoid_: DataTable(정렬·선택이 있는 v0 이후 후보), Grid, DataGrid
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
