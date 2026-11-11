@@ -1,0 +1,107 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as DialogStories from "./Dialog.stories.tsx";
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+화면 가운데에 뜨는 모달입니다. 열린 동안 뒤 화면은 반투명 막으로 가려져 읽히지도 눌리지도 않고, 키보드 포커스는 Dialog 안에서만 돕니다. Esc·닫기 버튼·막 누름으로 닫히며 포커스는 연 버튼으로 돌아옵니다. 삭제 확인처럼 응답이 꼭 필요한 경우에는 `AlertDialog`를 씁니다.
+
+<Canvas of={DialogStories.Basic} />
+
+## 사용 시점
+
+- 하던 일을 잠시 멈추고 입력·확인을 받아야 할 때(이름 바꾸기, 내보내기 설정)
+- 삭제처럼 되돌릴 수 없는 동작을 확인받을 때(`AlertDialog`)
+
+## 쓰지 않을 때
+
+- 트리거 옆의 짧은 설명이나 설정 몇 개는 Popover를 씁니다. 화면 전체를 막지 않습니다.
+- 작업 결과를 알리기만 하면 Toast나 화면 안의 Alert를 씁니다. 응답이 필요 없는 알림으로 흐름을 끊지 않습니다.
+- 긴 폼이나 여러 단계는 별도 페이지로 둡니다.
+
+## 예시
+
+### 구조
+
+`Dialog`는 열림 상태만 갖습니다. 안에 `DialogTrigger`(여는 버튼, `render={<Button />}`로 Button 모양)와 `DialogContent`를 둡니다. 내용에는 `DialogTitle`(제목, 이름이 됨), `DialogDescription`(설명), `DialogFooter`(동작 버튼 줄), `DialogClose`(누르면 닫는 버튼)를 씁니다. 끝 위쪽 닫기 버튼(이름 「닫기」, `closeLabel`로 바꿈)은 자동으로 붙습니다.
+
+### 크기
+
+`size`는 최대 폭입니다. `sm` 24rem, `md` 32rem(기본), `lg` 40rem이고 화면이 좁으면 화면 폭 − 32px까지 줄어듭니다. 높이가 화면보다 길면 Dialog 안에서 스크롤합니다.
+
+<Canvas of={DialogStories.Sizes} />
+
+### AlertDialog
+
+`AlertDialog`는 Dialog의 얇은 변형입니다. 부분 Component는 같고 루트만 바꿉니다. 내용이 `alertdialog` 역할이 되고 설명(`DialogDescription`)이 알릴 내용으로 읽힙니다. 응답을 받아야 하므로 막을 눌러도 닫히지 않고 끝 위쪽 닫기 버튼이 없습니다(Esc와 취소 버튼으로 닫습니다). 열리면 첫 버튼에 포커스가 오므로 **취소를 앞에**, 위험한 동작을 끝에 `color="danger"`로 둡니다.
+
+<Canvas of={DialogStories.Alert} />
+
+### 제어와 폼
+
+`open`/`onOpenChange`로 상태를 제어하면 폼 제출 뒤 닫을 수 있습니다. 안의 입력에 `autoFocus`를 주면 열 때 그 입력에 포커스가 갑니다. `DialogTrigger` 없이 Menu 항목 같은 다른 곳에서 `open`으로 열어도 되고, 닫히면 포커스는 열기 전 요소로 돌아갑니다. `DialogClose`의 `onClick`에서 `event.preventDefault()`를 부르면 닫지 않습니다.
+
+<Canvas of={DialogStories.Controlled} />
+
+### Dialog 안 Select
+
+Dialog 안에서 연 Select·Combobox·Menu 목록과 Tooltip은 Dialog 위에 뜹니다(쌓임 단계 `z-modal` 200 < `z-popover` 300 < `z-tooltip` 500). Esc는 위에 뜬 것부터 닫습니다.
+
+<Canvas of={DialogStories.WithSelect} />
+
+## Do/Don't
+
+### Do: 위험한 동작은 AlertDialog로 확인받는다
+
+확인 버튼은 `color="danger"`, 취소를 앞에 둡니다. 실수로 막을 눌러도 닫히지 않고, 열 때 포커스가 덜 위험한 취소에 옵니다.
+
+<Canvas of={DialogStories.DoAlertForDestructive} />
+
+### Don't: 위험한 동작을 Dialog와 primary 버튼으로 확인받는다
+
+막 누름으로 닫히고, 위험한 동작이 primary 색이라 저장 같은 일반 동작과 구별되지 않습니다.
+
+<Canvas of={DialogStories.DontDialogForDestructive} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 내용은 `dialog`(AlertDialog는 `alertdialog`) 역할입니다(React Aria `useDialog`, WAI-ARIA APG Dialog(Modal)·Alert Dialog 패턴). 트리거는 `aria-expanded`와 열렸을 때 `aria-controls`를 가집니다.
+- 이름과 설명: `DialogTitle`을 `aria-labelledby`로, `DialogDescription`을 `aria-describedby`로 잇습니다. 제목이 없으면 `aria-label`, 그것도 없으면 트리거 이름이 이름이 됩니다.
+- 포커스: 열면 포커스가 Dialog 안으로 옵니다(Dialog는 Dialog 요소 자신 또는 `autoFocus` 요소, AlertDialog는 첫 버튼). 열린 동안 Tab·Shift+Tab은 안에서 돌고, 닫히면 열기 전 요소로 돌아갑니다.
+- 닫기: Esc, 닫기 버튼(IconButton, 이름 「닫기」), 막 누름(Dialog만), `DialogClose`.
+- 모달: 열린 동안 바깥은 `inert`라 읽히지도 눌리지도 않고 페이지 스크롤이 잠깁니다. React Aria는 Safari 버그 때문에 `aria-modal` 대신 바깥 `inert`로 모달을 만듭니다.
+- 대비: 제목·본문(`text-default`)과 설명(`text-muted`)이 raised 표면과 4.5:1 이상입니다. 막(`bg-overlay`)은 글자를 올리지 않는 반투명 막이고 경계(`border-raised`)는 장식용이라 대비 검사 대상이 아닙니다.
+- 고대비 모드(forced-colors): 그림자는 사라지지만 1px 경계가 시스템 글자색으로 그려져 Dialog의 경계가 보입니다.
+- 움직임 줄이기: 확대 없이 opacity만 바뀝니다.
+
+### 앱이 할 일
+
+- `DialogTitle`을 두거나 `aria-label`을 줍니다.
+- 설명이 목록·여러 문단처럼 구조가 있으면 `DialogDescription` 밖에 둡니다. 설명은 한 줄로 이어 읽힙니다.
+- AlertDialog에서는 취소를 앞에, 위험한 동작을 끝에 `color="danger"`로 둡니다.
+- 같은 화면에 Dialog가 여럿이면 `closeLabel`로 닫기 버튼 이름을 구분합니다(예: 「이름 바꾸기 닫기」).
+- Theme을 `<html>`이 아닌 영역에 붙였다면 트리거를 그 영역 안에 둡니다. 막과 내용은 트리거가 있는 영역의 `data-theme`을 이어받습니다.
+
+## Props
+
+모두 client Component입니다. `Dialog`·`AlertDialog`는 DOM 요소가 없고 열림 상태만 갖습니다. 나머지는 각 요소(`DialogTrigger`·`DialogClose` `<button>`, `DialogContent` `<div>`, `DialogTitle` `<h2>`, `DialogDescription` `<p>`, `DialogFooter` `<div>`)의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant` prop은 없습니다. 버튼 색은 `render`로 준 Button의 `color`(Role)가 정합니다.
+
+| Component                         | prop                                 | 기본값                         |
+| --------------------------------- | ------------------------------------ | ------------------------------ |
+| `Dialog`·`AlertDialog`            | `open`: `boolean`(제어)              | 없음                           |
+| `Dialog`·`AlertDialog`            | `defaultOpen`: `boolean`(비제어)     | `false`                        |
+| `Dialog`·`AlertDialog`            | `onOpenChange`: `(open) => void`     | 없음                           |
+| `DialogTrigger`                   | `render`: `ReactElement`             | 없음(`<button type="button">`) |
+| `DialogContent`                   | `size`: `"sm" \| "md" \| "lg"`       | `"md"`                         |
+| `DialogContent`                   | `closeLabel`: `string`(Dialog만)     | `"닫기"`                       |
+| `DialogContent`                   | `role`·`id` 제외(역할 고정, 자동 id) |                                |
+| `DialogClose`                     | `render`: `ReactElement`             | 없음(`<button type="button">`) |
+| `DialogTitle`·`DialogDescription` | `id`: 주면 그 id로 잇는다            | 자동 id                        |
+
+상태는 `data-open`(트리거, 막, 내용. 열렸을 때)으로 노출합니다.
+
+<ArgTypes of={DialogStories} />

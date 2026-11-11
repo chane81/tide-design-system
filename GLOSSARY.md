@@ -140,6 +140,14 @@ _Avoid_: 레이어(Layer와 혼동), 모달(바깥을 막는 성질 하나만 �
 트리거 옆에 짧은 내용을 띄우는 오버레이(`Popover`, `PopoverTrigger`, `PopoverContent`). 내용은 `dialog` 역할이고 버튼·입력 같은 조작 요소를 담을 수 있다. 누르면 열리고 Esc·바깥 누름으로 닫히며 포커스는 트리거로 돌아온다. 동작 목록은 Menu, 설명 한 줄은 Tooltip, 확인이 필요한 내용은 Dialog다.
 _Avoid_: Dropdown(Menu·Select와 혼동), Popup, Flyout
 
+**Dialog (다이얼로그)**:
+화면 가운데에 뜨는 모달 오버레이(`Dialog`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`). 내용은 `dialog` 역할이고 반투명 막(backdrop, `bg-overlay`)이 뒤를 가린다. 열린 동안 바깥은 `inert`이고 페이지 스크롤이 잠기며 Tab은 안에서 돈다. Esc·닫기 버튼·막 누름으로 닫히고 포커스는 열기 전 요소로 돌아온다. 트리거 옆에 잠깐 띄우는 내용은 Popover다.
+_Avoid_: Modal(바깥을 막는 성질 하나만 가리킴), Sheet, Lightbox
+
+**AlertDialog (알림 다이얼로그)**:
+삭제처럼 되돌릴 수 없는 동작을 확인받는 Dialog의 얇은 변형(`AlertDialog`, 부분 Component는 Dialog의 것). 내용은 `alertdialog` 역할이고 설명이 알릴 내용으로 읽힌다. 응답을 받아야 하므로 막 누름으로 닫히지 않고 닫기 버튼이 없으며, 열리면 첫 버튼(취소)에 포커스가 온다. 위험한 동작 버튼은 `color="danger"`다. 응답이 필요 없는 알림은 Alert·Toast다.
+_Avoid_: Confirm(브라우저 `confirm()`과 혼동), Alert(화면 안 알림 Component)
+
 **Menu (메뉴)**:
 트리거를 누르면 동작 목록을 띄우는 오버레이(`Menu`, `MenuTrigger`, `MenuContent`, `MenuItem`, `MenuSection`). 목록은 `menu`, 항목은 `menuitem` 역할이고 화살표로 옮겨 다니며 Enter로 실행한다. 지금 위치는 highlight로 보인다. 실행하면 닫히고 포커스는 트리거로 돌아온다. 값 하나를 골라 보여 주고 폼에 넣는 것은 Select다.
 _Avoid_: Dropdown(Select와 혼동), Context menu(오른쪽 클릭 메뉴는 v0에 없음), Action sheet

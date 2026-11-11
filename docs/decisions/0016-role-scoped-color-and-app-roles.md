@@ -54,3 +54,5 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 - augmentation 대상은 앱이 설치한 `@tide-tds/components`다. re-export한 interface에 한 augmentation도 원래 interface에 합쳐진다(TypeScript 7.0.2, 티켓 40·41에서 확인).
 
 > 덧붙임(2026-11-11, [티켓 29](../progress/tide-v0-impl/issues/29-combobox.md)): Combobox도 Select와 같은 폼 입력 Component로 본다. 입력·목록·결과 없음 글자의 색은 정해진 Token(입력 `border-strong`·오류 `border-danger`·`focus-field`, chevron·결과 없음 `text-muted`, 목록은 Select와 같다)이라 `color`를 두지 않는다(③).
+
+> 덧붙임(2026-11-11, [티켓 30](../progress/tide-v0-impl/issues/30-dialog-and-alert-dialog.md)): Dialog·AlertDialog는 내용을 담는 오버레이 구조 Component로 본다(티켓 25 덧붙임의 판단 그대로). 표면은 raised 고정(`bg-raised`, `text-default`, `border-raised`, 설명 `text-muted`), 막은 `bg-overlay` 고정이고 `color`를 두지 않는다(③). AlertDialog의 「위험」은 Dialog 표면이 아니라 동작 버튼의 뜻이므로, 위험한 동작 버튼은 행동 Component인 Button의 `color="danger"`(Role)로 칠하고 취소는 `variant="ghost" color="neutral"`로 둔다(문서 Do/Don't). 닫기 IconButton은 ghost neutral 고정이다.
