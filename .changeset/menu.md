@@ -1,5 +1,0 @@
----
-"@tide-tds/components": patch
----
-
-`Menu`, `MenuTrigger`, `MenuContent`, `MenuItem`, `MenuSection`을 추가했습니다. 트리거에 동작 목록을 띄우는 client Component이고 React Aria hooks(`useMenuTrigger`, `useMenu`, `useMenuItem`, `useMenuSection`)로 만들었습니다. `Menu`는 열림 상태(`open`/`defaultOpen`/`onOpenChange(open)`)만 갖고 DOM이 없습니다. `MenuTrigger`는 기본 `<button type="button">`이고 `render={<Button />}`·`render={<IconButton aria-label="…" />}`로 Tide 모양을 씁니다. `MenuContent`는 `role="menu"`로 `document.body`에 portal되어 `z-popover`로 쌓이고, raised 표면·`shadow-md`·radius `lg`에 여백 3px입니다. `placement`(12가지, 기본 `bottom start`)와 `offset`(기본 4px)을 받습니다. 화살표(끝에서 처음으로 돎)·Home/End·영문 글자로 항목을 옮기고 Enter·Space·누름으로 실행하며, 실행·Esc·바깥 누름·Tab으로 닫히면 포커스가 트리거로 돌아옵니다. `MenuItem`은 radius `sm` 항목이고 `onClick`(키보드 실행 포함), `disabled`, `textValue`를 받습니다. 키보드 위치와 hover는 highlight(primary subtle 배경, primary 글자, 고대비 모드에서는 시스템 색 outline)로 전환 없이 바로 바뀝니다. `MenuSection`은 `heading`(또는 `aria-label`)이 이름인 묶음이고 앞뒤에 구분선이 그려집니다. 바로 나타나고 사라질 때만 opacity가 150ms로 흐려집니다. 상태는 `data-open`·`data-placement`·`data-highlighted`·`data-disabled`로 노출합니다.

@@ -1,5 +1,0 @@
----
-"@tide-tds/components": patch
----
-
-`Combobox`, `ComboboxItem`, `ComboboxSection`을 추가했습니다. 글자를 쳐서 옵션을 거르고 하나를 고르는 client Component이고 React Aria hooks(`useComboBox`, `useListBox`, `useOption`, `useListBoxSection`, `useFilter`)로 만들었습니다. `Combobox`는 `role="combobox"` 텍스트 `<input>`이고 Input·Select와 같은 `size`(`sm` 32px, `md` 40px, `lg` 48px)와 `focus-field` 포커스 표시, 입력 끝의 chevron 버튼(누르면 전체 목록, Tab 순서 밖)을 씁니다. 치면 목록이 열리고 친 글자가 들어 있는 옵션만 남습니다(대소문자·악센트 무시). ↓·↑로 열고 옮기며 Enter·누름·Tab으로 고르고, 포커스는 입력에 머뭅니다(가상 포커스). Esc는 닫고 입력을 고른 옵션 글자로 되돌리며, 고르지 않은 글자는 포커스가 떠나면 지워집니다. 거른 결과가 없으면 `emptyMessage`(기본 「결과가 없습니다」)가 보이고 결과 개수는 스크린리더에 알려집니다. 한글 IME 조합 중의 Enter·화살표는 목록 동작에 쓰지 않습니다. `value`(`string | null`)/`defaultValue`/`onValueChange(value)`(입력을 모두 지우면 `null`), `onOpenChange(open)`, `invalid`·`required`·`disabled`를 받고, `Field` 안에서는 label·설명·오류·`aria-invalid`가 자동으로 연결됩니다. `name`을 주면 숨은 input으로 고른 옵션의 `value`가 폼에 제출됩니다. 목록은 Select와 같은 표면·위치·motion으로 `document.body`에 portal되고 바깥을 막지 않습니다. 상태는 `data-open`·`data-invalid`·`data-placement`·`data-highlighted`·`data-selected`·`data-disabled`로 노출합니다.
