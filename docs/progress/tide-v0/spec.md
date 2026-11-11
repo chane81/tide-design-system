@@ -312,7 +312,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   - props는 루트 DOM 요소의 props를 확장하고, 이름이 겹치는 HTML 속성(`color` 등)은 `Omit`한다.
 - **스타일 축**:
   - `variant`는 Component마다 정의되는 주된 스타일 축이다. Button류는 채움 방식(`solid`/`subtle`/`outline`/`ghost`)을, Typography는 텍스트 스타일 이름을 값으로 받는다.
-  - `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)). 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Alert, Toast)는 `Role`(앱 Role 포함)만 받는다. 장식·분류 Component(Badge, Tag, Avatar)는 `ColorFamilyName`을 받고, Role도 받을지는 그 Component 티켓에서 정한다(둘 다 받으면 `Color`). Badge는 둘 다 받는다(`Color`, 기본 `neutral`, [ADR 0017](../../decisions/0017-badge-color-accepts-role-and-color-family.md)). Avatar는 `ColorFamilyName`만 받는다(기본 `gray`, 티켓 21, ADR 0017 후속). Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
+  - `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](../../decisions/0016-role-scoped-color-and-app-roles.md)). 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Alert, Toast)는 `Role`(앱 Role 포함)만 받는다. 장식·분류 Component(Badge, Tag, Avatar)는 `ColorFamilyName`을 받고, Role도 받을지는 그 Component 티켓에서 정한다(둘 다 받으면 `Color`). Badge는 둘 다 받는다(`Color`, 기본 `neutral`, [ADR 0017](../../decisions/0017-badge-color-accepts-role-and-color-family.md)). Avatar는 `ColorFamilyName`만 받는다(기본 `gray`, 티켓 21, ADR 0017 후속). Progress는 `Role`만 받는다(기본 `primary`, 티켓 22, ADR 0016 덧붙임). Skeleton은 `color`가 없다. Component는 루트에 `data-color`를 항상 붙여서(기본 `primary`) 바깥 색을 물려받지 않는다([ADR 0011](../../decisions/0011-open-color-names-data-color-accent.md)). `size`는 `xs`/`sm`/`md`/`lg`다.
   - `Role`, `RoleRegistry`, `ColorFamilyName`, `ColorFamilyRegistry`, `Color`는 `@tide-tds/components`에서도 다시 낸다. 앱의 augmentation 대상은 `@tide-tds/components`다(앱이 설치하는 패키지).
   - 공통 union 타입은 한 곳에서 정의하고, Component마다 `Extract`로 필요한 값만 고른다.
   - 채움 방식 union 이름은 `Variant`가 아니라 채움 방식을 드러내는 이름(예: `FillVariant`)으로 한다.
@@ -398,6 +398,8 @@ Component별로 이미 정한 범위:
 - **Alert**: 화면 안 상태 알림(`div`)이다. `color`는 `Role`(기본 `info`), radius `lg`, 역할 경계 + subtle 배경 + 역할 글자. info·success·warning·danger 상태 아이콘은 모양이 다르고 장식용이다. 기본은 역할 없는 정적 표시이고 `role`로 `alert`·`status`를 준다. 닫기는 제어형 `onClose`와 IconButton이다. 스타일은 Toast와 내부 모듈(`alert-style.ts`)로 나눠 쓴다([티켓 20](../tide-v0-impl/issues/20-alert.md)).
 - **Card**: surface 표면 컨테이너이고 border만 쓴다. 그림자는 없다. radius `lg`, 여백 16px, 기본 `div`이고 `render`로 요소를 바꾼다.
 - **Separator**: 네이티브 `<hr>`이다(`useSeparator` 없음). 기본은 separator 역할, 세로는 `aria-orientation`, `decorative`면 `role="none"`. 선은 장식용 `border-default`다.
+- **Skeleton**: 내용 자리 표시(`div`, `aria-hidden`)다. `variant`는 `text`(높이 1em, radius `sm`)/`rect`(높이는 `className`, radius `md`)/`circle`(radius `full`, `size` `xs`~`lg`는 Avatar와 같은 24~48px). 색은 `bg-neutral-subtle-active`이고 `color`는 없다. 깜빡임은 `motion-safe:animate-pulse`라 움직임 줄이기에서 멈춘다([티켓 22](../tide-v0-impl/issues/22-skeleton-and-progress.md)).
+- **Progress**: `div role="progressbar"`(네이티브 `<progress>` 아님)와 `aria-valuenow`·`aria-valuemin`·`aria-valuemax`다. 값을 아는 진행만 다루고(`value` 필수, `max` 기본 100), 값을 모르면 Spinner를 쓴다. 이름(`aria-label`·`aria-labelledby`)은 타입상 필수다. `color`는 `Role`(기본 `primary`), 막대는 accent text 색, 트랙은 accent subtle, `size`는 `sm`(4px)/`md`(8px). 너비 전환만 `motion-safe:`이고 진행 표시는 움직임 줄이기에서도 그대로다([티켓 22](../tide-v0-impl/issues/22-skeleton-and-progress.md)).
 - **Toast**:
   - 기본 위치는 아래 오른쪽이고 폭을 제한한다. 쌓임 단계는 `toast`다.
   - 자동으로 닫힐 때는 5초 이상 보이고, hover나 focus 중에는 멈춘다. 액션이나 오류가 있으면 자동으로 닫지 않는다.

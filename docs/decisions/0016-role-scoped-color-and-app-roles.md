@@ -16,6 +16,8 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 > 덧붙임(2026-11-10, [ADR 0017](0017-badge-color-accepts-role-and-color-family.md)): Badge는 Role도 받는다. Badge의 `color`는 `Color`다.
 >
 > 덧붙임(2026-11-11, 티켓 21, [ADR 0017 후속](0017-badge-color-accepts-role-and-color-family.md)): Avatar는 Role을 받지 않는다. Avatar의 `color`는 `ColorFamilyName`(기본 `gray`)이다.
+>
+> 덧붙임(2026-11-11, [티켓 22](../progress/tide-v0-impl/issues/22-skeleton-and-progress.md)): Progress는 행동·의미 Component로 본다. 진행 상태(진행 중·완료·실패)는 뜻이 있는 표시라 `color`는 `Role`(앱 Role 포함, 기본 `primary`)이고 색 계열 이름은 받지 않는다. Skeleton은 뜻 없는 회색 자리 표시라 `color`를 두지 않는다(`bg-neutral-subtle-active` 고정).
 
 이렇게 바꾼 이유는 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)이다. Atlassian은 「Color roles are applied to buttons to differentiate between primary, secondary, warning, or dangerous actions」라고 Role을 버튼에 쓰고, accent 색은 「colors that don't have any specific meaning … exchange one accent color for another, and the experience would remain unchanged」라고 뜻이 없는 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
 

@@ -1,0 +1,82 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ProgressStories from "./Progress.stories.tsx";
+
+<Meta of={ProgressStories} />
+
+# Progress
+
+작업이 얼마나 진행됐는지 막대로 보여 줍니다. 역할은 `progressbar`이고 값이 스크린 리더에 전해집니다. 움직임 줄이기를 켜도 진행 표시는 그대로입니다.
+
+<Canvas of={ProgressStories.Basic} />
+
+## 사용 시점
+
+- 업로드, 다운로드, 백업처럼 전체 양과 지금 양을 아는 작업
+- 여러 단계 중 몇 단계를 끝냈는지 보여 줄 때
+
+## 쓰지 않을 때
+
+- 얼마나 남았는지 모를 때는 Spinner를 씁니다. Progress는 값을 모르는 상태(indeterminate)를 두지 않습니다.
+- 디스크 사용량처럼 정해진 범위 안의 측정값은 진행이 아닙니다(meter). Progress로 보여 주지 않습니다.
+- 모양을 아는 내용을 불러오는 중이면 Skeleton을 씁니다.
+
+## 예시
+
+### 보이는 라벨과 값
+
+무엇의 진행인지 글자로 적고 `aria-labelledby`로 이름을 연결합니다. 퍼센트보다 알기 쉬운 값이 있으면 `aria-valuetext`로 줍니다(예: 「10장 중 3장」).
+
+<Canvas of={ProgressStories.WithLabel} />
+
+### 굵기
+
+| `size`     | 굵기 |
+| ---------- | ---- |
+| `sm`       | 4px  |
+| `md`(기본) | 8px  |
+
+너비는 부모를 채웁니다. 바꾸려면 `className`(예: `w-48`)을 줍니다.
+
+<Canvas of={ProgressStories.Sizes} />
+
+### 색
+
+`color`는 Role만 받습니다(기본 `primary`). 진행 상태는 뜻이 있는 표시라 뜻 없는 색 계열 이름(`blue` 등)은 받지 않습니다. 앱이 `RoleRegistry`에 더한 Role도 받습니다. 막대는 그 Role의 글자색, 트랙은 같은 Role의 subtle 배경입니다.
+
+<Canvas of={ProgressStories.Colors} />
+
+## Do/Don't
+
+### Do: 무엇의 진행인지 이름을 붙인다
+
+`aria-label`이나 `aria-labelledby` 중 하나는 타입상 필수입니다. 보이는 라벨이 있으면 `aria-labelledby`로 연결합니다.
+
+<Canvas of={ProgressStories.DoNameIt} />
+
+### Don't: 값을 모르는데 Progress를 쓴다
+
+값을 지어내면 사용자가 남은 시간을 잘못 짐작합니다. 값을 모르면 Spinner를 씁니다.
+
+<Canvas of={ProgressStories.DontUnknownProgress} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할과 값: 루트가 `role="progressbar"`이고 `aria-valuenow`(0~`max`로 자른 값), `aria-valuemin="0"`, `aria-valuemax`가 붙습니다. 막대 요소는 숨겨져 따로 읽히지 않습니다.
+- 대비: 막대와 트랙이 light·dark 모두 4.5:1 이상입니다(UI 경계 기준 3:1을 넘습니다). Role의 text × 같은 Role subtle 대비 쌍입니다.
+- 움직임 줄이기: 값이 바뀔 때 막대 너비 전환(150ms)만 빠지고 막대는 바로 새 너비가 됩니다. 진행 표시는 그대로 보입니다.
+- 고대비 모드(forced-colors): 트랙은 시스템 배경색과 시스템 글자색 경계, 막대는 시스템 강조색(Highlight)으로 그려집니다.
+
+### 앱이 할 일
+
+- `aria-label`이나 `aria-labelledby`로 무엇의 진행인지 이름을 붙입니다.
+- 값을 갱신합니다. 끝나면 완료 문구를 보여 주거나 Progress를 지웁니다.
+- 특정 영역을 불러오는 진행이면, 그 영역에 `aria-busy="true"`를 두고 영역의 `aria-describedby`로 Progress를 가리킵니다.
+
+## Props
+
+서버 컴포넌트로 쓸 수 있습니다. `div`의 props를 받습니다(`color`는 `Role`로 바뀌고, `role`·`aria-valuenow`·`aria-valuemin`·`aria-valuemax`·`children`은 받지 않습니다). `ref`는 루트 `div`에 연결되고, `className`은 트랙(루트)에 붙어 기본 class와 충돌하면 이깁니다(예: `w-48`). 루트에는 `data-color`가 붙습니다.
+
+<ArgTypes of={ProgressStories} />

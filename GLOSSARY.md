@@ -112,6 +112,14 @@ _Avoid_: Banner, Callout, Notice, SectionMessage
 사용자 이미지를 보여주는 원. 이미지가 없거나 불러오지 못하면 사람 모양 fallback 아이콘이 보인다. fallback 배경은 뜻이 없는 장식 색이라 색 계열 이름으로만 고른다(Role은 받지 않는다). 누르는 동작이 없고, 눌러야 하면 Button이나 IconButton 안에 넣는다.
 _Avoid_: ProfileImage, UserIcon(아이콘 이름과 혼동)
 
+**Skeleton (스켈레톤)**:
+내용이 오기 전 그 자리를 회색 모양(글 한 줄, 사각형, 원)으로 표시하는 장식. 스크린 리더에는 읽히지 않고, 움직임 줄이기에서는 깜빡임이 멈춘다. 불러오는 중이라는 사실은 앱이 영역의 `aria-busy`나 문구로 알린다.
+_Avoid_: Placeholder(input `placeholder`와 혼동), Shimmer, LoadingBox
+
+**Progress (진행 막대)**:
+전체 양을 아는 작업이 얼마나 진행됐는지 보여 주는 막대(`role="progressbar"`). 값을 모르는 기다림은 Spinner이고, 정해진 범위 안의 측정값(디스크 사용량 등)은 진행이 아니라 meter다. 진행 상태는 뜻이 있는 표시라 Role로 색을 고른다.
+_Avoid_: ProgressBar, LoadingBar, Meter
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
