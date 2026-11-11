@@ -1,0 +1,5 @@
+---
+"@tide-tds/components": patch
+---
+
+`Select`, `SelectItem`, `SelectSection`을 추가했습니다. 값 하나를 고르는 client Component이고 React Aria hooks(`useSelect`, `useListBox`, `useOption`, `useListBoxSection`, `HiddenSelect`)로 만들었습니다. `Select`는 입력창 모양의 트리거 `<button>`이고 Input과 같은 `size`(`sm` 32px, `md` 40px, `lg` 48px)와 `focus-field` 포커스 표시, 장식용 chevron을 씁니다. `value`(`string | null`)/`defaultValue`/`onValueChange(value)`, `open`/`defaultOpen`/`onOpenChange(open)`, `placeholder`(기본 「선택하세요」), `invalid`·`required`·`disabled`를 받고, `Field` 안에서는 label·설명·오류·`aria-invalid`가 자동으로 연결됩니다. `name`을 주면 숨은 `<select>`로 고른 값이 폼에 제출되고, `required`면 비어 있을 때 제출이 막히고 트리거로 포커스가 옵니다. 목록은 `role="listbox"`로 `document.body`에 portal되어 `z-popover`로 쌓이고(Dialog 위), Menu와 같은 raised 표면·여백 3px에 트리거보다 좁지 않습니다. 키보드는 Enter·Space·↓(고른 옵션)·↑(마지막 옵션)로 열고 화살표·Home/End·영문 글자로 옮기며 Enter·Space·누름으로 고릅니다. 닫힌 트리거에서 글자를 치면 바로 고릅니다. Esc·바깥 누름·Tab으로 닫히면 포커스가 트리거로 돌아옵니다. `SelectItem`은 `value`(필수)·`disabled`·`textValue`를 받고, 고른 옵션은 회색 배경과 체크 아이콘으로 보입니다. 상태는 `data-open`·`data-invalid`·`data-placement`·`data-highlighted`·`data-selected`·`data-disabled`로 노출합니다.
