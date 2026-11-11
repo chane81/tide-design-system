@@ -15,6 +15,12 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    # Playwright 공식 이미지(브라우저·시스템 의존성·폰트·git·zstd 포함, Dockerfile.noble v1.65.0 확인)에서 돌린다.
+    # 러너에서 `--with-deps`로 apt를 쓰면 Ubuntu 미러 장애 때 CI가 막힌다(docs/research/ci-apt-mirror-outage.md).
+    # 태그는 catalog의 playwright 버전과 맞춘다. `--user 1001`은 playwright.dev/docs/ci GitHub Actions 예시를 따른다.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v7
         with:
@@ -39,9 +45,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # browser·storybook project가 쓰는 Chromium headless shell. 캐시하지 않고 매번 설치한다.
-      # Playwright 버전은 catalog로 고정되어 components와 docs가 같은 버전을 쓴다(1.65.0 `install --help`로 옵션 확인).
-      - run: pnpm --filter @tide-tds/components exec playwright install --with-deps --only-shell chromium
+      # browser·storybook project가 쓰는 Chromium headless shell. 이미지 태그와 버전이 같으면 이미 있어 아무것도 받지 않는다.
+      # 버전이 어긋나도 apt 없이 Playwright CDN에서 브라우저만 받는다(--with-deps 쓰지 않음).
+      - run: pnpm --filter @tide-tds/components exec playwright install --only-shell chromium
       - run: pnpm lint
       - run: pnpm format:check
       # changeset 규칙: packages/*를 바꿨으면 changeset 필수(문서·설정만이면 필요 없음, 릴리스가 필요 없으면 empty),
