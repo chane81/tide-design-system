@@ -80,6 +80,18 @@ exports[`Role 회귀 > 대비 쌍 목록과 Theme별 대비비가 바뀌지 않�
   "outline-focus / bg-canvas ≥ 3: 5.0483 / 5.5544",
   "outline-focus / bg-surface ≥ 3: 5.0483 / 5.5544",
   "outline-focus / bg-raised ≥ 3: 5.0483 / 3.8524",
+  "border-primary / bg-primary-subtle ≥ 3: 4.6441 / 5.5826",
+  "border-success / bg-success-subtle ≥ 3: 4.2532 / 5.7102",
+  "border-warning / bg-warning-subtle ≥ 3: 4.6029 / 5.5266",
+  "border-danger / bg-danger-subtle ≥ 3: 5.0805 / 5.3535",
+  "border-info / bg-info-subtle ≥ 3: 4.4222 / 5.6412",
+  "border-strong / bg-neutral-subtle ≥ 3: 3.3201 / 3.8826",
+  "outline-focus / bg-neutral-subtle ≥ 3: 4.6334 / 3.8524",
+  "outline-focus / bg-primary-subtle ≥ 3: 4.6441 / 5.5826",
+  "outline-focus / bg-success-subtle ≥ 3: 4.6347 / 5.3698",
+  "outline-focus / bg-warning-subtle ≥ 3: 4.6223 / 5.5990",
+  "outline-focus / bg-danger-subtle ≥ 3: 4.6183 / 5.7251",
+  "outline-focus / bg-info-subtle ≥ 3: 4.6528 / 5.4405",
 ]
 `;
 

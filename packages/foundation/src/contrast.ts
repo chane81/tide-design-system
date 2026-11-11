@@ -63,6 +63,20 @@ export const contrastPairs: readonly ContrastPair[] = [
     surfaces,
     3,
   ),
+  // 역할 경계 × 같은 역할 subtle(WCAG 1.4.11). Alert처럼 subtle 배경 둘레에 역할 경계를 그리는 표면용이다(티켓 20).
+  // neutral은 역할 경계가 없어 border-strong이다.
+  ...roles.map((role) => ({
+    foreground: `border-${role}` as const,
+    background: `bg-${role}-subtle` as const,
+    minRatio: 3 as const,
+  })),
+  { foreground: "border-strong", background: "bg-neutral-subtle", minRatio: 3 },
+  // 포커스 표시 × 역할 subtle. subtle 표면 안의 조작 요소(Alert 닫기 버튼)는 ring이 그 배경 위에 그려진다(티켓 20).
+  ...pairs(
+    ["outline-focus"],
+    allRoles.map((role) => `bg-${role}-subtle` as const),
+    3,
+  ),
 ];
 
 /**
