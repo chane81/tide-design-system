@@ -104,3 +104,15 @@
 - listbox 안 구분선은 숨긴 장식 요소(Menu의 `separator`와 다름).
 - `useCloseOnTab`이 Tab 전파를 멈춤(Menu에도 적용), Tab은 트리거로 포커스 복귀.
 - 한글 타입어헤드 미지원, 옵션 300개 초과 시 hidden input(자동 완성 없음).
+
+## 29 Combobox
+
+- 루트는 입력 `<input>`, 감싸개 div(`w-full`)에는 props가 가지 않음.
+- 결과 없음이면 목록을 닫지 않고 「결과가 없습니다」(`emptyMessage`)를 listbox 밖에 표시(React Aria 기본은 닫음).
+- `onValueChange`는 `string | null`(입력을 모두 지우면 `null`), Select(`string`)와 다름.
+- 열림 제어 없음(`onOpenChange`만), 입력 클릭만으로는 열리지 않음(`menuTrigger: "input"`).
+- chevron·목록 이름·개수 안내 문구는 React Aria locale을 따름(한국어 고정 아님).
+- 페이지 스크롤로 닫히며 입력이 되돌아감(React Aria non-modal 기본), 지운 직후 1프레임 안 입력 경합.
+- 한글 「포함」 거르기의 조합 중간 글자 결과 줄어듦, 초성 검색 없음, Safari·Windows IME 실기기 미확인(Chromium CDP로 확인).
+- 목록 폭 `min(입력 폭, 100vw − 24px)`(Select는 트리거 폭 그대로).
+- Tab은 가상 포커스 옵션을 고르고 다음 요소로 이동(React Aria 동작).
