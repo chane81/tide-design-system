@@ -306,3 +306,32 @@ describe("Tooltip 대비 쌍", () => {
     expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
   });
 });
+
+// Menu(tide-v0-impl 티켓 27)와 Select·Combobox 목록이 같이 쓰는 목록·항목 색이 등록되어 있거나 제외 목록에 있는지 본다.
+describe("Menu(목록) 대비 쌍", () => {
+  it("항목 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("highlight: text-primary × bg-primary-subtle이 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
+  });
+
+  it("raised 위 항목: text-default × neutral subtle-hover·subtle-active가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+    expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
+  });
+
+  it("묶음 제목: text-muted × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-muted", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("비활성 글자(text-disabled), 구분선(border-default), 경계(border-raised)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["text-disabled", "border-default", "border-raised"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});

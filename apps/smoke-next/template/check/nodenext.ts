@@ -16,6 +16,11 @@ import {
   IconButton,
   Input,
   Link,
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuSection,
+  MenuTrigger,
   Progress,
   Radio,
   RadioGroup,
@@ -59,6 +64,12 @@ import {
   type IconButtonProps,
   type InputProps,
   type LinkProps,
+  type MenuContentProps,
+  type MenuItemProps,
+  type MenuPlacement,
+  type MenuProps,
+  type MenuSectionProps,
+  type MenuTriggerProps,
   type ProgressProps,
   type PaginationEllipsisProps,
   type PaginationItemProps,
@@ -219,6 +230,24 @@ const tooltipPlacement: TooltipPlacement = "top end";
 const tooltipContentProps: TooltipContentProps = { placement: tooltipPlacement, offset: 6 };
 // @ts-expect-error Tooltip 설명의 역할은 tooltip으로 고정이다.
 const dialogTooltip: TooltipContentProps = { role: "dialog" };
+const menuProps: MenuProps = { defaultOpen: false, onOpenChange: () => undefined, children: null };
+const menuTriggerProps: MenuTriggerProps = { disabled: true };
+const menuPlacement: MenuPlacement = "top start";
+const menuContentProps: MenuContentProps = {
+  placement: menuPlacement,
+  offset: 2,
+  "aria-label": "동작",
+};
+const menuItemProps: MenuItemProps = {
+  disabled: true,
+  textValue: "삭제",
+  onClick: () => undefined,
+};
+const menuSectionProps: MenuSectionProps = { heading: "정렬", className: "mt-1" };
+// @ts-expect-error Menu 목록의 역할은 menu로 고정이다.
+const listboxMenu: MenuContentProps = { role: "listbox" };
+// @ts-expect-error React Aria 이름(onAction)은 드러내지 않는다. onClick을 쓴다.
+const actionItem: MenuItemProps = { onAction: () => undefined };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -353,4 +382,16 @@ export const values = [
   tooltipTriggerProps,
   tooltipContentProps,
   dialogTooltip,
+  Menu,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  MenuSection,
+  menuProps,
+  menuTriggerProps,
+  menuContentProps,
+  menuItemProps,
+  menuSectionProps,
+  listboxMenu,
+  actionItem,
 ] as const;

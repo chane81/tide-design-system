@@ -253,6 +253,9 @@ try {
     "Pagination.js",
     // 오버레이 공통 class 모듈은 문자열만 있다(티켓 25).
     "overlay-style.js",
+    // 목록 공통 class·컬렉션 모듈은 문자열과 순수 함수만 있다(티켓 27).
+    "list-style.js",
+    "list-collection.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -282,6 +285,8 @@ try {
     "overlay.js",
     // Tooltip도 React Aria hooks·state를 쓰므로 client다(티켓 26).
     "Tooltip.js",
+    // Menu도 React Aria hooks·state를 쓰므로 client다(티켓 27).
+    "Menu.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -345,6 +350,10 @@ try {
       css.includes("--tide-z-tooltip") &&
       /data-open\\:transition-none/.test(css),
     "Tooltip 내부 class(z-tooltip, data-open:transition-none)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    /data-highlighted\\:bg-primary-subtle/.test(css) && /p-\\\[3px\\\]/.test(css),
+    "Menu 내부 class(data-highlighted:bg-primary-subtle, p-[3px])가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -529,6 +538,16 @@ try {
       !popoverTrigger.includes("data-open") &&
       !html?.includes('role="dialog"'),
     "Popover가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
+  );
+
+  // Menu(client)가 prerender한 HTML(티켓 27). 트리거는 Button 모양의 type=button이고 닫혀 있어 aria-expanded가
+  // false다. 목록은 열 때 body로 portal되므로 HTML에 menu 역할이 없다.
+  const menuTrigger = html?.match(/<button[^>]*aria-haspopup="true"[^>]*>/)?.[0] ?? "";
+  assert(
+    menuTrigger.includes('type="button"') &&
+      menuTrigger.includes('aria-expanded="false"') &&
+      !html?.includes('role="menu"'),
+    "Menu가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
   );
 
   // Tooltip(client)이 prerender한 HTML(티켓 26). 트리거는 IconButton 모양의 type=button이고 닫혀 있어

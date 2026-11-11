@@ -18,6 +18,11 @@ import {
   IconButton,
   Input,
   Link as TideLink,
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuSection,
+  MenuTrigger,
   Pagination,
   PaginationEllipsis,
   PaginationItem,
@@ -221,6 +226,17 @@ export default function Page() {
         />
         <TooltipContent placement="bottom">새 항목을 만듭니다</TooltipContent>
       </Tooltip>
+      {/* Menu는 client Component다(티켓 27). 서버 컴포넌트에서 항목·묶음 요소를 넘긴다. 항목 요소는 client 참조(lazy)로
+          가고 목록이 열릴 때 컬렉션으로 모은다(ADR 0019). 닫힌 채로 prerender되고 목록은 열 때 body로 portal된다. */}
+      <Menu>
+        <MenuTrigger render={<Button variant="outline" />}>문서 동작</MenuTrigger>
+        <MenuContent>
+          <MenuItem>이름 바꾸기</MenuItem>
+          <MenuSection heading="위험">
+            <MenuItem disabled>삭제</MenuItem>
+          </MenuSection>
+        </MenuContent>
+      </Menu>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>
