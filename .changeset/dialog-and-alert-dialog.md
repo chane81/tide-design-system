@@ -1,0 +1,5 @@
+---
+"@tide-tds/components": patch
+---
+
+`Dialog`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`와 `AlertDialog`를 추가했습니다. 화면 가운데에 뜨는 모달 client Component이고 React Aria hooks(`useOverlayTrigger`, `useModalOverlay`, `useDialog`)로 만들었습니다. `DialogContent`는 `document.body`로 portal한 반투명 막(`bg-overlay`, `z-modal`) 안의 `role="dialog"` 요소이고 raised 표면·`shadow-lg`·radius `xl`·여백 24px, `size`(`sm` 24rem, `md` 32rem, `lg` 40rem)를 받습니다. 열면 포커스가 안으로 오고 Tab은 안에서 돌며, Esc·끝 위쪽 닫기 버튼(IconButton, 이름 「닫기」·`closeLabel`)·막 누름·`DialogClose`로 닫히면 포커스가 열기 전 요소로 돌아옵니다. 열린 동안 바깥은 `inert`이고 페이지 스크롤이 잠깁니다. `DialogTitle`·`DialogDescription`은 `aria-labelledby`·`aria-describedby`로 이어집니다. `AlertDialog`는 같은 부분 Component를 쓰는 얇은 변형으로, 내용이 `role="alertdialog"`가 되고 막 누름으로 닫히지 않으며 닫기 버튼이 없고 열리면 첫 버튼(취소)에 포커스가 옵니다. 등장은 opacity + scale 0.96 → 1(`normal`), 퇴장은 opacity + scale 0.98(`fast`)이고 움직임 줄이기에서는 opacity만 바뀝니다. Dialog 안에서 연 Select·Menu 목록과 Tooltip은 Dialog 위에 뜹니다. 상태는 `data-open`으로 노출합니다.
