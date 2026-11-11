@@ -20,3 +20,10 @@ Menu·Select·Combobox는 항목 목록을 React Stately 상태(`useTreeState`, 
 
 - `_init`·`_payload`는 React의 공개 문서에 없는 lazy 객체 필드다. React 판을 올릴 때 Menu 테스트 「Fragment·배열·서버 컴포넌트의 lazy 참조로 온 항목도 모은다」가 이 동작을 지킨다. smoke 앱은 서버 컴포넌트 page에서 Menu를 prerender하지만 목록을 열지 않으므로 이 경로는 browser 테스트가 맡는다.
 - Select(28)·Combobox(29)는 옵션·묶음 Component에 같은 함수를 붙이고, 고른 값(`value`)을 항목 key로 쓰는 방법을 그 티켓에서 정한다(지금 key는 React key 또는 자리 번호).
+
+> 덧붙임(2026-11-11, [티켓 28](../progress/tide-v0-impl/issues/28-select.md)): Select가 옵션 key를 정했고 옵션 그리기를 공통 부분으로 나눴다. Menu 테스트는 그대로 통과한다.
+>
+> - **`value`가 key다(`valueItemCollectionNode`)**: 옵션 Component는 `itemCollectionNode`와 같은 node에 `key: props.value`를 더해 yield한다. 컬렉션 빌더는 yield한 node의 key를 요소 key·자리 번호보다 먼저 쓴다(react-stately 3.51.0 `CollectionBuilder.getFullNode`). 묶음은 key 없는 부분 node로 항목을 넘기므로 묶음 안 옵션 key에도 묶음 key가 붙지 않는다. 그래서 선택 key, 숨은 `<select>`의 option value, `onValueChange` 값이 모두 앱이 준 `value` 문자열이다. 공통 props는 `CollectionValueItemProps`(`value` 필수).
+> - **`listbox.tsx`("use client")**: listbox 옵션·묶음을 그리는 `ListBoxNodes`와 `ListBoxOptionProps`·`ListBoxSectionProps`. 옵션은 `useOption`의 `isFocused`를 `data-highlighted`로(Combobox 가상 포커스에서도 같다), `isSelected`를 `data-selected`와 끝의 장식용 체크 아이콘으로, `isDisabled`를 `data-disabled`로 붙이고 class는 Menu와 같은 `listItemClass`다. Combobox(29)가 그대로 쓴다.
+> - **listbox 안 구분선은 `separator` 역할이 아니다**: listbox의 자식은 option·group만 될 수 있어(storybook axe `aria-required-children`) 구분선은 `role="presentation"` + `aria-hidden`인 장식 요소다. 묶음 경계는 group이 알린다. Menu(menu 자식에 separator 허용)는 그대로 `role="separator"`다.
+> - **서버 컴포넌트**: Select는 Menu와 달리 렌더할 때(서버 prerender 포함) 옵션을 모은다(트리거에 고른 값을 보이고 숨은 select를 그려야 하므로). smoke 앱의 서버 컴포넌트 page가 Field 안 Select를 prerender해 lazy 참조 옵션이 모이는 것을 확인했다.

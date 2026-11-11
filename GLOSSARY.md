@@ -144,6 +144,10 @@ _Avoid_: Dropdown(Menu·Select와 혼동), Popup, Flyout
 트리거를 누르면 동작 목록을 띄우는 오버레이(`Menu`, `MenuTrigger`, `MenuContent`, `MenuItem`, `MenuSection`). 목록은 `menu`, 항목은 `menuitem` 역할이고 화살표로 옮겨 다니며 Enter로 실행한다. 지금 위치는 highlight로 보인다. 실행하면 닫히고 포커스는 트리거로 돌아온다. 값 하나를 골라 보여 주고 폼에 넣는 것은 Select다.
 _Avoid_: Dropdown(Select와 혼동), Context menu(오른쪽 클릭 메뉴는 v0에 없음), Action sheet
 
+**Select (선택 상자)**:
+값 하나를 고르는 입력(`Select`, `SelectItem`, `SelectSection`). 트리거는 입력창 모양의 버튼이고 고른 옵션이 보이며, 누르면 `listbox` 역할 목록이 열린다. 옵션(`option`)의 `value`가 고른 값이고 숨은 `<select>`로 폼에 제출된다. Field 안에서 label·설명·오류가 연결된다. 동작을 실행하는 목록은 Menu, 글자를 쳐서 거르는 것은 Combobox다.
+_Avoid_: Dropdown(Menu와 혼동), Picker, 네이티브 select(모양을 Tide가 그리지 못함)
+
 **Tooltip (툴팁)**:
 트리거에 짧은 설명 한 줄을 붙이는 오버레이(`Tooltip`, `TooltipTrigger`, `TooltipContent`). 설명은 `tooltip` 역할이고 열린 동안 트리거의 `aria-describedby`가 가리킨다. 마우스를 올리면 잠깐 뒤에, 키보드 포커스면 바로 열리고 Esc·포커스 이탈·포인터 이탈로 닫힌다. 포커스를 받지 않고 조작 요소를 담지 않는다. 이름(`aria-label`)이 아니라 설명이다. 조작 요소가 필요하면 Popover다.
 _Avoid_: Hint, Title 속성(브라우저 기본 툴팁), Popover

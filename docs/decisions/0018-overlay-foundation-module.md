@@ -41,3 +41,9 @@ Popover·Tooltip·Menu·Select·Combobox·Dialog·Toast는 모두 「트리거�
 > - **조합**: `useOverlayPresence` → `OverlayPortal`(`focusManagement` 기본 `true`. Menu는 항목에 포커스가 오므로 FocusScope가 닫힐 때 트리거로 포커스를 돌린다) → `useOverlayTheme` → `usePopoverOverlay`(모달 기본) + `useMenu`. motion은 `frequentMotionClass`, 쌓임은 `z-popover`다.
 > - **목록 공통 부분은 이 모듈 밖에 둔다**: 목록 표면(여백 3px 포함)·항목 class는 `list-style.ts`, 항목 모으기는 `list-collection.ts`([ADR 0019](0019-list-collection-elements.md))다. 오버레이가 아닌 목록(인라인 Listbox 등)에도 쓸 수 있게 이 모듈과 나눴다. `list-style.ts`가 `overlay-style.ts`의 표면·motion class를 가져다 쓴다.
 > - **Tab**: React Aria `useMenu`는 Tab을 다루지 않고, `FocusScope`가 document capture에서 Tab을 먼저 받으며, 바깥이 `inert`라 기본 동작은 갈 곳이 없다. Menu는 window capture에서 Tab을 받아 기본 동작을 막고 닫는다(포커스는 트리거로 돌아온다). Select 목록(28)도 같은 처리가 필요한지 확인한다.
+
+> 덧붙임(2026-11-11, [티켓 28](../progress/tide-v0-impl/issues/28-select.md)): Select 목록이 이 모듈을 썼고 하나를 더했다. Popover·Tooltip·Menu 테스트는 그대로 통과한다.
+>
+> - **`useCloseOnTab(overlayRef, close)`**: Menu 안에 있던 Tab 닫기(window capture에서 Tab을 받아 기본 동작을 막고 닫기)를 이 모듈로 옮겼다. Select 목록에도 필요했다. 옮기면서 **전파도 멈춘다**. listbox(`useListBox` 안의 `useSelectableCollection`)는 Tab에서 포커스를 목록 안 요소로 옮겨, 그대로 두면 닫힌 뒤 포커스가 트리거로 돌아오지 않았다(Select 테스트로 확인). Menu는 바뀐 동작이 없다(Menu Tab 테스트 통과).
+> - **조합**: `useOverlayPresence` → `OverlayPortal`(`focusManagement` 기본) → `useOverlayTheme` → 트리거 폭을 `min-width`로 붙이는 layout effect(위치 hook보다 먼저) → `usePopoverOverlay`(모달 기본, `bottom start`, 4px) + `useListBox` + `useCloseOnTab`. motion은 `frequentMotionClass`, 쌓임은 `z-popover`(`listPopupClass`).
+> - **바깥 요소와 listbox를 나눈다**: listbox의 자식은 option·group만 될 수 있다. 위치·표면은 바깥 요소(`listPopupClass`, `overlayProps`)가 맡고, 그 안에 Popover와 같은 숨은 닫기 버튼(`DismissButton`) 둘과 `role="listbox"` 요소를 둔다. Menu는 menu 자식 규칙 때문에 닫기 버튼이 없지만 Select는 둔다.
