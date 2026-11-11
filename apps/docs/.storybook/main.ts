@@ -1,7 +1,7 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 import remarkGfm from "remark-gfm";
-import { defaultClientConditions, mergeConfig } from "vite";
+import { defaultClientConditions, mergeConfig, type UserConfig } from "vite";
 
 // Storybook 10.6.6 설정.
 // - reactDocgen: 기본값도 'react-docgen'이지만 props 표 생성기가 바뀌지 않게 고정한다(@storybook/react-vite 10.6.6 타입 선언).
@@ -47,7 +47,24 @@ const config: StorybookConfig = {
       optimizeDeps: {
         include: ["@tide-tds/components > react-aria", "@tide-tds/components > react-stately"],
       },
-    }),
+      // components 원본을 직접 번들하므로 Rolldown이 원본의 "use client"마다 MODULE_LEVEL_DIRECTIVE 경고를 낸다.
+      // Storybook은 RSC 경계가 없는 SPA라 이 지시어가 쓰이지 않고, 배포 패키지는 tsdown이 파일 단위로 내며 지시어를 남긴다.
+      // 그래서 "use client"에 한해 끈다. defaultHandler를 부르지 않으면 그 경고가 억제된다
+      // (Vite 8.3.6 build.ts `normalizeUserOnWarn`, `build.rollupOptions`는 `rolldownOptions`의 deprecated alias).
+      build: {
+        rolldownOptions: {
+          onwarn(warning, defaultHandler) {
+            if (
+              warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+              warning.message.includes('"use client"')
+            ) {
+              return;
+            }
+            defaultHandler(warning);
+          },
+        },
+      },
+    } satisfies UserConfig),
 };
 
 export default config;
