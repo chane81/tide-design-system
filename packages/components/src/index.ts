@@ -22,6 +22,8 @@ export { Avatar, type AvatarProps } from "./Avatar.tsx";
 export { Badge, type BadgeProps } from "./Badge.tsx";
 export { Card, type CardProps } from "./Card.tsx";
 export { Separator, type SeparatorProps } from "./Separator.tsx";
+export { Skeleton, type SkeletonProps } from "./Skeleton.tsx";
+export { Progress, type ProgressProps } from "./Progress.tsx";
 export type {
   Color,
   ColorFamilyName,
