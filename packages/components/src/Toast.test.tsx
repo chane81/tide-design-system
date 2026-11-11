@@ -187,8 +187,10 @@ describe("큐", () => {
 
 describe("자동 닫힘", () => {
   // 가짜 타이머를 켠 동안에는 expect.element·expect.poll(타이머로 다시 시도)을 쓰지 않고 frames()로 렌더를 기다린다.
-  // 가짜 Date도 await 동안 흐른 실제 시간만큼 조금 움직인다(입력 명령 뒤 수십 ms, 디버그 기록으로 확인). 그래서 경계 앞뒤를
-  // 100ms 이상 띄워 확인한다.
+  // vitest 5.1.0 browser는 요소를 기다리는 명령(hover·unhover·click 등 locator 명령)이 도는 동안, 가짜 타이머가 켜져
+  // 있으면 실제 50ms마다 `vi.advanceTimersByTime(50)`을 부른다(`@vitest/browser` dist/context.js
+  // `advanceFakeTimersWhilePending`). 그래서 그런 명령 뒤에는 가짜 시계가 명령에 걸린 실제 시간만큼 움직여 있다.
+  // 부하가 크면 수 초가 될 수 있으니, 명령을 쓰는 테스트는 그 시간이 결과를 바꾸지 않게 짠다.
   test("기본 5초 뒤에 닫히고 onClose를 부른다. 그 전에는 닫히지 않는다", async () => {
     const onClose = vi.fn();
     const queue = await setup();
@@ -254,20 +256,36 @@ describe("자동 닫힘", () => {
   });
 
   test("영역에 마우스를 올린 동안 멈추고, 떠나면 남은 시간이 지나 닫힌다", async () => {
+    // hover·unhover 명령이 도는 동안 가짜 시계가 실제 시간만큼 움직인다(describe 주석). 5초 Toast는 부하로 명령이 2초를
+    // 넘기면 마우스가 닿기 전에 닫혀 hover가 Toast를 찾지 못했다(전체 turbo 실행, 2026-11-12). 그래서 테스트 시간 제한
+    // (15초)보다 훨씬 긴 60초 Toast를 쓰고, 마우스가 들어오고 나간 순간의 가짜 시각을 그 자리에서 기록해 남은 시간을
+    // 정확히 계산한다. 명령이 얼마나 걸리든 결과가 같다.
+    const timeout = 60_000;
     const queue = await setup();
     fakeTimers();
-    const toast = await addFaked(queue, { title: "저장했습니다" });
+    const toast = await addFaked(queue, { title: "저장했습니다", timeout });
+    // 자동 닫힘 타이머는 addFaked 안(effect)에서 시작했고, 그 뒤로는 가짜 시계를 움직이지 않았다.
+    const startedAt = Date.now();
+    const moments: { enter?: number; leave?: number } = {};
+    region().addEventListener("pointerenter", () => (moments.enter ??= Date.now()));
+    region().addEventListener("pointerleave", () => (moments.leave ??= Date.now()));
+
     vi.advanceTimersByTime(3000);
     await userEvent.hover(toast);
-    vi.advanceTimersByTime(60_000);
+    expect(moments.enter).toBeDefined();
+    // 올린 동안에는 남은 시간을 훨씬 넘겨도 닫히지 않는다.
+    vi.advanceTimersByTime(10 * timeout);
     await frames();
     expect(toast).toHaveAttribute("data-open", "");
+
     await userEvent.unhover(toast);
-    // 남은 시간은 2초에서 입력 명령에 걸린 실제 시간을 뺀 값이다(아래 주석).
-    vi.advanceTimersByTime(1000);
+    expect(moments.leave).toBeDefined();
+    // 떠난 순간부터 남은 시간(올리기 전까지 흐른 시간을 뺀 값)이 지나면 닫힌다.
+    const closesAt = moments.leave! + timeout - (moments.enter! - startedAt);
+    vi.advanceTimersByTime(closesAt - Date.now() - 1);
     await frames();
     expect(toast).toHaveAttribute("data-open", "");
-    vi.advanceTimersByTime(1100);
+    vi.advanceTimersByTime(1);
     await frames();
     expect(toast).not.toHaveAttribute("data-open");
   });
