@@ -335,3 +335,31 @@ describe("Menu(목록) 대비 쌍", () => {
     }
   });
 });
+
+// Select(tide-v0-impl 티켓 28) 트리거가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 목록·옵션 색은 위 Menu(목록)와 같다.
+describe("Select 대비 쌍", () => {
+  it("트리거 값·placeholder·chevron: text-default·text-muted × bg-canvas가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-canvas", 4.5)).toBe(true);
+    expect(registered("text-muted", "bg-canvas", 4.5)).toBe(true);
+  });
+
+  it("트리거 경계·오류 경계·focus-field: border-strong·border-danger·outline-focus × bg-canvas가 3:1로 등록되어 있다", () => {
+    for (const token of ["border-strong", "border-danger", "outline-focus"]) {
+      expect(registered(token, "bg-canvas", 3), token).toBe(true);
+    }
+  });
+
+  it("고른 옵션 체크 아이콘: highlight면 text-primary × bg-primary-subtle, 아니면 text-default × bg-neutral-subtle-active다", () => {
+    expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
+    expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
+  });
+
+  it("비활성 트리거(bg-disabled·text-disabled·border-default)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["bg-disabled", "text-disabled", "border-default"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});
