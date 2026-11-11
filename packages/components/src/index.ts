@@ -24,6 +24,20 @@ export { Card, type CardProps } from "./Card.tsx";
 export { Separator, type SeparatorProps } from "./Separator.tsx";
 export { Skeleton, type SkeletonProps } from "./Skeleton.tsx";
 export { Progress, type ProgressProps } from "./Progress.tsx";
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+  type TableBodyProps,
+  type TableCellProps,
+  type TableHeadProps,
+  type TableHeaderCellProps,
+  type TableProps,
+  type TableRowProps,
+} from "./Table.tsx";
 export type {
   Color,
   ColorFamilyName,
