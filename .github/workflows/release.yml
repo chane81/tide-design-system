@@ -85,15 +85,18 @@ jobs:
           script: pnpm release:version
           commit-message: "chore: 릴리스 버전 올리기"
           pr-title: "Release ${{ steps.next.outputs.version }}"
-      # Version PR의 assignee에 main에 push한 사람(github.actor)을 더한다. 이미 있으면 그대로다.
-      # PR assignee는 Issues API로 바꾸고, pull-requests: write 권한으로 된다(GitHub REST 「Add assignees to an issue」).
+      # Version PR에 main에 push한 사람(github.actor)을 assignee로, `release` 라벨을 더한다. 이미 있으면 그대로다.
+      # PR의 assignee·라벨은 Issues API로 바꾸고, pull-requests: write 권한으로 된다
+      # (GitHub REST 「Add assignees to an issue」「Add labels to an issue」). `release` 라벨은 저장소에 미리 있다.
       # 액션의 pr-number output은 만든 PR과 갱신한 PR 모두에 나온다(version/action.yml).
       - if: steps.version.outputs.pr-number != ''
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.version.outputs.pr-number }}
           ACTOR: ${{ github.actor }}
-        run: gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/assignees" -f "assignees[]=$ACTOR" --silent
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/assignees" -f "assignees[]=$ACTOR" --silent
+          gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels" -f "labels[]=release" --silent
 
   # Version PR이 머지된 뒤: 전체 검사를 다시 돌리고 tarball을 만든다(spec Testing Decisions 「CI」).
   pack:
