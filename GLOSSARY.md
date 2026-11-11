@@ -51,7 +51,7 @@ Semantic Token이 나타내는 의미 범주. Tide Role은 `neutral`, `primary`,
 _Avoid_: 컬러 그룹, intent, tone
 
 **색 이름 (Color)**:
-`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
+`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). Avatar는 색 계열만 받는다(티켓 21). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
 _Avoid_: 팔레트, color scheme(`color-scheme` CSS와 혼동), tone
 
 **accent 슬롯 (Accent slot)**:
@@ -107,6 +107,10 @@ _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 **Alert (알림)**:
 화면 안에 머무는 상태 알림 표면. 상태 아이콘, 제목, 본문, 닫기 버튼으로 이뤄지고 Role로 색을 고른다. 기본은 정적 표시이고, 새로 나타나 알려야 할 때만 live region 역할(`alert`·`status`)을 준다. 스스로 사라지는 알림은 Toast, 확인을 받아야 하는 알림은 AlertDialog다.
 _Avoid_: Banner, Callout, Notice, SectionMessage
+
+**Avatar (아바타)**:
+사용자 이미지를 보여주는 원. 이미지가 없거나 불러오지 못하면 사람 모양 fallback 아이콘이 보인다. fallback 배경은 뜻이 없는 장식 색이라 색 계열 이름으로만 고른다(Role은 받지 않는다). 누르는 동작이 없고, 눌러야 하면 Button이나 IconButton 안에 넣는다.
+_Avoid_: ProfileImage, UserIcon(아이콘 이름과 혼동)
 
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.

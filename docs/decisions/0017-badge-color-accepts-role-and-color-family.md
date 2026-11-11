@@ -19,3 +19,5 @@
 - `BadgeProps["color"]`는 `Color`다. 등록하지 않은 이름(예: `"purple-ish"`)만 타입 오류다.
 - Badge 글자색 대비는 Role 대비 쌍(`text-<role>` × `bg-<role>-subtle`, `text-on-solid` × `bg-<role>-solid`)과 색 이름 규칙(`colorContrastRules`의 text × subtle, on-solid × solid)이 보장한다. Tide 색 계열 6개는 foundation이 이 규칙으로 light·dark를 검사하고, 앱 이름은 `tide-color`가 검사한다. foundation 대비 쌍은 늘지 않는다.
 - Tag·Avatar(티켓 33·21)가 Role도 받을지는 각 티켓에서 따로 정한다.
+
+> 후속(2026-11-11, [티켓 21](../progress/tide-v0-impl/issues/21-avatar.md)): **Avatar는 Role을 받지 않는다.** `AvatarProps["color"]`는 `ColorFamilyName`이고 기본값은 `gray`다. Avatar의 색은 fallback 배경과 아이콘에만 쓰이고, 사람을 구분하는 데 돕는 뜻 없는 장식 색이다. Badge처럼 상태를 전하는 두 번째 쓰임이 없어 ADR 0016 표의 기본을 그대로 따른다(③). 상태(온라인 등)를 보여 줘야 하면 Avatar의 색이 아니라 따로 표시를 둔다. `neutral`은 Role이라 받지 않고, 회색은 `gray`다.
