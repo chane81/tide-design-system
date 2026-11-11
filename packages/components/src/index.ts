@@ -119,6 +119,18 @@ export {
   type DialogTriggerProps,
 } from "./Dialog.tsx";
 export {
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+  type TabListProps,
+  type TabPanelProps,
+  type TabProps,
+  type TabsActivationMode,
+  type TabsOrientation,
+  type TabsProps,
+} from "./Tabs.tsx";
+export {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
