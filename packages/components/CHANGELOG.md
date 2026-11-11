@@ -1,5 +1,26 @@
 # @tide-tds/components
 
+## 0.3.0
+
+### 호환되지 않는 변경 (minor)
+
+- [`f6b1915`](https://github.com/chane81/tide-design-system/commit/f6b1915087cf93a854b63e8598370ff42d797af0) [@chane81](https://github.com/chane81) - 3단계 Component 묶음(0.3.0): Badge·Card·Separator, Alert, Avatar, Skeleton·Progress, Table, Breadcrumb·Pagination이 들어갑니다. 모두 `"use client"` 없이 서버 컴포넌트에서 렌더됩니다. 각 Component의 자세한 변경은 같은 릴리스의 다른 항목에 있습니다.
+
+### 기능 추가와 수정 (patch)
+
+- [`1dd619e`](https://github.com/chane81/tide-design-system/commit/1dd619e4812766f3784cd033c9d00ca6f67109d0) [@chane81](https://github.com/chane81) - `Alert`를 추가했습니다. 화면 안에서 상태나 알릴 내용을 보여 주는 표면(radius `lg`, 역할 경계와 subtle 배경)이고 `"use client"`가 없어 서버 컴포넌트에서 바로 씁니다. `color`는 Role만 받습니다(앱이 더한 Role 포함, 기본 `info`). `info`·`success`·`warning`·`danger`는 모양이 다른 상태 아이콘(장식용)을 쓰고, `neutral`·`primary`·앱 Role은 `info`와 같은 아이콘입니다. `title`(제목), `children`(본문), `role`(`"alert"`·`"status"`, 기본은 역할 없는 정적 표시), `onClose`(주면 닫기 IconButton이 생기는 제어형 콜백), `closeLabel`(기본 `"닫기"`)을 받습니다. foundation 대비 쌍에 역할 경계 × 같은 역할 subtle(3:1)과 포커스 표시 × 역할 subtle(3:1)을 더했습니다. 기존 Token 값은 바뀌지 않습니다.
+
+- [`14230a6`](https://github.com/chane81/tide-design-system/commit/14230a62d00fe08e0c867856b4c5adb525915189) [@chane81](https://github.com/chane81) - `Avatar`를 추가했습니다. 사용자 이미지를 원(radius `full`) 안에 보여 주고, 이미지가 없거나 불러오지 못하면 사람 모양 fallback 아이콘이 보입니다. `"use client"`가 없어 서버 컴포넌트에서 바로 쓰고, 로드 실패 fallback도 JavaScript 없이 처리합니다(아이콘 위 층에 이미지를 CSS 배경으로 깔아, 실패하면 아무것도 그리지 않습니다). `alt`(필수, 주면 `role="img"`의 이름, `""`이면 장식용), `src`, `size`(`xs` 24px/`sm` 32px/`md` 40px/`lg` 48px, 기본 `md`), `color`(fallback 색, 색 계열 이름 `ColorFamilyName`만, 앱 장식 계열 포함, 기본 `gray`)를 받습니다. 눌러야 하면 Button이나 IconButton 안에 넣습니다.
+
+- [`d57d6b0`](https://github.com/chane81/tide-design-system/commit/d57d6b0e3e1d3399f13be4db92a4362627a6d0c7) [@chane81](https://github.com/chane81) - `Breadcrumb`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbCurrent`와 `Pagination`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`를 추가했습니다. 둘 다 이름 있는 `<nav>` 탐색 영역(기본 「이동 경로」·「페이지 이동」)이고 `"use client"` 없이 서버 컴포넌트에서 바로 씁니다. Breadcrumb은 항목 앞에 읽히지 않는 구분자 아이콘을 붙이고, 현재 페이지(`BreadcrumbCurrent`)에 `aria-current="page"`를 붙입니다. Pagination 번호는 Button 모양의 링크(32px, `current`면 `aria-current="page"`)이고 이전/다음은 이름 있는 IconButton(화살표, `disabled` 지원)입니다. `BreadcrumbLink`·`PaginationLink`·이전/다음은 `render`로 Next `Link`를 받습니다. 색(`color`)·`variant`·`size` 축은 없습니다.
+
+- [`f721899`](https://github.com/chane81/tide-design-system/commit/f721899f457d2166aeb7016f1e58473c2a222f84) [@chane81](https://github.com/chane81) - `Skeleton`과 `Progress`를 추가했습니다. 둘 다 `"use client"`가 없어 서버 컴포넌트에서 바로 씁니다. `Skeleton`은 내용이 오기 전 자리를 회색 모양으로 표시하고(`aria-hidden`이라 읽히지 않음), 깜빡임은 움직임 줄이기에서 멈춥니다. `variant`(`text` 기본, 높이 1em/`rect`, 높이는 `className`/`circle`), `size`(`circle`에만, Avatar와 같은 `xs` 24px~`lg` 48px, 기본 `md`)를 받습니다. `Progress`는 값을 아는 진행을 막대로 보여 주는 `role="progressbar"`이고 `aria-valuenow`·`aria-valuemin`·`aria-valuemax`를 노출합니다. `value`(필수, 0~`max`로 자름), `max`(기본 100), `size`(`sm` 4px/`md` 8px, 기본 `md`), `color`(Role만, 앱 Role 포함, 기본 `primary`)를 받고, `aria-label`이나 `aria-labelledby` 중 하나가 타입상 필수입니다. 값을 모르는 진행(indeterminate)은 두지 않으니 Spinner를 씁니다. 움직임 줄이기에서도 진행 표시는 그대로이고 너비 전환만 빠집니다.
+
+- [`47ae615`](https://github.com/chane81/tide-design-system/commit/47ae615ed5b3023d2502867457ef3d2a95660312) [@chane81](https://github.com/chane81) - `Table`, `TableHead`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`을 추가했습니다. 시맨틱 `<table>`·`<thead>`·`<tbody>`·`<tr>`·`<th>`·`<td>`를 그대로 렌더하고 `"use client"`가 없어 서버 컴포넌트에서 바로 씁니다. 부분마다 자기 요소의 props와 `ref`, `className`(기본 class를 이김)을 받습니다. `TableHeaderCell`은 기본 `scope="col"`이고 행 머리에는 `scope="row"`를 줍니다. `TableBody` 바로 아래 행은 마우스를 올리면 transition 없이 배경이 바뀝니다(머리·바닥 행은 그대로). 숫자 열은 칸에 `className="tabular-nums text-end"`를 줍니다. 정렬·행 선택·가상화와 색(Role)·`variant`·`size` 축은 없습니다.
+- 의존성 업데이트 [[`1dd619e`](https://github.com/chane81/tide-design-system/commit/1dd619e4812766f3784cd033c9d00ca6f67109d0)]:
+  - @tide-tds/foundation@0.3.0
+  - @tide-tds/icons@0.3.0
+
 ## 0.2.1
 
 ### 기능 추가와 수정 (patch)
