@@ -141,6 +141,7 @@ export {
   type TabsOrientation,
   type TabsProps,
 } from "./Tabs.tsx";
+export { Tag, TagGroup, type TagGroupProps, type TagProps } from "./Tag.tsx";
 export {
   Tooltip,
   TooltipContent,
