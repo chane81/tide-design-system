@@ -21,3 +21,16 @@ Tide Component의 DOM, 마크업, 스타일은 Tide가 직접 만든다. 포커�
 - React Aria의 prop 이름(`isDisabled`, `onPress`, `selectedKey`)은 hook을 호출하는 내부에서만 쓴다. 공개 API 이름으로 바꾸는 규칙은 Component 공통 API 규칙에서 정한다.
 - React Aria 오버레이 hook은 기본적으로 `document.body`에 portal로 렌더한다(`UNSAFE_PortalProvider`로 바꿀 수 있음). 쌓임 순서 설계는 이것을 전제로 한다.
 - 이 hook들은 클라이언트 전용이므로, hook을 쓰는 Component는 `"use client"` 경계 안에 둔다.
+
+> 덧붙임(2026-11-11, [티켓 32](../progress/tide-v0-impl/issues/32-accordion.md)): Accordion은 네이티브 `<details>/<summary>` 대신 React Aria `useDisclosure`(+ `useDisclosureGroupState`·`useDisclosureState`·`useButton`, react-aria 3.53.1·react-stately 3.51.0)로 만든다. 네이티브 요소로 WAI-ARIA APG Accordion이 완결되지 않기 때문이다(이 ADR의 「네이티브로 완결되면 hook을 쓰지 않는다」 기준).
+>
+> | 비교         | `<details>/<summary>`                                                                                                           | `useDisclosure`                                                                     |
+> | ------------ | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+> | APG 구조     | summary가 버튼 역할을 겸해 「제목 요소 안의 버튼」이 아니다. 제목을 summary 안에 넣으면 보조 기술에 따라 제목으로 읽히지 않는다 | `<hN>` 안의 `<button aria-expanded aria-controls>` + `region`(APG 그대로)           |
+> | 서버 렌더    | 그대로 된다                                                                                                                     | 된다. 접힌 패널은 `hidden`으로 prerender되고 id는 React `useId`라 hydration과 같다  |
+> | JS 없이 동작 | 열고 닫힌다                                                                                                                     | 안 된다(hydration 전에는 처음 상태로 고정). Tide 위젯은 모두 client라 같은 조건이다 |
+> | 애니메이션   | `::details-content` + `interpolate-size`가 필요하고 Chromium 위주다                                                             | Tide는 높이 애니메이션을 넣지 않는다(motion 결정). chevron 회전만 CSS로 한다        |
+> | 단일/다중    | `name` 속성(Baseline 2024)으로 단일 펼침. 제어 상태(`value`)는 `toggle` 이벤트가 바뀐 뒤 와서 막을 수 없다                      | `useDisclosureGroupState`로 단일·다중과 제어/비제어를 함께 다룬다                   |
+> | 페이지 찾기  | 닫힌 내용도 찾으면 펼친다(Chromium)                                                                                             | hydration 뒤 `hidden="until-found"`와 `beforematch`로 같게 동작한다                 |
+>
+> 공개 이름은 React Aria 이름(`isExpanded`, `expandedKeys`, `allowsMultipleExpanded`)이 아니라 `value`·`defaultValue`·`onValueChange`·`multiple`·`disabled`다.

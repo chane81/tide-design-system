@@ -1,0 +1,97 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as AccordionStories from "./Accordion.stories.tsx";
+
+<Meta of={AccordionStories} />
+
+# Accordion
+
+제목을 눌러 내용을 펼치고 접는 영역 묶음입니다. 펼침 상태는 끝의 chevron 방향으로 보이고, 내용은 펼치면 바로 보입니다(높이 애니메이션 없음).
+
+<Canvas of={AccordionStories.Basic} />
+
+## 사용 시점
+
+- 긴 내용을 제목 단위로 나눠, 사용자가 필요한 묶음만 골라 읽게 할 때(자주 묻는 질문, 설정의 고급 항목)
+- 화면이 좁아 모든 묶음을 한꺼번에 펼쳐 두기 어려울 때
+
+## 쓰지 않을 때
+
+- 모두가 꼭 읽어야 하는 내용(약관의 핵심, 오류 안내)은 접지 않고 본문에 둡니다.
+- 한 번에 하나만 보고 묶음 사이를 자주 오가면 Tabs를 씁니다.
+- 항목이 하나뿐이고 「더 보기」 정도면 본문을 줄이거나 링크로 다른 페이지에 둡니다.
+
+## 예시
+
+### 펼친 값 정하기
+
+`AccordionItem`마다 `value`를 줍니다. 처음 펼칠 항목은 `defaultValue`에 값 목록으로 줍니다. 기본은 한 번에 한 항목만 펼치고, 펼친 항목을 다시 누르면 접힙니다.
+
+### 여러 항목 펼치기
+
+`multiple`이면 다른 항목을 펼쳐도 펼쳐 있던 항목이 그대로 남습니다.
+
+<Canvas of={AccordionStories.Multiple} />
+
+### 비활성 항목
+
+`disabled` 항목은 흐리게 보이고 펼치거나 접을 수 없으며 Tab 순서에서 빠집니다.
+
+<Canvas of={AccordionStories.Disabled} />
+
+### 앱 상태로 제어하기
+
+`value`와 `onValueChange`로 펼친 값 목록을 앱 상태로 둡니다. 밖의 버튼으로 모두 펼치거나 접을 수 있습니다.
+
+<Canvas of={AccordionStories.Controlled} />
+
+## Do/Don't
+
+### Do: 제목만 보고 무엇이 펼쳐질지 알 수 있게 쓴다
+
+<Canvas of={AccordionStories.DoClearTitles} />
+
+### Don't: 꼭 읽어야 하는 내용을 「더 보기」 뒤에 접어 둔다
+
+접힌 내용은 읽지 않고 지나치기 쉽습니다. 환불 불가 같은 필수 안내는 본문에 둡니다.
+
+<Canvas of={AccordionStories.DontHideEssential} />
+
+## 접근성
+
+### 기본 제공
+
+- 구조: 트리거는 제목 요소(기본 `<h3>`) 안의 `<button>`이고 `aria-expanded`로 펼침 상태를, `aria-controls`로 패널을 가리킵니다(WAI-ARIA APG Accordion, React Aria `useDisclosure`). 패널은 `region` 역할이고 트리거 글자가 이름입니다(`aria-labelledby`).
+- 키보드: Tab으로 트리거를 차례로 지나고 Enter·Space로 펼치고 접습니다. 펼친 패널 안의 조작 요소도 Tab 순서에 있고, 접힌 패널 안은 건너뜁니다.
+- 페이지 찾기: 접힌 패널은 `hidden="until-found"`라 브라우저 페이지 찾기(Ctrl+F)가 그 안의 글자를 찾으면 패널이 펼쳐집니다(지원 브라우저).
+- 포커스 표시: 키보드 포커스에 ring(2px, 2px 떨어짐)이 보입니다.
+- 대비: 제목(`text-default`)과 chevron(`text-muted`)은 표면 층과 4.5:1, ring은 3:1 이상입니다. 경계와 항목 사이 선은 장식용이라 대비 검사 대상이 아닙니다.
+- 고대비 모드(forced-colors): chevron이 버튼 글자의 시스템 색을 따릅니다.
+- 움직임: chevron은 150ms 동안 돕니다. 움직임 줄이기에서는 돌지 않고 바로 방향이 바뀝니다. 패널은 늘 바로 펼쳐집니다.
+
+### 앱이 할 일
+
+- 제목 단계는 페이지 구조에 맞춰 `AccordionTrigger`의 `level`로 정합니다(기본 `3`).
+- 트리거 안에는 제목 글자만 둡니다. 버튼·링크 같은 다른 조작 요소는 패널에 둡니다.
+- 함께 펼칠 수 있는 항목이 많으면(대략 6개 넘음) 영역 랜드마크가 너무 늘지 않게 `AccordionPanel`에 `role="group"`을 줍니다.
+
+## Props
+
+모두 client Component입니다. `Accordion`·`AccordionItem`·`AccordionPanel`은 `<div>`, `AccordionTrigger`는 `<button type="button">`의 props를 받고 `ref`는 그 요소에 연결되며(트리거는 제목 요소가 아니라 버튼), `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant`·`size` prop은 없습니다.
+
+| Component          | prop                                                            | 기본값     |
+| ------------------ | --------------------------------------------------------------- | ---------- |
+| `Accordion`        | `value`: `string[]`(제어, 펼친 항목 값 목록)                    | 없음       |
+| `Accordion`        | `defaultValue`: `string[]`(비제어)                              | `[]`       |
+| `Accordion`        | `onValueChange`: `(value: string[]) => void`(펼친 순서)         | 없음       |
+| `Accordion`        | `multiple`: `boolean`                                           | `false`    |
+| `AccordionItem`    | `value`: `string`(필수)                                         |            |
+| `AccordionItem`    | `disabled`: `boolean`                                           | `false`    |
+| `AccordionTrigger` | `level`: `1 \| 2 \| 3 \| 4 \| 5 \| 6`(감싸는 제목 요소 단계)    | `3`        |
+| `AccordionTrigger` | `type`·`id`·`disabled`·`aria-expanded`·`aria-controls` 제외     |            |
+| `AccordionPanel`   | `role`: `"region" \| "group"`                                   | `"region"` |
+| `AccordionPanel`   | `id`·`hidden`·`aria-labelledby` 제외(자동 id, 펼침 상태가 정함) |            |
+
+상태는 `data-open`(펼친 항목·트리거·패널), `data-disabled`(비활성 항목), `aria-expanded`·`:disabled`(트리거)로 노출합니다.
+
+<ArgTypes of={AccordionStories} />
