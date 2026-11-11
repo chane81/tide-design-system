@@ -25,6 +25,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Separator,
   Skeleton,
   Switch,
@@ -60,6 +63,10 @@ import {
   type PaginationNextProps,
   type PaginationPreviousProps,
   type PaginationProps,
+  type PopoverContentProps,
+  type PopoverPlacement,
+  type PopoverProps,
+  type PopoverTriggerProps,
   type SeparatorProps,
   type SkeletonProps,
   type SwitchProps,
@@ -189,6 +196,16 @@ const paginationNextProps: PaginationNextProps = { "aria-label": "다음 댓글"
 const paginationEllipsisProps: PaginationEllipsisProps = { children: "3쪽 생략" };
 // @ts-expect-error 이전/다음의 size는 고정이다.
 const sizedPaginationNext: PaginationNextProps = { size: "lg" };
+const popoverProps: PopoverProps = {
+  defaultOpen: true,
+  onOpenChange: (open) => void open,
+  children: null,
+};
+const popoverTriggerProps: PopoverTriggerProps = { disabled: true };
+const placement: PopoverPlacement = "right bottom";
+const popoverContentProps: PopoverContentProps = { placement, offset: 4, "aria-label": "공유" };
+// @ts-expect-error Popover 내용의 역할은 dialog로 고정이다.
+const menuPopover: PopoverContentProps = { role: "menu" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -309,4 +326,11 @@ export const values = [
   paginationNextProps,
   paginationEllipsisProps,
   sizedPaginationNext,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  popoverProps,
+  popoverTriggerProps,
+  popoverContentProps,
+  menuPopover,
 ] as const;

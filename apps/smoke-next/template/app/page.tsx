@@ -24,6 +24,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Radio,
   RadioGroup,
   Progress,
@@ -197,6 +200,12 @@ export default function Page() {
           <PaginationNext render={<Link href="/?page=2" />} />
         </PaginationItem>
       </Pagination>
+      {/* Popover는 client Component다(티켓 25). 서버 컴포넌트에서 함수 없이 요소만 넘긴다.
+          닫힌 채로 prerender되고 내용은 열 때 body로 portal된다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <Popover>
+        <PopoverTrigger render={<Button variant="outline" />}>공유 범위</PopoverTrigger>
+        <PopoverContent placement="bottom start">링크가 있는 사람은 볼 수 있습니다.</PopoverContent>
+      </Popover>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

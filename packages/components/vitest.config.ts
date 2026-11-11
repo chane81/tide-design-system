@@ -22,7 +22,8 @@ export default defineConfig({
         plugins: [tailwindcss()],
         // next/link(CJS)를 처음부터 사전 번들한다. 실행 중에 발견하면 Vite가 다시 최적화하며 페이지를 새로 고쳐
         // 차가운 캐시에서 테스트 파일 import가 실패한다(2026-11-10 로컬에서 재현).
-        optimizeDeps: { include: ["next/link.js"] },
+        // react-aria·react-stately(오버레이 hook, 티켓 25)도 같은 이유로 처음부터 사전 번들한다. Component는 루트 entry만 import한다.
+        optimizeDeps: { include: ["next/link.js", "react-aria", "react-stately"] },
         test: {
           name: "browser",
           include: ["src/**/*.test.tsx"],

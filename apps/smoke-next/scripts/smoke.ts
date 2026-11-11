@@ -251,6 +251,8 @@ try {
     // Breadcrumb·Pagination은 함수를 만들지 않고 Button·IconButton에 props만 넘기는 서버 컴포넌트다(티켓 24).
     "Breadcrumb.js",
     "Pagination.js",
+    // 오버레이 공통 class 모듈은 문자열만 있다(티켓 25).
+    "overlay-style.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -275,6 +277,9 @@ try {
     "RadioGroup.js",
     "choice-group.js",
     "Switch.js",
+    // Popover와 오버레이 공통 hook은 React Aria hooks·state를 쓰므로 client다(티켓 25).
+    "Popover.js",
+    "overlay.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -322,6 +327,16 @@ try {
   assert(
     css.includes("li:first-child>") && css.includes(".min-w-8") && css.includes(".gap-1\\.5"),
     "Breadcrumb·Pagination 내부 class([li:first-child>&]:hidden, min-w-8, gap-1.5)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    css.includes(".z-popover") &&
+      css.includes("--tide-z-popover") &&
+      css.includes("@starting-style") &&
+      /transition-behavior:\s*allow-discrete/.test(css) &&
+      /not-data-open\\:hidden/.test(css) &&
+      /motion-safe\\:starting\\:blur-xs/.test(css),
+    "Popover 내부 class(z-popover, starting:, transition-discrete, not-data-open:hidden, motion-safe:starting:blur-xs)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -490,6 +505,22 @@ try {
       pagination.includes("페이지 생략") &&
       (pagination.match(/<svg [^>]*aria-hidden="true"/g) ?? []).length === 3,
     "Pagination이 prerender한 HTML에서 랜드마크·이전/다음 이름·disabled·aria-current·아이콘 숨김이 기대와 다르다",
+  );
+
+  // Popover(client)가 prerender한 HTML(티켓 25). 트리거는 Button 모양의 type=button이고 닫혀 있다(aria-expanded="false",
+  // aria-controls·data-open 없음). 내용은 열 때 body로 portal되므로 HTML에 dialog가 없다.
+  const popoverTrigger =
+    html?.match(/<button[^>]*>공유 범위<\/button>/)?.[0] ??
+    html?.match(/<button(?:(?!<\/button>).)*공유 범위(?:(?!<\/button>).)*<\/button>/)?.[0] ??
+    "";
+  assert(
+    popoverTrigger.includes('type="button"') &&
+      popoverTrigger.includes('aria-expanded="false"') &&
+      popoverTrigger.includes('data-color="primary"') &&
+      !popoverTrigger.includes("aria-controls") &&
+      !popoverTrigger.includes("data-open") &&
+      !html?.includes('role="dialog"'),
+    "Popover가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.

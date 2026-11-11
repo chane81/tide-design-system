@@ -280,3 +280,18 @@ describe("Breadcrumb·Pagination 대비 쌍", () => {
     }
   });
 });
+
+// Popover(tide-v0-impl 티켓 25)와 이후 오버레이가 같이 쓰는 raised 표면의 색이 등록되어 있거나 제외 목록에 있는지 본다.
+describe("Popover(오버레이 표면) 대비 쌍", () => {
+  it("글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it("안의 조작 요소 포커스 표시: outline-focus × bg-raised가 3:1로 등록되어 있다", () => {
+    expect(registered("outline-focus", "bg-raised", 3)).toBe(true);
+  });
+
+  it("경계(border-raised)는 장식용이라 대비 검사에서 제외되어 있다", () => {
+    expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
+  });
+});
