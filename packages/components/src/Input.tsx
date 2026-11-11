@@ -6,11 +6,7 @@ import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "./cn.ts";
 import { useFieldControl } from "./field-context.ts";
-import { inputBaseClass } from "./input-style.ts";
-import type { Size } from "./types.ts";
-
-/** Input의 size. `xs`(24px)는 입력하기에 작아서 받지 않는다. */
-type InputSize = Extract<Size, "sm" | "md" | "lg">;
+import { inputBaseClass, inputSizeClass, type InputSize } from "./input-style.ts";
 
 export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
   /** 높이 `sm` 32px, `md` 40px, `lg` 48px. 같은 size의 Button과 높이가 같다. 기본값은 `md`다. */
@@ -21,13 +17,6 @@ export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
    */
   invalid?: boolean;
 }
-
-/** 높이, 좌우 padding, 텍스트 스타일(spec size 표). radius는 모든 size에서 `md`다. */
-const sizeClass: Record<InputSize, string> = {
-  sm: "h-8 px-2.5 text-label-sm",
-  md: "h-10 px-3 text-label-md",
-  lg: "h-12 px-4 text-label-lg",
-};
 
 /**
  * 한 줄 텍스트를 입력하는 네이티브 `<input>`. `type`(`email`, `password`, `date` 등)을 그대로 받는다.
@@ -53,6 +42,10 @@ export function Input({
     "aria-invalid": ariaInvalid,
   });
   return (
-    <input {...props} {...control} className={cn(sizeClass[size], inputBaseClass, className)} />
+    <input
+      {...props}
+      {...control}
+      className={cn(inputSizeClass[size], inputBaseClass, className)}
+    />
   );
 }

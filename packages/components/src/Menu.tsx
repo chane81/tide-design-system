@@ -17,7 +17,6 @@ import {
   createContext,
   createElement,
   use,
-  useEffect,
   useId,
   useLayoutEffect,
   useMemo,
@@ -62,6 +61,7 @@ import {
 } from "./list-style.ts";
 import {
   OverlayPortal,
+  useCloseOnTab,
   useOverlayPresence,
   useOverlayTheme,
   usePopoverOverlay,
@@ -239,19 +239,8 @@ function MenuContentInner({
     popoverRef,
   );
   const mergedRef = useMemo(() => mergeRefs(ref, popoverRef), [ref, popoverRef]);
-  // Tab은 메뉴를 닫고 포커스를 트리거로 돌린다(WAI-ARIA APG Menu Button). React Aria useMenu는 Tab을 다루지 않고,
-  // 열린 동안 바깥이 inert라 브라우저 기본 Tab은 갈 곳이 없다. 항목의 keydown 처리(useMenuItem)가 전파를 멈추고
-  // FocusScope가 document capture에서 Tab을 먼저 다루므로, 그보다 앞인 window capture에서 받는다.
-  const { close } = state;
-  useEffect(() => {
-    const onKeyDown = (event: globalThis.KeyboardEvent): void => {
-      if (event.key !== "Tab" || !popoverRef.current?.contains(event.target as Node)) return;
-      event.preventDefault();
-      close();
-    };
-    window.addEventListener("keydown", onKeyDown, true);
-    return () => window.removeEventListener("keydown", onKeyDown, true);
-  }, [close, popoverRef]);
+  // Tab은 메뉴를 닫고 포커스를 트리거로 돌린다(WAI-ARIA APG Menu Button). React Aria useMenu는 Tab을 다루지 않는다.
+  useCloseOnTab(popoverRef, state.close);
   const { style: _style, ...rest } = mergeProps(props, overlayProps, ariaMenuProps);
   const nodes = [...tree.collection];
 
