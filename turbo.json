@@ -4,6 +4,7 @@
     "githubActionsRemoteBaseRefFallback": true,
     "affectedUsingTaskInputs": true
   },
+  "globalPassThroughEnv": ["PLAYWRIGHT_*"],
   "tasks": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "storybook-static/**"] },
     "typecheck": { "dependsOn": ["^build"] },

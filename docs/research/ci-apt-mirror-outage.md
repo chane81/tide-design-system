@@ -50,3 +50,8 @@ PR #7(Release 0.4.0) CI run 43021954463이 네 번 연속으로 같은 단계에
   - Playwright v1.65.0의 `utils/docker/Dockerfile.noble`에 git·zstd(actions/cache용)와 `install-deps`(폰트 포함)가 들어 있다. chromium을 설치하면 chromium-headless-shell도 함께 깔린다. `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright`(권한 777)이다.
   - MCR 태그 목록에 `v1.65.0-noble`이 있다.
 - 남은 일: 이미지 태그를 catalog의 playwright 버전과 함께 올려야 한다. 어긋나도 `install --only-shell chromium`이 apt 없이 브라우저를 받으므로 CI가 깨지지는 않는다.
+- 첫 적용 뒤 0.4.0 pack job이 실패했다. 테스트가 `/github/home/.cache/ms-playwright`에서 브라우저를 찾았기 때문이다.
+  - 원인: turbo 2.11.10 Strict Mode가 이미지의 `PLAYWRIGHT_BROWSERS_PATH`를 task 환경에서 걸러 냈다. `HOME`은 기본으로 통과하므로 Playwright가 기본 경로를 썼다.
+  - 조치: turborepo Playwright 가이드대로 `turbo.json`에 `"globalPassThroughEnv": ["PLAYWRIGHT_*"]`를 추가했다. passthrough 변수는 캐시 hash에 들어가지 않는다.
+  - 로컬 확인: `PLAYWRIGHT_BROWSERS_PATH=/nonexistent`를 넣고 turbo test를 돌리자 그 경로에서 브라우저를 찾다가 실패했다. 변수가 task까지 전달된다는 뜻이다.
+  - PR #8의 CI는 `--affected`로 task가 0개여서 이 문제를 잡지 못했다.
