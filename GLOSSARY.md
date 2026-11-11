@@ -132,6 +132,14 @@ _Avoid_: 빵 부스러기, Path, Trail, 방문 기록
 여러 쪽으로 나눈 목록에서 쪽 사이를 이동하는 탐색 영역(`Pagination`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`). 쪽 번호는 링크(Button 모양)이고 현재 쪽은 `aria-current="page"`, 이전/다음은 이름 있는 IconButton이다. 어떤 번호를 보일지는 앱이 정한다. 단계를 차례로 진행하는 표시(Stepper)와 다르다.
 _Avoid_: Pager, Paginator, Stepper
 
+**오버레이 (Overlay)**:
+페이지 흐름 밖에 떠서 다른 내용 위에 그려지는 요소(Popover, Tooltip, Menu·Select·Combobox 목록, Dialog, Toast). `document.body`로 portal하고 쌓임 단계 class(`z-popover` 등)로 쌓으며 top-layer(`<dialog>`, popover API)는 쓰지 않는다. portal·위치·등장/퇴장 motion·DOM에서 빼는 시점은 오버레이 공통 부분(`overlay.tsx`, `overlay-style.ts`)이 맡고, 역할(dialog, menu, listbox, tooltip)은 각 Component가 정한다.
+_Avoid_: 레이어(Layer와 혼동), 모달(바깥을 막는 성질 하나만 가리킴)
+
+**Popover (팝오버)**:
+트리거 옆에 짧은 내용을 띄우는 오버레이(`Popover`, `PopoverTrigger`, `PopoverContent`). 내용은 `dialog` 역할이고 버튼·입력 같은 조작 요소를 담을 수 있다. 누르면 열리고 Esc·바깥 누름으로 닫히며 포커스는 트리거로 돌아온다. 동작 목록은 Menu, 설명 한 줄은 Tooltip, 확인이 필요한 내용은 Dialog다.
+_Avoid_: Dropdown(Menu·Select와 혼동), Popup, Flyout
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge

@@ -1,0 +1,93 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as PopoverStories from "./Popover.stories.tsx";
+
+<Meta of={PopoverStories} />
+
+# Popover
+
+트리거 옆에 짧은 내용을 띄우는 오버레이입니다. 트리거를 누르면 열리고, Esc·바깥 누름·트리거 다시 누름으로 닫히며 포커스는 트리거로 돌아옵니다.
+
+<Canvas of={PopoverStories.Basic} />
+
+## 사용 시점
+
+- 트리거와 이어지는 설명, 몇 개의 설정, 짧은 입력처럼 화면을 떠나지 않고 잠깐 보여 줄 내용이 있을 때
+- 내용 안에 버튼·입력 같은 조작 요소가 있을 때(Tooltip은 조작 요소를 담을 수 없습니다)
+
+## 쓰지 않을 때
+
+- 동작 목록(이름 바꾸기, 복제, 삭제)은 Menu를 씁니다. 화살표 탐색과 메뉴 역할이 있습니다.
+- 값 하나를 고르는 목록은 Select·Combobox를 씁니다.
+- 짧은 설명 한 줄만 붙이려면 Tooltip을 씁니다.
+- 확인이 꼭 필요하거나 내용이 길면 Dialog를 씁니다. Popover는 바깥을 누르면 닫힙니다.
+
+## 예시
+
+### 트리거
+
+`PopoverTrigger`는 기본으로 class 없는 `<button>`입니다. Tide Button 모양을 쓰려면 `render={<Button />}`를 줍니다. 아이콘만 있는 트리거는 `render={<IconButton aria-label="…" />}`로 이름을 붙입니다. 내용에 이름이 따로 없으면 트리거 이름이 내용(`dialog`)의 이름이 됩니다.
+
+<Canvas of={PopoverStories.IconTrigger} />
+
+### 위치
+
+`placement`로 트리거의 어느 쪽에 띄울지 정합니다. 기본은 `bottom`(아래, 가운데 맞춤)이고 `top start`·`right bottom`처럼 변의 끝에 맞출 수 있습니다. 공간이 모자라면 반대쪽으로 뒤집히고, 높이가 모자라면 스크롤이 생깁니다. 어느 경우에도 트리거를 덮지 않습니다. 간격은 `offset`(기본 8px)입니다.
+
+<Canvas of={PopoverStories.Placement} />
+
+### 제목과 입력, 제어
+
+내용에 제목을 두면 `aria-labelledby`로 이름을 잇습니다. 안의 입력에 `autoFocus`를 주면 열 때 그 입력에 포커스가 갑니다. `open`/`onOpenChange`로 상태를 제어하면 저장 후 닫기처럼 내용 안에서 닫을 수 있습니다.
+
+<Canvas of={PopoverStories.WithForm} />
+
+## Do/Don't
+
+### Do: 트리거와 이어지는 짧은 내용을 담는다
+
+<Canvas of={PopoverStories.DoShortContent} />
+
+### Don't: 동작 목록을 버튼으로 늘어놓는다
+
+Popover 안의 버튼은 Tab으로만 옮겨 다닙니다. 동작 목록은 화살표로 오가고 메뉴로 읽히는 Menu를 씁니다.
+
+<Canvas of={PopoverStories.DontActionList} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 트리거는 버튼이고 `aria-expanded`가 열림 상태를, 열렸을 때 `aria-controls`가 내용을 가리킵니다. 내용은 `dialog` 역할입니다(React Aria `useOverlayTrigger`·`usePopover`·`useDialog`).
+- 이름: `aria-label`이나 `aria-labelledby`가 없으면 트리거 이름이 내용의 이름이 됩니다.
+- 포커스: 열면 포커스가 내용으로 옮겨 가고(안에 `autoFocus` 요소가 있으면 그 요소), 열린 동안 Tab은 내용 안에서 돕니다. 닫히면 트리거로 돌아옵니다.
+- 닫기: Esc, 바깥 누름, 트리거 다시 누름. 스크린리더 사용자를 위해 내용 앞뒤에 숨은 닫기 버튼이 있습니다(Tab 순서에는 없습니다).
+- 바깥: 열린 동안 바깥은 `inert`라 읽히지도 눌리지도 않고 페이지 스크롤이 잠깁니다.
+- 위치: 트리거를 덮지 않습니다. 뒤집거나 높이를 줄여 스크롤합니다(WCAG 2.4.11).
+- 대비: 글자(`text-default`)가 raised 표면과 4.5:1 이상입니다. 경계(`border-raised`)는 장식용이라 대비 검사 대상이 아닙니다.
+- 고대비 모드(forced-colors): 그림자는 사라지지만 1px 경계가 시스템 글자색으로 그려져 내용의 경계가 보입니다.
+- 움직임 줄이기: 이동·blur 없이 opacity만 바뀝니다.
+
+### 앱이 할 일
+
+- 아이콘만 있는 트리거에는 `aria-label`을 줍니다(IconButton은 타입상 필수입니다).
+- 내용이 트리거 이름과 다른 주제면 제목을 두고 `aria-labelledby`로 잇습니다.
+- Theme을 `<html>`이 아닌 영역에 붙였다면 트리거를 그 영역 안에 둡니다. 내용은 트리거가 있는 영역의 `data-theme`을 이어받습니다.
+
+## Props
+
+모두 client Component입니다. `Popover`는 DOM 요소가 없고 열림 상태만 갖습니다. `PopoverTrigger`는 `<button>`, `PopoverContent`는 `<div>`의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `p-2`, `w-72`). 색·`variant`·`size` prop은 없습니다.
+
+| Component        | prop                              | 기본값                         |
+| ---------------- | --------------------------------- | ------------------------------ |
+| `Popover`        | `open`: `boolean`(제어)           | 없음                           |
+| `Popover`        | `defaultOpen`: `boolean`(비제어)  | `false`                        |
+| `Popover`        | `onOpenChange`: `(open) => void`  | 없음                           |
+| `PopoverTrigger` | `render`: `ReactElement`          | 없음(`<button type="button">`) |
+| `PopoverContent` | `placement`: `PopoverPlacement`   | `"bottom"`                     |
+| `PopoverContent` | `offset`: `number`(px)            | `8`                            |
+| `PopoverContent` | `role`·`id` 제외(dialog, 자동 id) |                                |
+
+상태는 `data-open`(트리거와 내용, 열렸을 때)과 `data-placement`(내용, `top`/`bottom`/`left`/`right`)로 노출합니다.
+
+<ArgTypes of={PopoverStories} />

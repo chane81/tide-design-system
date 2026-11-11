@@ -23,6 +23,8 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 
 > 덧붙임(2026-11-11, [티켓 24](../progress/tide-v0-impl/issues/24-breadcrumb-and-pagination.md)): Breadcrumb·Pagination은 탐색 구조 Component로 본다. 링크·버튼을 담지만 동작의 뜻(위험, 성공 등)이 없는 이동이라 `color`를 두지 않는다(③). Breadcrumb 링크는 `text-muted`(hover `text-default`), 현재 페이지는 `text-default`다. Pagination 번호·이전/다음은 neutral ghost, 현재 쪽 번호는 primary subtle로 고정이다. 앱 브랜드 색으로 현재 쪽을 칠하는 요구가 생기면 `Pagination`에 `color?: Role`을 더하는 것을 그때 검토한다.
 
+> 덧붙임(2026-11-11, [티켓 25](../progress/tide-v0-impl/issues/25-popover.md)): Popover는 내용을 담는 오버레이 구조 Component로 본다. 뜻(위험, 성공)을 색으로 전하는 행동·의미 Component도, 분류용 장식 Component도 아니어서 `color`를 두지 않는다(③). 표면은 raised(`bg-raised`, `text-default`, `border-raised`)로 고정이다. 트리거의 색은 `render`로 준 Button·IconButton의 `color`(Role)가 정한다. 같은 판단을 Tooltip·Menu·Select·Combobox 목록·Dialog의 표면에도 쓴다(Toast는 Alert 스타일을 쓰는 행동·의미 Component라 `Role`).
+
 이렇게 바꾼 이유는 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)이다. Atlassian은 「Color roles are applied to buttons to differentiate between primary, secondary, warning, or dangerous actions」라고 Role을 버튼에 쓰고, accent 색은 「colors that don't have any specific meaning … exchange one accent color for another, and the experience would remain unchanged」라고 뜻이 없는 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
 
 - **등록 interface 두 개**: foundation이 `RoleRegistry`(Tide Role 6개)와 `ColorFamilyRegistry`(Tide 색 계열 6개)를 둔다. `Role = keyof RoleRegistry`, `ColorFamilyName = keyof ColorFamilyRegistry`, `Color = Role | ColorFamilyName`이다. ADR 0011의 `ColorRegistry`는 없앤다.

@@ -41,6 +41,12 @@ const config: StorybookConfig = {
       resolve: {
         conditions: ["@tide-tds/source", ...defaultClientConditions],
       },
+      // components 원본이 쓰는 react-aria·react-stately(오버레이 hook, 티켓 25)를 처음부터 사전 번들한다. 실행 중에 발견하면
+      // Vite가 다시 최적화하며 페이지를 새로 고쳐 story 테스트가 흔들린다. docs가 직접 의존하지 않으므로 중첩 문법을 쓴다
+      // (Vite docs dep-optimization-options `optimizeDeps.include`).
+      optimizeDeps: {
+        include: ["@tide-tds/components > react-aria", "@tide-tds/components > react-stately"],
+      },
     }),
 };
 
