@@ -127,3 +127,15 @@
 - 트리거에 `aria-haspopup`이 없음(React Aria `useOverlayTrigger`가 dialog에 붙이지 않음).
 - `size` sm 24rem·md 32rem·lg 40rem, 제목 `text-heading-sm`(`<h2>` 고정, 수준 바꾸는 prop 없음).
 - 닫을 때 퇴장 중 포커스가 body로 빠졌다가 내용이 빠진 다음 프레임에 돌아옴(Popover와 같은 기존 동작).
+
+## 31 Tabs
+
+- 부분 이름은 ARIA 역할을 따른 `TabList`·`Tab`·`TabPanel`(`TabsList`·`TabsTrigger`·`TabsContent` 방식 아님).
+- `value`나 `defaultValue` 하나가 타입상 필수(없으면 첫 탭인 React Aria와 다름).
+- 고른 탭의 패널만 렌더(고르지 않은 패널 상태 사라짐, `forceMount` 없음).
+- 패널 `tabIndex` 기본 0 고정(안의 조작 요소 여부로 바꾸지 않음, 앱이 `tabIndex={-1}`).
+- 고른 표시 막대는 탭마다 그리고 가운데에서 펼쳐짐(미끄러지는 막대 없음).
+- RTL 화살표 반전은 `I18nProvider` locale을 따름(`dir="rtl"`만으로는 안 바뀜).
+- `size`·`variant`(밑줄형만)·루트 `disabled`·탭 목록 넘침 스크롤 없음.
+- 세로 탭에서도 ←→ 동작(React Aria 기본, APG는 ↓↑만 적음).
+- 탭 글자색은 전환 없이 바로 바뀜, 막대만 opacity `fast`.
