@@ -116,3 +116,14 @@
 - 한글 「포함」 거르기의 조합 중간 글자 결과 줄어듦, 초성 검색 없음, Safari·Windows IME 실기기 미확인(Chromium CDP로 확인).
 - 목록 폭 `min(입력 폭, 100vw − 24px)`(Select는 트리거 폭 그대로).
 - Tab은 가상 포커스 옵션을 고르고 다음 요소로 이동(React Aria 동작).
+
+## 30 Dialog·AlertDialog
+
+- AlertDialog는 루트(`AlertDialog`)만 따로 두고 부분 Component는 Dialog의 것(`DialogTrigger`, `DialogContent` …)을 그대로 씀(`AlertDialogContent` 같은 별도 이름 없음).
+- Dialog는 막 누름으로 닫힘(끄는 prop 없음), AlertDialog는 막 누름으로 닫히지 않음. Esc는 둘 다 닫음(APG Alert Dialog 예시).
+- Dialog를 열면 Dialog 요소 자신에 포커스(React Aria 기본, `autoFocus`로 바꿈), AlertDialog는 첫 조작 요소(취소)에 포커스.
+- 닫기 IconButton은 Dialog에 늘 있음(숨기는 prop 없음), DOM 끝(Tab 순서 마지막)에 두고 끝 위쪽에 그림. AlertDialog에는 없음.
+- `aria-modal`을 붙이지 않음(React Aria가 Safari 버그로 빼고 바깥 `inert`로 모달을 만듦, APG는 `aria-modal="true"`).
+- 트리거에 `aria-haspopup`이 없음(React Aria `useOverlayTrigger`가 dialog에 붙이지 않음).
+- `size` sm 24rem·md 32rem·lg 40rem, 제목 `text-heading-sm`(`<h2>` 고정, 수준 바꾸는 prop 없음).
+- 닫을 때 퇴장 중 포커스가 body로 빠졌다가 내용이 빠진 다음 프레임에 돌아옴(Popover와 같은 기존 동작).
