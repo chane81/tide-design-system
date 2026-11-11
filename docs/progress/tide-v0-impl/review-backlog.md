@@ -36,3 +36,13 @@
 - Progress size `sm` 4px / `md` 8px 두 개.
 - union props story는 평평한 args 타입, Skeleton은 타입 단언.
 - (결정됨) 막대 색은 accent `text` 슬롯 유지(A안). light에서 `primary` 막대가 `#3183f5`보다 진함. 브랜드 색에 맞추려면 foundation에 배경용 accent `border` 유틸리티와 border × subtle 3:1 규칙을 더하는 B안이 있다.
+
+## 23 Table
+
+- 부분 이름 `TableHead`(thead)·`TableHeaderCell`(th). shadcn과 다름.
+- `TableHeaderCell` 기본 `scope="col"`, 행 머리는 앱이 `scope="row"`.
+- `TableCaption`·`TableFoot` 없음(네이티브 `<caption>`·`<tfoot>`).
+- 숫자 열은 prop 없이 `className="tabular-nums text-end"`.
+- hover neutral `subtle-hover`, 머리 칸 글자 `text-default`(`text-muted`는 대비 쌍 추가 필요).
+- 칸 높이 40px·가로 12px 한 가지, 밀도 축 없음.
+- 가로 스크롤 감싸개 없음(문서 안내만).
