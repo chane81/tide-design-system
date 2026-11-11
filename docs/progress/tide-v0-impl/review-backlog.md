@@ -182,5 +182,6 @@
 
 ## 퇴장 전환 flaky 수정(fix-exit-transition-flaky)
 
-- 「퇴장 중에 다시 열면 같은 요소가…」(Menu·Tooltip·Popover)는 두 `rerender` 사이에 150ms가 지나면 요소가 빠질 수 있는 같은 꼴의 race가 남았다. 두 rerender가 페이지 안(Playwright 왕복 없음)이라 확률이 낮아 이번에는 두었다. 실패가 보이면 닫기·다시 열기를 한 task에서 하는 harness로 바꾼다.
-- Toast 「자동 닫힘 > 영역에 마우스를 올린 동안 멈추고, 떠나면 남은 시간이 지나 닫힌다」가 전체 turbo `--force` 1/3회에서 `locator.hover` 15초 timeout(`getByLabel('저장했습니다')`를 못 찾음)으로 실패했다. 가짜 타이머 테스트로 이번 수정과 별건이다. 원인 조사 필요.
+- (결정됨) 「퇴장 중에 다시 열면 같은 요소가…」(Menu·Tooltip·Popover)의 두 `rerender` 사이 race는 `openControl`(`flushSync`)로 닫기·다시 열기를 한 task 안에서 하게 고쳤다.
+- (결정됨) Toast 「자동 닫힘 > 영역에 마우스를 올린 동안…」 hover timeout은 vitest browser가 locator 명령 동안 가짜 타이머를 실제 시간만큼 당기는 동작 때문이었다. 60초 Toast와 pointerenter·leave 시각 기록으로 고쳤다(`issues/34-toast.md`).
+- 가짜 타이머를 켠 테스트에서 locator 명령(`userEvent.hover`·`click` 등)을 쓰면 그 명령의 실제 시간만큼 가짜 시계가 흐른다. 앞으로 그런 테스트는 명령 시간이 결과를 바꾸지 않게 짠다(공통 규칙으로 올릴지 사람이 정한다).
