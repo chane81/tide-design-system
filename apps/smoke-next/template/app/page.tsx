@@ -16,7 +16,9 @@ import {
   Link as TideLink,
   Radio,
   RadioGroup,
+  Progress,
   Separator,
+  Skeleton,
   Spinner,
   Switch,
   Textarea,
@@ -132,6 +134,12 @@ export default function Page() {
         <Avatar alt="홍길동" src="/avatar.png" size="lg" color="cyan" />
         <Avatar alt="" />
       </p>
+      {/* Skeleton·Progress는 서버 컴포넌트다(티켓 22). 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+      <div aria-busy="true">
+        <Skeleton variant="circle" size="sm" />
+        <Skeleton />
+      </div>
+      <Progress value={30} max={60} color="success" aria-label="업로드" />
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

@@ -195,3 +195,37 @@ describe("Avatar 대비 쌍", () => {
     ).toBe(true);
   });
 });
+
+// Progress(tide-v0-impl 티켓 22)의 막대는 accent 슬롯의 text 색, 트랙은 같은 색 subtle이다.
+// 막대 × 트랙은 UI 경계 대비(3:1, WCAG 1.4.11)가 필요하다. 이 짝은 글자 기준(4.5:1)으로 이미 등록되어 있어 3:1을 넘는다.
+// solid × subtle은 dark에서 3:1이 되지 않아(예: primary 2.90) 막대에 쓰지 않는다.
+describe("Progress 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
+
+  it.each(tideRoles)(
+    "%s: 막대(text-%s) × 트랙(같은 Role subtle)이 3:1 이상(4.5:1)으로 등록되어 있다",
+    (role) => {
+      expect(registered(`text-${role}`, `bg-${role}-subtle`, 4.5)).toBe(true);
+    },
+  );
+
+  it("neutral: 막대(text-default) × 트랙(bg-neutral-subtle)이 3:1 이상(4.5:1)으로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
+  });
+
+  it("앱 Role은 text × subtle 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(
+      colorContrastRules.some(
+        (r) => r.foreground === "text" && r.background === "subtle" && r.minRatio >= 3,
+      ),
+    ).toBe(true);
+  });
+});
+
+// Skeleton(tide-v0-impl 티켓 22)은 aria-hidden 장식이라 대비 의무가 없다(글자·경계를 올리지 않는다).
+// 쓰는 Token(bg-neutral-subtle-active)은 다른 Component 글자 배경으로 대비 쌍에 이미 등록되어 있다.
+describe("Skeleton 대비 쌍", () => {
+  it("bg-neutral-subtle-active는 text-default의 배경으로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
+  });
+});

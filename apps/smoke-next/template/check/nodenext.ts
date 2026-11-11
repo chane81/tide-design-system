@@ -12,9 +12,11 @@ import {
   IconButton,
   Input,
   Link,
+  Progress,
   Radio,
   RadioGroup,
   Separator,
+  Skeleton,
   Switch,
   Textarea,
   VisuallyHidden,
@@ -31,7 +33,9 @@ import {
   type IconButtonProps,
   type InputProps,
   type LinkProps,
+  type ProgressProps,
   type SeparatorProps,
+  type SkeletonProps,
   type SwitchProps,
   type TextareaProps,
   type Color,
@@ -118,6 +122,15 @@ const avatarProps: AvatarProps = { alt: "홍길동", src: "/a.png", size: "xs", 
 const primaryAvatar: AvatarProps = { alt: "", color: "primary" };
 // @ts-expect-error Avatar는 alt가 필수다.
 const noAltAvatar: AvatarProps = { src: "/a.png" };
+// Skeleton size는 circle에만 있다. Progress는 value와 이름이 필수이고 color는 Role만 받는다(티켓 22).
+const skeletonProps: SkeletonProps = { variant: "circle", size: "lg" };
+// @ts-expect-error Skeleton text는 size를 받지 않는다.
+const sizedTextSkeleton: SkeletonProps = { variant: "text", size: "md" };
+const progressProps: ProgressProps = { value: 3, max: 10, color: "brand", "aria-label": "업로드" };
+// @ts-expect-error Progress는 접근 가능한 이름이 필수다.
+const unnamedProgress: ProgressProps = { value: 3 };
+// @ts-expect-error Progress color는 색 계열 이름을 받지 않는다.
+const blueProgress: ProgressProps = { value: 3, "aria-label": "업로드", color: "blue" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -195,4 +208,11 @@ export const values = [
   avatarProps,
   primaryAvatar,
   noAltAvatar,
+  Skeleton,
+  skeletonProps,
+  sizedTextSkeleton,
+  Progress,
+  progressProps,
+  unnamedProgress,
+  blueProgress,
 ] as const;

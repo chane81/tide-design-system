@@ -243,6 +243,9 @@ try {
     "alert-style.js",
     // Avatar는 hook·state·이벤트 없이 로드 실패 fallback을 CSS 층으로 처리한다(티켓 21).
     "Avatar.js",
+    // Skeleton·Progress는 표시만 하는 서버 컴포넌트다(티켓 22).
+    "Skeleton.js",
+    "Progress.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -296,6 +299,14 @@ try {
   assert(
     css.includes(".bg-cover") && /\[\\&_svg\\\]\\:size-7/.test(css),
     "Avatar 내부 class(bg-cover, [&_svg]:size-7)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    /motion-safe\\:animate-pulse/.test(css) &&
+      /\.h-\\\[1em\\\]/.test(css) &&
+      /motion-safe\\:transition-\\\[width\\\]/.test(css) &&
+      /forced-colors\\:text-\\\[Highlight\\\]/.test(css),
+    "Skeleton·Progress 내부 class(motion-safe:animate-pulse, h-[1em], motion-safe:transition-[width], forced-colors:text-[Highlight])가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -402,6 +413,26 @@ try {
       avatars.every((avatar) => /<svg[^>]*aria-hidden="true"/.test(avatar)) &&
       !html?.includes("<img"),
     "Avatar가 prerender한 HTML에서 역할·이름·data-color·아이콘 숨김·이미지 층이 기대와 다르다",
+  );
+
+  // Skeleton·Progress(서버 컴포넌트)가 prerender한 HTML(티켓 22).
+  // Skeleton은 aria-hidden이고, Progress는 progressbar 역할·이름·값 속성·data-color와 값 비율만큼의 막대 너비를 갖는다.
+  const skeletons = html
+    ? [...html.matchAll(/<div aria-busy="true">(.*?)<\/div><div[^>]*role="progressbar"/g)].map(
+        (m) => m[1] ?? "",
+      )
+    : [];
+  const progress = html?.match(/<div[^>]*role="progressbar"[^>]*>.*?<\/div>/)?.[0] ?? "";
+  assert(
+    skeletons.length === 1 &&
+      (skeletons[0]?.match(/<div aria-hidden="true"/g) ?? []).length === 2 &&
+      progress.includes('aria-label="업로드"') &&
+      progress.includes('aria-valuenow="30"') &&
+      progress.includes('aria-valuemin="0"') &&
+      progress.includes('aria-valuemax="60"') &&
+      progress.includes('data-color="success"') &&
+      /<span aria-hidden="true"[^>]*style="width:50%"/.test(progress),
+    "Skeleton·Progress가 prerender한 HTML에서 숨김·역할·이름·값·data-color·막대 너비가 기대와 다르다",
   );
 
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
