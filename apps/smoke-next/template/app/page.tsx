@@ -34,6 +34,9 @@ import {
   PopoverTrigger,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
+  SelectSection,
   Progress,
   Separator,
   Skeleton,
@@ -130,6 +133,19 @@ export default function Page() {
               문자
             </Checkbox>
           </CheckboxGroup>
+        </Field>
+        {/* Select는 Field context를 읽는 client Component다(티켓 28). 서버 컴포넌트에서 옵션·묶음 요소를 넘기며, 옵션
+            요소는 client 참조(lazy)로 가서 prerender 때 컬렉션으로 모인다(ADR 0019). 폼 제출용 숨은 select가 함께 그려진다. */}
+        <Field label="과일" description="하나를 고릅니다." error="과일을 고르세요." required>
+          <Select name="fruit" defaultValue="banana" size="sm">
+            <SelectItem value="apple">사과</SelectItem>
+            <SelectSection heading="노란 과일">
+              <SelectItem value="banana">바나나</SelectItem>
+              <SelectItem value="lemon" disabled>
+                레몬
+              </SelectItem>
+            </SelectSection>
+          </Select>
         </Field>
         {/* Switch는 Field context를 읽는 client Component다. 서버 컴포넌트에서 children label로 쓴다.
             thumb 이동 class는 이 파일에 쓰지 않는다(이름을 주석에 적어도 Tailwind가 스캔한다). */}

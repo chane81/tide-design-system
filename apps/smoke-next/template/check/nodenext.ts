@@ -24,6 +24,9 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
+  SelectSection,
   Pagination,
   PaginationEllipsis,
   PaginationItem,
@@ -59,6 +62,9 @@ import {
   type CheckboxGroupProps,
   type CheckboxProps,
   type RadioGroupProps,
+  type SelectItemProps,
+  type SelectProps,
+  type SelectSectionProps,
   type RadioProps,
   type FieldProps,
   type IconButtonProps,
@@ -248,6 +254,26 @@ const menuSectionProps: MenuSectionProps = { heading: "정렬", className: "mt-1
 const listboxMenu: MenuContentProps = { role: "listbox" };
 // @ts-expect-error React Aria 이름(onAction)은 드러내지 않는다. onClick을 쓴다.
 const actionItem: MenuItemProps = { onAction: () => undefined };
+const selectProps: SelectProps = {
+  value: null,
+  defaultValue: "apple",
+  onValueChange: (value: string) => value,
+  open: false,
+  onOpenChange: () => undefined,
+  name: "fruit",
+  placeholder: "고르세요",
+  size: "lg",
+  invalid: true,
+  required: true,
+};
+const selectItemProps: SelectItemProps = { value: "apple", disabled: true, textValue: "사과" };
+const selectSectionProps: SelectSectionProps = { heading: "과일", className: "mt-1" };
+// @ts-expect-error Select는 xs를 받지 않는다(Input과 같다).
+const xsSelect: SelectProps = { size: "xs" };
+// @ts-expect-error 옵션은 value가 필수다.
+const selectItemWithoutValue: SelectItemProps = {};
+// @ts-expect-error React Aria 이름(onSelectionChange)은 드러내지 않는다. onValueChange를 쓴다.
+const selectionChange: SelectProps = { onSelectionChange: () => undefined };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -394,4 +420,13 @@ export const values = [
   menuSectionProps,
   listboxMenu,
   actionItem,
+  Select,
+  SelectItem,
+  SelectSection,
+  selectProps,
+  selectItemProps,
+  selectSectionProps,
+  xsSelect,
+  selectItemWithoutValue,
+  selectionChange,
 ] as const;

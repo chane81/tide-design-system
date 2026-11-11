@@ -360,6 +360,10 @@ describe("Field와 폼", () => {
     await expect.element(button).toHaveAttribute("aria-invalid", "true");
     await expect.element(button).toHaveAttribute("data-invalid", "");
     await expect.element(button).toHaveAccessibleDescription("하나만 고릅니다. 과일을 고르세요.");
+    // Field가 그린 설명·오류 요소만 가리킨다(React Aria가 만든 빈 자리 id는 쓰지 않는다).
+    const ids = button.element().getAttribute("aria-describedby")!.split(" ");
+    expect(ids).toHaveLength(2);
+    expect(ids.every((id) => document.getElementById(id) !== null)).toBe(true);
     if (!forcedColors()) {
       expect(getComputedStyle(button.element()).borderTopColor).toBe(
         resolve("borderTopColor", "var(--tide-border-danger)"),
@@ -640,7 +644,11 @@ describe("옵션 묶음과 모으기", () => {
     );
     await expect.element(page.getByRole("group", { name: "국내" })).toBeVisible();
     await expect.element(page.getByRole("group", { name: "해외" })).toBeVisible();
-    expect(listbox()!.querySelectorAll('[role="separator"]')).toHaveLength(2);
+    // listbox 안에는 separator 역할을 둘 수 없어 구분선은 보조기술에서 숨긴 장식 요소다.
+    expect(listbox()!.querySelectorAll('[role="separator"]')).toHaveLength(0);
+    expect(listbox()!.querySelectorAll('[role="presentation"][aria-hidden="true"]')).toHaveLength(
+      2,
+    );
     await userEvent.click(page.getByRole("option", { name: "Busan" }));
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith("busan");
     expect(document.querySelector<HTMLSelectElement>("select")!.value).toBe("busan");

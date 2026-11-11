@@ -287,6 +287,9 @@ try {
     "Tooltip.js",
     // Menu도 React Aria hooks·state를 쓰므로 client다(티켓 27).
     "Menu.js",
+    // Select와 옵션 공통 모듈(listbox)도 React Aria hooks·state를 쓰므로 client다(티켓 28).
+    "Select.js",
+    "listbox.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -354,6 +357,11 @@ try {
   assert(
     /data-highlighted\\:bg-primary-subtle/.test(css) && /p-\\\[3px\\\]/.test(css),
     "Menu 내부 class(data-highlighted:bg-primary-subtle, p-[3px])가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    /group-disabled\\:text-disabled/.test(css),
+    "Select 내부 class(group-disabled:text-disabled)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -538,6 +546,32 @@ try {
       !popoverTrigger.includes("data-open") &&
       !html?.includes('role="dialog"'),
     "Popover가 prerender한 HTML에서 트리거 속성·닫힌 상태가 기대와 다르다",
+  );
+
+  // Select(client)가 Field 안에서 prerender한 HTML(티켓 28). 서버 컴포넌트가 넘긴 옵션(lazy 참조)이 prerender 때
+  // 모여, 트리거가 기본값 글자를 보이고 숨은 select에 옵션과 고른 값이 있다. 트리거 id는 label for가 가리키고
+  // aria-labelledby에 label, aria-describedby에 설명·오류가 있으며 오류 상태다. 목록은 열 때 portal되어 HTML에 없다.
+  const selectTrigger =
+    html?.match(/<button[^>]*aria-haspopup="listbox"[^>]*>.*?<\/button>/)?.[0] ?? "";
+  const selectId = /\sid="([^"]+)"/.exec(selectTrigger)?.[1];
+  const selectLabelledBy = /aria-labelledby="([^"]+)"/.exec(selectTrigger)?.[1]?.split(" ") ?? [];
+  const selectDescribedBy = /aria-describedby="([^"]+)"/.exec(selectTrigger)?.[1]?.split(" ") ?? [];
+  const hiddenSelect = html?.match(/<select[^>]*name="fruit"[^>]*>.*?<\/select>/)?.[0] ?? "";
+  assert(
+    selectId !== undefined &&
+      html?.includes(`for="${selectId}"`) === true &&
+      selectTrigger.includes('type="button"') &&
+      selectTrigger.includes('aria-expanded="false"') &&
+      /aria-invalid="true"/.test(selectTrigger) &&
+      selectTrigger.includes("바나나") &&
+      selectLabelledBy.length === 2 &&
+      selectLabelledBy.every((id) => html.includes(`id="${id}"`)) &&
+      selectDescribedBy.length === 2 &&
+      /<option[^>]*value="apple"/.test(hiddenSelect) &&
+      /<option[^>]*value="banana"[^>]*selected=""/.test(hiddenSelect) &&
+      /\srequired=""/.test(hiddenSelect) &&
+      !html.includes('role="listbox"'),
+    "Select가 prerender한 HTML에서 트리거 이름·설명·오류·기본값이나 숨은 select가 기대와 다르다",
   );
 
   // Menu(client)가 prerender한 HTML(티켓 27). 트리거는 Button 모양의 type=button이고 닫혀 있어 aria-expanded가
