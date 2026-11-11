@@ -290,6 +290,8 @@ try {
     // Select와 옵션 공통 모듈(listbox)도 React Aria hooks·state를 쓰므로 client다(티켓 28).
     "Select.js",
     "listbox.js",
+    // Combobox도 React Aria hooks·state를 쓰므로 client다(티켓 29).
+    "Combobox.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -572,6 +574,29 @@ try {
       /\srequired=""/.test(hiddenSelect) &&
       !html.includes('role="listbox"'),
     "Select가 prerender한 HTML에서 트리거 이름·설명·오류·기본값이나 숨은 select가 기대와 다르다",
+  );
+
+  // Combobox(client)가 Field 안에서 prerender한 HTML(티켓 29). 입력은 combobox 역할이고 id를 label for가 가리키며,
+  // aria-describedby는 Field의 설명·오류 두 개뿐이다(React Aria가 만든 값·설명·오류 빈 자리 id가 남지 않는다).
+  // 기본값 옵션의 글자가 입력 value에, 옵션 value가 숨은 input에 있다. 목록은 열 때 portal되어 HTML에 없다.
+  const comboboxInput = html?.match(/<input[^>]*role="combobox"[^>]*>/)?.[0] ?? "";
+  const comboboxId = /\sid="([^"]+)"/.exec(comboboxInput)?.[1];
+  const comboboxDescribedBy =
+    /aria-describedby="([^"]+)"/.exec(comboboxInput)?.[1]?.split(" ") ?? [];
+  const comboboxHidden = html?.match(/<input[^>]*name="country"[^>]*>/)?.[0] ?? "";
+  assert(
+    comboboxId !== undefined &&
+      html?.includes(`for="${comboboxId}"`) === true &&
+      comboboxInput.includes('aria-expanded="false"') &&
+      comboboxInput.includes('aria-autocomplete="list"') &&
+      comboboxInput.includes('value="일본"') &&
+      /aria-invalid="true"/.test(comboboxInput) &&
+      /\srequired=""/.test(comboboxInput) &&
+      comboboxDescribedBy.length === 2 &&
+      comboboxDescribedBy.every((id) => html.includes(`id="${id}"`)) &&
+      comboboxHidden.includes('type="hidden"') &&
+      comboboxHidden.includes('value="jp"'),
+    "Combobox가 prerender한 HTML에서 입력 이름·설명·오류·기본값이나 숨은 input이 기대와 다르다",
   );
 
   // Menu(client)가 prerender한 HTML(티켓 27). 트리거는 Button 모양의 type=button이고 닫혀 있어 aria-expanded가

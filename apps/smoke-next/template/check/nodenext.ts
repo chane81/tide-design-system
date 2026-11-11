@@ -27,6 +27,9 @@ import {
   Select,
   SelectItem,
   SelectSection,
+  Combobox,
+  ComboboxItem,
+  ComboboxSection,
   Pagination,
   PaginationEllipsis,
   PaginationItem,
@@ -65,6 +68,9 @@ import {
   type SelectItemProps,
   type SelectProps,
   type SelectSectionProps,
+  type ComboboxItemProps,
+  type ComboboxProps,
+  type ComboboxSectionProps,
   type RadioProps,
   type FieldProps,
   type IconButtonProps,
@@ -274,6 +280,26 @@ const xsSelect: SelectProps = { size: "xs" };
 const selectItemWithoutValue: SelectItemProps = {};
 // @ts-expect-error React Aria 이름(onSelectionChange)은 드러내지 않는다. onValueChange를 쓴다.
 const selectionChange: SelectProps = { onSelectionChange: () => undefined };
+const comboboxProps: ComboboxProps = {
+  value: null,
+  defaultValue: "kr",
+  onValueChange: (value: string | null) => value,
+  onOpenChange: (open: boolean) => open,
+  emptyMessage: "없음",
+  name: "country",
+  placeholder: "국가",
+  size: "sm",
+  invalid: true,
+  required: true,
+};
+const comboboxItemProps: ComboboxItemProps = { value: "kr", disabled: true, textValue: "대한민국" };
+const comboboxSectionProps: ComboboxSectionProps = { heading: "아시아", className: "mt-1" };
+// @ts-expect-error Combobox는 xs를 받지 않는다(Input과 같다).
+const xsCombobox: ComboboxProps = { size: "xs" };
+// @ts-expect-error Combobox 열림 상태는 입력이 정하므로 제어하지 않는다.
+const openCombobox: ComboboxProps = { open: true };
+// @ts-expect-error React Aria 이름(onInputChange)은 드러내지 않는다.
+const inputChange: ComboboxProps = { onInputChange: () => undefined };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -429,4 +455,13 @@ export const values = [
   xsSelect,
   selectItemWithoutValue,
   selectionChange,
+  Combobox,
+  ComboboxItem,
+  ComboboxSection,
+  comboboxProps,
+  comboboxItemProps,
+  comboboxSectionProps,
+  xsCombobox,
+  openCombobox,
+  inputChange,
 ] as const;

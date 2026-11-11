@@ -37,6 +37,9 @@ import {
   Select,
   SelectItem,
   SelectSection,
+  Combobox,
+  ComboboxItem,
+  ComboboxSection,
   Progress,
   Separator,
   Skeleton,
@@ -146,6 +149,24 @@ export default function Page() {
               </SelectItem>
             </SelectSection>
           </Select>
+        </Field>
+        {/* Combobox도 Field context를 읽는 client Component다(티켓 29). 옵션은 Select와 같이 lazy 참조로 넘어가 prerender
+            때 모인다. 고른 옵션의 value는 숨은 input으로 제출되고 입력에는 옵션 글자가 보인다. */}
+        <Field
+          label="국가"
+          description="이름 일부를 쳐서 찾습니다."
+          error="국가를 고르세요."
+          required
+        >
+          <Combobox name="country" defaultValue="jp" size="lg" placeholder="국가 이름">
+            <ComboboxItem value="kr">대한민국</ComboboxItem>
+            <ComboboxSection heading="이웃 나라">
+              <ComboboxItem value="jp">일본</ComboboxItem>
+              <ComboboxItem value="cn" disabled>
+                중국
+              </ComboboxItem>
+            </ComboboxSection>
+          </Combobox>
         </Field>
         {/* Switch는 Field context를 읽는 client Component다. 서버 컴포넌트에서 children label로 쓴다.
             thumb 이동 class는 이 파일에 쓰지 않는다(이름을 주석에 적어도 Tailwind가 스캔한다). */}
