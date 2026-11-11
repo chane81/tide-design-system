@@ -62,6 +62,15 @@ export {
   type PaginationPreviousProps,
   type PaginationProps,
 } from "./Pagination.tsx";
+export {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  type PopoverContentProps,
+  type PopoverPlacement,
+  type PopoverProps,
+  type PopoverTriggerProps,
+} from "./Popover.tsx";
 export type {
   Color,
   ColorFamilyName,
