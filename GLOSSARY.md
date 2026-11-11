@@ -148,6 +148,10 @@ _Avoid_: Dropdown(Select와 혼동), Context menu(오른쪽 클릭 메뉴는 v0�
 값 하나를 고르는 입력(`Select`, `SelectItem`, `SelectSection`). 트리거는 입력창 모양의 버튼이고 고른 옵션이 보이며, 누르면 `listbox` 역할 목록이 열린다. 옵션(`option`)의 `value`가 고른 값이고 숨은 `<select>`로 폼에 제출된다. Field 안에서 label·설명·오류가 연결된다. 동작을 실행하는 목록은 Menu, 글자를 쳐서 거르는 것은 Combobox다.
 _Avoid_: Dropdown(Menu와 혼동), Picker, 네이티브 select(모양을 Tide가 그리지 못함)
 
+**Combobox (콤보박스)**:
+글자를 쳐서 옵션을 거르고 하나를 고르는 입력(`Combobox`, `ComboboxItem`, `ComboboxSection`). 입력은 `combobox` 역할의 텍스트 입력이고 치면 친 글자가 들어 있는 옵션만 남은 `listbox`가 열린다. 포커스는 입력에 머물고 목록 안 위치는 가상 포커스(`aria-activedescendant`)다. 옵션의 `value`가 고른 값이고 숨은 input으로 폼에 제출되며, 목록 밖 글자는 값이 되지 않는다(자유 입력 없음). 옵션 몇 개 중 고르는 것은 Select다.
+_Avoid_: Autocomplete(자유 입력을 받는 것으로 읽힘), Typeahead(Menu·Select의 글자 이동과 혼동), Search(검색 결과 화면과 혼동)
+
 **Tooltip (툴팁)**:
 트리거에 짧은 설명 한 줄을 붙이는 오버레이(`Tooltip`, `TooltipTrigger`, `TooltipContent`). 설명은 `tooltip` 역할이고 열린 동안 트리거의 `aria-describedby`가 가리킨다. 마우스를 올리면 잠깐 뒤에, 키보드 포커스면 바로 열리고 Esc·포커스 이탈·포인터 이탈로 닫힌다. 포커스를 받지 않고 조작 요소를 담지 않는다. 이름(`aria-label`)이 아니라 설명이다. 조작 요소가 필요하면 Popover다.
 _Avoid_: Hint, Title 속성(브라우저 기본 툴팁), Popover

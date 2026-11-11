@@ -52,3 +52,5 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 - CSS, Utility class, `--tide-*` 변수, 대비 결과는 바뀌지 않는다(티켓 40 회귀 스냅숏).
 - 앱 Role에는 Role Utility class가 없다. Component는 accent class로 칠하므로 필요하지 않다. 앱이 자기 마크업을 앱 Role로 칠하려면 `data-color="brand"`와 accent class를 쓴다.
 - augmentation 대상은 앱이 설치한 `@tide-tds/components`다. re-export한 interface에 한 augmentation도 원래 interface에 합쳐진다(TypeScript 7.0.2, 티켓 40·41에서 확인).
+
+> 덧붙임(2026-11-11, [티켓 29](../progress/tide-v0-impl/issues/29-combobox.md)): Combobox도 Select와 같은 폼 입력 Component로 본다. 입력·목록·결과 없음 글자의 색은 정해진 Token(입력 `border-strong`·오류 `border-danger`·`focus-field`, chevron·결과 없음 `text-muted`, 목록은 Select와 같다)이라 `color`를 두지 않는다(③).

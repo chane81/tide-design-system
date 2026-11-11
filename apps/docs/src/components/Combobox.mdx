@@ -1,0 +1,121 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ComboboxStories from "./Combobox.stories.tsx";
+
+<Meta of={ComboboxStories} />
+
+# Combobox
+
+글자를 쳐서 옵션을 거르고 하나를 고르는 입력입니다. 치면 목록이 열리고 친 글자가 들어 있는 옵션만 남습니다. 고르면 닫히고 입력에 그 옵션의 이름이 들어갑니다. `Field` 안에 두면 label·설명·오류가 자동으로 연결되고, `name`을 주면 고른 옵션의 값이 폼에 제출됩니다.
+
+<Canvas of={ComboboxStories.Basic} />
+
+## 사용 시점
+
+- 옵션이 많아(대략 15개 이상) 훑어보기보다 쳐서 찾는 편이 빠를 때(국가, 도시, 공항, 담당자)
+- 사용자가 옵션 이름 일부를 알고 있을 때
+
+## 쓰지 않을 때
+
+- 옵션이 몇 개뿐이면 Select(또는 2~4개면 RadioGroup)를 씁니다. 칠 일이 없습니다.
+- 목록에 없는 글자를 그대로 값으로 받아야 하면(자유 입력) Input을 씁니다. Combobox는 목록 안의 옵션만 고릅니다.
+- 서버에서 결과를 받아 와야 하거나(비동기) 여러 개를 고르거나 수천 개를 그려야 하면(가상화) v0의 Combobox로는 할 수 없습니다.
+- 동작을 실행할 때는 Menu를 씁니다.
+
+## 예시
+
+### size
+
+`size`는 `sm`(32px)·`md`(40px, 기본값)·`lg`(48px)이고 같은 size의 Input·Select·Button과 높이·좌우 여백·글자 크기가 같습니다. chevron도 Select와 같은 자리에 있습니다. 폭은 Input처럼 감싸는 요소를 채우고, `className`으로 입력 폭을 바꿔도 chevron은 입력 끝에 붙어 있습니다. 목록은 입력보다 좁지 않되 화면 폭(양쪽 12px 여백을 뺀 것)을 넘지 않습니다.
+
+<Canvas of={ComboboxStories.Sizes} />
+
+### 결과 없음
+
+거른 결과가 없으면 목록이 닫히지 않고 「결과가 없습니다」가 보입니다. 글자는 `emptyMessage`로 바꿉니다. 결과 개수(0개 포함)는 스크린리더에 따로 알려집니다.
+
+<Canvas of={ComboboxStories.Empty} />
+
+### 묶음·비활성 옵션
+
+`ComboboxSection`으로 옵션을 묶고 `heading`으로 제목을 붙입니다. 거른 뒤 남은 옵션이 없는 묶음은 제목까지 빠집니다. `disabled` 옵션은 흐리게 보이고 고를 수 없으며 키보드 위치가 건너뜁니다. 고른 옵션은 회색 배경과 끝의 체크 아이콘으로 보입니다.
+
+<Canvas of={ComboboxStories.Sections} />
+
+### 제어
+
+`value`와 `onValueChange(value)`로 고른 값을 앱 상태에 둡니다. 사용자가 입력을 모두 지우면 `onValueChange(null)`이 불립니다. `value`를 바꾸면 입력 글자도 그 옵션의 이름으로 바뀝니다. 비제어로 쓰려면 `defaultValue`를 줍니다. 목록 열림은 입력이 정하므로 제어할 수 없고 `onOpenChange(open)`로 알 수만 있습니다.
+
+<Canvas of={ComboboxStories.Controlled} />
+
+### 폼 제출과 오류
+
+`name`을 주면 숨은 input이 함께 그려져 고른 옵션의 `value`가 제출됩니다(입력한 글자가 아닙니다). 폼을 reset하면 `defaultValue`로 돌아갑니다. Field의 `required`는 비어 있을 때 제출을 막고 입력으로 포커스를 옮기며 오류 상태로 만듭니다(브라우저 말풍선은 나오지 않으므로 메시지는 Field `error`로 보여 줍니다). Field의 `disabled`는 입력과 chevron을 끄고 값을 제출하지 않습니다.
+
+<Canvas of={ComboboxStories.InForm} />
+
+## Do/Don't
+
+### Do: 옵션이 많아 찾아야 하는 목록에 쓴다
+
+<Canvas of={ComboboxStories.DoManyOptions} />
+
+### Don't: 옵션 몇 개뿐인 목록을 Combobox로 둔다
+
+칠 일이 없고, 사용자는 무엇을 칠 수 있는지 모릅니다. 몇 개뿐이면 Select나 RadioGroup으로 모두 보여 줍니다.
+
+<Canvas of={ComboboxStories.DontFewOptions} />
+
+## 접근성
+
+### 기본 제공
+
+- 역할: 입력은 `combobox`(`aria-autocomplete="list"`, `aria-expanded`, 열렸을 때 `aria-controls`)이고 목록은 `listbox`, 옵션은 `option`(`aria-selected`), 묶음은 `group` 역할입니다(React Aria `useComboBox`·`useListBox`·`useOption`·`useListBoxSection`, WAI-ARIA APG Combobox의 list autocomplete).
+- 이름: 입력의 이름은 Field label이고(`<label for>`), label을 누르면 입력에 포커스가 옵니다. 설명·오류는 `aria-describedby`로, 오류 상태는 `aria-invalid="true"`로, 필수는 `required`로 연결됩니다.
+- 포커스: 늘 입력에 있습니다. 목록 안 위치는 가상 포커스(`aria-activedescendant`)이고 highlight로 보입니다. 그래서 목록이 열린 동안에도 바깥 요소는 막히지 않습니다(스크린리더에서는 입력과 목록 밖을 숨깁니다).
+- 열기: 글자를 치면 거른 목록이, ↓·↑ 또는 chevron 버튼을 누르면 전체 목록이 열립니다. 고른 옵션이 있으면 그 옵션에, 없으면 ↓는 첫 옵션·↑는 마지막 옵션에 위치합니다. chevron 버튼은 Tab 순서에 없습니다.
+- 탐색: ↓↑(비활성 옵션은 건너뜀), 마우스를 올린 옵션도 위치가 됩니다. 치는 동안에는 위치가 없어 Enter가 친 글자를 덮지 않습니다.
+- 고르기: Enter·누름, 그리고 위치가 있는 상태의 Tab(고르고 다음 요소로 갑니다). 고르면 닫히고 입력에 옵션 이름이 들어갑니다.
+- 닫기: Esc(입력을 고른 옵션의 이름으로 되돌립니다), 바깥 누름, 포커스가 입력을 떠날 때, 페이지가 스크롤될 때(목록이 입력에서 떨어지지 않게). 고르지 않은 글자는 포커스가 떠나면 지워집니다(목록 밖 값은 받지 않습니다).
+- 결과 안내: 목록이 열릴 때와 결과 개수가 바뀔 때 「N개 옵션을 사용할 수 있습니다」를 live region으로 알립니다. 문구는 React Aria 번역이고 앱 locale(`I18nProvider`, 없으면 브라우저 언어)을 따릅니다.
+- 한글 입력: 입력기가 조합하는 동안에도 거르고, 조합 중 Enter·화살표·Esc는 입력기가 쓰므로 목록 동작에 쓰지 않습니다(조합을 끝내는 Enter가 옵션을 고르거나 글자를 지우지 않습니다. Safari의 keyCode 229 Enter 포함).
+- 포커스 표시: 입력은 field 표시(경계가 포커스 색 2px)이고 클릭으로 포커스해도 보입니다. 오류 상태에서도 포커스 중에는 포커스 표시가 이깁니다. 목록의 위치는 highlight(primary subtle 배경, primary 글자)이고 고대비 모드에서는 옵션 안쪽 2px 테두리가 시스템 색으로 그려집니다.
+- 쌓임: 목록은 `z-popover`라 Dialog(`z-modal`) 안에서 열어도 위에 보입니다.
+- 대비: 입력·옵션 글자(`text-default`), placeholder·chevron·결과 없음 글자(`text-muted`), 입력 경계(`border-strong`)·오류 경계(`border-danger`)·포커스 색은 각 배경과 기준(글자 4.5:1, 경계 3:1) 이상입니다.
+- 움직임: 목록은 바로 나타나고 사라질 때만 opacity가 짧게(150ms) 흐려집니다.
+
+### 앱이 할 일
+
+- Field 안에 두거나, Field 없이 쓰면 `aria-label`로 이름을 줍니다.
+- 거르기와 고른 뒤 입력에 들어가는 글자는 옵션 내용의 글자입니다. 내용이 글자가 아니거나 다르게 하려면 `textValue`를 줍니다. 입력에는 아이콘이 보이지 않습니다.
+- `ComboboxItem`·`ComboboxSection`은 `Combobox`(또는 `ComboboxSection`) 바로 안에 둡니다. Fragment와 배열(`map`)은 되지만, 직접 만든 Component로 옵션을 감싸면 모이지 않습니다. `value`는 목록 안에서 겹치지 않게 줍니다.
+- 거르기는 「포함」 검사라 한글을 조합하는 중간 글자(예: 「바나나」를 치다 생긴 「반」)에서는 잠깐 결과가 줄 수 있습니다. 초성 검색은 하지 않습니다.
+- 필수 입력의 오류 메시지는 Field `error`로 보여 줍니다.
+
+## Props
+
+모두 client Component입니다. `Combobox`는 입력 `<input>`의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. `ComboboxItem`은 옵션 `<div>`의 props를 받습니다. 색·`variant` prop은 없습니다.
+
+| Component         | prop                                                            | 기본값                   |
+| ----------------- | --------------------------------------------------------------- | ------------------------ |
+| `Combobox`        | `value`: `string \| null`(제어, `null`은 비움)                  | 없음                     |
+| `Combobox`        | `defaultValue`: `string`(비제어, reset 값)                      | 없음(고르지 않음)        |
+| `Combobox`        | `onValueChange`: `(value: string \| null) => void`              | 없음                     |
+| `Combobox`        | `onOpenChange`: `(open: boolean) => void`                       | 없음                     |
+| `Combobox`        | `emptyMessage`: `ReactNode`                                     | `"결과가 없습니다"`      |
+| `Combobox`        | `name`·`form`: 숨은 input에 붙음                                | 없음                     |
+| `Combobox`        | `size`: `"sm" \| "md" \| "lg"`                                  | `"md"`                   |
+| `Combobox`        | `invalid`·`required`·`disabled`: `boolean`                      | Field 값(없으면 `false`) |
+| `Combobox`        | `placeholder`·`readOnly` 등 input 속성                          | 없음                     |
+| `Combobox`        | `value`·`defaultValue`·`onChange`·`type`·`list`는 input 것 제외 |                          |
+| `ComboboxItem`    | `value`: `string`(필수, 제출되는 값)                            |                          |
+| `ComboboxItem`    | `disabled`: `boolean`                                           | `false`                  |
+| `ComboboxItem`    | `textValue`: `string`(거르기·입력 글자)                         | 내용의 글자              |
+| `ComboboxItem`    | `role` 제외(option)                                             |                          |
+| `ComboboxSection` | `heading`: `ReactNode`(제목이자 이름)                           | 없음                     |
+| `ComboboxSection` | `aria-label`: `string`(제목이 없을 때)                          | 없음                     |
+| `ComboboxSection` | `className`: 묶음 감싸개 class                                  | 없음                     |
+
+상태는 `data-open`(입력과 목록, 열렸을 때), `data-invalid`(입력, 오류), 네이티브 `:disabled`(입력·chevron 버튼), `data-placement`(목록), `data-highlighted`(옵션, 가상 포커스 위치·hover), `data-selected`(옵션, 고른 값), `data-disabled`(옵션, 비활성)로 노출합니다.
+
+<ArgTypes of={ComboboxStories} />
