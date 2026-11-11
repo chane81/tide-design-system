@@ -18,6 +18,7 @@ export { Radio, type RadioProps } from "./Radio.tsx";
 export { RadioGroup, type RadioGroupProps } from "./RadioGroup.tsx";
 export { Switch, type SwitchProps } from "./Switch.tsx";
 export { Alert, type AlertProps } from "./Alert.tsx";
+export { Avatar, type AvatarProps } from "./Avatar.tsx";
 export { Badge, type BadgeProps } from "./Badge.tsx";
 export { Card, type CardProps } from "./Card.tsx";
 export { Separator, type SeparatorProps } from "./Separator.tsx";
