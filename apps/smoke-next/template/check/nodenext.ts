@@ -3,6 +3,10 @@ import {
   Alert,
   Avatar,
   Badge,
+  Breadcrumb,
+  BreadcrumbCurrent,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
   Card,
   Checkbox,
@@ -15,6 +19,12 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  Pagination,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
   Separator,
   Skeleton,
   Switch,
@@ -27,6 +37,10 @@ import {
   Textarea,
   VisuallyHidden,
   type AlertProps,
+  type BreadcrumbCurrentProps,
+  type BreadcrumbItemProps,
+  type BreadcrumbLinkProps,
+  type BreadcrumbProps,
   type AvatarProps,
   type BadgeProps,
   type ButtonProps,
@@ -40,6 +54,12 @@ import {
   type InputProps,
   type LinkProps,
   type ProgressProps,
+  type PaginationEllipsisProps,
+  type PaginationItemProps,
+  type PaginationLinkProps,
+  type PaginationNextProps,
+  type PaginationPreviousProps,
+  type PaginationProps,
   type SeparatorProps,
   type SkeletonProps,
   type SwitchProps,
@@ -154,6 +174,21 @@ const tableCellProps: TableCellProps = { headers: "q1", className: "tabular-nums
 const wrongScope: TableHeaderCellProps = { scope: "column" };
 // @ts-expect-error Table에는 variant가 없다.
 const variantTable: TableProps = { variant: "striped" };
+// Breadcrumb·Pagination은 nav·li·a·span props를 받는다. 색·variant·size 축은 없다(티켓 24).
+const breadcrumbProps: BreadcrumbProps = { "aria-label": "문서 경로", className: "mb-4" };
+const breadcrumbItemProps: BreadcrumbItemProps = { className: "gap-2" };
+const breadcrumbLinkProps: BreadcrumbLinkProps = { href: "/docs" };
+const breadcrumbCurrentProps: BreadcrumbCurrentProps = { children: "설치" };
+// @ts-expect-error BreadcrumbLink에는 color가 없다.
+const coloredBreadcrumbLink: BreadcrumbLinkProps = { color: "primary" };
+const paginationProps: PaginationProps = { "aria-label": "댓글 페이지" };
+const paginationItemProps: PaginationItemProps = { className: "hidden sm:block" };
+const paginationLinkProps: PaginationLinkProps = { href: "?page=2", current: true };
+const paginationPreviousProps: PaginationPreviousProps = { disabled: true };
+const paginationNextProps: PaginationNextProps = { "aria-label": "다음 댓글" };
+const paginationEllipsisProps: PaginationEllipsisProps = { children: "3쪽 생략" };
+// @ts-expect-error 이전/다음의 size는 고정이다.
+const sizedPaginationNext: PaginationNextProps = { size: "lg" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -252,4 +287,26 @@ export const values = [
   tableCellProps,
   wrongScope,
   variantTable,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbCurrent,
+  breadcrumbProps,
+  breadcrumbItemProps,
+  breadcrumbLinkProps,
+  breadcrumbCurrentProps,
+  coloredBreadcrumbLink,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+  paginationProps,
+  paginationItemProps,
+  paginationLinkProps,
+  paginationPreviousProps,
+  paginationNextProps,
+  paginationEllipsisProps,
+  sizedPaginationNext,
 ] as const;

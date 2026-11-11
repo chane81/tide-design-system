@@ -5,6 +5,10 @@ import {
   Alert,
   Avatar,
   Badge,
+  Breadcrumb,
+  BreadcrumbCurrent,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
   Card,
   Checkbox,
@@ -14,6 +18,12 @@ import {
   IconButton,
   Input,
   Link as TideLink,
+  Pagination,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
   Radio,
   RadioGroup,
   Progress,
@@ -161,6 +171,32 @@ export default function Page() {
           </TableRow>
         </TableBody>
       </Table>
+      {/* Breadcrumb·Pagination은 서버 컴포넌트다(티켓 24). 링크는 render로 Next Link를 받는다.
+          구분자·화살표·생략 아이콘은 Component가 쓴다. 내부 class는 이 파일에 쓰지 않는다(주석에도 이름을 적지 않는다). */}
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink render={<Link href="/" />}>홈</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbCurrent>설정</BreadcrumbCurrent>
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <Pagination>
+        <PaginationItem>
+          <PaginationPrevious disabled />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink render={<Link href="/?page=1" />} current>
+            1
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext render={<Link href="/?page=2" />} />
+        </PaginationItem>
+      </Pagination>
       {/* 아이콘은 PlusIcon 하나만 쓴다(Alert 상태 아이콘은 Component가 쓴다). 다른 아이콘이 빌드 결과에 없는지 smoke가 확인한다. */}
       <PlusIcon aria-label="추가" />
     </main>

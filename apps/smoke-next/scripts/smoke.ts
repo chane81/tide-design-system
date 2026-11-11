@@ -248,6 +248,9 @@ try {
     "Progress.js",
     // Table은 시맨틱 표 요소만 쓰는 서버 컴포넌트다(티켓 23).
     "Table.js",
+    // Breadcrumb·Pagination은 함수를 만들지 않고 Button·IconButton에 props만 넘기는 서버 컴포넌트다(티켓 24).
+    "Breadcrumb.js",
+    "Pagination.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -314,6 +317,11 @@ try {
   assert(
     css.includes(".border-collapse") && css.includes(":where(tbody>") && css.includes(".py-2\\.5"),
     "Table 내부 class(border-collapse, [:where(tbody>&)]:hover:bg-neutral-subtle-hover, py-2.5)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    css.includes("li:first-child>") && css.includes(".min-w-8") && css.includes(".gap-1\\.5"),
+    "Breadcrumb·Pagination 내부 class([li:first-child>&]:hidden, min-w-8, gap-1.5)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -455,6 +463,35 @@ try {
     "Table이 prerender한 HTML에서 표 요소·머리 칸 scope가 기대와 다르다",
   );
 
+  // Breadcrumb·Pagination(서버 컴포넌트)이 prerender한 HTML(티켓 24). 이름 있는 nav 랜드마크, 현재 항목의 aria-current,
+  // 장식용 아이콘(aria-hidden), 이전/다음 이름과 disabled, Next Link로 렌더한 href.
+  const breadcrumb = html?.match(/<nav aria-label="이동 경로">.*?<\/nav>/)?.[0] ?? "";
+  const pagination = html?.match(/<nav aria-label="페이지 이동">.*?<\/nav>/)?.[0] ?? "";
+  assert(
+    breadcrumb.startsWith('<nav aria-label="이동 경로"><ol ') &&
+      (breadcrumb.match(/<li /g) ?? []).length === 2 &&
+      /<a [^>]*href="\/"[^>]*>홈<\/a>/.test(breadcrumb) &&
+      /<span aria-current="page"[^>]*>설정<\/span>/.test(breadcrumb) &&
+      (breadcrumb.match(/<svg [^>]*aria-hidden="true"/g) ?? []).length === 2,
+    "Breadcrumb이 prerender한 HTML에서 랜드마크·목록·aria-current·구분자 숨김이 기대와 다르다",
+  );
+  assert(
+    pagination.startsWith('<nav aria-label="페이지 이동"><ul ') &&
+      /<li><button [^>]*aria-label="이전 페이지"/.test(pagination) &&
+      /<button [^>]*disabled=""[^>]*aria-label="이전 페이지"|<button [^>]*aria-label="이전 페이지"[^>]*disabled=""/.test(
+        pagination,
+      ) &&
+      /<a [^>]*href="\/\?page=1"[^>]*aria-current="page"|<a [^>]*aria-current="page"[^>]*href="\/\?page=1"/.test(
+        pagination,
+      ) &&
+      /<a [^>]*aria-label="다음 페이지"[^>]*href="\/\?page=2"|<a [^>]*href="\/\?page=2"[^>]*aria-label="다음 페이지"/.test(
+        pagination,
+      ) &&
+      pagination.includes("페이지 생략") &&
+      (pagination.match(/<svg [^>]*aria-hidden="true"/g) ?? []).length === 3,
+    "Pagination이 prerender한 HTML에서 랜드마크·이전/다음 이름·disabled·aria-current·아이콘 숨김이 기대와 다르다",
+  );
+
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
   const builtJs = (
@@ -491,6 +528,15 @@ try {
   // Avatar fallback 아이콘도 Component가 쓰므로 빌드 결과에 있다(티켓 21).
   if (!builtJs.includes(await iconShape("user-icon.js"))) {
     throw new Error("아이콘 확인 실패: Avatar가 쓰는 user-icon.js의 도형이 빌드 결과에 없다");
+  }
+  // Breadcrumb 구분자와 Pagination 화살표 아이콘도 Component가 쓰므로 빌드 결과에 있다(티켓 24).
+  // 생략 아이콘(ellipsis-icon.js)은 path 없이 circle만 있어 이 도형 비교로는 보지 않는다. prerender HTML 확인이 대신한다.
+  for (const file of ["chevron-right-icon.js", "chevron-left-icon.js"]) {
+    if (!builtJs.includes(await iconShape(file))) {
+      throw new Error(
+        `아이콘 확인 실패: Breadcrumb·Pagination이 쓰는 ${file}의 도형이 빌드 결과에 없다`,
+      );
+    }
   }
   if (builtJs.includes(await iconShape("house-icon.js"))) {
     throw new Error(

@@ -247,3 +247,36 @@ describe("Table 대비 쌍", () => {
     expect(contrastExclusions.some((exclusion) => exclusion.token === "border-default")).toBe(true);
   });
 });
+
+// Breadcrumb·Pagination(tide-v0-impl 티켓 24)이 쓰는 글자색과 배경이 대비 쌍에 등록되어 있는지 본다.
+// - Breadcrumb: 링크 text-muted(hover text-default), 현재 페이지 text-default. 배경은 놓인 표면 층이다.
+//   구분자 아이콘은 장식용이라 대비 대상이 아니다(글자색 text-muted를 따른다).
+// - Pagination: 번호·이전/다음은 neutral ghost(text-default, hover bg-neutral-subtle-hover),
+//   현재 페이지는 primary subtle(text-primary × bg-primary-subtle). 생략 아이콘은 장식용이다.
+describe("Breadcrumb·Pagination 대비 쌍", () => {
+  it.each(["text-muted", "text-default"])(
+    "%s × 표면 층 3개가 4.5:1로 등록되어 있다",
+    (foreground) => {
+      for (const background of surfaces) {
+        expect(registered(foreground, background, 4.5), `${foreground} × ${background}`).toBe(true);
+      }
+    },
+  );
+
+  it("번호 hover: text-default × bg-neutral-subtle-hover가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  });
+
+  it("현재 페이지: text-primary × bg-primary-subtle이 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
+    // 현재 페이지도 링크라 hover·누름 배경으로 바뀐다(Button subtle 규칙).
+    expect(registered("text-primary", "bg-primary-subtle-hover", 4.5)).toBe(true);
+    expect(registered("text-primary", "bg-primary-subtle-active", 4.5)).toBe(true);
+  });
+
+  it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("outline-focus", background, 3), background).toBe(true);
+    }
+  });
+});
