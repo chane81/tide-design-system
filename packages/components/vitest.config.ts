@@ -29,7 +29,10 @@ export default defineConfig({
         // next/link(CJS)를 처음부터 사전 번들한다. 실행 중에 발견하면 Vite가 다시 최적화하며 페이지를 새로 고쳐
         // 차가운 캐시에서 테스트 파일 import가 실패한다(2026-11-10 로컬에서 재현).
         // react-aria·react-stately(오버레이 hook, 티켓 25)도 같은 이유로 처음부터 사전 번들한다. Component는 루트 entry만 import한다.
-        optimizeDeps: { include: ["next/link.js", "react-aria", "react-stately"] },
+        // react-dom 루트 entry(test/motion.ts의 flushSync)도 같은 이유로 넣는다. 이 import를 더한 직후, 전에 만든 캐시가
+        // 남은 상태에서 실행 중에 발견되어 다시 최적화하며 「Vitest failed to find the runner」로 import에 실패했다
+        // (2026-11-12 로컬. 빈 캐시에서는 첫 scan이 찾아 재현되지 않는다).
+        optimizeDeps: { include: ["next/link.js", "react-aria", "react-stately", "react-dom"] },
         test: {
           name: "browser",
           include: ["src/**/*.test.tsx"],

@@ -9,7 +9,7 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, styleSnapshot, transitions } from "../test/motion.ts";
+import { captureExit, openControl, styleSnapshot, transitions } from "../test/motion.ts";
 
 import { Button } from "./Button.tsx";
 import { listItemClass } from "./list-style.ts";
@@ -681,11 +681,15 @@ describe("등장과 퇴장 motion", () => {
   });
 
   test("퇴장 중에 다시 열면 같은 요소가 전환 없이 바로 돌아온다", async () => {
-    const screen = await render(<Example open />);
+    const control = openControl((open) => <Example open={open} />);
+    await render(control.element);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
-    await screen.rerender(<Example open={false} />);
-    await screen.rerender(<Example open />);
+    // 닫고 다시 여는 일을 한 task 안에서 한다. 사이에 렌더링 단계가 없어 퇴장 전환이 끝나 요소가 빠질 수 없다(test/motion.ts).
+    control.set(false);
+    expect(element.hasAttribute("data-open")).toBe(false);
+    expect(transitions(element).has("opacity")).toBe(true);
+    control.set(true);
     expect(content()).toBe(element);
     expect(getComputedStyle(element).opacity).toBe("1");
     await wait(300);

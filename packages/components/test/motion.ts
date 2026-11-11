@@ -12,7 +12,9 @@
 // - CSS Transitions 1 §6.2: `transitionrun`은 transition이 만들어질 때 생기지만 dispatch는 위 렌더링 단계에서 한다. 렌더링이
 //   전환 길이보다 늦으면 run·start·end가 한꺼번에 오고, 그때는 이미 끝난 transition이 `getAnimations()`에 없다. 그래서
 //   `transitionrun` 리스너 대신 MutationObserver를 쓴다.
-import { expect } from "vitest";
+import { createElement, useState, type ReactElement } from "react";
+import { flushSync } from "react-dom";
+import { expect, onTestFinished } from "vitest";
 
 /** 단언에 쓰는 계산 스타일 키. `getComputedStyle` 결과는 live라 나중에 읽으면 바뀌므로 값을 복사해 둔다. */
 const styleKeys = [
@@ -60,19 +62,52 @@ export function captureWhen<T>(condition: () => boolean, read: () => T): Promise
   expect(condition(), "captureWhen: 동작 전에 이미 조건이 참이다").toBe(false);
   return new Promise<T>((resolve, reject) => {
     const observer = new MutationObserver(() => {
-      if (!condition()) return;
-      observer.disconnect();
       try {
+        if (!condition()) return;
+        observer.disconnect();
         resolve(read());
       } catch (error) {
+        observer.disconnect();
         reject(error);
       }
     });
     observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+    // 조건이 끝내 참이 되지 않아도 다음 테스트로 넘어가지 않게 테스트가 끝나면 끊는다.
+    onTestFinished(() => observer.disconnect());
   });
 }
 
 /** `element`에서 `data-open`이 빠지는(퇴장 전환이 시작되는) 순간에 `read`를 돌린다. */
 export function captureExit<T>(element: Element, read: () => T): Promise<T> {
   return captureWhen(() => !element.hasAttribute("data-open"), read);
+}
+
+/** `openControl`이 돌려주는 값 */
+export interface OpenControl {
+  /** `render`에 넘길 harness 요소 */
+  readonly element: ReactElement;
+  /** 열림 상태를 바꾸고 곧바로 commit한다(`flushSync`). 돌아오면 DOM과 layout effect가 끝나 있다. */
+  set(open: boolean): void;
+}
+
+/**
+ * 열림 상태를 테스트에서 동기로 바꾸는 harness를 만든다. 「닫고 다시 열기」처럼 두 변경 사이에 렌더링 단계가 끼면
+ * 안 되는 테스트에 쓴다. `rerender`는 각각 `await`해야 해서 그 사이에 퇴장 전환이 끝날 수 있다(부하에 따라).
+ * `set`을 같은 task 안에서 이어 부르면 그 사이에 timeline이 움직이지 않는다(위 근거).
+ */
+export function openControl(render: (open: boolean) => ReactElement, initial = true): OpenControl {
+  let setOpen: ((open: boolean) => void) | undefined;
+  function Harness(): ReactElement {
+    const [open, set] = useState(initial);
+    setOpen = set;
+    return render(open);
+  }
+  return {
+    element: createElement(Harness),
+    set(open) {
+      if (!setOpen) throw new Error("openControl: harness를 먼저 render한다");
+      const update = setOpen;
+      flushSync(() => update(open));
+    },
+  };
 }

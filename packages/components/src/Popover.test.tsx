@@ -9,7 +9,13 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, captureWhen, styleSnapshot, transitions } from "../test/motion.ts";
+import {
+  captureExit,
+  captureWhen,
+  openControl,
+  styleSnapshot,
+  transitions,
+} from "../test/motion.ts";
 
 import { Button } from "./Button.tsx";
 import {
@@ -485,14 +491,19 @@ describe("등장과 퇴장 motion", () => {
   });
 
   test("퇴장 중에 다시 열면 같은 요소가 DOM에 남아 열린 상태로 돌아온다", async () => {
-    // 퇴장(150ms) 안에 다시 열어야 하므로 사용자 입력 대신 제어 prop을 바로 바꾼다.
-    const screen = await render(<Example open />);
+    // 퇴장(150ms) 안에 다시 열어야 하므로 사용자 입력 대신 열림 상태를 바로 바꾼다. 닫고 다시 여는 일을 한 task 안에서
+    // 해서, 사이에 렌더링 단계가 없어 퇴장 전환이 끝나 요소가 빠질 수 없다(test/motion.ts).
+    const control = openControl((open) => <Example open={open} />);
+    await render(control.element);
     await expect.element(page.getByRole("dialog")).toBeVisible();
     const element = content();
-    await screen.rerender(<Example open={false} />);
+    // 등장 전환(300ms)이 끝난 뒤 닫는다. 등장 시작값(opacity 0)에서 닫으면 바뀌는 값이 없어 퇴장 전환이 생기지 않는다.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
+    control.set(false);
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(element.isConnected).toBe(true);
-    await screen.rerender(<Example open />);
+    expect(transitions(element).has("opacity")).toBe(true);
+    control.set(true);
     expect(content()).toBe(element);
     expect(element).toHaveAttribute("data-open", "");
     // 처음 퇴장 시간이 지나도 빠지지 않는다.
