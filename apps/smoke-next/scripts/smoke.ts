@@ -301,6 +301,8 @@ try {
     "Accordion.js",
     // Tag도 React Aria hooks·state를 쓰므로 client다(티켓 33).
     "Tag.js",
+    // Toast도 React Aria hooks·state를 쓰므로 client다(티켓 34).
+    "Toast.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -388,6 +390,14 @@ try {
       css.includes("aria-disabled\\:bg-disabled") &&
       css.includes("pe-0\\.75"),
     "Tag 내부 class(hover:bg-(--tag-remove-hover), [--tag-remove-hover:…], aria-disabled:bg-disabled, pe-0.75)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes(".z-toast") &&
+      css.includes("--tide-z-toast") &&
+      css.includes("flex-col-reverse") &&
+      css.includes("max-w-96") &&
+      css.includes("w-\\[calc\\(100\\%-2rem\\)\\]"),
+    "Toast 내부 class(z-toast, flex-col-reverse, max-w-96, w-[calc(100%-2rem)])가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes(".z-tooltip") &&
@@ -667,6 +677,13 @@ try {
       htmlAttribute(shippingPanel, "aria-labelledby") === htmlAttribute(shippingTrigger, "id") &&
       htmlAttribute(refundTrigger, "aria-controls") === htmlAttribute(refundPanel, "id"),
     "Accordion이 prerender한 HTML에서 트리거·패널 역할·펼침 상태·연결이 기대와 다르다",
+  );
+
+  // Toast(client, 티켓 34): 큐가 비어 있으면 영역을 그리지 않는다. 서버 컴포넌트 page가 client 모듈의 영역을
+  // 그려도 prerender HTML에는 띄우는 버튼만 있고 영역(aria-label="알림")·alertdialog는 없다.
+  assert(
+    html?.includes("알림 띄우기") === true && !html.includes('aria-label="알림"'),
+    "Toast 영역이 prerender HTML에 그려졌거나 client Component(AppToasts)가 렌더되지 않았다",
   );
 
   // TagGroup(client)이 prerender한 HTML(티켓 33). 서버 컴포넌트가 넘긴 태그(lazy 참조)가 prerender 때 모여

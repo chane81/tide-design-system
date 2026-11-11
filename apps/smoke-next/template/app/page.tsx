@@ -80,6 +80,7 @@ import { PlusIcon } from "@tide-tds/icons";
 import Link from "next/link";
 
 import { brandColor } from "./colors";
+import { AppToasts } from "./toasts";
 
 export default function Page() {
   return (
@@ -312,6 +313,8 @@ export default function Page() {
       </Accordion>
       {/* TagGroup은 client Component다(티켓 33). 서버 컴포넌트가 만든 태그(lazy 참조)가 prerender 때 모여 grid·row로
           그려진다. 서버 컴포넌트는 함수(onRemove)를 넘길 수 없어 지우기 버튼 없는 묶음이다. 내부 class는 이 파일에 쓰지 않는다. */}
+      {/* Toast(client 전용, 티켓 34). 큐와 영역은 client 모듈(toasts.tsx)에 두고 여기서는 그 Component만 그린다. */}
+      <AppToasts />
       <TagGroup aria-label="입력한 키워드">
         <Tag value="react">리액트</Tag>
         <Tag value="design" color="blue">

@@ -531,3 +531,58 @@ describe("Tag 대비 쌍", () => {
     }
   });
 });
+
+// Toast(tide-v0-impl 티켓 34)는 Alert 배치에 오버레이 raised 표면을 얹는다. 글자는 text-default, 상태 아이콘과
+// 닫기(ghost)·액션(outline) 버튼은 Toast의 Role 색(accent 슬롯)이고 모두 bg-raised 위에 그린다.
+describe("Toast 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
+  const allRoles = ["neutral", ...tideRoles] as const;
+  const text = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "text-default" : `text-${role}`;
+  const border = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "border-strong" : `border-${role}`;
+
+  it("제목·본문 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+  });
+
+  it.each(allRoles)(
+    "%s: 상태 아이콘·버튼 글자(역할 text) × bg-raised가 4.5:1로 등록되어 있다",
+    (role) => {
+      expect(registered(text(role), "bg-raised", 4.5)).toBe(true);
+    },
+  );
+
+  it.each(allRoles)(
+    "%s: 닫기(ghost)·액션(outline) 버튼 hover·누름 글자 × subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
+    (role) => {
+      for (const state of ["subtle-hover", "subtle-active"]) {
+        expect(registered(text(role), `bg-${role}-${state}`, 4.5)).toBe(true);
+      }
+    },
+  );
+
+  it.each(allRoles)("%s: 액션 버튼(outline) 경계 × bg-raised가 3:1로 등록되어 있다", (role) => {
+    expect(registered(border(role), "bg-raised", 3)).toBe(true);
+  });
+
+  it("Toast·영역·버튼 포커스 표시: outline-focus × bg-raised·표면 층이 3:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("outline-focus", background, 3), background).toBe(true);
+    }
+  });
+
+  it("앱 Role은 text × 표면 층(4.5:1), border × 표면 층(3:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    const rule = (foreground: string, minRatio: number): boolean =>
+      colorContrastRules.some(
+        (r) =>
+          r.foreground === foreground && r.background === "bg-raised" && r.minRatio === minRatio,
+      );
+    expect(rule("text", 4.5)).toBe(true);
+    expect(rule("border", 3)).toBe(true);
+  });
+
+  it("경계(border-raised)는 장식용이라 대비 검사에서 제외되어 있다", () => {
+    expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
+  });
+});

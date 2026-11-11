@@ -60,6 +60,8 @@ import {
   Tabs,
   Tag,
   TagGroup,
+  ToastQueue,
+  ToastRegion,
   Table,
   TableBody,
   TableCell,
@@ -131,6 +133,9 @@ import {
   type TabsProps,
   type TagGroupProps,
   type TagProps,
+  type ToastOptions,
+  type ToastQueueOptions,
+  type ToastRegionProps,
   type PopoverProps,
   type PopoverTriggerProps,
   type SeparatorProps,
@@ -335,6 +340,23 @@ const tagProps: TagProps = { value: "a", children: "가", color: "cyan", disable
 const unnamedTagGroup: TagGroupProps = {};
 // @ts-expect-error Tag는 뜻 없는 분류 색이라 Role은 받지 않는다.
 const roleTag: TagProps = { value: "a", children: "가", color: "danger" };
+const toastQueueOptions: ToastQueueOptions = { maxVisible: 2 };
+const toastQueue = new ToastQueue(toastQueueOptions);
+const toastOptions: ToastOptions = {
+  title: "저장했습니다",
+  description: "본문",
+  color: "brand",
+  action: { label: "되돌리기", onClick: (event) => event.preventDefault() },
+  timeout: null,
+  onClose: () => undefined,
+  closeLabel: "알림 닫기",
+};
+const toastKey: string = toastQueue.add(toastOptions);
+const toastRegionProps: ToastRegionProps = { queue: toastQueue, "aria-label": "알림" };
+// @ts-expect-error Toast는 행동·의미 Component라 색 계열 이름은 받지 않는다.
+const familyToast: ToastOptions = { title: "가", color: "blue" };
+// @ts-expect-error 제목은 필수다.
+const untitledToast: ToastOptions = { description: "가" };
 const tooltipPlacement: TooltipPlacement = "top end";
 const tooltipContentProps: TooltipContentProps = { placement: tooltipPlacement, offset: 6 };
 // @ts-expect-error Tooltip 설명의 역할은 tooltip으로 고정이다.
@@ -483,6 +505,11 @@ export const values = [
   tagProps,
   unnamedTagGroup,
   roleTag,
+  ToastRegion,
+  toastKey,
+  toastRegionProps,
+  familyToast,
+  untitledToast,
   Alert,
   alertProps,
   blueAlert,
