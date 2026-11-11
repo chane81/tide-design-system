@@ -165,3 +165,17 @@
 - 묶음 이름은 `aria-label`·`aria-labelledby` 중 하나 타입상 필수, 보이는 `label`·설명·오류 문구 prop 없음.
 - 태그 행 hover 모양 없음, 비활성은 `bg-disabled`·`text-disabled`.
 - 지우지 않는 묶음도 grid 화살표 탐색(client), 탐색이 필요 없으면 Badge.
+
+## 34 Toast
+
+- 공개 API는 `ToastQueue`(모듈에서 `new`) + `ToastRegion`, Provider·`useToaster()`·전역 기본 큐 없음.
+- `maxVisible` 기본 3.
+- 자동 닫힘을 막는 「오류」는 `danger`만(`warning`은 자동으로 닫힘).
+- 5초보다 짧은 `timeout`은 조용히 5초로 올림, `null`이면 자동 닫힘 없음.
+- 기본 `color`는 `info`(Alert와 같음).
+- 액션은 하나(`{ label, onClick }`), Button outline `sm`, 내용 아래, 누르면 닫힘(`preventDefault`로 막음).
+- 새 Toast가 아래(모서리 쪽)에 쌓이고 Tab 순서는 새것부터.
+- 영역 이름 기본은 React Aria 번역(locale 따름), 닫기 이름 기본은 Tide 「닫기」.
+- 영역은 문서 Theme만 따름(트리거 없음).
+- 퇴장 중 Toast는 역할만 빠지고 `inert` 없음.
+- 위치는 아래 끝쪽 하나(`placement` prop 없음, `className`으로 조정).
