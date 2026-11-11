@@ -164,6 +164,10 @@ _Avoid_: Autocomplete(자유 입력을 받는 것으로 읽힘), Typeahead(Menu�
 트리거에 짧은 설명 한 줄을 붙이는 오버레이(`Tooltip`, `TooltipTrigger`, `TooltipContent`). 설명은 `tooltip` 역할이고 열린 동안 트리거의 `aria-describedby`가 가리킨다. 마우스를 올리면 잠깐 뒤에, 키보드 포커스면 바로 열리고 Esc·포커스 이탈·포인터 이탈로 닫힌다. 포커스를 받지 않고 조작 요소를 담지 않는다. 이름(`aria-label`)이 아니라 설명이다. 조작 요소가 필요하면 Popover다.
 _Avoid_: Hint, Title 속성(브라우저 기본 툴팁), Popover
 
+**Tabs (탭)**:
+같은 영역에서 여러 패널 중 하나를 골라 보여 주는 묶음(`Tabs`, `TabList`, `Tab`, `TabPanel`). 탭 목록은 `tablist`, 탭은 `tab`, 내용은 `tabpanel` 역할이고 탭과 패널은 같은 `value`로 이어진다. 화살표로 탭을 옮기며 기본은 옮기면 바로 고른다(자동 활성화). 고른 탭은 글자색과 막대(고른 표시)로 보이고, 고른 탭의 패널만 보인다. 여러 묶음을 함께 펼치는 것은 Accordion, 다른 페이지로 가는 메뉴는 링크 목록이다.
+_Avoid_: Segmented control(값을 고르는 입력과 혼동), Tab bar(앱 하단 내비게이션과 혼동), 탭 순서(키보드 Tab 이동과 혼동하므로 「탭」은 이 Component, 「Tab」은 키)
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge

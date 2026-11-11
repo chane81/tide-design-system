@@ -29,3 +29,8 @@ Menu·Select·Combobox는 항목 목록을 React Stately 상태(`useTreeState`, 
 > - **서버 컴포넌트**: Select는 Menu와 달리 렌더할 때(서버 prerender 포함) 옵션을 모은다(트리거에 고른 값을 보이고 숨은 select를 그려야 하므로). smoke 앱의 서버 컴포넌트 page가 Field 안 Select를 prerender해 lazy 참조 옵션이 모이는 것을 확인했다.
 
 > 덧붙임(2026-11-11, [티켓 29](../progress/tide-v0-impl/issues/29-combobox.md)): Combobox가 `listbox.tsx`·`list-collection.ts`·`list-style.ts`를 고치지 않고 썼다(`ComboboxItem`은 `valueItemCollectionNode`, `ComboboxSection`은 `sectionCollectionNode`). `useComboBoxState`의 거르기(`filterCollection`)는 묶음 node를 남은 옵션이 있을 때만 남기고 옵션 node를 그대로 복사하므로, 거른 컬렉션에서도 key가 `value`이고 `ListBoxNodes`의 묶음 구분선 규칙(이웃이 묶음일 때만)이 그대로 맞는다. 옵션의 `textValue`(기본 내용 글자)가 거르기 글자이자 고른 뒤 입력에 들어가는 글자다. 가상 포커스에서도 `useOption`의 `isFocused`가 `data-highlighted`가 되는 것을 테스트로 확인했다.
+
+> 덧붙임(2026-11-11, [티켓 31](../progress/tide-v0-impl/issues/31-tabs.md)): Tabs가 `list-collection.ts`를 고치지 않고 썼다. `Tab`은 `valueItemCollectionNode`(탭 `value` = 컬렉션 key)이고 `TabList`가 `resolveCollectionChildren`으로 모아 `useTabListState`에 넘긴다. Select처럼 렌더할 때 모으므로 서버 컴포넌트 page의 prerender HTML에 탭이 그려진다(smoke 확인).
+>
+> - **패널은 컬렉션 밖이다**: `TabPanel`은 `TabList` 밖의 형제라 `useTabPanel`이 요구하는 같은 상태 객체(`useTabList`가 WeakMap에 탭 id 앞부분을 묶는다)를 받을 수 없다. 그래서 루트 `Tabs`가 `useId`로 id 앞부분을 짓고 탭 id·`aria-controls`(고른 탭만)와 패널 id·`aria-labelledby`를 그 값으로 덮어쓴다. React Aria 탭 키보드 이동은 id가 아니라 `data-key`로 요소를 찾으므로 영향이 없다(react-aria 3.53.1 `useTab`·`useSelectableItem` 소스).
+> - **타입어헤드 없음**: `TabsKeyboardDelegate`에 `getKeyForSearch`가 없어 탭 목록은 글자 이동을 하지 않는다. 그래서 `Tab`은 `textValue`를 받지 않는다(공통 props에서 뺀다).
