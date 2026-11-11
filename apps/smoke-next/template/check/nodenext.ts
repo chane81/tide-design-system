@@ -1,5 +1,6 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
 import {
+  Alert,
   Badge,
   Button,
   Card,
@@ -16,6 +17,7 @@ import {
   Switch,
   Textarea,
   VisuallyHidden,
+  type AlertProps,
   type BadgeProps,
   type ButtonProps,
   type CardProps,
@@ -96,6 +98,18 @@ const cardProps: CardProps = { children: null, id: "card" };
 const separatorProps: SeparatorProps = { orientation: "vertical", decorative: true };
 // @ts-expect-error Separator orientation은 horizontal/vertical만 받는다.
 const diagonalSeparator: SeparatorProps = { orientation: "diagonal" };
+// Alert color는 Role만 받는다(앱 Role 포함, ADR 0016). role은 alert·status만, onClose는 인자 없는 콜백이다(티켓 20).
+const alertProps: AlertProps = {
+  color: "brand",
+  title: "새 요금제",
+  role: "status",
+  onClose: () => {},
+  closeLabel: "알림 닫기",
+};
+// @ts-expect-error Alert color는 색 계열 이름을 받지 않는다.
+const blueAlert: AlertProps = { color: "blue" };
+// @ts-expect-error Alert role은 alert·status만 받는다.
+const buttonAlert: AlertProps = { role: "button" };
 const iconProps: IconProps = { size: 20, strokeWidth: 1.5, "aria-label": "추가" };
 const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
@@ -165,4 +179,8 @@ export const values = [
   Separator,
   separatorProps,
   diagonalSeparator,
+  Alert,
+  alertProps,
+  blueAlert,
+  buttonAlert,
 ] as const;

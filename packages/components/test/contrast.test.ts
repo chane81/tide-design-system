@@ -115,3 +115,56 @@ describe("Card·Separator 대비 쌍", () => {
     expect(contrastExclusions.some((item) => item.token === "border-default")).toBe(true);
   });
 });
+
+// Alert(tide-v0-impl 티켓 20)가 쓰는 역할 text·border·subtle 배경 조합과 닫기 버튼 포커스 표시가 등록되어 있는지 본다.
+describe("Alert 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
+  const allRoles = ["neutral", ...tideRoles] as const;
+  const border = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "border-strong" : `border-${role}`;
+  const text = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "text-default" : `text-${role}`;
+
+  it.each(allRoles)(
+    "%s: 글자·아이콘(역할 text) × 같은 Role subtle이 4.5:1로 등록되어 있다",
+    (role) => {
+      expect(registered(text(role), `bg-${role}-subtle`, 4.5)).toBe(true);
+    },
+  );
+
+  it.each(allRoles)("%s: 역할 경계 × 같은 Role subtle(안쪽)이 3:1로 등록되어 있다", (role) => {
+    expect(registered(border(role), `bg-${role}-subtle`, 3)).toBe(true);
+  });
+
+  it.each(allRoles)("%s: 역할 경계 × 표면 층(바깥)이 3:1로 등록되어 있다", (role) => {
+    for (const background of surfaces) {
+      expect(registered(border(role), background, 3), `${border(role)} × ${background}`).toBe(true);
+    }
+  });
+
+  it.each(allRoles)(
+    "%s: 닫기 버튼 포커스 표시(outline-focus) × 같은 Role subtle이 3:1로 등록되어 있다",
+    (role) => {
+      expect(registered("outline-focus", `bg-${role}-subtle`, 3)).toBe(true);
+    },
+  );
+
+  it.each(allRoles)(
+    "%s: 닫기 버튼(ghost) hover·누름 글자 × subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
+    (role) => {
+      for (const state of ["subtle-hover", "subtle-active"]) {
+        expect(registered(text(role), `bg-${role}-${state}`, 4.5)).toBe(true);
+      }
+    },
+  );
+
+  it("앱 Role은 text × subtle(4.5:1), border × 표면 층(3:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    const rule = (foreground: string, background: string, minRatio: number): boolean =>
+      colorContrastRules.some(
+        (r) =>
+          r.foreground === foreground && r.background === background && r.minRatio === minRatio,
+      );
+    expect(rule("text", "subtle", 4.5)).toBe(true);
+    for (const background of surfaces) expect(rule("border", background, 3)).toBe(true);
+  });
+});

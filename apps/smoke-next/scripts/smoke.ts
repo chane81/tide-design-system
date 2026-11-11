@@ -238,6 +238,9 @@ try {
     "Badge.js",
     "Card.js",
     "Separator.js",
+    // Alert는 onClose를 IconButton에 그대로 넘길 뿐 핸들러를 만들지 않는다. 공유 스타일 모듈도 서버용이다(티켓 20).
+    "Alert.js",
+    "alert-style.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -281,6 +284,11 @@ try {
       css.includes(".bg-surface") &&
       css.includes(".self-stretch"),
     "Badge·Card·Separator 내부 class([&_svg]:size-3, bg-surface, self-stretch)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+
+  assert(
+    css.includes(".-me-1") && css.includes(".-my-0\\.5"),
+    "Alert 내부 class(-me-1, -my-0.5)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
 
   // Field(서버 컴포넌트)가 prerender한 HTML에서 label·설명·오류가 입력창과 연결되어 있다(티켓 15).
@@ -341,6 +349,22 @@ try {
     "Badge·Card·Separator가 prerender한 HTML에서 article·data-color·hr 역할이 기대와 다르다",
   );
 
+  // Alert(서버 컴포넌트)가 prerender한 HTML: 정적 Alert는 역할이 없고, role="status"는 그대로 붙고,
+  // 루트에 data-color가 붙고, 상태 아이콘은 aria-hidden이며, onClose가 없어 닫기 버튼이 없다(티켓 20).
+  const alerts = html
+    ? [...html.matchAll(/<div[^>]*data-color="(warning|brand)"[^>]*>.*?<\/svg>/g)].map((m) => m[0])
+    : [];
+  assert(
+    alerts.length === 2 &&
+      alerts.some((alert) => alert.includes('data-color="warning"') && !alert.includes("role=")) &&
+      alerts.some(
+        (alert) => alert.includes('data-color="brand"') && alert.includes('role="status"'),
+      ) &&
+      alerts.every((alert) => /<svg[^>]*aria-hidden="true"/.test(alert)) &&
+      !html?.includes('aria-label="닫기"'),
+    "Alert가 prerender한 HTML에서 역할·data-color·아이콘 숨김·닫기 버튼이 기대와 다르다",
+  );
+
   // 5. 아이콘 tree-shaking: 페이지가 쓴 아이콘만 빌드 결과에 들어간다.
   // 도형 데이터는 원본 SVG에서 생성되므로, 쓰지 않은 아이콘의 도형 문자열이 없으면 파일 단위로 빠진 것이다.
   const builtJs = (
@@ -366,6 +390,12 @@ try {
   for (const file of ["check-icon.js", "minus-icon.js"]) {
     if (!builtJs.includes(await iconShape(file))) {
       throw new Error(`아이콘 확인 실패: Checkbox가 쓰는 ${file}의 도형이 빌드 결과에 없다`);
+    }
+  }
+  // Alert 상태 아이콘도 Component가 쓰므로 빌드 결과에 있다(티켓 20).
+  for (const file of ["info-icon.js", "triangle-exclamation-point-icon.js"]) {
+    if (!builtJs.includes(await iconShape(file))) {
+      throw new Error(`아이콘 확인 실패: Alert가 쓰는 ${file}의 도형이 빌드 결과에 없다`);
     }
   }
   if (builtJs.includes(await iconShape("house-icon.js"))) {
