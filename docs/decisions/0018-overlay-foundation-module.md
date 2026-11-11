@@ -35,3 +35,9 @@ Popover·Tooltip·Menu·Select·Combobox·Dialog·Toast는 모두 「트리거�
 > - **위치는 `useOverlayPosition` + `overlayPositionProps`**: Tooltip은 dismiss(Esc, hover·포커스 이탈)를 `useTooltipTrigger`가 하므로 `usePopover`를 쓰지 않는다. 위치는 `useOverlayPosition`(`isOpen`, 스크롤 시 `onClose`로 바로 닫기)이 구하고 `overlayPositionProps`가 `zIndex`를 빼고 `data-placement`를 붙인다.
 >
 > 모듈 밖의 Tooltip 결정 하나: 열린 모달 Popover·Dialog는 바깥을 `ariaHideOutside(..., { shouldUseInert: true })`로 막고 **나중에 body에 붙은 요소도** MutationObserver로 막는다. 그 안 트리거의 Tooltip이 `inert`가 되지 않도록 설명 요소에 `data-react-aria-top-layer`를 붙인다. React Aria 3.53.1 소스(`ariaHideOutside`의 늘 보이는 요소, `useInteractOutside`의 바깥 판정 제외, `FocusScope`)가 이 속성을 보는 것을 확인했지만 공개 문서에는 없는 속성이다. React Aria 판을 올릴 때 Tooltip 테스트 「열린 Popover 위에 보이고 inert가 되지 않는다」가 이 동작을 지킨다. Toast(34)도 같은 문제가 생기면 이 속성을 쓰고 공통 모듈로 옮긴다.
+
+> 덧붙임(2026-11-11, [티켓 27](../progress/tide-v0-impl/issues/27-menu.md)): Menu가 이 모듈을 고치지 않고 그대로 썼다. Popover·Tooltip 테스트는 그대로 통과한다.
+>
+> - **조합**: `useOverlayPresence` → `OverlayPortal`(`focusManagement` 기본 `true`. Menu는 항목에 포커스가 오므로 FocusScope가 닫힐 때 트리거로 포커스를 돌린다) → `useOverlayTheme` → `usePopoverOverlay`(모달 기본) + `useMenu`. motion은 `frequentMotionClass`, 쌓임은 `z-popover`다.
+> - **목록 공통 부분은 이 모듈 밖에 둔다**: 목록 표면(여백 3px 포함)·항목 class는 `list-style.ts`, 항목 모으기는 `list-collection.ts`([ADR 0019](0019-list-collection-elements.md))다. 오버레이가 아닌 목록(인라인 Listbox 등)에도 쓸 수 있게 이 모듈과 나눴다. `list-style.ts`가 `overlay-style.ts`의 표면·motion class를 가져다 쓴다.
+> - **Tab**: React Aria `useMenu`는 Tab을 다루지 않고, `FocusScope`가 document capture에서 Tab을 먼저 받으며, 바깥이 `inert`라 기본 동작은 갈 곳이 없다. Menu는 window capture에서 Tab을 받아 기본 동작을 막고 닫는다(포커스는 트리거로 돌아온다). Select 목록(28)도 같은 처리가 필요한지 확인한다.
