@@ -297,6 +297,8 @@ try {
     "AlertDialog.js",
     // Tabs도 React Aria hooks·state를 쓰므로 client다(티켓 31).
     "Tabs.js",
+    // Accordion도 React Aria hooks·state를 쓰므로 client다(티켓 32).
+    "Accordion.js",
   ]) {
     if (!(await startsWithUseClient(file))) {
       throw new Error(`"use client" 확인 실패: ${file}에 지시어가 없다`);
@@ -370,6 +372,13 @@ try {
       css.includes("forced-colors\\:after\\:border-\\[Highlight\\]") &&
       css.includes("after\\:border-primary"),
     "Tabs 내부 class(motion-safe:data-selected:after:scale-x-100, data-selected:after:opacity-100, forced-colors:after:border-[Highlight], after:border-primary)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+  );
+  assert(
+    css.includes("group-aria-expanded\\:rotate-180") &&
+      css.includes("motion-safe\\:transition-\\[rotate\\]") &&
+      css.includes("\\[\\&\\[hidden\\]\\]\\:p-0") &&
+      css.includes("forced-colors\\:text-current"),
+    "Accordion 내부 class(group-aria-expanded:rotate-180, motion-safe:transition-[rotate], [&[hidden]]:p-0, forced-colors:text-current)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes(".z-tooltip") &&
@@ -620,6 +629,35 @@ try {
       attribute(activityPanel, "aria-labelledby") === attribute(activityTab, "id") &&
       (html.match(/role="tabpanel"/g) ?? []).length === 1,
     "Tabs가 prerender한 HTML에서 탭·패널 역할·고른 상태·연결이 기대와 다르다",
+  );
+
+  // Accordion(client)이 prerender한 HTML(티켓 32). 제목(h3) 안의 type=button 트리거가 aria-expanded를 노출하고
+  // aria-controls가 패널 id를 가리키며 패널은 aria-labelledby로 트리거를 가리킨다(React useId라 서버와 hydration이 같다).
+  // 펼친 항목의 패널만 보이고 접힌 패널은 hidden이다(hydration 뒤 React Aria가 until-found로 바꾼다). 비활성 트리거는 disabled다.
+  const accordionTrigger = (text: string): string =>
+    html?.match(new RegExp(`<h3[^>]*><button[^>]*>${text}<svg`))?.[0] ?? "";
+  const accordionPanel = (text: string): string =>
+    html?.match(new RegExp(`<div[^>]*role="region"[^>]*>${text}</div>`))?.[0] ?? "";
+  const shippingTrigger = accordionTrigger("배송 안내");
+  const refundTrigger = accordionTrigger("환불 안내");
+  const archiveTrigger = accordionTrigger("보관 안내");
+  const shippingPanel = accordionPanel("배송 패널");
+  const refundPanel = accordionPanel("환불 패널");
+  const htmlAttribute = (element: string, name: string): string | undefined =>
+    element.match(new RegExp(` ${name}="([^"]*)"`))?.[1];
+  assert(
+    shippingTrigger.includes('aria-expanded="true"') &&
+      shippingTrigger.includes('type="button"') &&
+      shippingTrigger.includes("data-open") &&
+      refundTrigger.includes('aria-expanded="false"') &&
+      archiveTrigger.includes("disabled") &&
+      shippingPanel !== "" &&
+      !/ hidden[ =>]/.test(shippingPanel) &&
+      / hidden[ =>]/.test(refundPanel) &&
+      htmlAttribute(shippingTrigger, "aria-controls") === htmlAttribute(shippingPanel, "id") &&
+      htmlAttribute(shippingPanel, "aria-labelledby") === htmlAttribute(shippingTrigger, "id") &&
+      htmlAttribute(refundTrigger, "aria-controls") === htmlAttribute(refundPanel, "id"),
+    "Accordion이 prerender한 HTML에서 트리거·패널 역할·펼침 상태·연결이 기대와 다르다",
   );
 
   // Select(client)가 Field 안에서 prerender한 HTML(티켓 28). 서버 컴포넌트가 넘긴 옵션(lazy 참조)이 prerender 때

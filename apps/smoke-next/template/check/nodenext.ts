@@ -1,5 +1,9 @@
 // moduleResolution: nodenext에서 배포된 d.ts가 해석되는지 확인한다.
 import {
+  Accordion,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
   Alert,
   Avatar,
   Badge,
@@ -65,6 +69,11 @@ import {
   TooltipContent,
   TooltipTrigger,
   VisuallyHidden,
+  type AccordionHeadingLevel,
+  type AccordionItemProps,
+  type AccordionPanelProps,
+  type AccordionProps,
+  type AccordionTriggerProps,
   type AlertProps,
   type BreadcrumbCurrentProps,
   type BreadcrumbItemProps,
@@ -297,6 +306,21 @@ const ariaTabs: TabsProps = { defaultValue: "a", keyboardActivation: "manual" };
 const roleTab: TabProps = { value: "a", role: "option" };
 const tooltipProps: TooltipProps = { delay: 0, closeDelay: 100, disabled: false, children: null };
 const tooltipTriggerProps: TooltipTriggerProps = { "aria-describedby": "hint" };
+const accordionProps: AccordionProps = {
+  defaultValue: ["a"],
+  multiple: true,
+  onValueChange: (value) => void value,
+};
+const accordionItemProps: AccordionItemProps = { value: "a", disabled: true };
+const accordionLevel: AccordionHeadingLevel = 2;
+const accordionTriggerProps: AccordionTriggerProps = { level: accordionLevel };
+const accordionPanelProps: AccordionPanelProps = { role: "group" };
+// @ts-expect-error Accordion 값은 문자열 목록이다.
+const stringAccordion: AccordionProps = { value: "a" };
+// @ts-expect-error React Aria 이름(allowsMultipleExpanded)은 드러내지 않는다.
+const ariaAccordion: AccordionProps = { allowsMultipleExpanded: true };
+// @ts-expect-error 패널 역할은 region·group이다.
+const dialogPanel: AccordionPanelProps = { role: "dialog" };
 const tooltipPlacement: TooltipPlacement = "top end";
 const tooltipContentProps: TooltipContentProps = { placement: tooltipPlacement, offset: 6 };
 // @ts-expect-error Tooltip 설명의 역할은 tooltip으로 고정이다.
@@ -428,6 +452,17 @@ export const values = [
   Separator,
   separatorProps,
   diagonalSeparator,
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionPanel,
+  accordionProps,
+  accordionItemProps,
+  accordionTriggerProps,
+  accordionPanelProps,
+  stringAccordion,
+  ariaAccordion,
+  dialogPanel,
   Alert,
   alertProps,
   blueAlert,

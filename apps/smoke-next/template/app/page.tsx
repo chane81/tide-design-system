@@ -2,6 +2,10 @@
 // 이 파일에는 Component 내부 class(예: VisuallyHidden의 class)를 직접 쓰지 않는다.
 // 그래야 출력 CSS에 그 class가 있을 때 패키지 CSS의 @source가 동작했다고 볼 수 있다.
 import {
+  Accordion,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
   Alert,
   AlertDialog,
   Avatar,
@@ -288,6 +292,22 @@ export default function Page() {
       </AlertDialog>
       {/* Tabs는 client Component다(티켓 31). 서버 컴포넌트가 만든 탭(lazy 참조)이 prerender 때 모여 고른 탭과
           그 패널만 HTML에 있다. 내부 class는 이 파일에 쓰지 않는다. */}
+      {/* Accordion은 client Component다(티켓 32). 펼친 항목의 패널만 보이고 접힌 패널은 hidden으로 prerender된다.
+          트리거와 패널은 React useId로 지은 id로 이어진다. 내부 class는 이 파일에 쓰지 않는다. */}
+      <Accordion defaultValue={["shipping"]}>
+        <AccordionItem value="shipping">
+          <AccordionTrigger>배송 안내</AccordionTrigger>
+          <AccordionPanel>배송 패널</AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="refund">
+          <AccordionTrigger>환불 안내</AccordionTrigger>
+          <AccordionPanel>환불 패널</AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="archive" disabled>
+          <AccordionTrigger>보관 안내</AccordionTrigger>
+          <AccordionPanel>보관 패널</AccordionPanel>
+        </AccordionItem>
+      </Accordion>
       <Tabs defaultValue="activity">
         <TabList aria-label="프로젝트 보기">
           <Tab value="overview">개요</Tab>

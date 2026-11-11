@@ -448,3 +448,37 @@ describe("Tabs 대비 쌍", () => {
     }
   });
 });
+
+// Accordion(tide-v0-impl 티켓 32)이 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 배경이 없어 놓인 표면 층 위에 그린다.
+// - 글자: 트리거·패널 text-default, chevron text-muted(펼침 상태를 보이는 그래픽이라 3:1이면 되지만 4.5:1 쌍으로 등록되어 있다).
+// - 트리거 hover 배경 bg-neutral-subtle-hover 위 글자와 chevron은 둘 다 text-default다.
+// - 포커스 표시: 트리거의 outline-focus. 루트 경계·항목 사이 선 border-default와 비활성 text-disabled는 제외 Token이다.
+describe("Accordion 대비 쌍", () => {
+  it.each(["text-default", "text-muted"])(
+    "트리거·패널 글자와 chevron %s × 표면 층 3개가 4.5:1로 등록되어 있다",
+    (foreground) => {
+      for (const background of surfaces) {
+        expect(registered(foreground, background, 4.5), `${foreground} × ${background}`).toBe(true);
+      }
+    },
+  );
+
+  it("hover 배경(bg-neutral-subtle-hover) 위 트리거 글자·chevron(text-default)이 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  });
+
+  it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("outline-focus", background, 3), background).toBe(true);
+    }
+  });
+
+  it("경계·구분선(border-default)과 비활성 글자(text-disabled)는 대비 검사에서 제외되어 있다", () => {
+    for (const token of ["border-default", "text-disabled"]) {
+      expect(
+        contrastExclusions.some((item) => item.token === token),
+        token,
+      ).toBe(true);
+    }
+  });
+});
