@@ -176,6 +176,10 @@ _Avoid_: Collapse·Collapsible(항목 하나짜리 펼침과 혼동), Disclosure
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다. 묶음(`TagGroup`)은 이름 있는 `grid`이고 태그(`Tag`)는 `row`다. ←→로 옮기고 `onRemove`가 있으면 Delete·Backspace와 지우기 버튼으로 지우며, 지운 뒤 포커스는 옆 태그로 간다. 색은 뜻 없는 색 계열(`ColorFamilyName`, 기본 `gray`)만 받는다(티켓 33). 상호작용이 없는 상태 표시는 Badge다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
 
+**Toast (토스트)**:
+끝난 동작의 결과를 화면 아래 끝쪽에 잠깐 띄워 알리는 오버레이(`ToastQueue`, `ToastRegion`). 큐(`ToastQueue`)에 넣으면 영역(`region` 랜드마크)에 쌓여 보이고, 한 번에 보이는 수를 넘으면 기다린다. Toast 하나는 제목이 이름인 비모달 `alertdialog`이고 글자는 `alert`로 읽힌다. 5초 이상 보인 뒤 스스로 닫히며 영역에 hover·focus가 있는 동안 멈춘다. 액션이 있거나 오류(`danger`)면 스스로 닫히지 않는다. 화면에 머무는 알림은 Alert, 확인을 받아야 하는 알림은 AlertDialog다.
+_Avoid_: Snackbar, Notification(브라우저 알림 API와 혼동), Flag
+
 **묶음 (Group)**:
 하나의 이름으로 함께 읽히는 선택 항목의 모음. `CheckboxGroup`(`role="group"`)과 `RadioGroup`(`role="radiogroup"`)이고, Field에 `group`을 주면 Field label이 묶음의 이름이 된다. 오류 상태는 묶음이 아니라 안의 항목마다 붙는다.
 _Avoid_: 그룹(문서에서는 「묶음」으로 쓴다. Component 이름은 `Group`), fieldset

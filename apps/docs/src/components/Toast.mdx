@@ -1,0 +1,116 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ToastStories from "./Toast.stories.tsx";
+
+<Meta of={ToastStories} />
+
+# Toast
+
+화면 아래 끝쪽(왼쪽에서 오른쪽으로 읽는 언어면 오른쪽)에 잠깐 떠서 끝난 동작의 결과를 알리는 표면입니다. 하던 일을 막지 않고, 5초 이상 보인 뒤 스스로 닫힙니다. 마우스를 올리거나 키보드 포커스가 Toast 영역에 있는 동안에는 시간이 멈춥니다. 액션이 있거나 오류(`danger`)인 Toast는 스스로 닫히지 않습니다.
+
+<Canvas of={ToastStories.Basic} />
+
+## 사용 시점
+
+- 저장·복사·업로드처럼 사용자가 한 동작의 결과를 알릴 때
+- 되돌리기처럼 바로 할 수 있는 동작을 하나 곁들일 때
+- 백그라운드 작업(내보내기 완료, 연결 끊김)을 알릴 때
+
+## 쓰지 않을 때
+
+- 화면과 함께 계속 보여야 하는 상태(점검 예정, 폼 오류 요약)는 화면 안의 Alert를 씁니다.
+- 확인을 받아야 하는 질문(삭제할까요?)은 AlertDialog를 씁니다. Toast는 놓치기 쉽고 흐름을 막지 않습니다.
+- 입력 칸 하나의 오류는 Field의 오류 문구로 그 칸 옆에 둡니다.
+
+## 예시
+
+### 구조
+
+`ToastQueue`는 Toast를 쌓는 큐이고 React 밖(모듈)에 만듭니다. 앱에 `ToastRegion`을 하나 두고 큐를 넘긴 뒤, 어디서든 `queue.add({ title, description, color, action })`로 띄웁니다. `add`는 key를 돌려주고 `queue.close(key)`로 닫습니다. `ToastRegion`은 Toast가 있을 때만 `document.body`에 그려집니다.
+
+```tsx
+// toasts.ts ("use client" 모듈에서 import한다)
+export const toasts = new ToastQueue();
+
+// 레이아웃의 client Component
+<ToastRegion queue={toasts} />;
+
+// 아무 이벤트 핸들러
+toasts.add({ title: "저장했습니다", color: "success" });
+```
+
+`ToastQueue`와 `ToastRegion`은 client 전용입니다. 서버 컴포넌트 레이아웃에서는 `ToastRegion`을 그리는 작은 client Component를 만들어 둡니다.
+
+### 상태
+
+`color`는 Role입니다(기본 `info`). 상태 아이콘과 그 색, 닫기·액션 버튼 색이 바뀌고 표면과 글자는 같습니다. `danger`는 오류로 보고 스스로 닫지 않습니다.
+
+<Canvas of={ToastStories.States} />
+
+### 액션
+
+`action: { label, onClick }`으로 버튼을 하나 둡니다. 누르면 `onClick`을 부르고 Toast를 닫습니다(`event.preventDefault()`면 닫지 않음). 액션이 있으면 시간이 지나도 닫히지 않습니다. 사용자가 액션을 누를 시간을 빼앗지 않기 위해서입니다.
+
+<Canvas of={ToastStories.WithAction} />
+
+### 큐와 시간
+
+한 번에 3개(`new ToastQueue({ maxVisible })`)까지 보이고, 넘는 Toast는 앞의 것이 닫힐 때까지 기다립니다. 새 Toast가 모서리 쪽(아래)에 옵니다. 자동 닫힘 시간은 `timeout`(ms)으로 바꾸고 기본 5000입니다. 5000보다 짧은 값은 5000으로 올리고, `null`이면 스스로 닫지 않습니다.
+
+<Canvas of={ToastStories.Queue} />
+
+## Do/Don't
+
+### Do: 결과를 짧게 알린다
+
+제목 한 줄로 결과를 말하고, 되돌릴 수 있으면 액션을 하나 둡니다.
+
+<Canvas of={ToastStories.DoShortResult} />
+
+### Don't: Toast로 확인을 묻는다
+
+질문은 놓치기 쉽고, 다른 곳을 누르면 답 없이 지나갑니다. 확인이 필요하면 AlertDialog를 씁니다.
+
+<Canvas of={ToastStories.DontAskConfirmation} />
+
+## 접근성
+
+### 기본 제공
+
+- 영역: Toast가 있으면 `region` 랜드마크(이름 기본 「N개 알림.」, React Aria 번역이라 locale을 따름)가 생깁니다. F6·Shift+F6로 영역에 오가고(React Aria `useToastRegion`), Tab으로 Toast와 그 안의 버튼에 닿습니다.
+- 알림 읽기: Toast는 제목이 이름, 본문이 설명인 `alertdialog`(비모달)이고, 안의 제목·본문은 `alert`로 읽혀 나타날 때 스크린 리더가 바로 알립니다(React Aria `useToast`). 상태 아이콘은 장식용이라 뜻은 글자로 전합니다.
+- 시간(WCAG 2.2.1, 2.2.2): 스스로 닫히는 Toast는 5초 이상 보이고, 영역에 마우스를 올리거나 포커스가 있는 동안 멈춥니다. 액션이나 오류(`danger`)가 있으면 스스로 닫히지 않습니다.
+- 포커스: 포커스가 있던 Toast가 닫히면 옆 Toast로, 마지막 Toast가 닫히면 영역에 들어오기 전 요소로 돌아갑니다.
+- 다른 오버레이: 열린 Dialog·Popover 위에 뜨고(`z-toast` 400 > `z-modal` 200·`z-popover` 300), 그 바깥 막기(`inert`)에 들지 않아 읽히고 눌립니다. 눌러도 Dialog가 닫히지 않습니다.
+- 대비: 글자(`text-default`), 아이콘·버튼 글자(역할 text), 액션 버튼 경계가 raised 표면과 등록된 대비를 넘습니다. 경계(`border-raised`)는 장식용입니다.
+- 고대비 모드(forced-colors): 그림자는 사라지지만 1px 경계가 시스템 글자색으로 그려집니다.
+- 움직임 줄이기: 이동·blur 없이 opacity만 바뀝니다.
+
+### 앱이 할 일
+
+- 제목은 짧게, 결과를 말합니다(「저장했습니다」). 같은 내용을 반복해서 띄우지 않습니다.
+- 다른 곳에 없는 중요한 정보는 Toast로만 알리지 않습니다. 화면 안 Alert나 해당 칸에도 남깁니다.
+- `timeout`을 길게 바꿀 수는 있지만 5초보다 짧게는 되지 않습니다.
+- 앱에 `ToastRegion`은 하나만 둡니다. 영역은 문서 Theme(`<html>`의 `data-theme`)을 따릅니다.
+
+## Props
+
+모두 client 전용입니다. `ToastRegion`은 영역 `<div>`의 props를 받고 `ref`는 영역 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. `role`은 `region`으로 고정입니다.
+
+| 대상                         | prop·인자                                                   | 기본값                     |
+| ---------------------------- | ----------------------------------------------------------- | -------------------------- |
+| `ToastRegion`                | `queue`: `ToastQueue`(필수)                                 |                            |
+| `ToastRegion`                | `aria-label`: `string`                                      | 「N개 알림.」(locale)      |
+| `new ToastQueue(options)`    | `maxVisible`: `number`                                      | `3`                        |
+| `queue.add(toast)` → key     | `title`: `ReactNode`(필수, 이름)                            |                            |
+| `queue.add(toast)`           | `description`: `ReactNode`(설명)                            | 없음                       |
+| `queue.add(toast)`           | `color`: `Role`                                             | `"info"`                   |
+| `queue.add(toast)`           | `action`: `{ label: ReactNode; onClick?: (event) => void }` | 없음                       |
+| `queue.add(toast)`           | `timeout`: `number \| null`(ms, 최소 5000)                  | `5000`(액션·danger는 없음) |
+| `queue.add(toast)`           | `onClose`: `() => void`                                     | 없음                       |
+| `queue.add(toast)`           | `closeLabel`: `string`                                      | `"닫기"`                   |
+| `queue.close(key)`·`clear()` | 하나 닫기·모두 닫기(`clear`는 `onClose`를 부르지 않음)      |                            |
+
+상태는 Toast의 `data-open`(떠 있는 동안), `data-color`(Role)로 노출합니다.
+
+<ArgTypes of={ToastStories} />
