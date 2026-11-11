@@ -27,3 +27,11 @@ Popover·Tooltip·Menu·Select·Combobox·Dialog·Toast는 모두 「트리거�
 - 열린 동안 바깥이 `inert`라 Playwright `click`(누를 수 있는지 먼저 확인)은 바깥 요소를 누르지 못한다. 테스트는 좌표로 마우스를 누르는 명령(`mouseDownOn`·`mouseUp`)을 쓴다.
 - 트리거는 `useOverlayTrigger`의 `onPress`를 `usePress`로 붙인다(`useButton` 대신. 트리거가 `render`로 Tide Button이 되므로 press만 붙이고, 공개 이름에 `onPress`를 드러내지 않는다). 기본(모달)에서는 열린 동안 트리거도 `inert`라, 트리거를 다시 누르면 바깥 누름으로 닫힌다(테스트로 확인). `nonModal`(Combobox)에서 트리거 누름과 바깥 누름이 겹치는 경우는 29에서 확인한다.
 - 등장 방향은 첫 스타일 계산 때 정해진다. 공간이 없어 반대쪽으로 뒤집힌 경우에만 첫 프레임의 시작 방향이 요청한 쪽(4px)이 된다.
+
+> 덧붙임(2026-11-11, [티켓 26](../progress/tide-v0-impl/issues/26-tooltip.md)): Tooltip이 이 모듈을 처음 다시 썼다. 바뀐 것은 셋이다. Popover 테스트는 그대로 통과한다.
+>
+> - **`OverlayPortal`의 `focusManagement`(기본 `true`)**: `false`면 React Aria `Overlay`에 `disableFocusManagement`를 넘겨 `FocusScope` 없이 portal만 한다. Tooltip은 포커스를 받지 않으므로 끈다. 켜 두면 열린 Popover 안 트리거의 Tooltip이 FocusScope를 하나 더 만들고 닫힐 때 포커스 복귀를 시도한다.
+> - **「자주 씀」 motion `frequentMotionClass`(overlay-style.ts)**: `popoverMotionClass`와 같은 구조(`data-open`, 닫힌 상태 `hidden` + `transition-discrete`, 퇴장 중 `pointer-events-none`)에서 등장의 시작 상태와 이동·blur를 뺐다. 열린 동안은 `data-open:transition-none`이라 새로 나타날 때도, 퇴장 중 다시 열릴 때도 전환 없이 바로 불투명해진다. 닫히면 `transition-[opacity,display]` `fast` out으로 opacity만 사라진다. 이동이 없으므로 움직임 줄이기에서도 같다. Menu·Select·Combobox 목록(27~29)이 그대로 쓴다.
+> - **위치는 `useOverlayPosition` + `overlayPositionProps`**: Tooltip은 dismiss(Esc, hover·포커스 이탈)를 `useTooltipTrigger`가 하므로 `usePopover`를 쓰지 않는다. 위치는 `useOverlayPosition`(`isOpen`, 스크롤 시 `onClose`로 바로 닫기)이 구하고 `overlayPositionProps`가 `zIndex`를 빼고 `data-placement`를 붙인다.
+>
+> 모듈 밖의 Tooltip 결정 하나: 열린 모달 Popover·Dialog는 바깥을 `ariaHideOutside(..., { shouldUseInert: true })`로 막고 **나중에 body에 붙은 요소도** MutationObserver로 막는다. 그 안 트리거의 Tooltip이 `inert`가 되지 않도록 설명 요소에 `data-react-aria-top-layer`를 붙인다. React Aria 3.53.1 소스(`ariaHideOutside`의 늘 보이는 요소, `useInteractOutside`의 바깥 판정 제외, `FocusScope`)가 이 속성을 보는 것을 확인했지만 공개 문서에는 없는 속성이다. React Aria 판을 올릴 때 Tooltip 테스트 「열린 Popover 위에 보이고 inert가 되지 않는다」가 이 동작을 지킨다. Toast(34)도 같은 문제가 생기면 이 속성을 쓰고 공통 모듈로 옮긴다.

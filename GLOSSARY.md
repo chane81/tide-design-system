@@ -140,6 +140,10 @@ _Avoid_: 레이어(Layer와 혼동), 모달(바깥을 막는 성질 하나만 �
 트리거 옆에 짧은 내용을 띄우는 오버레이(`Popover`, `PopoverTrigger`, `PopoverContent`). 내용은 `dialog` 역할이고 버튼·입력 같은 조작 요소를 담을 수 있다. 누르면 열리고 Esc·바깥 누름으로 닫히며 포커스는 트리거로 돌아온다. 동작 목록은 Menu, 설명 한 줄은 Tooltip, 확인이 필요한 내용은 Dialog다.
 _Avoid_: Dropdown(Menu·Select와 혼동), Popup, Flyout
 
+**Tooltip (툴팁)**:
+트리거에 짧은 설명 한 줄을 붙이는 오버레이(`Tooltip`, `TooltipTrigger`, `TooltipContent`). 설명은 `tooltip` 역할이고 열린 동안 트리거의 `aria-describedby`가 가리킨다. 마우스를 올리면 잠깐 뒤에, 키보드 포커스면 바로 열리고 Esc·포커스 이탈·포인터 이탈로 닫힌다. 포커스를 받지 않고 조작 요소를 담지 않는다. 이름(`aria-label`)이 아니라 설명이다. 조작 요소가 필요하면 Popover다.
+_Avoid_: Hint, Title 속성(브라우저 기본 툴팁), Popover
+
 **Tag (태그)**:
 사용자가 고르거나 입력한 값을 보여주는 짧은 라벨. 필요하면 지울 수 있다. 예: 선택한 필터, 입력한 키워드. 눌러서 켜고 끄는 칩과는 다르다.
 _Avoid_: Chip(토글 칩과 혼동), Badge
