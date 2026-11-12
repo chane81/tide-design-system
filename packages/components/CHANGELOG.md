@@ -1,5 +1,24 @@
 # @tide-tds/components
 
+## 0.8.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#27](https://github.com/chane81/tide-design-system/pull/27) [`e05449d`](https://github.com/chane81/tide-design-system/commit/e05449df9039d0c3b3ed2969cd7832e33d795e54) [@chane81](https://github.com/chane81) - 조작 요소 글자 크기를 맞췄다(ADR 0024).
+
+  - `sm`의 글자를 12px(`label-sm`)에서 14px(`label-md`)로 올렸다. Button `sm`, Input·Select·Combobox `sm`, Textarea `sm`(`caption` → `body-sm`)이 해당한다. 높이·padding·아이콘 크기는 그대로이고, `sm` 버튼은 글자 폭만큼 넓어진다. `xs`는 12px 그대로다.
+  - Switch 라벨을 Checkbox·Radio와 같은 `body-sm`/`body-md`/`body-lg`(보통 굵기)로 바꿨다. md 라벨은 14px에서 16px로 커진다.
+  - Menu·Select·Combobox 목록 항목을 `body-md`(높이 36px)에서 `body-sm`(높이 32px)으로 바꿔 트리거 글자 크기와 맞췄다.
+
+- [#28](https://github.com/chane81/tide-design-system/pull/28) [`4662ed6`](https://github.com/chane81/tide-design-system/commit/4662ed6c8c1e80d0773d0e0a6c252c8d4c29b599) [@chane81](https://github.com/chane81) - solid를 덜 진하게 바꿨다. 모든 색 계열의 600 단계를 이전 값에서 OKLCH 밝기 +0.03, 채도 ×0.85(상한 0.12)로 옮겼고 색상은 그대로다(blue-600 `#3c70bb` → `#4e7aba` 등). `solid`·`solid-hover`·`solid-active`, light `border`·`outline-focus`가 함께 밝아진다. solid 위 흰 글자 대비는 4.18~4.62:1로 solid 위 글자 하한 4:1(ADR 0023)을 지킨다. `text-muted`(light)는 gray-600이 흰 표면 위 4.5:1에 못 미쳐 gray-700으로 옮겼다. Token 이름은 그대로라 코드는 깨지지 않지만 화면 색이 바뀐다.
+
+### 기능 추가와 수정 (patch)
+
+- [#27](https://github.com/chane81/tide-design-system/pull/27) [`5eeee3e`](https://github.com/chane81/tide-design-system/commit/5eeee3e6f9a59b5a8bee4ac58dc188c388f103fe) [@chane81](https://github.com/chane81) - 입력창(Input·Textarea·Select·Combobox)을 클릭하면 outline이 잠깐 보였다 사라지던 문제를 고쳤다. `focus-field`가 평소에도 투명 outline을 두어 `transition-colors`가 outline 색을 글자색에서 투명으로 150ms 동안 전환했다. 이제 평소에는 outline이 없고, 투명 outline은 forced-colors(고대비) 모드에서만 둔다.
+- 의존성 업데이트 [[`5eeee3e`](https://github.com/chane81/tide-design-system/commit/5eeee3e6f9a59b5a8bee4ac58dc188c388f103fe), [`4662ed6`](https://github.com/chane81/tide-design-system/commit/4662ed6c8c1e80d0773d0e0a6c252c8d4c29b599)]:
+  - @tide-tds/foundation@0.8.0
+  - @tide-tds/icons@0.8.0
+
 ## 0.7.0
 
 ### 기능 추가와 수정 (patch)
