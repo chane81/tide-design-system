@@ -104,3 +104,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ③ 단순함: [ADR 0015 Switch는 `<label>` 루트에 `className`을, 네이티브 input에 `ref`와 HTML 속성을 붙인다](../decisions/0015-switch-label-root-input-ref.md)
 - ① 접근성, ② 명확함, ③ 단순함: [ADR 0016 행동·의미 Component의 `color`는 Role만 받고, 앱 브랜드 색은 앱 Role로 더한다](../decisions/0016-role-scoped-color-and-app-roles.md)
 - ② 명확함, ③ 단순함: [ADR 0017 Badge의 `color`는 Role과 색 계열 이름을 모두 받는다(`Color`)](../decisions/0017-badge-color-accepts-role-and-color-family.md)
+- ① 접근성, ② 명확함, ③ 단순함: [ADR 0022 파스텔 강도와 덮기 방식 상태색으로 컬러 Foundation의 색감을 바꾼다](../decisions/0022-pastel-intensity-and-overlay-states.md)
