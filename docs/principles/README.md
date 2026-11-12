@@ -107,3 +107,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ② 명확함, ③ 단순함: [ADR 0022 파스텔 강도와 덮기 방식 상태색으로 컬러 Foundation의 색감을 바꾼다](../decisions/0022-pastel-intensity-and-overlay-states.md)
 - ① 접근성, ② 명확함: [ADR 0023 대비 하한을 상태별 세 등급(4.5 / 4.0 / 3)으로 나눈다](../decisions/0023-tiered-contrast-minimum.md)
 - ① 접근성, ② 명확함: [ADR 0024 조작 요소 글자 크기를 맞춘다: `sm` 14px, Switch 라벨 body, 목록 항목 14px](../decisions/0024-control-text-sizes.md)
+- ② 명확함, ① 접근성: [ADR 0025 Button outline·ghost의 호버·누름을 같은 색 파스텔로 채운다](../decisions/0025-tinted-outline-ghost-states.md)

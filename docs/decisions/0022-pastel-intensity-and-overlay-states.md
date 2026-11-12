@@ -66,6 +66,8 @@ Button outline·ghost와 목록 항목(Menu, Table 행 등)의 호버·클릭은
 
 > 덧붙임(2026-11-12, [ADR 0023](0023-tiered-contrast-minimum.md)): 이 바탕은 hover·누름에만 쓰므로 그 위 글자의 하한은 일시 상태 등급 4.0:1로 바뀌었다. 값은 그대로다.
 
+> 덧붙임(2026-11-13, [ADR 0025](0025-tinted-outline-ghost-states.md)): Button·IconButton의 Role 색 `outline`·`ghost`는 같은 색 `faint`·`subtle`로 채운다. 색 없이 덮는 방식은 neutral `outline`·`ghost`와 목록 항목·Table 행·Accordion 트리거에 남는다.
+
 ### 4. 스케일 값
 
 - Role 계열 다섯(blue, green, amber, red, cyan)의 50·100·200·300·950을 계열마다 손으로 다시 맞춘다. 바탕 100은 L 0.945 안팎·C 0.02~0.05, 글자 950은 L 0.33~0.36이다. 계열마다 채도가 다른 것은 의도다.
