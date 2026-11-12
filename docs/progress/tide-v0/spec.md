@@ -426,7 +426,7 @@ Component별로 이미 정한 범위:
 - **Token 블록**: 5종(색 스케일과 대비비, 텍스트 스타일, radius, 그림자 light/dark, motion)을 직접 만든다. 모두 Token 원본을 import해 그린다.
 - **아이콘 페이지**: 이름표의 이름과 Lucide `tags.json`으로 검색하고, 클릭하면 import 문을 복사한다. 가상화 없이 시작한다. 검색 메타데이터는 공개 API가 아니다.
 - **가이드**: z-index 페이지에 `scroll-padding-top`, 아이콘 페이지에 사용 가이드, 시작하기에 Theme 전환 시 transition 끄기를 둔다.
-- **배포**: Dokploy(`tide-tds.lakegreen.net`)에 Dockerfile(pnpm build → nginx)로 올린다. Autodeploy는 끄고, 릴리스 workflow의 마지막에 API로 배포한다.
+- **배포**: Dokploy(`tide-tds.lakegreen.net`)에 Dockerfile(pnpm build → nginx)로 올린다. Autodeploy는 끄고, 릴리스 workflow의 마지막에 API로 배포를 요청한 뒤 배포가 끝날 때까지 기다린다(실패·15분 타임아웃이면 job 실패). nginx는 해시 없는 파일에 `Cache-Control: no-cache`, 해시 붙은 `assets/*`에 1년 `immutable`을 붙인다([티켓 44](../tide-v0-impl/issues/44-docs-cache-and-deploy-wait.md), 2026-11-12 덧붙임).
 
 ### 릴리스 ([버전과 배포 정책 결정](issues/30-grilling-release.md), [ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
 
