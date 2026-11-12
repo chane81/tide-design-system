@@ -41,8 +41,11 @@ const meta = {
     children: { control: "text", table: { type: { summary: "ReactNode" } } },
     variant: {
       control: "inline-radio",
-      options: ["subtle", "solid"],
-      table: { type: { summary: '"subtle" | "solid"' }, defaultValue: { summary: '"subtle"' } },
+      options: ["subtle", "faint", "solid"],
+      table: {
+        type: { summary: '"subtle" | "faint" | "solid"' },
+        defaultValue: { summary: '"subtle"' },
+      },
     },
     size: {
       control: "inline-radio",
@@ -97,12 +100,12 @@ export const Families: Story = {
   ),
 };
 
-/** subtle과 solid */
+/** subtle, faint, solid */
 export const Variants: Story = {
   name: "채움 방식",
   render: () => (
     <div className="flex flex-col gap-3">
-      {(["subtle", "solid"] as const).map((variant) => (
+      {(["subtle", "faint", "solid"] as const).map((variant) => (
         <div key={variant} className="flex flex-wrap items-center gap-2">
           {roles.map((role) => (
             <Badge key={role} color={role} variant={variant}>
