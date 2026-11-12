@@ -64,6 +64,8 @@ Button outline·ghost와 목록 항목(Menu, Table 행 등)의 호버·클릭은
 
 이 바탕 위의 `text`(light 700, dark 300)는 모든 계열에서 4.5:1 이상이다(light 최저 5.15:1).
 
+> 덧붙임(2026-11-12, [ADR 0023](0023-tiered-contrast-minimum.md)): 이 바탕은 hover·누름에만 쓰므로 그 위 글자의 하한은 일시 상태 등급 4.0:1로 바뀌었다. 값은 그대로다.
+
 ### 4. 스케일 값
 
 - Role 계열 다섯(blue, green, amber, red, cyan)의 50·100·200·300·950을 계열마다 손으로 다시 맞춘다. 바탕 100은 L 0.945 안팎·C 0.02~0.05, 글자 950은 L 0.33~0.36이다. 계열마다 채도가 다른 것은 의도다.
@@ -93,5 +95,6 @@ Role이 없는 장식 계열 **`purple`**(H 300)과 **`mint`**(H 190)를 더한�
 - **값이 바뀐다.** 기존 Token 이름은 그대로라 코드는 깨지지 않지만 화면 색이 달라진다. 0.x의 minor로 낸다.
 - **Component 변화.** Badge(`faint` 추가, subtle 글자·테두리), Tag, Avatar, Alert(테두리를 `subtle-border`로), Button subtle(글자), Button outline·ghost와 목록 항목의 호버(`bg-hover`·`bg-active`).
 - **대비 쌍이 바뀐다.** `on-subtle` × `faint`·`subtle`·`subtle-hover`·`subtle-active`(4.5), `text` × `bg-hover`·`bg-active`(4.5)를 더하고, Alert 경계 쌍을 지운다. 덮기·섞기로 계산된 값도 검사한다.
+  - 덧붙임(2026-11-12, [ADR 0023](0023-tiered-contrast-minimum.md)): 하한이 상태별 세 등급으로 바뀌었다. `subtle-hover`·`subtle-active`, `bg-hover`·`bg-active` 위 글자와 `on-solid` × `solid` 3단계는 4.0, 정지 상태 글자(`faint`·`subtle` 위)는 4.5 그대로다.
 - **앱 계열(`defineColorFamily`)** 입력은 11단계 스케일 그대로다. 문서에 단계별 역할(50 faint, 100 파스텔 바탕, 200 테두리, 950 파스텔 글자, 600 solid, 700 링크)과 권장 밝기·채도 범위를 적는다. 대비 쌍 검사가 같은 규칙을 강제한다.
 - **외부 제품 값은 저장소에 남기지 않는다.** 조사 문서에는 조합 규칙과 범위만 있고, Tide 값은 Tide가 정한 값이다.
