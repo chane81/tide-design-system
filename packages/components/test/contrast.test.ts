@@ -75,8 +75,17 @@ describe("Badge 대비 쌍", () => {
     },
   );
 
-  it("색 계열 6개가 text × subtle, on-solid × solid 규칙을 light·dark에서 통과한다", () => {
-    expect(colorFamilyNames).toEqual(["blue", "gray", "green", "amber", "red", "cyan"]);
+  it("색 계열 8개가 text × subtle, on-solid × solid 규칙을 light·dark에서 통과한다", () => {
+    expect(colorFamilyNames).toEqual([
+      "blue",
+      "gray",
+      "green",
+      "amber",
+      "red",
+      "cyan",
+      "purple",
+      "mint",
+    ]);
     for (const family of colorFamilyNames) {
       const results = checkColorContrast({
         light: colorSlotHex(family, "light"),
@@ -172,7 +181,7 @@ describe("Alert 대비 쌍", () => {
 // Avatar(tide-v0-impl 티켓 21)의 fallback은 색 계열의 text(아이콘) × subtle(배경)이다. 색 이름 규칙으로 검사된다.
 // 이미지 층은 사용자 사진이라 대비 검사 대상이 아니다.
 describe("Avatar 대비 쌍", () => {
-  it("색 계열 6개의 fallback 아이콘(text) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
+  it("색 계열 8개의 fallback 아이콘(text) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
     for (const family of colorFamilyNames) {
       const used = checkColorContrast({
         light: colorSlotHex(family, "light"),
@@ -486,7 +495,7 @@ describe("Accordion 대비 쌍", () => {
 // Tag(tide-v0-impl 티켓 33)는 색 계열의 text(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
 // 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(text × subtle 3단계)으로 검사된다.
 describe("Tag 대비 쌍", () => {
-  it("색 계열 6개의 글자(text) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
+  it("색 계열 8개의 글자(text) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
     for (const family of colorFamilyNames) {
       const used = checkColorContrast({
         light: colorSlotHex(family, "light"),

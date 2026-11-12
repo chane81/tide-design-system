@@ -36,7 +36,7 @@ declare module "../src/index.ts" {
 }
 
 describe("Tide 색 이름", () => {
-  it("Role 6개 다음에 색 계열 6개가 온다", () => {
+  it("Role 6개 다음에 색 계열 8개가 온다", () => {
     expect(tideColorNames).toEqual([
       "neutral",
       "primary",
@@ -50,6 +50,8 @@ describe("Tide 색 이름", () => {
       "amber",
       "red",
       "cyan",
+      "purple",
+      "mint",
     ]);
   });
 
@@ -173,7 +175,7 @@ describe("색 이름 등록 타입", () => {
     expectTypeOf<ColorFamilyRegistry["test-accent"]>().toEqualTypeOf<true>();
     // ColorFamily는 Primitive 계열이라 augmentation으로 넓어지지 않는다.
     expectTypeOf<ColorFamily>().toEqualTypeOf<
-      "blue" | "gray" | "green" | "amber" | "red" | "cyan"
+      "blue" | "gray" | "green" | "amber" | "red" | "cyan" | "purple" | "mint"
     >();
     // @ts-expect-error Role은 색 계열 이름이 아니다.
     const role: ColorFamilyName = "primary";
@@ -183,8 +185,8 @@ describe("색 이름 등록 타입", () => {
   it("Color는 Role과 색 계열 이름을 합친 것이다", () => {
     expectTypeOf<Color>().toEqualTypeOf<Role | ColorFamilyName>();
     // @ts-expect-error 등록하지 않은 색 이름은 Color가 아니다.
-    const unknown: Color = "purple";
-    expect(unknown).toBe("purple");
+    const unknown: Color = "violet";
+    expect(unknown).toBe("violet");
   });
 
   it("앱 Role은 Semantic Token 이름을 넓히지 않는다", () => {

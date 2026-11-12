@@ -29,7 +29,7 @@ import * as TagStories from "./Tag.stories.tsx";
 
 ### 색 계열
 
-분류마다 뜻 없는 색 계열(`gray`·`blue`·`green`·`amber`·`red`·`cyan`, 앱 장식 계열)을 `Tag`의 `color`로 고릅니다. 기본값은 `gray`입니다. Role(`primary`·`danger` 등)은 받지 않습니다.
+분류마다 뜻 없는 색 계열(`gray`·`blue`·`green`·`amber`·`red`·`cyan`, 장식 계열 `purple`·`mint`, 앱 장식 계열)을 `Tag`의 `color`로 고릅니다. 기본값은 `gray`입니다. Role(`primary`·`danger` 등)은 받지 않습니다.
 
 <Canvas of={TagStories.Colors} />
 
@@ -95,7 +95,7 @@ Tag는 옮겨 다니고 지우는 대상으로 읽힙니다. 바뀌지 않는 �
 | `TagGroup` | `role` 제외(`grid`, 비면 `group`)                                     |          |
 | `Tag`      | `value`: `string`(필수, `onRemove`에 넘어오는 값)                     |          |
 | `Tag`      | `children`: `ReactNode`(필수, 태그 글자)                              |          |
-| `Tag`      | `color`: `ColorFamilyName`(Tide 색 계열 6개 + 앱 장식 계열)           | `"gray"` |
+| `Tag`      | `color`: `ColorFamilyName`(Tide 색 계열 8개 + 앱 장식 계열)           | `"gray"` |
 | `Tag`      | `disabled`: `boolean`                                                 | `false`  |
 | `Tag`      | `textValue`: `string`(태그 행 이름이 되는 글자, 기본은 children 글자) | 없음     |
 | `Tag`      | `role`·`id`·`tabIndex` 제외(React Aria가 정함)                        |          |

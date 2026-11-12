@@ -106,7 +106,6 @@ const defaultOnlyFamilies = [
   "sky",
   "indigo",
   "violet",
-  "purple",
   "fuchsia",
   "pink",
   "rose",
@@ -127,6 +126,8 @@ describe("tailwind.css", () => {
       ...defaultOnlyFamilies.flatMap((family) => [`bg-${family}-500`, `text-${family}-50`]),
       "bg-blue-500",
       "bg-red-500",
+      "bg-purple-500",
+      "text-mint-700",
       "text-green-700",
       "border-gray-200",
       "bg-white",
@@ -163,6 +164,11 @@ describe("tailwind.css", () => {
   it("Primitive class가 Tide 값을 쓴다", () => {
     expect(ruleBody(css, "bg-blue-500")).toContain("background-color: var(--tide-color-blue-500)");
     expect(ruleBody(css, "bg-red-500")).toContain("background-color: var(--tide-color-red-500)");
+    // 장식 계열 purple·mint도 Tide Primitive다(ADR 0022 §5).
+    expect(ruleBody(css, "bg-purple-500")).toContain(
+      "background-color: var(--tide-color-purple-500)",
+    );
+    expect(ruleBody(css, "text-mint-700")).toContain("color: var(--tide-color-mint-700)");
     expect(ruleBody(css, "text-green-700")).toContain("color: var(--tide-color-green-700)");
     expect(ruleBody(css, "border-gray-200")).toContain("border-color: var(--tide-color-gray-200)");
     expect(ruleBody(css, "bg-white")).toContain("background-color: var(--tide-color-white)");
@@ -175,7 +181,7 @@ describe("tailwind.css", () => {
       expect(css).not.toContain(`--color-${family}-`);
     }
     // Tide와 이름이 같은 계열도 기본값(oklch)이 아니다.
-    expect(css).not.toMatch(/--color-(red|blue|gray|green|amber|cyan)-\d+:\s*oklch/);
+    expect(css).not.toMatch(/--color-(red|blue|gray|green|amber|cyan|purple|mint)-\d+:\s*oklch/);
   });
 
   it("dark variant는 data-theme=dark를 따른다", () => {

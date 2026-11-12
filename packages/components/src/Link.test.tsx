@@ -96,7 +96,7 @@ describe("색 이름(data-color)", () => {
   });
 
   test("Role이 아닌 색 이름은 타입 오류다", () => {
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
     const a: LinkProps = { color: "purple" };
     // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
     const b: LinkProps = { color: "blue", href: "/x" };

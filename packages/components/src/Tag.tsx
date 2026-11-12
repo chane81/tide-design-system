@@ -162,7 +162,7 @@ export interface TagProps
   /** 태그 글자. 필수다. 아이콘(장식용)을 앞에 함께 둘 수 있다. */
   children: ReactNode;
   /**
-   * 색 계열 이름. Tide 색 계열 6개와 앱이 `ColorFamilyRegistry`에 더한 계열을 받는다. 기본값은 `gray`다.
+   * 색 계열 이름. Tide 색 계열 8개(장식 계열 purple·mint 포함)와 앱이 `ColorFamilyRegistry`에 더한 계열을 받는다. 기본값은 `gray`다.
    * 분류를 구분하는 뜻 없는 색이라 Role(`primary`·`danger` 등)은 받지 않는다(ADR 0016·0017 후속).
    * 루트에 `data-color`로 붙고 바깥 요소의 색을 물려받지 않는다.
    */

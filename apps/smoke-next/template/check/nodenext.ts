@@ -424,7 +424,7 @@ const primary: "blue-600" = semantic.background["primary-solid"].light;
 const colors: Color[] = ["primary", "gray", "brand"];
 const roles: Role[] = ["neutral", "brand"];
 // @ts-expect-error 등록하지 않은 색 이름은 Color가 아니다.
-const unknownColor: Color = "purple";
+const unknownColor: Color = "violet";
 // @ts-expect-error Button의 color는 Role만 받는다. 색 계열 이름은 장식·분류 Component용이다.
 const familyButton: ButtonProps = { color: "blue" };
 // @ts-expect-error brand는 이 파일에서 Role로만 등록했다. 색 계열 이름이 아니다.

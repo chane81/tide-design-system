@@ -14,7 +14,7 @@ const photoB = photo("#0ca678", "#1098ad");
 // 불러오지 못하는 이미지(깨진 데이터)
 const broken = "data:image/png;base64,AAAA";
 
-const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+const families = ["gray", "blue", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 
 const meta = {
   title: "Component/Avatar",
@@ -81,7 +81,7 @@ export const Sizes: Story = {
   ),
 };
 
-/** fallback 색: 색 계열 6개. 색에 뜻이 없고, 사람을 구분하는 데 돕는다. */
+/** fallback 색: 색 계열 8개. 색에 뜻이 없고, 사람을 구분하는 데 돕는다. */
 export const Colors: Story = {
   name: "fallback 색(색 계열)",
   render: () => (

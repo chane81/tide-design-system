@@ -245,7 +245,7 @@ describe("모양", () => {
 });
 
 describe("색", () => {
-  const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+  const families = ["gray", "blue", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 
   test("기본은 gray이고 루트에 data-color가 붙는다", async () => {
     await render(
@@ -299,6 +299,10 @@ describe("색", () => {
 
   test("color는 색 계열 이름(ColorFamilyName)만 받고 Role은 타입 오류다(ADR 0016·0017 후속)", () => {
     const tide: AvatarProps = { alt: "", color: "cyan" };
+    const decorative: AvatarProps[] = [
+      { alt: "", color: "purple" },
+      { alt: "", color: "mint" },
+    ];
     const app: AvatarProps = { alt: "", color: "leaf" };
     // @ts-expect-error -- fallback 배경은 뜻이 없는 장식 색이라 Role을 받지 않는다.
     const role: AvatarProps = { alt: "", color: "primary" };
@@ -306,7 +310,7 @@ describe("색", () => {
     const neutral: AvatarProps = { alt: "", color: "neutral" };
     // @ts-expect-error -- 등록하지 않은 이름이다.
     const unknown: AvatarProps = { alt: "", color: "purple-ish" };
-    expect([tide, app, role, neutral, unknown]).toHaveLength(5);
+    expect([tide, ...decorative, app, role, neutral, unknown]).toHaveLength(7);
   });
 });
 

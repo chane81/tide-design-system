@@ -16,7 +16,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** Primitive 6계열 11단계와 white, black */
+/** Primitive 8계열 11단계와 white, black */
 export const Scale: Story = {
   name: "색 스케일",
   render: () => <ColorScale />,

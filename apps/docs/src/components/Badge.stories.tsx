@@ -15,7 +15,7 @@ const roleLabel: Record<(typeof roles)[number], string> = {
   info: "안내",
 };
 
-const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+const families = ["gray", "blue", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 const familyLabel: Record<(typeof families)[number], string> = {
   gray: "문서",
   blue: "디자인",
@@ -23,6 +23,8 @@ const familyLabel: Record<(typeof families)[number], string> = {
   amber: "영업",
   red: "보안",
   cyan: "데이터",
+  purple: "일정",
+  mint: "교육",
 };
 
 const meta = {
@@ -81,7 +83,7 @@ export const Colors: Story = {
   ),
 };
 
-/** 분류: 색 계열 6개. 색에 뜻이 없고 같은 분류를 같은 색으로 묶는다. */
+/** 분류: 색 계열 8개. 색에 뜻이 없고 같은 분류를 같은 색으로 묶는다. */
 export const Families: Story = {
   name: "분류(색 계열)",
   render: () => (

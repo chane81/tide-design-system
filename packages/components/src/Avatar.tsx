@@ -31,7 +31,7 @@ export interface AvatarProps extends Omit<
   /** `xs` 24px, `sm` 32px, `md` 40px, `lg` 48px. 기본값은 `md`다. */
   size?: AvatarSize;
   /**
-   * fallback 배경과 아이콘의 색 계열(Tide 색 계열 6개와 앱이 `ColorFamilyRegistry`에 더한 계열).
+   * fallback 배경과 아이콘의 색 계열(Tide 색 계열 8개(장식 계열 purple·mint 포함)와 앱이 `ColorFamilyRegistry`에 더한 계열).
    * 뜻이 없는 장식 색이라 Role은 받지 않는다(ADR 0016·0017 후속). 기본값은 `gray`다.
    * 루트에 `data-color`로 붙고 바깥 요소의 색을 물려받지 않는다.
    */

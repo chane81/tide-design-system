@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 
 import { beforeAll, describe, expect, it } from "vitest";
 
-const families = ["blue", "gray", "green", "amber", "red", "cyan"] as const;
+const families = ["blue", "gray", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
 const roleFamily = {
@@ -132,7 +132,7 @@ const slotRule = [
 const slots = slotRule.map(([slot]) => slot);
 const familyVars = families.flatMap((family) => slots.map((slot) => `--tide-${family}-${slot}`));
 const accentVars = slots.map((slot) => `--tide-accent-${slot}`);
-// data-color로 고르는 색 이름: Role 6개와 색 계열 6개
+// data-color로 고르는 색 이름: Role 6개와 색 계열 8개(장식 계열 purple·mint 포함)
 const colorNames = [...roles, ...families];
 
 const contractVars = [
@@ -200,7 +200,7 @@ describe("tokens.css", () => {
     );
   });
 
-  it("Primitive는 6계열 11단계와 white, black이고 hex가 정본이다", () => {
+  it("Primitive는 8계열 11단계와 white, black이고 hex가 정본이다", () => {
     const primitive = [...root].filter(([name]) => name.startsWith("--tide-color-"));
     expect(primitive.map(([name]) => name).sort()).toEqual([...primitiveVars].sort());
     for (const [, value] of primitive) expect(value).toMatch(/^#[0-9a-f]{6}$/);
