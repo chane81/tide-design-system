@@ -366,7 +366,7 @@ describe("highlight(키보드 위치와 hover)", () => {
     );
   });
 
-  test("raised 위 항목 규칙: highlight가 아닌 항목의 hover는 neutral subtle-hover다", async () => {
+  test("raised 위 항목 규칙: highlight가 아닌 항목의 hover는 무채색 bg-hover다", async () => {
     // 키보드 위치가 따로 있을 때 마우스가 다른 항목 위에 있는 경우다. 같은 항목 class로 확인한다.
     await render(
       <div data-theme="light" className="bg-raised p-2">
@@ -384,7 +384,7 @@ describe("highlight(키보드 위치와 hover)", () => {
     await userEvent.hover(page.getByTestId("plain"));
     if (forcedColors()) return;
     expect(getComputedStyle(byTestId("plain")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-neutral-subtle-hover)"),
+      resolve("backgroundColor", "var(--tide-bg-hover)"),
     );
     await userEvent.hover(page.getByTestId("disabled"));
     expect(getComputedStyle(byTestId("disabled")).backgroundColor).toBe(transparent);

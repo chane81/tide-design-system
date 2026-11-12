@@ -1,6 +1,10 @@
 import { contrastPairs, type ContrastPair, type ThemeName } from "@tide-tds/foundation";
 // 내부 서브패스(앱 개발자용 아님). 문서 블록이 원본 hex로 대비비를 계산하려고 쓴다.
-import { contrastExclusions, contrastRatio, semanticHex } from "@tide-tds/foundation/internal";
+import {
+  contrastExclusions,
+  contrastPairRatio,
+  opaqueSemanticHex,
+} from "@tide-tds/foundation/internal";
 import type { ReactElement } from "react";
 
 // 색 Token 블록: 대비 쌍 목록과 Theme별 대비비를 Token 원본에서 그린다.
@@ -8,8 +12,9 @@ import type { ReactElement } from "react";
 // 미리보기는 현재 Theme과 무관하게 원본 hex로 칠한다. 그래서 light와 dark 표를 한 화면에서 볼 수 있다.
 
 function Preview({ pair, theme }: { pair: ContrastPair; theme: ThemeName }): ReactElement {
-  const foreground = semanticHex(pair.foreground, theme);
-  const background = semanticHex(pair.background, theme);
+  const foreground = opaqueSemanticHex(pair.foreground, theme);
+  // 반투명 배경(bg-hover·bg-active)은 쌍의 표면 위에 합성한 색으로 칠한다(대비 검사와 같은 값).
+  const background = opaqueSemanticHex(pair.background, theme, pair.surface);
   if (pair.minRatio === 4.5) {
     return (
       <span
@@ -61,14 +66,17 @@ export function ContrastPairs({ theme }: { theme: ThemeName }): ReactElement {
         </thead>
         <tbody>
           {contrastPairs.map((pair) => {
-            const ratio = contrastRatio(
-              semanticHex(pair.foreground, theme),
-              semanticHex(pair.background, theme),
-            );
+            const ratio = contrastPairRatio(pair, theme);
             return (
-              <tr key={`${pair.foreground}/${pair.background}`} className="border-b border-default">
+              <tr
+                key={`${pair.foreground}/${pair.background}/${pair.surface ?? ""}`}
+                className="border-b border-default"
+              >
                 <td className="py-1 pr-4 font-mono">{pair.foreground}</td>
-                <td className="py-1 pr-4 font-mono">{pair.background}</td>
+                <td className="py-1 pr-4 font-mono">
+                  {pair.background}
+                  {pair.surface ? ` (${pair.surface} 위)` : ""}
+                </td>
                 <td className="py-1 pr-4">
                   <Preview pair={pair} theme={theme} />
                 </td>

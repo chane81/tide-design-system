@@ -25,13 +25,12 @@ import type { Role } from "./types.ts";
 export const alertLayoutClass = "flex items-start gap-3 rounded-lg border p-4";
 
 /**
- * Alert의 subtle 표면. 모두 등록된 대비 쌍이다.
- * - 글자·아이콘: text-accent × bg-accent-subtle 4.5:1(Role `text-<role>` × `bg-<role>-subtle`, neutral은 text-default ×
- *   bg-neutral-subtle, 앱 Role은 색 이름 규칙 text × subtle)
- * - 경계: border-accent × 바깥 표면 층 3:1(`border-<role>` × 표면 층, neutral은 border-strong)과
- *   × 안쪽 bg-accent-subtle 3:1(`border-<role>` × `bg-<role>-subtle`, neutral은 border-strong × bg-neutral-subtle)
+ * Alert의 subtle 표면(ADR 0022 §1).
+ * - 글자·아이콘: text-accent-on-subtle × bg-accent-subtle 4.5:1(Role `text-<role>-on-subtle` × `bg-<role>-subtle`, neutral은
+ *   text-default × bg-neutral-subtle, 앱 Role은 색 이름 규칙 on-subtle × subtle)
+ * - 경계: 파스텔 테두리 border-accent-subtle. 바탕과 글자만으로 알아볼 수 있어 꾸밈이고 대비 검사에서 뺐다.
  */
-export const alertSurfaceClass = "border-accent bg-accent-subtle text-accent";
+export const alertSurfaceClass = "border-accent-subtle bg-accent-subtle text-accent-on-subtle";
 
 /** 상태 아이콘 자리. 글자 첫 줄 높이(body-sm 20px)와 같은 20px라 첫 줄 가운데에 맞는다. */
 export const alertIconClass = "size-5 shrink-0";
@@ -47,6 +46,14 @@ export const alertDescriptionClass = "text-body-sm";
 
 /** 닫기 버튼(IconButton xs, 24px). 위아래 2px를 겹쳐 첫 줄 높이(20px)를 늘리지 않고, 끝쪽 4px를 여백에 겹친다. */
 export const alertCloseClass = "-my-0.5 -me-1";
+
+/**
+ * Alert(subtle 표면) 안 닫기 버튼의 색. ghost의 기본(text-accent, bg-hover·bg-active)을 덮어쓴다.
+ * subtle 바탕 위라 글자는 on-subtle이고, hover·누름은 같은 색의 subtle-hover·subtle-active다
+ * (on-subtle × subtle 3단계 4.5:1 등록. text × subtle-active는 일부 색에서 4.5:1에 못 미친다, ADR 0022).
+ */
+export const alertSubtleCloseClass =
+  "text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active";
 
 type IconComponent = (props: IconProps) => ReactElement;
 

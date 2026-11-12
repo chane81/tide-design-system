@@ -144,20 +144,64 @@ describe("색", () => {
     expect(getComputedStyle(element).color).toBe(resolve("var(--tide-text-default)"));
   });
 
-  test.each(roles)("%s subtle은 같은 Role의 subtle 배경과 Role 글자색이다", async (role) => {
+  test.each(roles)(
+    "%s subtle은 같은 Role의 subtle 배경, 파스텔 글자(on-subtle), 파스텔 테두리다",
+    async (role) => {
+      await render(
+        <div data-theme="light">
+          <Badge color={role}>{role}</Badge>
+        </div>,
+      );
+      const element = badge(role);
+      expect(element).toHaveAttribute("data-color", role);
+      if (forcedColors()) return;
+      // neutral의 on-subtle은 text-default를 공유한다(ADR 0022).
+      const text =
+        role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role}-on-subtle)`;
+      expect(getComputedStyle(element).backgroundColor).toBe(
+        resolve(`var(--tide-bg-${role}-subtle)`),
+      );
+      expect(getComputedStyle(element).color).toBe(resolve(text));
+      expect(getComputedStyle(element).borderTopColor).toBe(
+        resolve(`var(--tide-border-${role}-subtle)`),
+      );
+    },
+  );
+
+  // subtle·faint의 계산된 색이 Token 값과 같은지 light·dark에서 본다(티켓 03 수용 기준).
+  test.each(
+    (["light", "dark"] as const).flatMap((theme) =>
+      (["subtle", "faint"] as const).flatMap((variant) =>
+        roles.map((role) => [theme, variant, role] as const),
+      ),
+    ),
+  )("%s %s × %s는 Token 값으로 칠한다", async (theme, variant, role) => {
     await render(
-      <div data-theme="light">
-        <Badge color={role}>{role}</Badge>
+      <div data-theme={theme}>
+        <Badge color={role} variant={variant}>
+          {role}
+        </Badge>
       </div>,
     );
-    const element = badge(role);
-    expect(element).toHaveAttribute("data-color", role);
     if (forcedColors()) return;
-    const text = role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role})`;
-    expect(getComputedStyle(element).backgroundColor).toBe(
-      resolve(`var(--tide-bg-${role}-subtle)`),
+    const probe = (value: string): string => {
+      const div = document.createElement("div");
+      div.dataset["theme"] = theme;
+      div.style.borderColor = value;
+      document.body.append(div);
+      const resolved = getComputedStyle(div).borderTopColor;
+      div.remove();
+      return resolved;
+    };
+    const style = getComputedStyle(badge(role));
+    const text =
+      role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role}-on-subtle)`;
+    expect(style.backgroundColor).toBe(probe(`var(--tide-bg-${role}-${variant})`));
+    expect(style.color).toBe(probe(text));
+    // faint는 테두리가 없다(투명).
+    expect(style.borderTopColor).toBe(
+      variant === "faint" ? transparent : probe(`var(--tide-border-${role}-subtle)`),
     );
-    expect(getComputedStyle(element).color).toBe(resolve(text));
   });
 
   test.each(roles)("%s solid는 같은 Role의 solid 배경과 on-solid 글자색이다", async (role) => {
@@ -197,7 +241,7 @@ describe("색", () => {
   });
 
   test.each(
-    (["subtle", "solid"] as const).flatMap((variant) =>
+    (["subtle", "faint", "solid"] as const).flatMap((variant) =>
       families.map((family) => [variant, family] as const),
     ),
   )("%s × 색 계열 %s는 그 계열 변수를 쓴다", async (variant, family) => {
@@ -211,7 +255,7 @@ describe("색", () => {
     const element = badge(family);
     expect(element).toHaveAttribute("data-color", family);
     if (forcedColors()) return;
-    const [bg, text] = variant === "solid" ? ["solid", "on-solid"] : ["subtle", "text"];
+    const [bg, text] = variant === "solid" ? ["solid", "on-solid"] : [variant, "on-subtle"];
     expect(getComputedStyle(element).backgroundColor).toBe(resolve(`var(--tide-${family}-${bg})`));
     expect(getComputedStyle(element).color).toBe(resolve(`var(--tide-${family}-${text})`));
   });

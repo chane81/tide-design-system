@@ -3,6 +3,7 @@ import type { ComponentProps, ReactElement, ReactNode } from "react";
 
 import {
   alertCloseClass,
+  alertSubtleCloseClass,
   alertContentClass,
   alertDescriptionClass,
   alertIconClass,
@@ -82,7 +83,7 @@ export function Alert({
           color={color}
           size="xs"
           onClick={onClose}
-          className={alertCloseClass}
+          className={`${alertCloseClass} ${alertSubtleCloseClass}`}
         >
           <XIcon />
         </IconButton>

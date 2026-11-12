@@ -9,6 +9,7 @@ export {
   type Color,
   type ColorFamilyName,
   type ColorFamilyRegistry,
+  type MixedColor,
   type Role,
   type RoleRegistry,
   type SemanticColorName,

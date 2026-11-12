@@ -159,7 +159,8 @@ describe("스타일 축", () => {
     }
   });
 
-  // 채움 방식마다 배경·글자·경계 Token. neutral은 역할 text·border가 없어 default·strong을 쓴다.
+  // 채움 방식마다 배경·글자·경계 Token. neutral은 역할 text·border·on-subtle이 없어 default·strong을 쓴다.
+  // subtle 글자는 파스텔 글자 on-subtle이다(ADR 0022).
   const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
   const expected = (variant: NonNullable<ButtonProps["variant"]>, role: (typeof roles)[number]) => {
     const text = role === "neutral" ? "text-default" : `text-${role}`;
@@ -167,7 +168,11 @@ describe("스타일 축", () => {
       case "solid":
         return { bg: `bg-${role}-solid`, text: "text-on-solid", border: null };
       case "subtle":
-        return { bg: `bg-${role}-subtle`, text, border: null };
+        return {
+          bg: `bg-${role}-subtle`,
+          text: role === "neutral" ? "text-default" : `text-${role}-on-subtle`,
+          border: null,
+        };
       case "outline":
         return { bg: null, text, border: role === "neutral" ? "border-strong" : `border-${role}` };
       case "ghost":
@@ -198,6 +203,37 @@ describe("스타일 축", () => {
     expect(style.borderTopColor).toBe(
       token.border ? await resolve("borderColor", `var(--tide-${token.border})`) : transparent,
     );
+  });
+
+  // outline·ghost의 hover·누름은 색 없이 덮는다(ADR 0022 §3). 계산된 색이 Token 값과 같은지 light·dark에서 본다.
+  test.each(
+    (["light", "dark"] as const).flatMap((theme) =>
+      (["outline", "ghost"] as const).map((variant) => [theme, variant] as const),
+    ),
+  )("%s %s hover 배경은 bg-hover, 글자는 그대로 Role text다", async (theme, variant) => {
+    if (forcedColors()) return;
+    await render(
+      <div data-theme={theme}>
+        <Button variant={variant} color="primary" noPressScale>
+          저장
+        </Button>
+      </div>,
+    );
+    const probe = (property: "backgroundColor" | "color", value: string): string => {
+      const div = document.createElement("div");
+      div.dataset["theme"] = theme;
+      div.style[property] = value;
+      document.body.append(div);
+      const resolved = getComputedStyle(div)[property];
+      div.remove();
+      return resolved;
+    };
+    const button = page.getByRole("button").element() as HTMLElement;
+    await userEvent.hover(button);
+    await expect
+      .poll(() => getComputedStyle(button).backgroundColor)
+      .toBe(probe("backgroundColor", "var(--tide-bg-hover)"));
+    expect(getComputedStyle(button).color).toBe(probe("color", "var(--tide-text-primary)"));
   });
 
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {

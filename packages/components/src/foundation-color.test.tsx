@@ -51,14 +51,14 @@ describe("data-color와 accent 슬롯", () => {
       </div>,
     );
 
-    // subtle은 light 50, dark 950이다.
-    expect(accent("page-light", "subtle")).toBe(color.blue[50]);
+    // subtle은 light 100, dark 950이다(ADR 0022).
+    expect(accent("page-light", "subtle")).toBe(color.blue[100]);
     expect(accent("nested-dark", "subtle")).toBe(color.blue[950]);
-    expect(accent("nested-light", "subtle")).toBe(color.blue[50]);
+    expect(accent("nested-light", "subtle")).toBe(color.blue[100]);
     expect(accent("same-element", "subtle")).toBe(color.blue[950]);
-    expect(accent("nested-dark", "text")).toBe(color.blue[200]);
+    expect(accent("nested-dark", "text")).toBe(color.blue[300]);
     if (!forcedColors()) {
-      expect(background("page-light")).toBe(rgb(color.blue[50]));
+      expect(background("page-light")).toBe(rgb(color.blue[100]));
       expect(background("nested-dark")).toBe(rgb(color.blue[950]));
       expect(background("same-element")).toBe(rgb(color.blue[950]));
     }
@@ -80,7 +80,7 @@ describe("data-color와 accent 슬롯", () => {
     expect(accent("neutral", "subtle")).toBe(color.gray[900]);
     expect(accent("gray", "subtle")).toBe(color.gray[950]);
     expect(accent("neutral", "text")).toBe(color.gray[50]);
-    expect(accent("gray", "text")).toBe(color.gray[200]);
+    expect(accent("gray", "text")).toBe(color.gray[300]);
     if (!forcedColors()) {
       expect(background("danger")).toBe(rgb(color.red[600]));
       expect(background("neutral")).toBe(rgb(color.gray[900]));

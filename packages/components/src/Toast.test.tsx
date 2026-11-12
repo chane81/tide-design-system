@@ -520,14 +520,15 @@ describe("위치·표면·색", () => {
     expect(icon.getBoundingClientRect().width).toBe(20);
   });
 
-  test("기본 color는 info이고, 닫기(ghost xs 24px)·액션(outline sm 32px) 버튼은 같은 Role이다", async () => {
+  test("기본 color는 info이고, 닫기(ghost xs 24px)·액션(outline sm 32px) 버튼은 neutral이다", async () => {
     const queue = await setup();
     const toast = await show(queue, { title: "새 버전", action: { label: "새로 고침" } });
     expect(toast).toHaveAttribute("data-color", "info");
     const close = page.getByRole("button", { name: "닫기" }).element() as HTMLElement;
     const action = page.getByRole("button", { name: "새로 고침" }).element() as HTMLElement;
-    expect(close).toHaveAttribute("data-color", "info");
-    expect(action).toHaveAttribute("data-color", "info");
+    // raised 위 Role 색 글자는 bg-hover·bg-active 위에서 4.5:1에 못 미쳐 버튼은 neutral(text-default)이다(티켓 03).
+    expect(close).toHaveAttribute("data-color", "neutral");
+    expect(action).toHaveAttribute("data-color", "neutral");
     expect(close.getBoundingClientRect().height).toBe(24);
     expect(action.getBoundingClientRect().height).toBe(32);
   });

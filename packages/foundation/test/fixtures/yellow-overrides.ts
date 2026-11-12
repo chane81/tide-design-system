@@ -10,12 +10,14 @@ export default [
     name: "yellow",
     scale: yellowScale,
     // solid는 밝은 단계(400/500/600)에 진한 글자(950)를 얹고, light 경계는 한 단계 진하게 덮어쓴다.
+    // light text는 한 단계 진하게(800) 덮어써서 무채색 클릭 바탕(bg-active) 위 4.5:1을 맞춘다(규칙의 700은 4.24:1).
     overrides: {
       solid: { light: 400, dark: 400 },
       "solid-hover": { light: 500, dark: 500 },
       "solid-active": { light: 600, dark: 600 },
       "on-solid": { light: 950, dark: 950 },
       border: { light: 700 },
+      text: { light: 800 },
     },
   }),
 ];

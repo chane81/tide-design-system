@@ -138,12 +138,12 @@ describe("색 이름(data-color)", () => {
       );
       const element = page.getByRole("link").element();
       expect(element).toHaveAttribute("data-color", "brand");
-      // light text 슬롯은 800 단계다.
+      // light text 슬롯은 700 단계다(ADR 0022).
       expect(getComputedStyle(element).getPropertyValue("--tide-accent-text").trim()).toBe(
-        "#5b21b6",
+        "#6d28d9",
       );
       if (!forcedColors()) {
-        expect(getComputedStyle(element).color).toBe(await resolveColor("#5b21b6"));
+        expect(getComputedStyle(element).color).toBe(await resolveColor("#6d28d9"));
       }
     });
   });

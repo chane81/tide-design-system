@@ -257,10 +257,10 @@ describe("색", () => {
     expect(element).toHaveAttribute("data-color", "gray");
     if (forcedColors()) return;
     expect(getComputedStyle(element).backgroundColor).toBe(resolve("var(--tide-gray-subtle)"));
-    expect(getComputedStyle(element).color).toBe(resolve("var(--tide-gray-text)"));
+    expect(getComputedStyle(element).color).toBe(resolve("var(--tide-gray-on-subtle)"));
   });
 
-  test.each(families)("%s는 그 계열의 subtle 배경과 text 아이콘색이다", async (family) => {
+  test.each(families)("%s는 그 계열의 subtle 배경과 on-subtle 아이콘색이다", async (family) => {
     await render(
       <div data-theme="dark">
         <Avatar alt="홍길동" color={family} data-testid="avatar" />
@@ -272,7 +272,7 @@ describe("색", () => {
     const probe = document.createElement("span");
     probe.dataset["theme"] = "dark";
     probe.dataset["color"] = family;
-    probe.className = "bg-accent-subtle text-accent";
+    probe.className = "bg-accent-subtle text-accent-on-subtle";
     document.body.append(probe);
     const expected = getComputedStyle(probe);
     expect(getComputedStyle(element).backgroundColor).toBe(expected.backgroundColor);

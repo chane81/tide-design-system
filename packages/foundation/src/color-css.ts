@@ -1,14 +1,18 @@
+import { color, type ColorStep } from "./color.ts";
 import { colorFamilyNames, isRole, roleNames, roleSlotToken } from "./color-name.ts";
 import {
   colorSlots,
   familySlotSteps,
+  isSlotStep,
   slotPrimitive,
+  slotValueHex,
   type ColorSlot,
   type SlotRule,
 } from "./color-slot.ts";
 import {
   roleFamily,
   semanticEntries,
+  slotColorValue,
   type SemanticColorName,
   type SemanticNamespace,
   type ThemeName,
@@ -41,22 +45,33 @@ export function semanticVar(className: string): string {
   return `--tide-${className}`;
 }
 
-/** 슬롯 값의 CSS 표현. 계열 단계는 Primitive 변수를, white·black은 Tide Primitive 변수를 가리킨다. */
-function slotCss(family: string, step: SlotRule[ThemeName]): string {
-  return `var(${primitiveVar(slotPrimitive(family, step))})`;
+/**
+ * 슬롯 값의 CSS 표현. 계열 단계는 Primitive 변수를, white·black은 Tide Primitive 변수를 가리킨다.
+ * 덮기·섞기는 빌드할 때 계산한 hex다(런타임 `color-mix()`를 쓰지 않는다. 대비 검사와 같은 값이다, ADR 0022).
+ */
+function slotCss(
+  family: string,
+  value: SlotRule[ThemeName],
+  stepHex: (step: ColorStep) => string,
+): string {
+  return isSlotStep(value)
+    ? `var(${primitiveVar(slotPrimitive(family, value))})`
+    : slotValueHex(value, stepHex);
 }
 
 /**
- * 계열 하나의 Theme 블록 선언(9줄).
+ * 계열 하나의 Theme 블록 선언(슬롯마다 한 줄).
+ * @param stepHex 계열 단계의 hex. 덮기·섞기 값을 계산할 때 쓴다.
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function familyThemeDeclarations(
   family: string,
   steps: Readonly<Record<ColorSlot, SlotRule>>,
   theme: ThemeName,
+  stepHex: (step: ColorStep) => string,
 ): string[] {
   return colorSlots.map(
-    (slot) => `  ${familyVar(family, slot)}: ${slotCss(family, steps[slot][theme])};`,
+    (slot) => `  ${familyVar(family, slot)}: ${slotCss(family, steps[slot][theme], stepHex)};`,
   );
 }
 
@@ -90,11 +105,11 @@ export function accentDefaultDeclarations(): string[] {
  */
 export function tideFamilyThemeDeclarations(theme: ThemeName): string[] {
   return colorFamilyNames.flatMap((family) =>
-    familyThemeDeclarations(family, familySlotSteps(family), theme),
+    familyThemeDeclarations(family, familySlotSteps(family), theme, (step) => color[family][step]),
   );
 }
 
-// Role Token은 계열 변수의 별칭이다. 덮어쓴 슬롯(neutral dark subtle)만 Primitive를 직접 가리킨다.
+// Role Token은 계열 변수의 별칭이다. 덮어쓴 슬롯(neutral dark subtle 3단계)만 값을 직접 가리킨다.
 const roleAliases = new Map<SemanticColorName, { family: string; slot: ColorSlot }>(
   roleNames.flatMap((role) =>
     colorSlots
@@ -113,9 +128,12 @@ export function roleAliasCss(className: SemanticColorName, theme: ThemeName): st
   const alias = roleAliases.get(className);
   if (!alias) return undefined;
   const family = alias.family as (typeof roleFamily)[keyof typeof roleFamily];
-  const familyValue = slotPrimitive(family, familySlotSteps(family)[alias.slot][theme]);
+  const familyValue = slotColorValue(family, familySlotSteps(family)[alias.slot][theme]);
   const entry = semanticEntries().find((candidate) => candidate.className === className)!;
-  return entry.value[theme] === familyValue ? `var(${familyVar(family, alias.slot)})` : undefined;
+  // 덮기·섞기 값은 객체라 모양으로 비교한다.
+  return JSON.stringify(entry.value[theme]) === JSON.stringify(familyValue)
+    ? `var(${familyVar(family, alias.slot)})`
+    : undefined;
 }
 
 /** accent Utility class 하나. key는 Utility class에서 접두사를 뺀 이름이다. */
@@ -126,14 +144,24 @@ export interface AccentUtility {
 }
 
 /**
- * accent Utility class 목록. 예: `bg-accent-solid` → `--tide-accent-solid`, `text-accent` → `--tide-accent-text`
+ * accent Utility class 목록. 예: `bg-accent-solid` → `--tide-accent-solid`, `text-accent` → `--tide-accent-text`,
+ * `border-accent-subtle` → `--tide-accent-subtle-border`
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const accentUtilities: readonly AccentUtility[] = [
   ...colorSlots
-    .filter((slot) => slot !== "text" && slot !== "border" && slot !== "on-solid")
+    .filter(
+      (slot) =>
+        slot !== "text" &&
+        slot !== "border" &&
+        slot !== "subtle-border" &&
+        slot !== "on-solid" &&
+        slot !== "on-subtle",
+    )
     .map((slot) => ({ namespace: "background" as const, key: `accent-${slot}`, slot })),
   { namespace: "text", key: "accent", slot: "text" },
   { namespace: "text", key: "accent-on-solid", slot: "on-solid" },
+  { namespace: "text", key: "accent-on-subtle", slot: "on-subtle" },
   { namespace: "border", key: "accent", slot: "border" },
+  { namespace: "border", key: "accent-subtle", slot: "subtle-border" },
 ];

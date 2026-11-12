@@ -69,8 +69,10 @@ const thumbSizeClass: Record<SwitchSize, string> = {
 // hover·누름은 루트 label(이름 붙인 group/switch)에서 반응한다. 바깥 요소의 group hover에는 반응하지 않는다. label을 눌러도 토글되기 때문이다. 활성(:enabled)일 때만 붙는다.
 // Checkbox·Radio(choice-style.ts)와 같은 규칙이다. hover는 켜짐 solid-hover·꺼짐 subtle, 누름은 한 단계 진한 -active 슬롯이다.
 // - 켜짐: solid-hover / solid-active(Button solid와 같은 규칙). thumb on-solid와 4.5:1 대비 쌍이 등록되어 있다.
-// - 꺼짐: accent subtle / subtle-active 배경. thumb은 text-accent가 되어 등록된 대비 쌍(색 이름 text × 같은 색 subtle 3단계
-//   4.5:1, neutral은 text-default × neutral subtle 3단계) 안에 남는다. 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
+// - 꺼짐: accent subtle / subtle-active 배경. thumb은 text-accent가 된다. thumb은 글자가 아닌 UI 요소라 기준은 3:1이다.
+//   hover(subtle)는 등록된 대비 쌍(text × 같은 색 subtle 4.5:1, neutral은 text-default × neutral subtle) 안에 있다.
+//   누름(subtle-active) 위 text 쌍은 ADR 0022에서 지웠다(text가 subtle 위 글자가 아니게 되어서). 값은 최저 4.31:1이라
+//   3:1을 넘는다(티켓 03 판단 보류 목록 참고). 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
 const trackClass =
   "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-accent-subtle group-active/switch:not-checked:enabled:bg-accent-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
 

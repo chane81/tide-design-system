@@ -101,7 +101,7 @@ export function PaginationLink({
       // a의 props를 Button에 넘긴다. Button은 render 요소(기본 `<a />`)에 그대로 병합한다.
       {...(props as Omit<ButtonProps, "color">)}
       render={render ?? <a />}
-      // 현재 페이지는 primary subtle(bg-accent-subtle + text-accent), 나머지는 neutral ghost(text-default)다.
+      // 현재 페이지는 primary subtle(bg-accent-subtle + text-accent-on-subtle), 나머지는 neutral ghost(text-default)다.
       variant={current ? "subtle" : "ghost"}
       color={current ? "primary" : "neutral"}
       size={itemSize}

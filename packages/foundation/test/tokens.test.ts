@@ -29,20 +29,33 @@ const semanticClasses = [
   "bg-raised",
   "bg-disabled",
   "bg-overlay",
+  // 무채색 호버·클릭(ADR 0022 §3)
+  "bg-hover",
+  "bg-active",
   ...roles.flatMap((role) =>
-    ["solid", "solid-hover", "solid-active", "subtle", "subtle-hover", "subtle-active"].map(
-      (state) => `bg-${role}-${state}`,
-    ),
+    [
+      "solid",
+      "solid-hover",
+      "solid-active",
+      "subtle",
+      "subtle-hover",
+      "subtle-active",
+      "faint",
+    ].map((state) => `bg-${role}-${state}`),
   ),
   "text-default",
   "text-muted",
   "text-disabled",
   "text-on-solid",
   ...roles.filter((role) => role !== "neutral").map((role) => `text-${role}`),
+  // neutral의 on-subtle은 text-default를 공유한다(ADR 0022 §1).
+  ...roles.filter((role) => role !== "neutral").map((role) => `text-${role}-on-subtle`),
   "border-default",
   "border-strong",
   "border-raised",
   ...roles.filter((role) => role !== "neutral").map((role) => `border-${role}`),
+  // 파스텔 테두리(슬롯 subtle-border). neutral도 있다.
+  ...roles.map((role) => `border-${role}-subtle`),
   "outline-focus",
 ];
 
@@ -117,18 +130,41 @@ const motionVars = [
   ...zIndices.map(([name]) => `--tide-z-${name}`),
 ];
 
-// 색 계열 변수 묶음과 accent 슬롯(tide-v0-impl 티켓 40, ADR 0011). [슬롯, light 단계, dark 단계]
-const slotRule = [
+// 색 계열 변수 묶음과 accent 슬롯(tide-v0-impl 티켓 40, ADR 0011, ADR 0022 §2). [슬롯, light 값, dark 값]
+// 값: 숫자는 그 계열 단계, 문자열은 Primitive, [단계, 덮는 색, 비율]은 덮기, ["mix", a, b]는 반씩 섞기다.
+type SlotSpec =
+  | number
+  | string
+  | readonly [number, string, number]
+  | readonly ["mix", number | string, number | string];
+const slotRule: readonly (readonly [string, SlotSpec, SlotSpec])[] = [
   ["solid", 600, 600],
-  ["solid-hover", 700, 700],
-  ["solid-active", 800, 800],
-  ["subtle", 50, 950],
-  ["subtle-hover", 100, 900],
-  ["subtle-active", 200, 800],
-  ["text", 800, 200],
+  ["solid-hover", [600, "black", 0.14], [600, "black", 0.14]],
+  ["solid-active", [600, "black", 0.2], [600, "black", 0.2]],
+  ["subtle", 100, 950],
+  ["subtle-hover", [100, "gray-950", 0.04], [950, "white", 0.06]],
+  ["subtle-active", [100, "gray-950", 0.08], [950, "white", 0.1]],
+  ["faint", 50, ["mix", "gray-950", 950]],
+  ["text", 700, 300],
   ["border", 600, 400],
+  ["subtle-border", 200, 800],
   ["on-solid", "white", "white"],
-] as const;
+  ["on-subtle", 950, 100],
+];
+
+/** 두 hex를 sRGB 채널마다 섞는다(브라우저의 불투명 합성과 같다). 테스트 안에서 따로 계산한다. */
+function mix(a: string, b: string, amount: number): string {
+  const channels = (hex: string): number[] =>
+    [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
+  const to = channels(b);
+  return `#${channels(a)
+    .map((value, index) =>
+      Math.round(value * (1 - amount) + to[index]! * amount)
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+}
 const slots = slotRule.map(([slot]) => slot);
 const familyVars = families.flatMap((family) => slots.map((slot) => `--tide-${family}-${slot}`));
 const accentVars = slots.map((slot) => `--tide-accent-${slot}`);
@@ -234,19 +270,36 @@ describe("tokens.css", () => {
   describe("색 계열과 accent 슬롯(티켓 40)", () => {
     const ref = (family: string, step: number | string): string =>
       `var(--tide-color-${typeof step === "number" ? `${family}-${step}` : step})`;
+    const primitive = (family: string, step: number | string): string =>
+      root.get(`--tide-color-${typeof step === "number" ? `${family}-${step}` : step}`)!;
+    // 단계는 Primitive 변수 참조, 덮기·섞기는 빌드할 때 계산한 hex다(런타임 color-mix() 없음).
+    const expected = (family: string, spec: SlotSpec): string => {
+      if (typeof spec === "number" || typeof spec === "string") return ref(family, spec);
+      if (spec[0] === "mix")
+        return mix(primitive(family, spec[1]), primitive(family, spec[2]), 0.5);
+      return mix(primitive(family, spec[0]), primitive(family, spec[1]), spec[2]);
+    };
 
     it.each(families)("%s 계열 변수는 매핑 규칙을 따른다", (family) => {
-      for (const [slot, lightStep, darkStep] of slotRule) {
-        expect(light.get(`--tide-${family}-${slot}`), slot).toBe(ref(family, lightStep));
-        expect(dark.get(`--tide-${family}-${slot}`), slot).toBe(ref(family, darkStep));
+      for (const [slot, lightSpec, darkSpec] of slotRule) {
+        expect(light.get(`--tide-${family}-${slot}`), slot).toBe(expected(family, lightSpec));
+        expect(dark.get(`--tide-${family}-${slot}`), slot).toBe(expected(family, darkSpec));
       }
+    });
+
+    it("덮기·섞기 값은 6자리 hex이고 color-mix()를 쓰지 않는다", () => {
+      expect(css).not.toMatch(/color-mix\(in srgb, var\(--tide-color-/);
+      expect(light.get("--tide-blue-subtle-hover")).toMatch(/^#[0-9a-f]{6}$/);
+      expect(dark.get("--tide-blue-faint")).toMatch(/^#[0-9a-f]{6}$/);
     });
 
     it("gray는 일반 계열 규칙을 따르고 neutral과 다르다", () => {
       expect(dark.get("--tide-gray-subtle")).toBe(ref("gray", 950));
       expect(darkResolved.get("--tide-bg-neutral-subtle")).toBe(ref("gray", 900));
-      expect(dark.get("--tide-gray-text")).toBe(ref("gray", 200));
+      expect(dark.get("--tide-gray-text")).toBe(ref("gray", 300));
       expect(dark.get("--tide-gray-border")).toBe(ref("gray", 400));
+      // gray dark faint는 gray-950과 gray-950을 섞은 값이라 gray-950 그대로다.
+      expect(dark.get("--tide-gray-faint")).toBe(primitive("gray", 950));
     });
 
     it("Role Token은 계열 변수의 별칭이고, 덮어쓴 슬롯만 Primitive를 가리킨다", () => {
@@ -283,6 +336,9 @@ describe("tokens.css", () => {
         expect(rule.get("--tide-accent-text")).toBe(`var(--tide-text-${role})`);
         expect(rule.get("--tide-accent-border")).toBe(`var(--tide-border-${role})`);
         expect(rule.get("--tide-accent-on-solid")).toBe("var(--tide-text-on-solid)");
+        expect(rule.get("--tide-accent-faint")).toBe(`var(--tide-bg-${role}-faint)`);
+        expect(rule.get("--tide-accent-on-subtle")).toBe(`var(--tide-text-${role}-on-subtle)`);
+        expect(rule.get("--tide-accent-subtle-border")).toBe(`var(--tide-border-${role}-subtle)`);
       },
     );
 
@@ -291,47 +347,96 @@ describe("tokens.css", () => {
       expect(rule.get("--tide-accent-subtle")).toBe("var(--tide-bg-neutral-subtle)");
       expect(rule.get("--tide-accent-text")).toBe("var(--tide-text-default)");
       expect(rule.get("--tide-accent-border")).toBe("var(--tide-border-strong)");
+      // on-subtle은 text-default를 공유하고, faint·subtle-border는 Role Token이 있다.
+      expect(rule.get("--tide-accent-on-subtle")).toBe("var(--tide-text-default)");
+      expect(rule.get("--tide-accent-faint")).toBe("var(--tide-bg-neutral-faint)");
+      expect(rule.get("--tide-accent-subtle-border")).toBe("var(--tide-border-neutral-subtle)");
     });
   });
 
-  it("alpha는 overlay와 shadow 색에만 8자리 hex로 쓴다", () => {
+  it("alpha는 overlay, 무채색 호버·클릭, shadow 색에만 8자리 hex로 쓴다", () => {
     const alphaVars = [...css.matchAll(/(--tide-[\w-]+):\s*#[0-9a-f]{8};/g)].map((m) => m[1]);
-    expect([...new Set(alphaVars)].sort()).toEqual(["--tide-bg-overlay", "--tide-shadow-color"]);
+    expect([...new Set(alphaVars)].sort()).toEqual([
+      "--tide-bg-active",
+      "--tide-bg-hover",
+      "--tide-bg-overlay",
+      "--tide-shadow-color",
+    ]);
     // gray-950 #28292c, black #000000. 50% = 80, 70% = b3, 8% = 14, 30% = 4d
     expect(light.get("--tide-bg-overlay")).toBe("#28292c80");
     expect(dark.get("--tide-bg-overlay")).toBe("#28292cb3");
     expect(light.get("--tide-shadow-color")).toBe("#28292c14");
     expect(dark.get("--tide-shadow-color")).toBe("#0000004d");
+    // 무채색 호버·클릭(ADR 0022 §3): light gray-950 4%(0a)·8%(14), dark white 6%(0f)·10%(1a)
+    expect(light.get("--tide-bg-hover")).toBe("#28292c0a");
+    expect(light.get("--tide-bg-active")).toBe("#28292c14");
+    expect(dark.get("--tide-bg-hover")).toBe("#ffffff0f");
+    expect(dark.get("--tide-bg-active")).toBe("#ffffff1a");
   });
 
-  describe("매핑(tide-v0 티켓 09)", () => {
+  describe("매핑(tide-v0 티켓 09, ADR 0022 §2)", () => {
     const ref = (name: string): string => `var(--tide-color-${name})`;
+    const hex = (name: string): string => root.get(`--tide-color-${name}`)!;
 
     it.each(roles)("%s 배경", (role) => {
       const family = roleFamily[role];
-      const subtleDark = role === "neutral" ? [900, 800, 700] : [950, 900, 800];
-      const states = ["", "-hover", "-active"];
-      states.forEach((state, index) => {
-        const solid = [600, 700, 800][index];
-        expect(lightResolved.get(`--tide-bg-${role}-solid${state}`)).toBe(
-          ref(`${family}-${solid}`),
+      const step = (n: number): string => `${family}-${n}`;
+      for (const theme of ["light", "dark"] as const) {
+        const resolved = theme === "light" ? lightResolved : darkResolved;
+        // solid 3단계: 600, 600 + black 14% / 20%(두 Theme 같음)
+        expect(resolved.get(`--tide-bg-${role}-solid`)).toBe(ref(step(600)));
+        expect(resolved.get(`--tide-bg-${role}-solid-hover`)).toBe(
+          mix(hex(step(600)), hex("black"), 0.14),
         );
-        expect(darkResolved.get(`--tide-bg-${role}-solid${state}`)).toBe(ref(`${family}-${solid}`));
-        expect(lightResolved.get(`--tide-bg-${role}-subtle${state}`)).toBe(
-          ref(`${family}-${[50, 100, 200][index]}`),
+        expect(resolved.get(`--tide-bg-${role}-solid-active`)).toBe(
+          mix(hex(step(600)), hex("black"), 0.2),
         );
-        expect(darkResolved.get(`--tide-bg-${role}-subtle${state}`)).toBe(
-          ref(`${family}-${subtleDark[index]}`),
+      }
+      // light subtle 3단계: 100, 100 + gray-950 4% / 8%. faint: 50
+      expect(lightResolved.get(`--tide-bg-${role}-subtle`)).toBe(ref(step(100)));
+      expect(lightResolved.get(`--tide-bg-${role}-subtle-hover`)).toBe(
+        mix(hex(step(100)), hex("gray-950"), 0.04),
+      );
+      expect(lightResolved.get(`--tide-bg-${role}-subtle-active`)).toBe(
+        mix(hex(step(100)), hex("gray-950"), 0.08),
+      );
+      expect(lightResolved.get(`--tide-bg-${role}-faint`)).toBe(ref(step(50)));
+      // dark faint: gray-950과 950을 반씩 섞기
+      expect(darkResolved.get(`--tide-bg-${role}-faint`)).toBe(
+        mix(hex("gray-950"), hex(step(950)), 0.5),
+      );
+      if (role === "neutral") {
+        // neutral dark subtle 3단계는 덮어쓴 단계 900 / 800 / 700 그대로다(gray-950은 dark canvas와 같은 색).
+        expect(darkResolved.get("--tide-bg-neutral-subtle")).toBe(ref("gray-900"));
+        expect(darkResolved.get("--tide-bg-neutral-subtle-hover")).toBe(ref("gray-800"));
+        expect(darkResolved.get("--tide-bg-neutral-subtle-active")).toBe(ref("gray-700"));
+      } else {
+        // dark subtle 3단계: 950, 950 + white 6% / 10%
+        expect(darkResolved.get(`--tide-bg-${role}-subtle`)).toBe(ref(step(950)));
+        expect(darkResolved.get(`--tide-bg-${role}-subtle-hover`)).toBe(
+          mix(hex(step(950)), hex("white"), 0.06),
         );
-      });
+        expect(darkResolved.get(`--tide-bg-${role}-subtle-active`)).toBe(
+          mix(hex(step(950)), hex("white"), 0.1),
+        );
+      }
     });
 
     it.each(roles.filter((role) => role !== "neutral"))("%s 글자와 테두리", (role) => {
       const family = roleFamily[role];
-      expect(lightResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-800`));
-      expect(darkResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-200`));
+      expect(lightResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-700`));
+      expect(darkResolved.get(`--tide-text-${role}`)).toBe(ref(`${family}-300`));
       expect(lightResolved.get(`--tide-border-${role}`)).toBe(ref(`${family}-600`));
       expect(darkResolved.get(`--tide-border-${role}`)).toBe(ref(`${family}-400`));
+      expect(lightResolved.get(`--tide-text-${role}-on-subtle`)).toBe(ref(`${family}-950`));
+      expect(darkResolved.get(`--tide-text-${role}-on-subtle`)).toBe(ref(`${family}-100`));
+      expect(lightResolved.get(`--tide-border-${role}-subtle`)).toBe(ref(`${family}-200`));
+      expect(darkResolved.get(`--tide-border-${role}-subtle`)).toBe(ref(`${family}-800`));
+    });
+
+    it("neutral 파스텔 테두리는 gray 규칙을 따른다(gray 스케일 그대로)", () => {
+      expect(lightResolved.get("--tide-border-neutral-subtle")).toBe(ref("gray-200"));
+      expect(darkResolved.get("--tide-border-neutral-subtle")).toBe(ref("gray-800"));
     });
 
     it("공통 Token", () => {

@@ -12,15 +12,26 @@ import {
   colorSlots,
   resolveSlotSteps,
   slotPrimitive,
+  slotValueHex,
   type ColorSlot,
   type SlotOverrides,
   type SlotRule,
   type SlotStep,
+  type SlotValue,
 } from "./color-slot.ts";
 import { checkColorContrast, type ColorContrastResult } from "./contrast.ts";
 import type { ThemeName } from "./semantic.ts";
 
-export type { ColorSlot, SlotOverrides, SlotRule, SlotStep } from "./color-slot.ts";
+export type {
+  ColorSlot,
+  SlotColorRef,
+  SlotMix,
+  SlotOverlay,
+  SlotOverrides,
+  SlotRule,
+  SlotStep,
+  SlotValue,
+} from "./color-slot.ts";
 export type { ColorContrastResult, ColorContrastRule } from "./contrast.ts";
 
 /** 50~950의 11단계 스케일. 값은 `#rrggbb` hex다. */
@@ -32,7 +43,10 @@ export interface ColorFamilyInput<Name extends string> {
   readonly name: Name;
   /** 11단계 스케일 전체 */
   readonly scale: ColorScale;
-  /** 매핑 규칙에서 덮어쓸 슬롯 값. 예: 밝은 계열의 `on-solid`를 `{ light: 950, dark: 950 }`으로 */
+  /**
+   * 매핑 규칙에서 덮어쓸 슬롯 값. 예: 밝은 계열의 `on-solid`를 `{ light: 950, dark: 950 }`으로.
+   * 단계 대신 덮기(`{ step: 100, overlay: "gray-950", amount: 0.04 }`)나 섞기(`{ mix: ["gray-950", 950] }`)도 쓸 수 있다.
+   */
   readonly overrides?: SlotOverrides;
 }
 
@@ -67,6 +81,43 @@ const reservedNames = new Set<string>([
 
 function isSlotStep(value: unknown): value is SlotStep {
   return value === "white" || value === "black" || steps.includes(value as ColorStep);
+}
+
+/** 덮기·섞기가 참조할 수 있는 색: 그 계열 단계, 또는 Tide Primitive 이름 */
+function isColorRef(value: unknown): boolean {
+  return steps.includes(value as ColorStep) || Object.hasOwn(primitiveNames, value as string);
+}
+
+const primitiveNames: Record<string, true> = Object.fromEntries(
+  Object.entries(color).flatMap(([name, scale]) =>
+    typeof scale === "string"
+      ? [[name, true]]
+      : Object.keys(scale).map((step) => [`${name}-${step}`, true]),
+  ),
+);
+
+/** 슬롯 값: 단계, 덮기(`{ step, overlay, amount }`), 섞기(`{ mix: [a, b] }`) */
+function isSlotValue(value: unknown): value is SlotValue {
+  if (isSlotStep(value)) return true;
+  if (typeof value !== "object" || value === null) return false;
+  const record = value as Record<string, unknown>;
+  if ("mix" in record) {
+    return (
+      Object.keys(record).length === 1 &&
+      Array.isArray(record.mix) &&
+      record.mix.length === 2 &&
+      record.mix.every(isColorRef)
+    );
+  }
+  return (
+    Object.keys(record).length === 3 &&
+    steps.includes(record.step as ColorStep) &&
+    typeof record.overlay === "string" &&
+    Object.hasOwn(primitiveNames, record.overlay) &&
+    typeof record.amount === "number" &&
+    record.amount > 0 &&
+    record.amount < 1
+  );
 }
 
 /**
@@ -111,8 +162,10 @@ export function defineColorFamily<const Name extends string>(
       throw new Error(`${name}: 없는 슬롯을 덮어썼다(${slot})`);
     }
     for (const [theme, step] of Object.entries(rule ?? {})) {
-      if ((theme !== "light" && theme !== "dark") || !isSlotStep(step)) {
-        throw new Error(`${name}: ${slot}.${theme} 값이 단계(50~950, white, black)가 아니다`);
+      if ((theme !== "light" && theme !== "dark") || !isSlotValue(step)) {
+        throw new Error(
+          `${name}: ${slot}.${theme} 값이 단계(50~950, white, black), 덮기, 섞기가 아니다`,
+        );
       }
     }
   }
@@ -133,8 +186,7 @@ export function colorFamilySlotHex(
   family: ColorFamilyDefinition,
 ): Record<ThemeName, Record<ColorSlot, string>> {
   const resolved = slotSteps(family);
-  const hex = (step: SlotStep): string =>
-    typeof step === "number" ? family.scale[step] : color[step];
+  const hex = (value: SlotValue): string => slotValueHex(value, (step) => family.scale[step]);
   return {
     light: Object.fromEntries(
       colorSlots.map((slot) => [slot, hex(resolved[slot].light)]),
@@ -157,7 +209,9 @@ export function checkColorFamily(family: ColorFamilyDefinition): ColorContrastRe
  */
 export function colorFamilyCss(families: readonly ColorFamilyDefinition[]): string {
   const themeBlock = (theme: ThemeName): string[] =>
-    families.flatMap((family) => familyThemeDeclarations(family.name, slotSteps(family), theme));
+    families.flatMap((family) =>
+      familyThemeDeclarations(family.name, slotSteps(family), theme, (step) => family.scale[step]),
+    );
   return [
     ":root {",
     ...families.flatMap((family) =>

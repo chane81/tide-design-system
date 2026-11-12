@@ -124,7 +124,8 @@ describe("현재 페이지", () => {
       expect(style.backgroundColor).toBe(
         await resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
       );
-      expect(style.color).toBe(await resolve("color", "var(--tide-text-primary)"));
+      // 현재 페이지는 Button subtle이라 글자가 파스텔 글자 on-subtle이다(ADR 0022).
+      expect(style.color).toBe(await resolve("color", "var(--tide-text-primary-on-subtle)"));
       const other = getComputedStyle(others[0] as Element);
       expect(other.backgroundColor).toBe(transparent);
       expect(other.color).toBe(await resolve("color", "var(--tide-text-default)"));
