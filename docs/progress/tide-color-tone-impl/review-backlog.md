@@ -71,3 +71,14 @@
 - **Pagination 현재 페이지 쌍**: 02 기록은 현재 페이지가 `text × subtle`을 쓴다고 했지만, 03 뒤 Button subtle은 `text-accent-on-subtle`이라 현재 페이지 글자는 `text-primary-on-subtle`이다. 문서는 코드에 맞췄다. foundation `contrast.ts` 주석(「Pagination 현재 페이지가 text × subtle을 쓴다」)은 낡았을 수 있다.
   - → 티켓 46 처리(2026-11-12): 주석을 고쳤다. text × subtle은 Progress 막대 × 트랙, Menu·Select·Combobox highlight, Switch 꺼짐 hover thumb이 쓰고, Pagination 현재 페이지는 on-subtle 쌍이다.
 - **neutral·gray dark faint**(티켓 02 항목)는 문서에 사실(dark에서 배경이 페이지와 같다)만 적었다. 값을 바꿀지는 그대로 보류다.
+
+## 티켓 47 (2026-11-13)
+
+solid 600을 덜 진하게 바꾼 [티켓 47](../tide-v0-impl/issues/47-softer-solid.md)에서 추천안대로 구현하고 남긴 항목이다.
+
+- **`text-muted` light를 gray-700으로 옮겼다.** 새 gray-600(`#747a81`)은 흰 표면 위 4.34:1로 정지 상태 글자 4.5:1에 못 미친다. gray-700은 6.33:1이라 이전(gray-600 4.93:1)보다 진하고, `text-default`(gray-900, 10.09:1)와의 차이가 줄었다. gray만 600을 이전 값으로 두는 길(neutral solid만 진하게 남음)이나 gray에 따로 muted 단계를 두는 길(스케일 밖 값, ADR 0022 ③과 충돌)도 있다.
+- **500→600 명도 간격이 좁아졌다.** 순서(500 > 600 > 700)는 지키지만 OKLCH L 간격이 500→600 0.044~0.049, 600→700 0.085~0.089다. 500은 어느 슬롯도 쓰지 않아 화면에는 스케일 견본에서만 보인다.
+- **solid 위 흰 글자가 4.5:1 아래다(4.18~4.62).** ADR 0023의 4.0 등급 안이지만, red를 뺀 7개 계열은 이제 흰색보다 검정 글자 대비가 더 높다(색 스케일 타일 글자가 검정으로 바뀐다). on-solid는 흰색 그대로 두었다.
+- **Storybook axe 검사를 둘로 나눴다.** `*-on-solid` class와 `data-contrast-tier="4"` 요소는 4.0:1, 나머지는 4.5:1이다. hover·누름 같은 다른 4.0 등급 상태는 axe가 정지 화면만 보므로 따로 표시하지 않았다. 앱이 `on-solid` 글자를 solid가 아닌 바탕에 쓰면 axe가 4.0으로만 검사한다.
+- **브랜드 색 문서의 예시 스케일과 권장 범위는 그대로다.** BrandColor.mdx의 600 권장(C 0.13 이하)과 예시 600(L 0.545)은 이전 Tide 600 기준이다. 앱 계열에 같은 덜 진한 solid를 권할지 정해야 한다.
+- **역사 기록의 600 값은 고치지 않았다.** tide-v0 티켓 08·09, tide-color-tone 티켓 02·05의 표는 그때의 결정이라 그대로 두고 ADR 0022 덧붙임이 새 값을 가리킨다.
