@@ -19,7 +19,9 @@
 //
 // 퇴장 motion: react-stately 큐는 닫힌 Toast를 바로 목록에서 뺀다. 영역은 빠진 Toast를 퇴장 전환이 끝날 때까지
 // `data-open` 없이 남겼다가 뺀다(useOverlayPresence). 퇴장 중인 Toast는 역할·tabIndex를 붙이지 않아 useToastRegion의
-// 포커스 이동(`[role="alertdialog"]` 순서로 옆 Toast를 찾는다)과 스크린 리더에서 빠진다.
+// 포커스 이동(`[role="alertdialog"]` 순서로 옆 Toast를 찾는다)과 스크린 리더에서 빠진다. 또 `inert`를 붙여 안의
+// 버튼(액션·닫기)에 Tab·누름이 닿지 않게 한다(티켓 43). 보이는 수(`maxVisible`)를 넘어 밀려난 Toast는 앞의 것이 닫히면
+// 같은 key로 다시 보이므로, 그때는 `open`이 다시 참이 되어 `inert`가 풀린다.
 
 import { XIcon } from "@tide-tds/icons";
 import {
@@ -289,6 +291,8 @@ function ToastItem({ toast, open, state, onExited }: ToastItemProps): ReactEleme
       // 색은 항상 붙인다(기본 info). 바깥 data-color를 물려받지 않게 한다(ADR 0011).
       data-color={color}
       data-open={open ? "" : undefined}
+      // 퇴장 중에는 상호작용을 막는다. React 19는 inert를 boolean 속성으로 다룬다(false면 속성을 뺀다).
+      inert={!open}
       data-placement="top"
       className={toastClass}
     >
