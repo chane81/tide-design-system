@@ -51,7 +51,13 @@ describe("대비 쌍", () => {
       (pair) => semanticHex(pair.background, "light").length === 9,
     );
     expect(translucent.length).toBeGreaterThan(0);
-    for (const pair of translucent) expect(pair.surface, pair.background).toBe("bg-canvas");
+    for (const pair of translucent) {
+      expect(["bg-canvas", "bg-raised"], pair.background).toContain(pair.surface);
+    }
+    // raised 위에는 text-default만 둔다(Role 색 글자는 dark에서 4.5:1에 못 미친다, 티켓 03).
+    expect(
+      translucent.filter((pair) => pair.surface === "bg-raised").map((pair) => pair.foreground),
+    ).toEqual(["text-default", "text-default"]);
     // light: 흰색 위 gray-950 #28292c 4%(0a/255) → #f7f7f7, dark: gray-950 위 white 6%(0f/255) → #353638
     const hover = {
       foreground: "text-default",
@@ -80,7 +86,10 @@ describe("대비 쌍", () => {
   });
 
   it("같은 쌍을 두 번 등록하지 않는다", () => {
-    const keys = contrastPairs.map((pair) => `${pair.foreground}/${pair.background}`);
+    // 반투명 배경은 표면까지 합쳐 하나의 쌍이다.
+    const keys = contrastPairs.map(
+      (pair) => `${pair.foreground}/${pair.background}/${pair.surface ?? ""}`,
+    );
     expect(new Set(keys).size).toBe(keys.length);
   });
 });

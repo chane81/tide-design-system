@@ -64,6 +64,8 @@ exports[`Role 회귀 > 대비 쌍 목록과 Theme별 대비비가 바뀌지 않�
   "text-danger / bg-active (bg-canvas 위) ≥ 4.5: 5.8912 / 5.4871",
   "text-info / bg-hover (bg-canvas 위) ≥ 4.5: 5.7460 / 6.5696",
   "text-info / bg-active (bg-canvas 위) ≥ 4.5: 5.3056 / 5.7187",
+  "text-default / bg-hover (bg-raised 위) ≥ 4.5: 9.4168 / 7.7890",
+  "text-default / bg-active (bg-raised 위) ≥ 4.5: 8.6951 / 6.8474",
   "text-on-solid / bg-neutral-solid ≥ 4.5: 4.9258 / 4.9258",
   "text-on-solid / bg-neutral-solid-hover ≥ 4.5: 6.2410 / 6.2410",
   "text-on-solid / bg-neutral-solid-active ≥ 4.5: 6.9289 / 6.9289",

@@ -72,6 +72,14 @@ export const contrastPairs: readonly ContrastPair[] = [
         surface: neutralStateSurface,
       })),
   ),
+  // text-default × 무채색 호버·클릭(raised 표면 위에 합성). 목록 오버레이 항목(Menu·Select·Combobox)과
+  // Toast 닫기·액션 버튼(neutral)이다. raised 위 Role 색 글자는 dark에서 4.5:1에 못 미쳐 Tide Component는 쓰지 않는다(티켓 03).
+  ...neutralStates.map((background) => ({
+    foreground: "text-default" as const,
+    background,
+    minRatio: 4.5 as const,
+    surface: "bg-raised" as const,
+  })),
   // solid 위 글자 × 모든 역할 solid 3단계
   ...pairs(
     ["text-on-solid"],

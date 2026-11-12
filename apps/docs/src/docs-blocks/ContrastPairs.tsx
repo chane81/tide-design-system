@@ -68,7 +68,10 @@ export function ContrastPairs({ theme }: { theme: ThemeName }): ReactElement {
           {contrastPairs.map((pair) => {
             const ratio = contrastPairRatio(pair, theme);
             return (
-              <tr key={`${pair.foreground}/${pair.background}`} className="border-b border-default">
+              <tr
+                key={`${pair.foreground}/${pair.background}/${pair.surface ?? ""}`}
+                className="border-b border-default"
+              >
                 <td className="py-1 pr-4 font-mono">{pair.foreground}</td>
                 <td className="py-1 pr-4 font-mono">
                   {pair.background}
