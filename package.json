@@ -12,7 +12,8 @@
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "release:version": "changeset version && node scripts/changelog-ko.ts"
+    "release:version": "changeset version && node scripts/changelog-ko.ts",
+    "test:scripts": "vitest run"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:",
@@ -20,7 +21,8 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "packageManager": "pnpm@12.18.0"
 }
