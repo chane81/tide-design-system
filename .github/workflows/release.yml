@@ -235,7 +235,7 @@ jobs:
       - id: detect
         run: node scripts/storybook-release.ts >> "$GITHUB_OUTPUT"
 
-  # Dokploy에 문서 배포를 요청한다. Dokploy는 main을 받아 apps/docs/Dockerfile로 빌드한다(Autodeploy는 꺼 둔다).
+  # Dokploy에 문서 배포를 요청하고 배포가 끝날 때까지 기다린다. Dokploy는 main을 받아 apps/docs/Dockerfile로 빌드한다(Autodeploy는 꺼 둔다).
   # 배포하는 때:
   # - TDS가 실제로 publish되었을 때(Storybook이 같이 올랐든 아니든 한 번).
   # - Storybook만 릴리스될 때(mode가 none). mode가 publish면 위 조건대로 TDS publish 뒤에 한 번만 배포한다.
@@ -247,21 +247,29 @@ jobs:
     needs: [select-mode, publish, storybook]
     if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.publish.outputs.published == 'true' || (needs.storybook.outputs.release == 'true' && needs.select-mode.outputs.mode == 'none')) }}
     runs-on: ubuntu-latest
+    # 스크립트의 배포 대기 타임아웃(15분)보다 조금 길게 둔 안전장치다.
+    timeout-minutes: 20
     environment: docs
-    permissions: {}
+    permissions:
+      contents: read # 배포 스크립트를 받으려고 checkout
     steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
       # Dokploy API: POST /api/application.deploy, `x-api-key` 헤더, 본문 { applicationId }
-      # (docs.dokploy.com API 「Authentication」, 「Application」 reference). 배포는 Dokploy 큐에서 이어진다.
+      # (docs.dokploy.com API 「Authentication」, 「Application」 reference). 배포는 Dokploy 큐에서 이어지므로
+      # 요청만으로는 끝난 게 아니다. scripts/deploy-docs.ts가 요청 뒤 GET /api/deployment.all로 새 배포의 status를
+      # 폴링해 `done`이면 성공, `error`·`cancelled`·15분 타임아웃이면 실패한다(근거는 scripts/dokploy-deploy.ts, 티켓 44).
+      # 실패하면 storybook-tag가 만들어지지 않아 다음 실행에서 다시 배포한다. API 키는 환경 변수로만 넘기고 출력하지 않는다.
       - env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
           DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
           DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
-        run: |
-          curl --fail-with-body --silent --show-error \
-            --request POST "${DOKPLOY_URL%/}/api/application.deploy" \
-            --header "x-api-key: $DOKPLOY_API_KEY" \
-            --header "Content-Type: application/json" \
-            --data "{\"applicationId\":\"$DOKPLOY_APPLICATION_ID\"}"
+        run: node scripts/deploy-docs.ts
 
   # Storybook 릴리스의 git tag를 문서 배포가 성공한 뒤에 만든다. 배포가 실패하면 tag가 없어 다음 실행
   # (mode가 none인 push나 workflow_dispatch)에서 다시 배포하고 tag를 만든다. tag는 changesets 모노레포 형식 `<name>@<version>`이다
