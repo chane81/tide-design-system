@@ -227,12 +227,7 @@ jobs:
   # 이 job이 실패해도 npm 릴리스는 되돌리지 않는다. 실패하면 workflow_dispatch로 다시 돌린다.
   docs:
     needs: [select-mode, publish, storybook]
-    if: >-
-      ${{ !cancelled() && (
-        github.event_name == 'workflow_dispatch' ||
-        needs.publish.outputs.published == 'true' ||
-        (needs.storybook.outputs.release == 'true' && needs.select-mode.outputs.mode == 'none')
-      ) }}
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.publish.outputs.published == 'true' || (needs.storybook.outputs.release == 'true' && needs.select-mode.outputs.mode == 'none')) }}
     runs-on: ubuntu-latest
     environment: docs
     permissions: {}
