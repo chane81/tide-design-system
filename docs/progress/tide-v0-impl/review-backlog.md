@@ -213,3 +213,12 @@
 ## 43 퇴장 중 Toast inert
 
 - 보이는 수(`maxVisible`)를 넘어 밀려난 Toast(닫히지 않음)도 퇴장 전환을 거치므로 그동안 `inert`다. 다시 보이면 같은 요소에서 `inert`가 풀린다. 밀려남을 퇴장으로 보이는 동작은 그대로 두었다.
+
+## Storybook이 TDS 릴리스를 따라 오르기(storybook-follows-tds, ADR 0021)
+
+- `updateInternalDependents: "always"`(실험 옵션)는 docs가 devDependencies라 bump가 `none`이고 patch 고정이라 쓰지 않았다. version script가 자동 docs changeset을 만든다.
+- TDS 단계를 그대로 따른다. 0.x TDS minor(breaking)도 Storybook minor(추가와 개편)가 된다. 문서 변화가 없는 TDS patch에도 Storybook patch가 오른다.
+- 사람이 docs changeset을 쓰면 그 단계를 따르고, 그 CHANGELOG에는 「TDS x.y.z 반영」을 덧붙이지 않는다. 덧붙일지 정한다.
+- 자동 CHANGELOG 항목에는 PR·커밋 링크와 작성자가 없다(커밋 없는 changeset, changelog-github 1.0.1).
+- TDS가 든 Version PR 제목에서 「[TDS] Release x」 단독 꼴은 더 나오지 않는다.
+- workflow 실제 동작(제목 갱신, publish 뒤 docs tag)은 main 머지 뒤 첫 실행에서 확인된다.

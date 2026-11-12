@@ -48,10 +48,11 @@ pnpm changeset --empty  # 바꿨지만 릴리스가 필요 없을 때(테스트,
 - **minor**: 새 문서 페이지·기능(검색, 블록 등), 사이드바·페이지 구성 개편, Storybook 설정 변경
 - **patch**: 내용 수정, 오타, 예시 수정
 - **`major`는 쓰지 않는다.** TDS와 같이 CI가 막는다.
+- **TDS를 릴리스하면 Storybook도 오른다.** 쌓인 changeset에 TDS 릴리스가 있고 Storybook changeset이 없으면, Version PR을 만들 때 Storybook도 TDS와 같은 단계(minor면 minor, patch면 patch)로 오르고 CHANGELOG에 「TDS x.y.z 반영」이 남는다(ADR 0021). Storybook changeset을 직접 쓰면 그 단계를 따른다. 자동 changeset은 Version PR에서만 생기므로 PR에 넣지 않는다.
 
 ## 릴리스 흐름
 
-1. changeset이 든 PR을 main에 머지하면 「chore: 릴리스 버전 올리기」 PR(Version PR)이 생기거나 갱신된다. 버전과 CHANGELOG 변경이 들어 있다. Version PR은 하나이고 제목은 든 묶음에 따라 `[TDS] Release 0.6.0`, `[Storybook] Release 0.1.0`, `[TDS] Release 0.6.0 · [Storybook] Release 0.2.0` 중 하나다.
+1. changeset이 든 PR을 main에 머지하면 「chore: 릴리스 버전 올리기」 PR(Version PR)이 생기거나 갱신된다. 버전과 CHANGELOG 변경이 들어 있다. Version PR은 하나이고 제목은 든 묶음에 따라 `[TDS] Release 0.6.0`, `[Storybook] Release 0.1.0`, `[TDS] Release 0.6.0 · [Storybook] Release 0.2.0` 중 하나다. TDS가 오르면 Storybook도 따라 오르므로 TDS가 든 Version PR은 「둘 다」 꼴이 된다.
 2. 릴리스할 때 Version PR을 머지한다. 단계 경계(0.1.0 … 0.5.0)는 이 PR을 머지할 때 사람이 고른다.
 3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-tds/components@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
 4. publish가 실제로 일어났으면 문서 사이트(`tide-tds.lakegreen.net`) 배포를 요청한다. Storybook만 오른 Version PR을 머지했을 때는 npm publish 없이 문서만 배포하고, 성공하면 tag `@tide-tds/docs@0.1.0`을 만든다(GitHub Release는 없다). 아직 릴리스하지 않은 TDS changeset이 main에 남아 있으면 Storybook만으로는 배포하지 않는다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
