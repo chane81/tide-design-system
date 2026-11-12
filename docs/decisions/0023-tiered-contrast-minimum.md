@@ -33,6 +33,7 @@
 ## Consequences
 
 - **WCAG AA를 엄격하게 읽으면 일부 상태가 기준보다 낮을 수 있다.** WCAG 2.2 성공 기준 1.4.3은 상태를 가리지 않고 일반 텍스트에 4.5:1을 요구한다. 그래서 hover·누름 배경 위 글자와 solid 위 버튼 글자는 4.0:1~4.5:1 사이 값이 나와도 Tide 검사를 통과하고, 이 경우 1.4.3의 엄격한 해석에는 못 미친다. 이것은 심미성을 위해 고른 트레이드오프다. 지금 값(티켓 46 시점)에서 4.5:1 아래로 내려간 쌍은 없고(on-solid 최저 4.70:1), 앞으로 색을 다듬을 때 이 여유를 쓴다.
+  - 덧붙임(2026-11-13, [tide-v0-impl 티켓 47](../progress/tide-v0-impl/issues/47-softer-solid.md)): solid(600)를 덜 진하게 바꿔 이 여유를 처음 썼다. on-solid × solid는 4.18~4.62:1(최저 mint 4.18, Role 중 최저 success 4.20)이라 이제 실제로 4.5:1 아래인 쌍이 있다. `solid-hover`·`solid-active`는 5.36:1 이상이다. Storybook의 axe 검사도 solid 위 글자는 4.0:1로 검사하도록 맞췄다([접근성 기준](../standards/accessibility.md)).
 - **정지 상태 글자는 그대로 4.5:1이다.** 사용자가 오래 보는 글자와 기본 상태의 버튼·배지 subtle 글자는 AA를 지킨다.
 - **raised 표면 안 Role 색 `outline`·`ghost`는 여전히 `neutral`을 권한다.** dark raised 위 누름 배경에서 `warning`(3.99:1)·`danger`(3.89:1)가 4.0:1에도 못 미친다. 수치는 [티켓 46](../progress/tide-v0-impl/issues/46-contrast-tiered-minimum.md)에 있다.
 - **대비 쌍 수가 바뀐다.** Switch thumb 쌍 5개가 늘어 109개가 114개가 된다(4.5:1 39개, 4.0:1 43개, 3:1 32개). 대비비 값은 하나도 바뀌지 않는다.

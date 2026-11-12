@@ -275,7 +275,8 @@ const commonBackground = {
 
 const commonText = {
   default: { light: "gray-900", dark: "gray-50" },
-  muted: { light: "gray-600", dark: "gray-300" },
+  // light는 gray-700이다. gray-600이 solid용으로 밝아져(티켓 47) 흰 표면 위 4.5:1에 못 미친다(4.34).
+  muted: { light: "gray-700", dark: "gray-300" },
   disabled: { light: "gray-400", dark: "gray-600" },
   // solid 배경 위 글자. 모든 Role이 같이 쓴다.
   "on-solid": { light: "white", dark: "white" },

@@ -75,6 +75,21 @@ Button outline·ghost와 목록 항목(Menu, Table 행 등)의 호버·클릭은
 - gray는 그대로다.
 - 값 표: [02 결정](../progress/tide-color-tone/issues/02-grilling-scale-values.md), [05 결정](../progress/tide-color-tone/issues/05-grilling-purple-family.md)
 
+> 덧붙임(2026-11-13, [tide-v0-impl 티켓 47](../progress/tide-v0-impl/issues/47-softer-solid.md)): solid가 아직 진하다는 사용자 판단으로 모든 계열(gray 포함)의 600을 덜 진하게 바꿨다. 이전 600에서 OKLCH L +0.03, 채도 ×0.85(상한 0.12), 색상 유지다. 흰 글자 대비는 4.18~4.62:1로 solid 위 글자 하한 4.0:1([ADR 0023](0023-tiered-contrast-minimum.md))을 넘는다. `solid-hover`·`solid-active`는 규칙(600 + black 14% / 20%)이 그대로라 값만 따라 바뀐다.
+>
+> | 계열   | 600 이전  | 600 이후  | 흰 글자 대비 | solid-hover | solid-active |
+> | ------ | --------- | --------- | ------------ | ----------- | ------------ |
+> | blue   | `#3c70bb` | `#4e7aba` | 4.36         | `#4369a0`   | `#3e6295`    |
+> | gray   | `#6b7179` | `#747a81` | 4.34         | `#64696f`   | `#5d6267`    |
+> | green  | `#278445` | `#428a55` | 4.20         | `#397749`   | `#356e44`    |
+> | amber  | `#976500` | `#9b702f` | 4.42         | `#856028`   | `#7c5a26`    |
+> | red    | `#bb4039` | `#b55a51` | 4.62         | `#9c4d46`   | `#914841`    |
+> | cyan   | `#007c9e` | `#3484a1` | 4.23         | `#2d728a`   | `#2a6a81`    |
+> | purple | `#7d5cb0` | `#8469b0` | 4.54         | `#725a97`   | `#6a548d`    |
+> | mint   | `#14817c` | `#3a8883` | 4.18         | `#327571`   | `#2e6d69`    |
+>
+> 600을 쓰는 다른 자리도 함께 밝아진다. `border`(light)와 `outline-focus`(light)는 표면 위 4.20:1 이상, `outline-focus` × subtle은 3.56:1 이상으로 3:1을 넘는다(dark는 400이라 그대로). `text-muted`(light)는 gray-600이 흰 표면 위 4.34:1로 4.5:1에 못 미쳐 gray-700(6.33:1)으로 옮겼다.
+
 ### 5. 장식 계열 추가
 
 Role이 없는 장식 계열 **`purple`**(H 300)과 **`mint`**(H 190)를 더한다. 같은 규칙을 따르고 장식·분류 Component(Badge, Tag, Avatar)가 쓴다. 의미 표시(성공, 경고 등)에는 Role을 쓴다고 문서에 적는다. mint는 cyan(info, H 226)과 파스텔에서도 구분된다.
