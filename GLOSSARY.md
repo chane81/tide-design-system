@@ -191,5 +191,17 @@ _Avoid_: 그룹(문서에서는 「묶음」으로 쓴다. Component 이름은 `
 _Avoid_: public API(Component props만 떠올리게 함), 인터페이스
 
 **릴리스 (Release)**:
-Tide의 모든 배포 패키지를 같은 버전으로 함께 내는 한 번의 배포. 바뀐 것이 없는 패키지도 같은 버전으로 함께 나간다.
+Tide의 모든 배포 패키지를 같은 버전으로 함께 내는 한 번의 배포. 바뀐 것이 없는 패키지도 같은 버전으로 함께 나간다. 「TDS 릴리스」라고도 한다. Storybook 버전을 올리는 것은 「Storybook 릴리스」로 구분한다.
 _Avoid_: 배포(문서 사이트 배포와 혼동), publish(패키지 하나의 동작)
+
+**TDS**:
+npm에 내는 세 배포 패키지(`@tide-tds/foundation`, `@tide-tds/icons`, `@tide-tds/components`)의 묶음. changesets `fixed`로 언제나 같은 버전이다. Version PR 제목의 `[TDS]`가 이것이다.
+_Avoid_: Tide 전체(Storybook을 포함하는 것처럼 읽힘)
+
+**Storybook 버전 (Storybook version)**:
+문서 앱 `@tide-tds/docs`(`apps/docs`)의 버전. TDS와 따로 가는 semver이고, docs changeset으로만 오른다. 0.0.0은 아직 릴리스하지 않은 값이다. 릴리스되면 git tag `@tide-tds/docs@<버전>`이 생기고 문서 사이트가 배포된다. 어느 TDS 버전을 설명하는지와는 상관없다(문서 사이트는 언제나 npm `latest`를 설명한다).
+_Avoid_: 문서 버전(TDS 버전별 문서로 읽힘), docs 패키지 버전(npm에 내지 않음)
+
+**Version PR**:
+changesets/action이 main에 열어 두는 PR 하나(브랜치 `changeset-release/main`). 쌓인 changeset을 버전과 CHANGELOG로 바꾼 내용이고, 머지하면 릴리스가 이어진다. 제목은 든 묶음에 따라 `[TDS] Release x`, `[Storybook] Release y`, 둘 다면 가운뎃점으로 잇는다.
+_Avoid_: 릴리스 PR(다른 저장소의 release 브랜치 PR과 혼동)

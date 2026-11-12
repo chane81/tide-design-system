@@ -22,3 +22,5 @@ CI publish는 npm trusted publishing(GitHub Actions OIDC)에서 **직접 publish
 - 앱이 foundation을 desktop과 다른 버전으로 설치하면 두 벌이 생긴다. 설치 가이드에서 같은 버전 설치를 안내한다.
 - 직접 publish를 허용했으므로 main 브랜치와 release workflow가 뚫리면 바로 배포될 수 있다. `id-token: write`는 publish job에만 주고, trusted publisher 설정 변경에는 대화형 2FA가 필요하다는 점에 기댄다.
 - changesets가 staged publishing을 지원하면 stage + 승인으로 바꿀지 다시 볼 수 있다. 바꿀 때는 trusted publisher 설정만 바꾸면 되고 버전 체계는 그대로다.
+
+> 덧붙임(2026-11-12, [ADR 0020](0020-storybook-versioning-and-version-pr-title.md)): `fixed`를 glob `["@tide-tds/*"]`에서 세 패키지 이름 `["@tide-tds/foundation", "@tide-tds/icons", "@tide-tds/components"]`로 바꿨다. Storybook(`@tide-tds/docs`)을 `privatePackages.version`으로 버전 관리하면 glob이 docs와 smoke-next까지 fixed 묶음에 넣어 TDS와 같은 버전으로 올리기 때문이다(@changesets/config 4.0.1 `globMatch`는 전체 패키지 이름에 맞춘다, [근거 문서](../research/changesets-split-version-prs.md) 실험 E3). 새 배포 패키지를 더하면 이 목록에도 직접 더한다. 「Tide 0.x」라는 말은 지금처럼 세 배포 패키지에만 통하고, Storybook 버전은 따로 간다.

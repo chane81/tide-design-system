@@ -2,6 +2,8 @@
 
 조사일: 2026-11-12
 
+> 결정(2026-11-12): 추천안 (a)를 골라 구현했다. [ADR 0020](../decisions/0020-storybook-versioning-and-version-pr-title.md).
+
 > 원칙: 1차 출처(설치된 패키지 소스, changesets·changesets/action의 해당 버전 태그 소스와 문서, GitHub 이슈, 다른 저장소의 실제 workflow 파일)만 근거로 삼는다. 확인하지 못한 내용은 「확인 불가」로 적는다. 코드 동작은 소스를 읽은 데 더해, 저장소를 scratchpad에 복제해 설치된 `@changesets/cli` 3.0.3으로 직접 돌려 확인했다(4절).
 
 [release.md](release.md), [release-practices.md](release-practices.md)의 후속이다. 그 문서에 있는 도구 비교와 다른 저장소의 브랜치 운영은 다시 적지 않는다.

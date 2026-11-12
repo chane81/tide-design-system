@@ -1,6 +1,5 @@
 {
   "name": "@tide-tds/smoke-next",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {

@@ -430,13 +430,15 @@ Component별로 이미 정한 범위:
 
 ### 릴리스 ([버전과 배포 정책 결정](issues/30-grilling-release.md), [ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
 
-- **도구**: changesets 3 + `changesets/action`(Version PR) + `@changesets/changelog-github`. 세 패키지를 `fixed`로 묶는다.
+- **도구**: changesets 3 + `changesets/action`(Version PR) + `@changesets/changelog-github`. 세 패키지를 `fixed`로 묶는다(이름으로 적는다).
+- **Storybook 버전**([ADR 0020](../../decisions/0020-storybook-versioning-and-version-pr-title.md), 2026-11-12 덧붙임): `@tide-tds/docs`는 `privatePackages.version`으로 독립 semver를 갖는다(0.0.0 → 첫 minor로 0.1.0). Version PR은 하나이고 제목은 `[TDS] Release x` / `[Storybook] Release y` / 둘 다. Storybook만 오른 머지는 npm publish 없이 문서만 배포하고 tag `@tide-tds/docs@y`를 만든다. GitHub Release는 TDS에만 만든다.
 - **semver**: 0.x에서는 minor가 breaking이고 patch가 기능 추가와 수정이다. 0.x 동안 `major` changeset은 쓰지 않는다.
   - breaking: 공개 계약(`--tide-*`, Utility class 이름, 텍스트 스타일 이름, Component export·props·값·콜백, 아이콘 이름표 키)을 지우거나 이름·뜻을 바꾸는 것, peer 범위를 올리는 것
   - patch: 시각 값 조정
 - **흐름**: changeset이 있는 PR → Version PR → 머지하면 전체 검사 → publish(OIDC, 이 job에만 `id-token: write`) → 실제로 publish되었을 때만 문서 배포. 문서 배포가 실패해도 npm 릴리스는 되돌리지 않는다.
 - **CI 규칙**:
   - `packages/*`를 바꾼 PR에 changeset이 없으면 실패한다. 문서와 설정만 바꾼 PR은 empty changeset을 쓴다.
+  - `apps/docs`를 바꾼 PR도 changeset(또는 empty)이 필요하다. TDS 패키지와 `@tide-tds/docs`를 한 changeset 파일에 섞으면 실패한다(ADR 0020).
   - 아이콘 이름표에서 키가 빠졌는데 minor changeset이 없으면 실패한다.
 - **기타**: prerelease dist-tag는 쓰지 않는다. CHANGELOG는 한글로 쓴다. tag는 패키지마다 만들고, GitHub Release는 릴리스당 하나로 합친다.
 - **첫 publish**:

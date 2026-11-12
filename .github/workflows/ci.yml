@@ -50,11 +50,14 @@ jobs:
       - run: pnpm --filter @tide-tds/components exec playwright install --only-shell chromium
       - run: pnpm lint
       - run: pnpm format:check
-      # changeset 규칙: packages/*를 바꿨으면 changeset 필수(문서·설정만이면 필요 없음, 릴리스가 필요 없으면 empty),
-      # 0.x 동안 major 금지, 아이콘 이름표 키가 빠지면 icons minor 필수(scripts/check-changesets.ts).
+      # changeset 규칙: packages/*나 apps/docs(Storybook)를 바꿨으면 changeset 필수(그 밖의 문서·설정만이면 필요 없음,
+      # 릴리스가 필요 없으면 empty), 0.x 동안 major 금지, 아이콘 이름표 키가 빠지면 icons minor 필수,
+      # TDS 패키지와 @tide-tds/docs를 한 changeset에 섞으면 실패(scripts/check-changesets.ts, ADR 0020).
       # Version PR(changeset-release/*)은 changeset을 지우는 PR이라 건너뛴다(changesets.dev 「Automating Changesets」).
       - if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
         env:
           BASE_REF: ${{ github.base_ref }}
         run: node scripts/check-changesets.ts "origin/$BASE_REF"
+      # 루트 scripts/(릴리스·CI 스크립트) 단위 테스트. 패키지가 아니라 turbo 밖에서 돈다(vitest.config.ts).
+      - run: pnpm test:scripts
       - run: pnpm turbo run typecheck test build smoke --affected

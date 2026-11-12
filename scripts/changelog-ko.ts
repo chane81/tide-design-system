@@ -8,6 +8,8 @@
 //   그 낱말은 괄호 안에 남긴다.
 // - `No changes in this release.`: 같은 패키지가 fixed 묶음 때문에 변경 없이 버전만 오를 때 넣는다.
 // - `Thanks [@user](…)!`, `Updated dependencies`: @changesets/changelog-github 1.0.1이 넣는다.
+// - Storybook(`apps/docs/CHANGELOG.md`, ADR 0020)도 같이 고친다. 문서 앱에는 호환성 계약이 없으므로
+//   0.x 여부와 상관없이 minor는 「추가와 개편」, patch는 「수정」으로 쓴다.
 // 맨 위 버전 항목만 고치므로 이미 나간 항목은 건드리지 않는다. 두 번 돌려도 결과가 같다.
 import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -27,7 +29,14 @@ function headings(major: number): Record<string, string> {
       };
 }
 
-function localizeLatestEntry(changelog: string): string {
+/** Storybook 문서 앱의 제목. 버전 규칙은 CONTRIBUTING.md 「버전 규칙」. */
+const STORYBOOK_HEADINGS: Record<string, string> = {
+  Major: "큰 개편 (major)",
+  Minor: "추가와 개편 (minor)",
+  Patch: "수정 (patch)",
+};
+
+function localizeLatestEntry(changelog: string, storybook: boolean): string {
   const start = changelog.search(/^## /m);
   if (start === -1) return changelog;
   const rest = changelog.slice(start + 3);
@@ -36,7 +45,7 @@ function localizeLatestEntry(changelog: string): string {
   const entry = changelog.slice(start, end);
 
   const version = /^## (\d+)\./.exec(entry);
-  const names = headings(version ? Number(version[1]) : 0);
+  const names = storybook ? STORYBOOK_HEADINGS : headings(version ? Number(version[1]) : 0);
   const localized = entry
     .replace(/^### (Major|Minor|Patch) Changes$/gm, (_, type: string) => `### ${names[type]}`)
     .replace(
@@ -48,11 +57,15 @@ function localizeLatestEntry(changelog: string): string {
   return changelog.slice(0, start) + localized + changelog.slice(end);
 }
 
-for (const dir of readdirSync("packages")) {
-  const path = join("packages", dir, "CHANGELOG.md");
+const targets = [
+  ...readdirSync("packages").map((dir) => ({ dir: join("packages", dir), storybook: false })),
+  { dir: join("apps", "docs"), storybook: true },
+];
+for (const { dir, storybook } of targets) {
+  const path = join(dir, "CHANGELOG.md");
   if (!existsSync(path)) continue;
   const before = readFileSync(path, "utf8");
-  const after = localizeLatestEntry(before);
+  const after = localizeLatestEntry(before, storybook);
   if (after !== before) {
     writeFileSync(path, after);
     console.log(`${path}: 한글 문구로 바꿨다`);
