@@ -1,5 +1,17 @@
 # @tide-tds/docs
 
+## 0.3.1
+
+### 수정 (patch)
+
+- [#27](https://github.com/chane81/tide-design-system/pull/27) [`230e474`](https://github.com/chane81/tide-design-system/commit/230e474008d7dc704590de01ff40b2b25162c41b) [@chane81](https://github.com/chane81) - Button·Input·Textarea·Switch 문서의 size 표를 바뀐 글자 스타일(`sm` 14px, Switch 라벨 `body-*`)에 맞췄다.
+
+- [#27](https://github.com/chane81/tide-design-system/pull/27) [`230e474`](https://github.com/chane81/tide-design-system/commit/230e474008d7dc704590de01ff40b2b25162c41b) [@chane81](https://github.com/chane81) - Foundation 「모양과 깊이」 문서의 `focus-field` 설명을 고쳤다. 투명 outline은 고대비 모드에서만 둔다.
+
+- [#31](https://github.com/chane81/tide-design-system/pull/31) [`a2a59f0`](https://github.com/chane81/tide-design-system/commit/a2a59f06042ee5bbd2e60151e887df5ba0d442b1) [@chane81](https://github.com/chane81) - 「브랜드 색 더하기」 문서가 앱 브랜드 색의 600을 Tide solid처럼 덜 진하게(흰 글자 4:1 이상) 권한다. 권장 범위와 예시 스케일을 새 기준으로 고쳤다.
+
+- [#28](https://github.com/chane81/tide-design-system/pull/28) [`104a6c9`](https://github.com/chane81/tide-design-system/commit/104a6c91d1117ed20c11844d1777d06c1944d2b7) [@chane81](https://github.com/chane81) - story의 axe 대비 검사가 Tide 하한 등급(ADR 0023)을 따른다. solid 위 글자와 대비 쌍 견본의 4:1 등급은 4:1로, 나머지 글자는 4.5:1로 검사한다. 색 스케일·대비 블록은 새 600 값을 보여 준다.
+
 ## 0.3.0
 
 ### 추가와 개편 (minor)
