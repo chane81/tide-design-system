@@ -19,7 +19,12 @@ export {
   type ThemedColor,
   type TideRole,
 } from "./semantic.ts";
-export { contrastPairs, type ContrastExclusion, type ContrastPair } from "./contrast.ts";
+export {
+  contrastPairs,
+  type ContrastExclusion,
+  type ContrastMinRatio,
+  type ContrastPair,
+} from "./contrast.ts";
 export {
   fontFamily,
   fontSize,

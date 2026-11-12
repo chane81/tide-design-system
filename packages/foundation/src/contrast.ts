@@ -1,12 +1,20 @@
 import { mixHex, type ColorSlot } from "./color-slot.ts";
 import { semanticHex, type SemanticColorName, type ThemeName, type TideRole } from "./semantic.ts";
 
+/**
+ * 대비 하한 세 등급(ADR 0023).
+ * - `4.5`: 정지 상태의 글자(표면 층·subtle·faint 위 글자, 선택 유지 바탕 위 글자)
+ * - `4`: hover·누름 같은 일시 상태의 글자, solid 위 글자(on-solid)
+ * - `3`: 글자가 아닌 UI 요소(경계, 포커스 표시, Switch thumb)
+ */
+export type ContrastMinRatio = 4.5 | 4 | 3;
+
 /** 함께 쓰이는 글자(또는 경계)와 배경의 짝. Utility class 이름으로 적는다. */
 export interface ContrastPair {
   readonly foreground: SemanticColorName;
   readonly background: SemanticColorName;
-  /** 텍스트는 4.5, UI 경계와 포커스는 3 */
-  readonly minRatio: 4.5 | 3;
+  /** 정지 상태 글자는 4.5, 일시 상태 글자와 solid 위 글자는 4, UI 경계·포커스·thumb은 3(ADR 0023) */
+  readonly minRatio: ContrastMinRatio;
   /** 배경이 반투명(`bg-hover`·`bg-active`)이면 그 아래 표면. 배경을 이 표면 위에 합성한 값으로 검사한다. */
   readonly surface?: SemanticColorName;
 }
@@ -17,24 +25,29 @@ export interface ContrastExclusion {
   readonly reason: string;
 }
 
-// 대비 쌍 규칙은 tide-v0 티켓 09(컬러 Foundation 결정)의 「대비 검증 규칙」을 따른다.
+// 대비 쌍 규칙은 tide-v0 티켓 09(컬러 Foundation 결정)의 「대비 검증 규칙」을 따르고, 하한은 ADR 0023의 세 등급이다.
+// - 4.5: 정지 상태 글자. 표면 층·subtle·faint 위 글자, 선택 유지 바탕(neutral subtle-active) 위 글자.
+// - 4: 일시 상태 글자(hover·누름 배경 subtle-hover·subtle-active, bg-hover·bg-active 합성)와 solid 위 글자(on-solid).
+// - 3: 글자가 아닌 UI 요소(경계, 포커스 표시, Switch thumb).
 // 모든 text × 모든 bg 조합이 아니라 실제로 함께 쓰는 쌍만 적는다. light와 dark에서 모두 검사한다.
+// 같은 짝을 두 번 적지 않는다. 한 짝을 여러 쓰임이 쓰면 가장 엄한 등급으로 한 번 적는다.
 // surface는 canvas와 같은 색이지만 이름이 다른 Token이므로 따로 등록한다.
 const surfaces = ["bg-canvas", "bg-surface", "bg-raised"] as const;
 const roles = ["primary", "success", "warning", "danger", "info"] as const satisfies TideRole[];
 const allRoles = ["neutral", ...roles] as const satisfies TideRole[];
-const subtleStates = ["subtle", "subtle-hover", "subtle-active"] as const;
 const solidStates = ["solid", "solid-hover", "solid-active"] as const;
-// on-subtle이 놓이는 바탕(ADR 0022 §1): faint와 subtle 3단계
-const onSubtleBackgrounds = ["faint", ...subtleStates] as const;
+// on-subtle이 놓이는 바탕(ADR 0022 §1). 정지 상태(faint·subtle)와 일시 상태(subtle-hover·subtle-active)로 나눈다.
+const onSubtleRest = ["faint", "subtle"] as const;
+const subtleTransient = ["subtle-hover", "subtle-active"] as const;
 // 무채색 호버·클릭(ADR 0022 §3). 반투명이라 흰 표면(light canvas, dark canvas) 위에 합성한 값으로 검사한다.
+// hover·누름에만 쓰는 배경이라 그 위 글자는 일시 상태 등급(4)이다.
 const neutralStates = ["bg-hover", "bg-active"] as const;
 const neutralStateSurface = "bg-canvas" as const;
 
 function pairs(
   foregrounds: readonly SemanticColorName[],
   backgrounds: readonly SemanticColorName[],
-  minRatio: 4.5 | 3,
+  minRatio: ContrastMinRatio,
 ): ContrastPair[] {
   return foregrounds.flatMap((foreground) =>
     backgrounds.map((background) => ({ foreground, background, minRatio })),
@@ -45,46 +58,60 @@ export const contrastPairs: readonly ContrastPair[] = [
   // 기본 글자 × 표면 층
   ...pairs(["text-default", "text-muted"], surfaces, 4.5),
   // neutral faint·subtle 위 글자는 text-default다(neutral의 on-subtle은 text-default를 공유한다).
+  // subtle-active는 Button subtle 누름이기도 하지만 목록의 선택 유지 바탕(Select·Combobox 고른 옵션)이라 정지 상태 등급이다.
   ...pairs(
     ["text-default"],
-    onSubtleBackgrounds.map((state) => `bg-neutral-${state}` as const),
+    (["faint", "subtle", "subtle-active"] as const).map((state) => `bg-neutral-${state}` as const),
     4.5,
   ),
+  // neutral subtle-hover는 Button subtle hover뿐이다(일시 상태).
+  ...pairs(["text-default"], ["bg-neutral-subtle-hover"], 4),
   // 역할 글자(바탕 없이 쓰는 색 글자) × 표면 층, 같은 역할 subtle.
-  // subtle 위 글자는 on-subtle이지만(ADR 0022), Progress 트랙·Pagination 현재 페이지·Menu highlight가 text × subtle을 쓴다.
-  // subtle-hover·subtle-active 위 text 쌍은 지웠다(그 위 글자는 on-subtle이다).
+  // subtle 위 글자는 보통 on-subtle이지만(ADR 0022), Progress 막대 × 트랙, Menu·Select·Combobox highlight
+  // (text-primary × bg-primary-subtle), Switch 꺼짐 hover thumb이 text × subtle을 쓴다.
+  // Pagination 현재 페이지는 Button subtle이라 text-primary-on-subtle이다(아래 on-subtle 쌍).
   ...roles.flatMap((role) => pairs([`text-${role}`], [...surfaces, `bg-${role}-subtle`], 4.5)),
-  // 파스텔 글자(on-subtle) × 같은 역할 faint·subtle 3단계
+  // 파스텔 글자(on-subtle) × 같은 역할 faint·subtle(정지 상태)
   ...roles.flatMap((role) =>
     pairs(
       [`text-${role}-on-subtle`],
-      onSubtleBackgrounds.map((state) => `bg-${role}-${state}` as const),
+      onSubtleRest.map((state) => `bg-${role}-${state}` as const),
       4.5,
     ),
   ),
-  // 글자 × 무채색 호버·클릭(흰 표면 위에 합성). Button outline·ghost와 목록 항목이다.
+  // 파스텔 글자(on-subtle) × 같은 역할 subtle-hover·subtle-active(일시 상태). Button subtle, Pagination 현재 페이지,
+  // Alert 닫기 버튼의 hover·누름이다.
+  ...roles.flatMap((role) =>
+    pairs(
+      [`text-${role}-on-subtle`],
+      subtleTransient.map((state) => `bg-${role}-${state}` as const),
+      4,
+    ),
+  ),
+  // 글자 × 무채색 호버·클릭(흰 표면 위에 합성). Button outline·ghost, 목록 항목, Table 행, Accordion 트리거의 hover·누름이다.
   ...["text-default" as const, ...roles.map((role) => `text-${role}` as const)].flatMap(
     (foreground) =>
       neutralStates.map((background) => ({
         foreground,
         background,
-        minRatio: 4.5 as const,
+        minRatio: 4 as const,
         surface: neutralStateSurface,
       })),
   ),
   // text-default × 무채색 호버·클릭(raised 표면 위에 합성). 목록 오버레이 항목(Menu·Select·Combobox)과
-  // Toast 닫기·액션 버튼(neutral)이다. raised 위 Role 색 글자는 dark에서 4.5:1에 못 미쳐 Tide Component는 쓰지 않는다(티켓 03).
+  // Toast 닫기·액션 버튼(neutral)이다. raised 위 Role 색 글자는 dark 누름에서 warning 3.99·danger 3.89로 4:1에도
+  // 못 미쳐 Tide Component는 쓰지 않는다(티켓 03·46).
   ...neutralStates.map((background) => ({
     foreground: "text-default" as const,
     background,
-    minRatio: 4.5 as const,
+    minRatio: 4 as const,
     surface: "bg-raised" as const,
   })),
-  // solid 위 글자 × 모든 역할 solid 3단계
+  // solid 위 글자 × 모든 역할 solid 3단계. 버튼·배지의 label 글자(medium 굵기)라 4다(ADR 0023).
   ...pairs(
     ["text-on-solid"],
     allRoles.flatMap((role) => solidStates.map((state) => `bg-${role}-${state}` as const)),
-    4.5,
+    4,
   ),
   // UI 경계와 포커스 표시 × 표면 층(WCAG 1.4.11)
   ...pairs(
@@ -100,6 +127,9 @@ export const contrastPairs: readonly ContrastPair[] = [
     allRoles.map((role) => `bg-${role}-subtle` as const),
     3,
   ),
+  // Switch 꺼짐 누름 thumb(text-accent) × 같은 역할 subtle-active. thumb은 글자가 아닌 UI 요소라 3이다(티켓 46).
+  // neutral은 thumb이 text-default이고, text-default × bg-neutral-subtle-active는 위에서 4.5로 등록되어 있다.
+  ...roles.flatMap((role) => pairs([`text-${role}`], [`bg-${role}-subtle-active`], 3)),
 ];
 
 /**
@@ -132,18 +162,21 @@ export const contrastExclusions: readonly ContrastExclusion[] = [
 
 // 색 이름(Color) 하나의 대비 쌍 규칙(tide-v0-impl 티켓 40). Role 대비 쌍과 같은 규칙을 슬롯 이름으로 적는다.
 // Tide 색 계열, 테스트 전용 계열, 앱 브랜드 계열(tide-color CLI)이 모두 이 규칙으로 light·dark를 검사한다.
+// 하한은 ADR 0023의 세 등급이다.
 // - text × 표면 층, 같은 색 subtle: 4.5
-// - text × 무채색 호버·클릭(bg-hover·bg-active를 흰 표면에 합성): 4.5
-// - on-subtle × 같은 색 faint·subtle 3단계: 4.5
-// - on-solid × 같은 색 solid 3단계: 4.5
+// - text × 무채색 호버·클릭(bg-hover·bg-active를 흰 표면에 합성): 4(일시 상태)
+// - on-subtle × 같은 색 faint·subtle: 4.5
+// - on-subtle × 같은 색 subtle-hover·subtle-active: 4(일시 상태)
+// - on-solid × 같은 색 solid 3단계: 4(solid 위 글자)
 // - border × 표면 층: 3
+// - text × 같은 색 subtle-active: 3(Switch 꺼짐 누름 thumb, UI 요소)
 // subtle-border는 꾸밈이라 검사하지 않는다(ADR 0022 §1).
 /** 색 이름 하나에서 함께 쓰는 슬롯 짝. 배경은 같은 색의 슬롯이거나 표면 층·무채색 호버 Token이다. */
 export interface ColorContrastRule {
   readonly foreground: ColorSlot;
   readonly background: ColorSlot | (typeof surfaces)[number] | (typeof neutralStates)[number];
-  /** 텍스트는 4.5, UI 경계는 3 */
-  readonly minRatio: 4.5 | 3;
+  /** 정지 상태 글자는 4.5, 일시 상태 글자와 solid 위 글자는 4, UI 요소는 3(ADR 0023) */
+  readonly minRatio: ContrastMinRatio;
   /** 배경이 반투명이면 그 아래 표면. 배경을 이 표면 위에 합성한 값으로 검사한다. */
   readonly surface?: (typeof surfaces)[number];
 }
@@ -161,24 +194,30 @@ export const colorContrastRules: readonly ColorContrastRule[] = [
   ...neutralStates.map((background) => ({
     foreground: "text" as const,
     background,
-    minRatio: 4.5 as const,
+    minRatio: 4 as const,
     surface: neutralStateSurface,
   })),
-  ...onSubtleBackgrounds.map((background) => ({
+  ...onSubtleRest.map((background) => ({
     foreground: "on-subtle" as const,
     background,
     minRatio: 4.5 as const,
   })),
+  ...subtleTransient.map((background) => ({
+    foreground: "on-subtle" as const,
+    background,
+    minRatio: 4 as const,
+  })),
   ...solidStates.map((background) => ({
     foreground: "on-solid" as const,
     background,
-    minRatio: 4.5 as const,
+    minRatio: 4 as const,
   })),
   ...surfaces.map((background) => ({
     foreground: "border" as const,
     background,
     minRatio: 3 as const,
   })),
+  { foreground: "text" as const, background: "subtle-active" as const, minRatio: 3 as const },
 ];
 
 /** 대비 쌍 규칙 하나를 Theme 하나에서 검사한 결과 */
