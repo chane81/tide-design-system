@@ -4,10 +4,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   bundleVersions,
+  incrementVersion,
   mixedChangesetProblems,
   shouldReleaseStorybook,
+  storybookFollowChangeset,
+  storybookFollowType,
   storybookTag,
   versionPrTitle,
+  withStorybookFollow,
 } from "./release-scope.ts";
 
 const tds = (newVersion: string, type = "minor") => [
@@ -124,5 +128,71 @@ describe("Storybook 릴리스 판단", () => {
 
   it("시작값 0.0.0은 tag가 없어도 릴리스하지 않는다", () => {
     expect(shouldReleaseStorybook("0.0.0", false)).toBe(false);
+  });
+});
+
+describe("Storybook이 TDS 릴리스를 따라 오르기", () => {
+  const tdsChangeset = (type: string) => ({
+    id: `tds-${type}`,
+    releases: [{ name: "@tide-tds/components", type }],
+  });
+  const docsChangeset = (type: string) => ({
+    id: `docs-${type}`,
+    releases: [{ name: "@tide-tds/docs", type }],
+  });
+  const empty = { id: "empty", releases: [] };
+  // changeset status는 오르지 않는 docs도 type none으로 releases에 넣는다.
+  const docsNone = {
+    name: "@tide-tds/docs",
+    type: "none",
+    oldVersion: "0.1.0",
+    newVersion: "0.1.0",
+  };
+
+  it("TDS patch만 있으면 patch, minor가 섞이면 가장 큰 단계(minor)를 따른다", () => {
+    expect(storybookFollowType([tdsChangeset("patch")])).toBe("patch");
+    expect(storybookFollowType([tdsChangeset("patch"), tdsChangeset("minor"), empty])).toBe(
+      "minor",
+    );
+  });
+
+  it("사람이 쓴 Storybook changeset이 있으면 따라 오르지 않는다", () => {
+    expect(storybookFollowType([tdsChangeset("minor"), docsChangeset("patch")])).toBeNull();
+  });
+
+  it("TDS 릴리스가 없으면(Storybook만, empty만) 따라 오르지 않는다", () => {
+    expect(storybookFollowType([docsChangeset("minor")])).toBeNull();
+    expect(storybookFollowType([empty])).toBeNull();
+    expect(storybookFollowType([])).toBeNull();
+  });
+
+  it("버전을 한 단계 올린다", () => {
+    expect(incrementVersion("0.1.0", "patch")).toBe("0.1.1");
+    expect(incrementVersion("0.1.3", "minor")).toBe("0.2.0");
+    expect(incrementVersion("0.9.2", "major")).toBe("1.0.0");
+    expect(() => incrementVersion("0.1.0-next.0", "patch")).toThrow();
+  });
+
+  it("status releases의 docs none 항목을 따라 오른 버전으로 바꿔 제목에 반영한다", () => {
+    const releases = withStorybookFollow(
+      [...tds("0.5.1", "patch"), docsNone],
+      [tdsChangeset("patch")],
+    );
+    expect(versionPrTitle(bundleVersions(releases))).toBe(
+      "[TDS] Release 0.5.1 · [Storybook] Release 0.1.1",
+    );
+  });
+
+  it("따라 오르지 않으면 releases를 그대로 둔다", () => {
+    const releases = [...tds("0.6.0"), { ...docsNone, type: "patch", newVersion: "0.1.1" }];
+    expect(withStorybookFollow(releases, [tdsChangeset("minor"), docsChangeset("patch")])).toEqual(
+      releases,
+    );
+  });
+
+  it("자동 changeset은 docs 한 패키지만 담고 반영한 TDS 버전을 요약에 적는다", () => {
+    const content = storybookFollowChangeset("minor", "0.6.0");
+    expect(content).toMatch(/^---\n"@tide-tds\/docs": minor\n---\n/);
+    expect(content).toContain("TDS 0.6.0 반영");
   });
 });
