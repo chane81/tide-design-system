@@ -185,3 +185,16 @@
 - (결정됨) 「퇴장 중에 다시 열면 같은 요소가…」(Menu·Tooltip·Popover)의 두 `rerender` 사이 race는 `openControl`(`flushSync`)로 닫기·다시 열기를 한 task 안에서 하게 고쳤다.
 - (결정됨) Toast 「자동 닫힘 > 영역에 마우스를 올린 동안…」 hover timeout은 vitest browser가 locator 명령 동안 가짜 타이머를 실제 시간만큼 당기는 동작 때문이었다. 60초 Toast와 pointerenter·leave 시각 기록으로 고쳤다(`issues/34-toast.md`).
 - (결정됨) 가짜 타이머를 켠 테스트에서 locator 명령(`userEvent.hover`·`click` 등)을 쓰면 그 명령의 실제 시간만큼 가짜 시계가 흐른다. 공통 규칙으로 올렸다(2026-11-12, `docs/agents/testing.md`).
+
+## Storybook 버전 관리와 Version PR 제목(storybook-release-versioning, ADR 0020)
+
+- docs 시작값은 0.0.0 그대로 두고 첫 docs minor changeset으로 0.1.0을 만든다. 0.0.0은 릴리스 감지에서 뺀다.
+- Storybook 버전 규칙: 0.x의 「minor = breaking」을 쓰지 않고 minor = 추가·개편, patch = 수정. CHANGELOG 제목 「추가와 개편 (minor)」「수정 (patch)」.
+- Storybook major 금지는 지금 CI 규칙(TDS가 0.x인 동안 모든 major 금지)에 기대고 있다. TDS가 1.0이 되면 docs의 0.x major 금지를 따로 둘지 정한다.
+- changeset 규칙은 「changeset이 하나라도 있나」만 본다. TDS만 바꾸고 docs changeset만 넣어도 통과한다. 묶음별 대응 검사는 두지 않았다.
+- Storybook tag는 lightweight(GitHub REST 「Create a reference」)다. changesets가 만드는 TDS tag(annotated `git tag -m`)와 종류가 다르다.
+- Storybook 배포 tag는 배포 성공 뒤에 만든다. 배포가 실패하면 다음 mode `none` push나 workflow_dispatch가 다시 배포하고 tag를 만든다. mode `version`인 push에서는 다시 시도하지 않는다.
+- TDS와 Storybook이 함께 오른 릴리스에서 TDS publish가 실패하면 문서도 배포되지 않고 docs tag도 생기지 않는다. 이후 mode `none` push에서 Storybook만 배포될 수 있다(그때 main TDS가 npm에 없을 수 있음). 드문 경우라 수동 대응으로 둔다.
+- Storybook 릴리스 감지는 `git ls-remote`(익명, 공개 저장소 전제)로 원격 tag를 본다. 저장소를 비공개로 바꾸면 token이 필요하다.
+- `changeset status` 계획에 smoke-next가 `none`(버전 `undefined`)으로 나온다. 파일은 바뀌지 않아 그대로 둔다.
+- 루트 `scripts/` 테스트는 루트 `vitest.config.ts` + `pnpm test:scripts`로 turbo 밖에서 돈다. 루트 devDependency에 `vitest`(catalog)를 더했다.
