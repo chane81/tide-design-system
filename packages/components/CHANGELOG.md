@@ -1,5 +1,26 @@
 # @tide-tds/components
 
+## 0.6.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#20](https://github.com/chane81/tide-design-system/pull/20) [`ffb1b06`](https://github.com/chane81/tide-design-system/commit/ffb1b06ce2e056347a7fdc8ddfc043a2ec7e21f6) [@chane81](https://github.com/chane81) - Component가 파스텔 글자·테두리와 색 없는 호버를 씁니다(ADR 0022).
+
+  - Badge: `subtle`은 파스텔 글자(`text-accent-on-subtle`)와 파스텔 테두리(`border-accent-subtle`)를 씁니다. 가장 옅은 바탕의 `variant="faint"`를 더했습니다(테두리 없음). `faint`는 Badge에만 있습니다.
+  - Tag는 파스텔 글자와 테두리, Avatar fallback은 파스텔 글자를 씁니다.
+  - Alert는 글자·아이콘이 파스텔 글자, 테두리가 파스텔 테두리입니다. 닫기 버튼은 파스텔 글자에 같은 색의 subtle 호버·누름 바탕입니다.
+  - Button·IconButton: `subtle`의 글자는 파스텔 글자입니다. `outline`·`ghost`의 호버·누름은 색 없이 덮는 `bg-hover`·`bg-active`입니다(글자는 그대로 Role 색).
+  - Menu·Select·Combobox 항목, Table 행, Accordion 트리거의 호버는 `bg-hover`입니다. highlight와 고른 옵션의 바탕은 그대로입니다.
+  - Toast의 닫기·액션 버튼은 Toast의 `color`와 관계없이 `neutral`입니다. raised 표면 위에서 Role 색 글자가 호버·누름 바탕에 대해 대비 기준을 넘지 못해서입니다. 상태 아이콘은 그대로 Role 색입니다.
+
+- [#17](https://github.com/chane81/tide-design-system/pull/17) [`5a628b0`](https://github.com/chane81/tide-design-system/commit/5a628b008205f3eeba345d8d005941ce4c4d9b90) [@chane81](https://github.com/chane81) - foundation의 색 스케일 값이 바뀌어 모든 Component의 색이 달라집니다(ADR 0022). 장식·분류 Component인 Badge·Tag·Avatar의 `color`가 장식 계열 `purple`·`mint`를 받습니다. Button·IconButton·Link처럼 Role만 받는 Component에는 들어가지 않습니다.
+
+### 기능 추가와 수정 (patch)
+
+- 의존성 업데이트 [[`5a628b0`](https://github.com/chane81/tide-design-system/commit/5a628b008205f3eeba345d8d005941ce4c4d9b90), [`edb3f2e`](https://github.com/chane81/tide-design-system/commit/edb3f2e94319c7c77f714e650ba7043263e521d2)]:
+  - @tide-tds/foundation@0.6.0
+  - @tide-tds/icons@0.6.0
+
 ## 0.5.1
 
 ### 기능 추가와 수정 (patch)
