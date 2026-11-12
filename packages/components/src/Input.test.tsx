@@ -204,7 +204,7 @@ describe("입력", () => {
 });
 
 describe("포커스 표시", () => {
-  test("클릭으로 포커스해도 focus-field(border focus 색, inset 1px, 투명 outline)가 보인다", async () => {
+  test("클릭으로 포커스해도 focus-field(border focus 색, inset 1px)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
     await render(
       <div data-theme="light">
         <Input aria-label="이름" />
@@ -221,17 +221,39 @@ describe("포커스 표시", () => {
     const style = getComputedStyle(input.element());
 
     expect(style.borderTopWidth).toBe("1px");
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
     if (forcedColors()) {
       // border 색과 box-shadow는 시스템 색으로 덮이고, 투명 outline이 시스템 색으로 그려져 포커스 표시가 남는다.
       expect(style.boxShadow).toBe("none");
+      expect(style.outlineStyle).toBe("solid");
+      expect(style.outlineWidth).toBe("2px");
       expect(style.outlineColor).not.toBe(transparent);
     } else {
       const focus = resolve("var(--tide-outline-focus)");
       expect(style.borderTopColor).toBe(focus);
       expect(style.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      expect(style.outlineColor).toBe(transparent);
+      // 평소에는 outline이 없다. 투명 outline은 forced-colors에서만 둔다.
+      expect(style.outlineStyle).toBe("none");
+    }
+  });
+
+  test("클릭 직후에도 outline이 번쩍이지 않는다", async () => {
+    // 평소 투명 outline을 두면 transition-colors가 outline-color를 글자색에서 투명으로 150ms 동안 전환해,
+    // 클릭 직후 글자색 outline이 잠깐 보였다(회귀 방지).
+    await render(
+      <div data-theme="light">
+        <Input aria-label="이름" />
+        <Textarea aria-label="메모" />
+      </div>,
+    );
+    for (const name of ["이름", "메모"]) {
+      const field = page.getByRole("textbox", { name });
+      await userEvent.click(field);
+      const style = getComputedStyle(field.element());
+      if (forcedColors()) {
+        expect(style.outlineStyle).toBe("solid");
+      } else {
+        expect(style.outlineStyle).toBe("none");
+      }
     }
   });
 
@@ -246,10 +268,11 @@ describe("포커스 표시", () => {
     await expect.element(textarea).toHaveFocus();
     await settle();
     const style = getComputedStyle(textarea.element());
-    expect(style.outlineWidth).toBe("2px");
     if (forcedColors()) {
+      expect(style.outlineWidth).toBe("2px");
       expect(style.outlineColor).not.toBe(transparent);
     } else {
+      expect(style.outlineStyle).toBe("none");
       expect(style.boxShadow).toBe(`${resolve("var(--tide-outline-focus)")} 0px 0px 0px 1px inset`);
     }
   });
@@ -284,7 +307,7 @@ describe("포커스 표시", () => {
       expect(focused.borderTopColor).toBe(focus);
       expect(focused.borderLeftColor).toBe(focus);
       expect(focused.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      expect(focused.outlineColor).toBe(transparent);
+      expect(focused.outlineStyle).toBe("none");
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));

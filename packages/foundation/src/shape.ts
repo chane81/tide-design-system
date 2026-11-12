@@ -61,7 +61,7 @@ export type ShadowName = keyof typeof shadow;
 
 /**
  * 포커스 표시 ring의 두께와 offset. 공개 계약은 `--tide-focus-ring-width`, `--tide-focus-ring-offset`이다.
- * `focus-ring` utility가 쓰고, `focus-field`의 투명 outline 두께도 같은 값을 쓴다.
+ * `focus-ring` utility가 쓰고, `focus-field`의 투명 outline(forced-colors 전용) 두께도 같은 값을 쓴다.
  */
 export const focusRing = {
   width: "2px",

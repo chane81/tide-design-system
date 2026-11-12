@@ -408,11 +408,15 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     expect(body).toContain("outline-offset: var(--tide-focus-ring-offset)");
   });
 
-  it("focus-field는 border 색과 inset 1px, 투명 outline을 함께 둔다", () => {
+  it("focus-field는 border 색과 inset 1px를 두고, 투명 outline은 forced-colors에서만 둔다", () => {
     const body = ruleBody(css, "focus-field");
     expect(body).toContain("border-color: var(--tide-outline-focus)");
     expect(body).toContain("box-shadow: inset 0 0 0 1px var(--tide-outline-focus)");
-    expect(body).toContain("outline: var(--tide-focus-ring-width) solid transparent");
+    // 평소 투명 outline을 두면 transition-colors가 outline-color를 currentColor에서 전환해 클릭 직후 번쩍인다.
+    expect(body).toContain("outline: none");
+    expect(css).toMatch(
+      /\.focus-field\s*\{[^}]*@media \(forced-colors: active\)\s*\{\s*outline: var\(--tide-focus-ring-width\) solid transparent/,
+    );
   });
 
   it("variant와 함께 쓸 수 있다", () => {

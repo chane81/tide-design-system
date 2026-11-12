@@ -252,7 +252,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 
 - **포커스 표시**:
   - ring: `outline` 2px, offset 2px, `:focus-visible`. 버튼류와 나머지 전부에 쓴다.
-  - field: border를 focus-ring 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다. 투명 outline을 함께 둔다. `:focus`(클릭 포함). 입력창과 Select·Combobox 트리거에 쓴다.
+  - field: border를 focus-ring 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다. 투명 outline은 forced-colors에서만 둔다(평소에 두면 transition-colors가 outline 색을 전환해 클릭 직후 번쩍인다). `:focus`(클릭 포함). 입력창과 Select·Combobox 트리거에 쓴다.
   - highlight: primary subtle 배경과 primary text 글자. 투명 outline을 함께 둔다. 목록 안 항목에 쓰고, hover도 같은 모양이다.
   - `focus-ring`과 `focus-field`를 `@utility`로 노출한다. `--tide-focus-ring-width`와 `--tide-focus-ring-offset`도 둔다.
   - error 입력창에서도 포커스 중에는 focus-field가 이겨야 한다. error+focus 조합을 명시적으로 정의한다. 오류 상태는 `aria-invalid="true"`로 나타내고, `focus-field`가 `[aria-invalid="true"]` 조합을 따로 적어 오류 border보다 우선한다([radius·Elevation·포커스 표시 Foundation](../tide-v0-impl/issues/06-radius-elevation-focus-foundation.md)).

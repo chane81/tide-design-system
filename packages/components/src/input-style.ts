@@ -2,7 +2,7 @@
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 //
 // - 경계: border-strong(표면 층 위 3:1, WCAG 1.4.11 입력 테두리). 오류는 aria-invalid:border-danger.
-// - 포커스: focus-field(:focus, 클릭 포함). 오류 상태에서도 포커스 중에는 focus-field가 이긴다(foundation utility).
+// - 포커스: focus-field(:focus, 클릭 포함, 투명 outline은 forced-colors에서만). 오류 상태에서도 포커스 중에는 focus-field가 이긴다(foundation utility).
 // - 비활성: 네이티브 :disabled. cursor-not-allowed와 disabled Token 색을 쓴다.
 // - 글자: 텍스트 스타일 뒤에 font-normal을 둬 입력한 값은 보통 굵기로 보인다(tailwind-merge가 뒤의 굵기를 남긴다).
 // - size: 높이·좌우 padding·텍스트 스타일(spec size 표). Input과 Select 트리거가 같은 값을 써서 같은 size면 높이가 같다.
