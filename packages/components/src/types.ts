@@ -12,7 +12,7 @@ export type FillVariant = "solid" | "subtle" | "outline" | "ghost";
 
 // 색 이름 타입. 정의는 foundation이 가지고 여기서 그대로 다시 낸다(tide-v0-impl 티켓 40·41, ADR 0016).
 // - Role: 행동·의미 Component(Button, IconButton, Link 등)의 `color`. Tide Role 6개 + 앱 Role
-// - ColorFamilyName: 장식·분류 Component(Badge, Tag, Avatar 등)가 쓰는 색 계열. Tide 색 계열 6개 + 앱 장식 계열
+// - ColorFamilyName: 장식·분류 Component(Badge, Tag, Avatar 등)가 쓰는 색 계열. Tide 색 계열 8개(장식 계열 purple·mint 포함) + 앱 장식 계열
 //   Badge는 Role도 함께 받아 `Color`(Role | ColorFamilyName)를 쓴다(ADR 0017). Avatar는 ColorFamilyName만 받는다(티켓 21).
 // 앱은 `declare module "@tide-tds/components" { interface RoleRegistry { brand: true } }`로 Role을 더한다.
 // re-export한 interface에 한 augmentation도 원래 interface에 합쳐진다(TypeScript 7.0.2에서 확인).

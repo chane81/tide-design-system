@@ -203,7 +203,7 @@ describe("스타일 축", () => {
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {
     // @ts-expect-error -- variant는 채움 방식 4개만 받는다.
     const a: ButtonProps = { variant: "link" };
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
     const b: ButtonProps = { color: "purple" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다.
     const c: ButtonProps = { size: "xl" };

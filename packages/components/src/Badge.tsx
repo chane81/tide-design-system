@@ -20,7 +20,7 @@ export interface BadgeProps extends Omit<ComponentProps<"span">, "color" | "chil
   size?: BadgeSize;
   /**
    * 색 이름. 상태는 Role(Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role), 뜻 없는 분류는 색 계열 이름
-   * (Tide 색 계열 6개와 앱이 `ColorFamilyRegistry`에 더한 계열)을 쓴다(ADR 0016·0017). 기본값은 `neutral`이다.
+   * (Tide 색 계열 8개(장식 계열 purple·mint 포함)와 앱이 `ColorFamilyRegistry`에 더한 계열)을 쓴다(ADR 0016·0017). 기본값은 `neutral`이다.
    * 루트에 `data-color`로 붙고 바깥 요소의 색을 물려받지 않는다.
    */
   // 장식·분류 Component라 색 계열 이름을 받고, 상태 라벨로도 쓰므로 Role도 함께 받는다(ADR 0017).

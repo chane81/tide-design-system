@@ -38,7 +38,7 @@ const badge = (text: string): HTMLElement =>
 
 const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
 // 색 계열은 Theme 블록이 정한 계열 변수(--tide-<계열>-<슬롯>)를 accent 슬롯으로 쓴다(ADR 0011).
-const families = ["gray", "blue", "green", "amber", "red", "cyan"] as const;
+const families = ["gray", "blue", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 
 describe("역할과 이름", () => {
   test("상태를 텍스트로 전한다. 역할이 없는 span이라 주변 이름에 그대로 들어간다", async () => {
@@ -237,6 +237,9 @@ describe("색", () => {
       { children: "a", color: "success" },
       { children: "a", color: "blue" },
       { children: "a", color: "gray" },
+      // 장식 계열 purple·mint(ADR 0022 §5)
+      { children: "a", color: "purple" },
+      { children: "a", color: "mint" },
       // 앱 Role과 앱 장식 계열도 받는다.
       { children: "a", color: "brand" },
       { children: "a", color: "leaf" },
@@ -246,6 +249,8 @@ describe("색", () => {
       "success",
       "blue",
       "gray",
+      "purple",
+      "mint",
       "brand",
       "leaf",
     ]);

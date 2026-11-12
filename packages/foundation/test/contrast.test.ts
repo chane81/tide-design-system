@@ -17,9 +17,9 @@ describe("contrastRatio", () => {
     expect(contrastRatio("#ffffff", "#000000")).toBeCloseTo(21, 5);
     expect(contrastRatio("#000000", "#ffffff")).toBeCloseTo(21, 5);
     expect(contrastRatio("#777777", "#777777")).toBe(1);
-    // tide-v0 티켓 08에서 계산한 blue 단계별 흰색 대비
+    // blue 단계별 흰색 대비(500은 tide-v0 티켓 08, 600은 ADR 0022 값)
     expect(contrastRatio(color.blue[500], color.white)).toBeCloseTo(3.69, 2);
-    expect(contrastRatio(color.blue[600], color.white)).toBeCloseTo(5.05, 2);
+    expect(contrastRatio(color.blue[600], color.white)).toBeCloseTo(4.97, 2);
   });
 
   it("반투명 색은 받지 않는다", () => {

@@ -104,7 +104,7 @@ export interface RoleRegistry extends Record<TideRole, true> {}
 export type Role = keyof RoleRegistry;
 
 /**
- * 색 계열 목록. Tide 색 계열 6개가 들어 있고, 앱은 module augmentation으로 장식용 계열을 더한다.
+ * 색 계열 목록. Tide 색 계열 8개(장식 계열 purple·mint 포함)가 들어 있고, 앱은 module augmentation으로 장식용 계열을 더한다.
  * Tide가 Primitive 계열을 더하면 이 목록도 함께 넓어진다.
  *
  * ```ts

@@ -64,7 +64,7 @@ describe("역할과 이름", () => {
     const c: IconButtonProps = { "aria-label": "설정", children: <Icon />, variant: "link" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다. 24px보다 작은 size는 없다.
     const d: IconButtonProps = { "aria-label": "설정", children: <Icon />, size: "2xs" };
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다.
+    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
     const e: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "purple" };
     // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
     const f: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "blue" };

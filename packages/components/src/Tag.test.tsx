@@ -394,6 +394,11 @@ describe("공통 API", () => {
     // @ts-expect-error -- 태그 글자는 필수다.
     const empty: TagProps = { value: "a" };
     const family: TagProps = { value: "a", children: "가", color: "cyan" };
-    expect([unnamed, selection, missing, disabled, role, empty, family]).toHaveLength(7);
+    // 장식 계열 purple·mint도 색 계열이다(ADR 0022 §5).
+    const purple: TagProps = { value: "a", children: "가", color: "purple" };
+    const mint: TagProps = { value: "a", children: "가", color: "mint" };
+    expect([unnamed, selection, missing, disabled, role, empty, family, purple, mint]).toHaveLength(
+      9,
+    );
   });
 });
