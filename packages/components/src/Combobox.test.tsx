@@ -813,13 +813,13 @@ describe("모양", () => {
     expect(getComputedStyle(byTestId("apple")).backgroundColor).toBe(transparent);
   });
 
-  test("결과 없음 글자는 muted이고 옵션 하나 높이(36px)다", async () => {
+  test("결과 없음 글자는 muted이고 옵션 하나 높이(32px)다", async () => {
     await render(<Fruits />);
     await tabToInput();
     await userEvent.keyboard("수박");
     const message = page.getByText("결과가 없습니다").element() as HTMLElement;
     await expect.element(page.getByText("결과가 없습니다")).toBeVisible();
-    expect(message.getBoundingClientRect().height).toBe(36);
+    expect(message.getBoundingClientRect().height).toBe(32);
     if (!forcedColors()) {
       expect(getComputedStyle(message).color).toBe(resolve("color", "var(--tide-text-muted)"));
     }

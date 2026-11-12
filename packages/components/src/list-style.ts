@@ -38,11 +38,11 @@ export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto
  * - `data-disabled`: `text-disabled`, `cursor-not-allowed`. hover 배경이 없다.
  * - 상태끼리 겹칠 때 순서에 기대지 않도록 `not-data-highlighted:`로 서로 뺀다.
  * - transition이 없다. 반복되는 목록 항목은 바로 바뀐다(spec 「motion 적용」).
- * - 크기: 세로 6px·가로 8px 여백, `text-body-md`(16/24)라 높이 36px. 바로 안의 아이콘(svg, 장식용)은 16px이고
+ * - 크기: 세로 6px·가로 8px 여백, `text-body-sm`(14/20)이라 높이 32px. 글자 크기가 트리거(Button·Select `md`, 14px)와 같다. 바로 안의 아이콘(svg, 장식용)은 16px이고
  *   아이콘과 글자 사이는 8px다(Button md와 같은 아이콘 크기).
  */
 export const listItemClass = [
-  "flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-body-md text-default outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
+  "flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm text-default outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
   "hover:not-data-highlighted:not-data-disabled:bg-hover",
   "data-selected:not-data-highlighted:bg-neutral-subtle-active",
   "data-highlighted:bg-primary-subtle data-highlighted:text-primary data-highlighted:outline-2 data-highlighted:outline-solid data-highlighted:-outline-offset-2 data-highlighted:outline-transparent",
