@@ -118,6 +118,33 @@ export const Variants: Story = {
   ),
 };
 
+/** faint: 덜 중요한 표시. 한 목록 안에서는 faint로 맞춘다. */
+export const Faint: Story = {
+  name: "덜 중요한 표시(faint)",
+  render: () => (
+    <ul className="flex flex-col gap-2 text-body-md text-default">
+      <li className="flex items-center gap-2">
+        로그인 화면 개편{" "}
+        <Badge variant="faint" color="blue">
+          디자인
+        </Badge>
+      </li>
+      <li className="flex items-center gap-2">
+        가을 할인 안내문{" "}
+        <Badge variant="faint" color="green">
+          마케팅
+        </Badge>
+      </li>
+      <li className="flex items-center gap-2">
+        신입 온보딩 자료{" "}
+        <Badge variant="faint" color="mint">
+          교육
+        </Badge>
+      </li>
+    </ul>
+  ),
+};
+
 /** size 2개 */
 export const Sizes: Story = {
   name: "size",
@@ -192,6 +219,19 @@ export const DontFamilyForStatus: Story = {
       <Badge color="green">완료</Badge>
       <Badge color="red">실패</Badge>
     </div>
+  ),
+};
+
+/** Don't: 급한 상태를 faint로 낮춘다. */
+export const DontFaintForUrgent: Story = {
+  name: "Don't: 급한 상태를 faint로",
+  render: () => (
+    <p className="flex items-center gap-2 text-body-md text-default">
+      결제 서버{" "}
+      <Badge variant="faint" color="danger">
+        중단
+      </Badge>
+    </p>
   ),
 };
 

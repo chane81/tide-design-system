@@ -44,12 +44,27 @@
 ### 보류 항목
 
 - **ADR 0022 §3의 4.5 보장은 canvas 기준이다.** 앱이 raised 표면(Dialog, Popover 등, dark gray-900)에 Role 색 ghost·outline 버튼을 두면 hover·누름에서 4.5:1에 못 미친다(dark 누름 3.89~4.10:1, danger hover 4.42:1). 문서(티켓 04)에 안내할지, ADR을 보강할지(예: raised 위 bg-hover·bg-active 값 따로 두기) 검토가 필요하다.
+  - → 04 처리(2026-11-12): 문서 안내를 넣었다. Color.mdx 「표면에 따른 주의」, Button.mdx 「앱이 할 일」(raised 안 outline·ghost는 `color="neutral"`, IconButton도 같음). **ADR 보강 여부는 아직 정하지 않았다(보류 유지).**
 - **Switch 꺼짐 누름 thumb**: 꺼짐 상태에서 누르면 thumb(`text-accent`)이 `subtle-active` 위에 놓인다. 이 쌍은 02에서 지웠다. thumb은 글자가 아닌 UI 요소라 3:1이 기준이고, 실제 값은 최저 4.31:1(info dark)이라 통과한다. 주석만 고쳤다. 등록 쌍(3:1 UI 쌍)을 더할지 정해야 한다.
 - **Alert 닫기 버튼 덮어쓰기**: ghost의 기본(text-accent, bg-hover)을 Alert 안에서만 `text-accent-on-subtle` + `subtle-hover`·`subtle-active`로 덮어썼다. 다른 subtle 표면 안에 ghost 버튼을 두는 앱도 같은 문제를 겪는다. 문서(04)에 「subtle 표면 안 버튼」 안내가 필요할 수 있다.
+  - → 04 처리(2026-11-12): Button.mdx 「앱이 할 일」에 「subtle 배경 안 ghost는 `color`를 같은 Role로, className으로 `text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active`」를 적고 Color.mdx에서 가리킨다. light·dark 모두 `bg-hover`·`bg-active`를 subtle에 덮은 값이 `subtle-hover`·`subtle-active`와 같다(덮는 색·비율이 같음).
 - **Toast.mdx 한 문장**: 「닫기·액션 버튼 색이 바뀐다」가 사실과 달라져 한 문장만 고쳤다. 설명 전체는 04에서 다시 본다.
+  - → 04 처리(2026-11-12): 첫 줄을 한 문장 요약으로 줄이고 위치·시간 설명을 「구조」「큐와 시간」으로 옮겼다. 상태 문단과 대비 줄(버튼 글자 text-default, 아이콘 Role 색)을 사실에 맞게 고쳤다.
 
 ## 티켓 01에서 넘어온 항목
 
 - MDX(Avatar·Badge·Tag·Color)는 계열 목록과 개수만 고쳤다. 설명과 Do/Don't는 티켓 04에서 고친다.
+  - → 04 처리(2026-11-12): Color(강도·덮기·장식 계열 Do/Don't), Badge(faint 예·Don't), Tag·Avatar(파스텔 글자 대비 줄)를 고쳤다. Tag·Avatar의 Do/Don't는 색과 무관해 그대로 두었다.
 - JSDoc의 「색 계열 6개」를 「8개」로 고쳤다. 다른 곳에 남은 표현이 없는지 04에서 다시 본다.
+  - → 04 확인(2026-11-12): packages·apps·GLOSSARY에 「계열 6개」 표현은 없다(`scale.test.ts`의 「Role 계열 6개」는 Role 계열이라 맞다).
 - 문서 앱은 changeset이 없다. ADR 0021에 따라 Storybook 버전은 TDS를 따라 오른다.
+
+## 티켓 04 (2026-11-12)
+
+### 새 보류 항목
+
+- **외부 팔레트 값이 코드에 남아 있다.** `packages/foundation/test/fixtures/brand.ts`·`yellow.ts`와 `color-family.ts` JSDoc 예(`50: "#f5f3ff"` …)가 외부 팔레트 값과 같다. 04는 코드 동작을 바꾸지 않는 문서 티켓이라 문서(BrandColor.mdx) 예시만 Tide 예시 값으로 바꿨다. 픽스처·JSDoc을 바꿀지 정해야 한다(바꾸면 CLI 테스트 기대 출력도 바뀐다).
+- **smoke 메시지 낡음**: `apps/smoke-next/scripts/smoke.ts`의 Table 검사 실패 메시지가 옛 class `hover:bg-neutral-subtle-hover`를 적는다(검사 조건은 `:where(tbody>`라 동작은 맞다).
+- **Badge JSDoc과 문서 문장**: Badge `variant` JSDoc은 「같은 화면 안에서는 한 가지로 맞춘다」인데, 문서는 「눈에 띄어야 하는 몇 개만 solid」(기존 문장)를 함께 적는다. faint 예시는 한 목록 안을 faint로 맞춰 충돌을 피했다. 규칙을 하나로 정리할지 정해야 한다.
+- **Pagination 현재 페이지 쌍**: 02 기록은 현재 페이지가 `text × subtle`을 쓴다고 했지만, 03 뒤 Button subtle은 `text-accent-on-subtle`이라 현재 페이지 글자는 `text-primary-on-subtle`이다. 문서는 코드에 맞췄다. foundation `contrast.ts` 주석(「Pagination 현재 페이지가 text × subtle을 쓴다」)은 낡았을 수 있다.
+- **neutral·gray dark faint**(티켓 02 항목)는 문서에 사실(dark에서 배경이 페이지와 같다)만 적었다. 값을 바꿀지는 그대로 보류다.

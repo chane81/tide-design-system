@@ -27,12 +27,14 @@ import * as ButtonStories from "./Button.stories.tsx";
 
 `variant`로 채움 방식을 고릅니다. 기본값은 `solid`입니다.
 
-| `variant` | 모양                    | 쓰는 곳                  |
-| --------- | ----------------------- | ------------------------ |
-| `solid`   | 진한 배경, 흰 글자      | 영역의 주요 동작 하나    |
-| `subtle`  | 옅은 배경               | 자주 쓰는 보조 동작      |
-| `outline` | 테두리                  | 주요 동작 옆의 보조 동작 |
-| `ghost`   | 배경 없음, hover에 배경 | 툴바, 취소처럼 약한 동작 |
+| `variant` | 모양                           | 쓰는 곳                  |
+| --------- | ------------------------------ | ------------------------ |
+| `solid`   | 진한 배경, 흰 글자             | 영역의 주요 동작 하나    |
+| `subtle`  | 파스텔 배경, 진한 같은 색 글자 | 자주 쓰는 보조 동작      |
+| `outline` | 테두리, 색 글자                | 주요 동작 옆의 보조 동작 |
+| `ghost`   | 배경 없음, 색 글자             | 툴바, 취소처럼 약한 동작 |
+
+`solid`·`subtle`은 호버·누름에 같은 색이 조금 진해집니다. `outline`·`ghost`는 색 없는 호버·누름 배경(`bg-hover`·`bg-active`)이 깔리고 글자 색은 그대로입니다.
 
 <Canvas of={ButtonStories.Variants} />
 
@@ -148,6 +150,7 @@ import Link from "next/link";
 - 로딩: `aria-disabled="true"`가 붙고 이름 뒤에 「로딩 중」이 붙습니다(`loadingLabel`로 바꿉니다). 포커스를 잃지 않습니다.
 - 비활성: `button`은 `disabled`, 링크 등은 `aria-disabled="true"`로 알립니다. 링크는 포커스를 받지만 실행되지 않습니다.
 - 커서: 누를 수 있으면 손 모양(`pointer`), 로딩 중에는 `wait`, 비활성에는 `not-allowed`입니다. 링크로 렌더해도 같습니다.
+- 대비: 글자는 배경과 호버·누름 배경 위에서 4.5:1 이상입니다. `outline`·`ghost`는 canvas·surface 표면 위에서 잽니다.
 - 움직임 줄이기: 켜면 누름 축소가 사라집니다. 색 변화는 남습니다.
 - 고대비 모드(forced-colors): 모든 채움 방식에 경계가 보입니다.
 
@@ -155,6 +158,8 @@ import Link from "next/link";
 
 - 텍스트로 무엇을 하는지 적습니다(「확인」보다 「저장」).
 - 로딩이 끝난 결과(저장됨, 실패)는 처음부터 있던 알림 영역에 텍스트로 넣습니다.
+- Dialog·Popover 같은 raised 표면 안의 `outline`·`ghost`는 `color="neutral"`로 둡니다. dark Theme에서 Role 색 글자가 호버·누름 배경 위 4.5:1에 못 미칩니다. IconButton도 같습니다.
+- `subtle` 배경(Alert 등) 안의 `ghost`는 `color`를 바탕과 같은 Role로 주고, `className="text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active"`로 글자를 파스텔 글자로 바꿉니다. 그대로 두면 호버·누름 위 글자 대비가 모자랄 수 있습니다.
 
 ## Props
 

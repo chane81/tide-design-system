@@ -38,9 +38,21 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 ### 채움 방식 바꾸기
 
-`subtle`(기본)은 옅은 배경, `solid`는 진한 배경입니다. 한 화면 안에서는 한 가지로 맞춥니다. 눈에 띄어야 하는 몇 개에만 `solid`를 씁니다.
+`variant`는 `subtle`, `faint`, `solid` 세 가지이고 이름은 컬러의 강도와 같습니다. 한 화면 안에서는 한 가지로 맞춥니다.
+
+| `variant`      | 모양                                   | 쓰는 곳                |
+| -------------- | -------------------------------------- | ---------------------- |
+| `subtle`(기본) | 파스텔 배경, 진한 같은 색 글자, 테두리 | 대부분의 상태·분류     |
+| `faint`        | 가장 옅은 배경, 테두리 없음            | 덜 중요한 표시         |
+| `solid`        | 진한 배경, 흰 글자                     | 눈에 띄어야 하는 몇 개 |
 
 <Canvas of={BadgeStories.Variants} />
+
+### 덜 중요한 표시
+
+본문보다 눈에 덜 띄어야 하는 분류·부가 정보는 `faint`로 둡니다. 글자는 `subtle`과 같아 대비는 같습니다. `neutral`·`gray`의 `faint`는 dark Theme에서 배경이 페이지와 같은 색입니다.
+
+<Canvas of={BadgeStories.Faint} />
 
 ### 크기 바꾸기
 
@@ -77,6 +89,12 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 <Canvas of={BadgeStories.DontFamilyForStatus} />
 
+### Don't: 급한 상태를 faint로 둔다
+
+`faint`는 눈에 덜 띄게 하는 강도입니다. 중단·실패처럼 바로 봐야 하는 상태는 `subtle`이나 `solid`로 둡니다.
+
+<Canvas of={BadgeStories.DontFaintForUrgent} />
+
 ### Don't: 색만으로 구분한다
 
 색을 구분하기 어려운 사용자와 스크린 리더 사용자는 두 Badge가 같은 상태로 보입니다.
@@ -94,7 +112,7 @@ Badge는 포커스와 키보드 동작이 없습니다. 지울 수 있는 값은
 ### 기본 제공
 
 - 역할: 없습니다(`span`). 텍스트가 주변 문장과 이름(버튼, 목록 항목)에 그대로 들어갑니다.
-- 대비: 글자와 배경이 4.5:1 이상입니다(Role과 색 계열마다 subtle·solid 대비 쌍).
+- 대비: 글자와 배경이 4.5:1 이상입니다(Role과 색 계열마다 subtle·faint·solid 대비 쌍). `subtle`의 파스텔 테두리는 꾸밈이라 대비 검사 대상이 아닙니다.
 - 고대비 모드(forced-colors): 배경 대신 시스템 글자색 경계가 그려져 라벨 모양이 남습니다.
 
 ### 앱이 할 일

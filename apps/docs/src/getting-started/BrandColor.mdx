@@ -1,4 +1,6 @@
-import { Meta } from "@storybook/addon-docs/blocks";
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+
+import * as ColorStories from "../foundations/Color.stories.tsx";
 
 <Meta title="시작하기/브랜드 색 더하기" />
 
@@ -28,20 +30,37 @@ import { defineColorFamily } from "@tide-tds/foundation/color-family";
 export default defineColorFamily({
   name: "brand",
   scale: {
-    50: "#f5f3ff",
-    100: "#ede9fe",
-    200: "#ddd6fe",
-    300: "#c4b5fd",
-    400: "#a78bfa",
-    500: "#8b5cf6",
-    600: "#7c3aed",
-    700: "#6d28d9",
-    800: "#5b21b6",
-    900: "#4c1d95",
-    950: "#2e1065",
+    50: "#fcf0f5",
+    100: "#fee5f0",
+    200: "#ebcbd9",
+    300: "#e1adc4",
+    400: "#dc7dac",
+    500: "#c75b93",
+    600: "#a54d7a",
+    700: "#90406a",
+    800: "#793157",
+    900: "#68274a",
+    950: "#5c1d3f",
   },
 });
 ```
+
+### 단계별 역할
+
+단계마다 맡는 자리가 정해져 있습니다. 아래는 light Theme 기준입니다. L은 OKLCH 밝기, C는 채도입니다.
+
+| 단계 | 맡는 자리                      | 권장 범위                 |
+| ---- | ------------------------------ | ------------------------- |
+| 50   | `faint` 바탕                   | —                         |
+| 100  | `subtle` 파스텔 바탕           | L 0.945 안팎, C 0.02~0.05 |
+| 200  | 파스텔 테두리(`subtle-border`) | —                         |
+| 600  | `solid` 바탕, `border`         | 600~900 모두 C 0.13 이하  |
+| 700  | `text`(링크 같은 색 글자)      | —                         |
+| 950  | 파스텔 글자(`on-subtle`)       | L 0.33~0.36               |
+
+- 범위는 권장이고 대비 검사가 강제하지 않습니다. 계열마다 채도가 조금씩 달라도 됩니다.
+- 위 예시 스케일은 이 범위 안에 있고 대비 검사를 통과합니다.
+- dark Theme은 950이 파스텔 바탕, 100이 파스텔 글자, 300이 `text`입니다. 전체 규칙은 아래 「대비가 모자랄 때」의 슬롯 표에 있습니다.
 
 ## 2. CSS 만들기
 
@@ -51,7 +70,16 @@ export default defineColorFamily({
 pnpm exec tide-color build brand.ts > app/brand.css
 ```
 
-대비도 Tide와 같은 기준으로 light·dark 모두 검사합니다. 기준에 못 미치면 모자란 짝을 출력하고, CSS를 만들지 않고 exit 1로 끝납니다. 스케일을 바꿀 때마다 다시 실행하도록 `package.json` script로 두면 편합니다.
+대비도 Tide와 같은 기준으로 light·dark 모두 검사합니다. 기준에 못 미치면 모자란 짝을 출력하고, CSS를 만들지 않고 exit 1로 끝납니다.
+
+| 글자·경계                | 배경                                      | 기준  |
+| ------------------------ | ----------------------------------------- | ----- |
+| `text`                   | 표면 층, `subtle`, `bg-hover`·`bg-active` | 4.5:1 |
+| `on-subtle`(파스텔 글자) | `faint`, `subtle` 3단계                   | 4.5:1 |
+| `on-solid`               | `solid` 3단계                             | 4.5:1 |
+| `border`                 | 표면 층                                   | 3:1   |
+
+밝기·채도 범위와 파스텔 테두리는 검사하지 않습니다. 스케일을 바꿀 때마다 다시 실행하도록 `package.json` script로 두면 편합니다.
 
 ```json
 {
@@ -102,7 +130,7 @@ Component의 `color`에 이름을 줍니다. light·dark Theme도 따라 바뀝�
 
 ### 대비가 모자랄 때
 
-`overrides`로 슬롯이 가리킬 단계를 바꿉니다. 예를 들어 밝은 노랑은 solid를 밝게 두고 그 위 글자를 진한 단계로 바꿉니다.
+`overrides`로 슬롯이 가리킬 단계를 바꿉니다. 예를 들어 밝은 노랑은 solid를 밝게 두고 그 위 글자와 `text`를 진한 단계로 바꿉니다.
 
 ```ts
 // brand.ts
@@ -115,19 +143,14 @@ export default defineColorFamily({
     "solid-active": { light: 600, dark: 600 },
     "on-solid": { light: 950, dark: 950 },
     border: { light: 700 },
+    text: { light: 800 },
   },
 });
 ```
 
-슬롯과 기본 단계는 아래와 같습니다. 값은 단계 숫자나 `white`, `black`입니다.
+값은 단계 숫자, `white`·`black`, 덮기(`{ step: 100, overlay: "gray-950", amount: 0.04 }`), 섞기(`{ mix: ["gray-950", 950] }`) 중 하나입니다. Theme 하나만 바꿔도 됩니다. 슬롯과 기본 값은 아래와 같습니다.
 
-| 슬롯                                      | light         | dark          |
-| ----------------------------------------- | ------------- | ------------- |
-| `solid`, `solid-hover`, `solid-active`    | 600, 700, 800 | 600, 700, 800 |
-| `subtle`, `subtle-hover`, `subtle-active` | 50, 100, 200  | 950, 900, 800 |
-| `text`                                    | 800           | 200           |
-| `border`                                  | 600           | 400           |
-| `on-solid`                                | `white`       | `white`       |
+<Canvas of={ColorStories.Slots} meta={ColorStories} sourceState="none" />
 
 ### 장식용 색 계열로 쓸 때
 
@@ -160,18 +183,22 @@ declare module "@tide-tds/components" {
 ```css
 /* app/globals.css */
 [data-theme="light"] {
-  --tide-bg-primary-solid: #7c3aed;
-  --tide-bg-primary-solid-hover: #6d28d9;
-  --tide-bg-primary-solid-active: #5b21b6;
-  --tide-bg-primary-subtle: #f5f3ff;
-  --tide-bg-primary-subtle-hover: #ede9fe;
-  --tide-bg-primary-subtle-active: #ddd6fe;
-  --tide-text-primary: #5b21b6;
-  --tide-border-primary: #7c3aed;
+  --tide-bg-primary-solid: #a54d7a;
+  --tide-bg-primary-solid-hover: #8e4269;
+  --tide-bg-primary-solid-active: #843e62;
+  --tide-bg-primary-subtle: #fee5f0;
+  --tide-bg-primary-subtle-hover: #f5dde8;
+  --tide-bg-primary-subtle-active: #edd6e0;
+  --tide-bg-primary-faint: #fcf0f5;
+  --tide-text-primary: #90406a;
+  --tide-text-primary-on-subtle: #5c1d3f;
+  --tide-border-primary: #a54d7a;
+  --tide-border-primary-subtle: #ebcbd9;
 }
 ```
 
 - 이 값은 대비 검사를 받지 않습니다. 대비 검사가 필요하면 위처럼 앱 Role을 더합니다.
+- 호버·누름 값은 덮은 결과를 직접 넣습니다. `tide-color build`가 만든 CSS의 같은 슬롯 값을 옮기면 됩니다.
 - `dark` Theme도 같은 변수를 따로 덮어씁니다.
 - `--tide-blue-*` 같은 계열 변수는 덮어쓰지 않습니다. 같은 계열을 쓰는 다른 Role과 장식 색이 함께 바뀝니다.
 
