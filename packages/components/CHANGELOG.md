@@ -1,5 +1,14 @@
 # @tide-tds/components
 
+## 0.5.1
+
+### 기능 추가와 수정 (patch)
+
+- [`1b64a95`](https://github.com/chane81/tide-design-system/commit/1b64a95d9ef4d502bc8d75cece25b88c9f0e2ca2) [@chane81](https://github.com/chane81) - 닫히는 Toast는 퇴장 전환(150ms) 동안 `inert`가 되어, 안의 액션·닫기 버튼에 Tab·포커스·누름이 닿지 않는다. 닫은 뒤 옆 Toast로 가는 포커스 이동은 그대로다. 보이는 수(`maxVisible`)를 넘어 밀려났다가 다시 보이는 Toast는 `inert`가 풀린다.
+- 의존성 업데이트 []:
+  - @tide-tds/foundation@0.5.1
+  - @tide-tds/icons@0.5.1
+
 ## 0.5.0
 
 ### 호환되지 않는 변경 (minor)
