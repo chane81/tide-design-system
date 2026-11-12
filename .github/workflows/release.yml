@@ -25,9 +25,13 @@ on:
 permissions: {}
 
 # 같은 브랜치의 릴리스가 겹치지 않게 한다. 진행 중인 publish를 끊지 않도록 취소하지 않는다.
+# queue 기본값(single)은 pending을 하나만 두고 새 실행이 오면 기존 pending을 취소한다.
+# Version PR 머지 실행(publish)이 뒤이은 기능 PR 머지 실행에 밀려 취소되면 publish가 빠지므로,
+# queue: max로 모든 실행을 순서대로 돌린다(GitHub Docs 「Control the concurrency of workflows and jobs」, 2026-11-10 확인).
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   select-mode:
