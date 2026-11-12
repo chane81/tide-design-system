@@ -12,7 +12,7 @@
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "release:version": "changeset version && node scripts/changelog-ko.ts",
+    "release:version": "node scripts/storybook-follow.ts && changeset version && node scripts/changelog-ko.ts",
     "test:scripts": "vitest run"
   },
   "devDependencies": {

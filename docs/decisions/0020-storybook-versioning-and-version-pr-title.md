@@ -10,6 +10,8 @@ Storybook 문서 앱(`@tide-tds/docs`, `apps/docs`)에 TDS(`@tide-tds/foundation
 | Storybook만        | `[Storybook] Release 0.1.0`                       |
 | 둘 다              | `[TDS] Release 0.6.0 · [Storybook] Release 0.2.0` |
 
+> 덧붙임(2026-11-12, [ADR 0021](0021-storybook-follows-tds-release.md)): TDS 릴리스에 Storybook changeset이 없으면 `pnpm release:version`이 Storybook changeset(「TDS x.y.z 반영」)을 자동으로 더해 Storybook도 TDS와 같은 단계로 오른다. 그래서 TDS가 오르는 Version PR의 제목은 언제나 「둘 다」 꼴이고, 「TDS만」 제목은 더 나오지 않는다. 아래 「TDS가 실제로 publish되면 … 배포한다」 경로에서 docs tag도 함께 생긴다.
+
 근거 버전: `@changesets/cli` 3.0.3(`@changesets/config` 4.0.1, `assemble-release-plan` 7.0.0, `apply-release-plan` 8.1.1, `should-skip-package` 1.0.0), changesets/action v2.1.2. 설치본 소스와 태그 소스, context7 `/changesets/changesets`로 확인했다.
 
 - **버전 관리 대상**: `.changeset/config.json`에 `privatePackages: { "version": true, "tag": false }`를 둔다. changesets 3의 기본값은 private을 버전 관리하지 않는다(migration 가이드 「Opt in to versioning private packages」).
