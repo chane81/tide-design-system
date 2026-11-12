@@ -51,16 +51,20 @@ Semantic Token이 나타내는 의미 범주. Tide Role은 `neutral`, `primary`,
 _Avoid_: 컬러 그룹, intent, tone
 
 **색 이름 (Color)**:
-`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). Avatar·Tag는 색 계열만 받는다(티켓 21·33). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
+`data-color` 속성으로 고르는 이름. Role과 색 계열 둘로 나뉜다. Role은 뜻이 있는 색이라 행동·의미 Component가 쓰고, 색 계열(`blue`, `gray`, `green`, `amber`, `red`, `cyan`과 장식 전용 `purple`, `mint`)은 뜻이 없는 색이라 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다. Badge는 상태 라벨로도 쓰여 Role도 받는다(ADR 0017). Avatar·Tag는 색 계열만 받는다(티켓 21·33). 타입은 `Color = Role | ColorFamilyName`이고, 앱은 `RoleRegistry`나 `ColorFamilyRegistry`를 module augmentation해서 이름을 더한다.
 _Avoid_: 팔레트, color scheme(`color-scheme` CSS와 혼동), tone
 
 **accent 슬롯 (Accent slot)**:
-`data-color`가 고른 색 이름(Role이나 색 계열)의 값을 받는 자리. `--tide-accent-<슬롯>` 변수 9개(`solid`/`-hover`/`-active`, `subtle`/`-hover`/`-active`, `text`, `border`, `on-solid`)이고, `bg-accent-solid`, `text-accent` 같은 Utility class로 쓴다. `data-color`가 없으면 `primary` 값을 받는다. 색 계열도 같은 슬롯 이름으로 변수 묶음(`--tide-blue-solid` 등)을 가진다. 앱 Role과 앱 장식 계열은 `tide-color build`가 만든 `[data-color]` 규칙으로 이 자리에 값을 꽂는다.
+`data-color`가 고른 색 이름(Role이나 색 계열)의 값을 받는 자리. `--tide-accent-<슬롯>` 변수 12개(`solid`/`-hover`/`-active`, `subtle`/`-hover`/`-active`, `faint`, `text`, `border`, `subtle-border`, `on-solid`, `on-subtle`)이고, `bg-accent-solid`, `text-accent`, `text-accent-on-subtle`, `border-accent-subtle` 같은 Utility class로 쓴다. `text`는 바탕 없이 쓰는 색 글자, `on-subtle`은 `subtle`·`faint` 바탕 위 글자다(ADR 0022). `data-color`가 없으면 `primary` 값을 받는다. 색 계열도 같은 슬롯 이름으로 변수 묶음(`--tide-blue-solid` 등)을 가진다. 앱 Role과 앱 장식 계열은 `tide-color build`가 만든 `[data-color]` 규칙으로 이 자리에 값을 꽂는다.
 _Avoid_: accent color(색 하나로 오해), 강조색, theme color
 
 **강도 (Emphasis)**:
-같은 Role 안에서 배경색이 얼마나 강한지를 나타내는 구분. `solid`(진한 배경, 흰 글자)와 `subtle`(옅은 배경, 역할색 글자) 두 가지다. 이름에 항상 적고 생략하지 않는다.
+같은 Role 안에서 배경색이 얼마나 강한지를 나타내는 구분. `solid`(진한 배경, 흰 글자), `subtle`(색이 보이는 파스텔 배경, 같은 색상의 아주 진한 글자, 한 톤 진한 테두리), `faint`(채도를 더 뺀 가장 옅은 배경, subtle과 같은 글자) 세 가지다(ADR 0022). 이름에 항상 적고 생략하지 않는다.
 _Avoid_: variant(Component 스타일 축과 혼동), weight, tone
+
+**덮기 (Overlay state)**:
+호버·클릭 상태 색을 만드는 방법. 상태마다 다른 단계를 고르지 않고, 기본 색 위에 정해진 색을 n% 덮는다. 예: `subtle-hover` = light 100 + gray-950 4%, `solid-hover` = 600 + black 14%. 색이 없는 바탕의 호버는 `bg-hover`·`bg-active`(light gray-950 4%·8%, dark white 6%·10%)다. 덮은 값은 빌드할 때 hex로 계산해 Token에 넣는다(ADR 0022).
+_Avoid_: tint, shade(방향이 정해진 말과 혼동), 오버레이(`bg-overlay` 막과 혼동)
 
 **표면 층 (Surface level)**:
 요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다.
