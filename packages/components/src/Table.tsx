@@ -35,7 +35,7 @@ const tableClass = "w-full border-collapse text-body-sm text-default";
 
 // - 행 사이 선은 장식용 border-default 1px다(대비 검사 제외 Token, Separator·Card와 같다). 구분은 표 구조가 전한다.
 // - 행 hover는 transition 없이 바로 바뀐다(spec motion 「반복되는 목록 항목의 hover는 바로 바뀐다」). 그래서 transition class가 없다.
-//   색은 색 없이 덮는 bg-hover다(ADR 0022 §3). text-default × bg-hover(표면 위 합성) 4.5:1이 등록되어 있다.
+//   색은 색 없이 덮는 bg-hover다(ADR 0022 §3). text-default × bg-hover(표면 위 합성) 4:1(일시 상태, ADR 0023)이 등록되어 있다.
 // - hover는 `<tbody>` 바로 아래 행에만 준다. 헤더 행(thead)과 바닥 행(tfoot)은 데이터 행이 아니라 바뀌지 않는다.
 //   선택자를 `:where(tbody > 행)`로 감싸 특이도를 `hover:`와 같은 수준(0,1,0)보다 낮게 둔다. 그래서 사용자 className의
 //   `hover:bg-transparent` 같은 값이 CSS 순서와 상관없이 이긴다(tailwind-merge는 서로 다른 변형이라 둘 다 남긴다).

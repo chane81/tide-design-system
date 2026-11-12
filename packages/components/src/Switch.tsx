@@ -68,15 +68,15 @@ const thumbSizeClass: Record<SwitchSize, string> = {
 // 켜짐·비활성은 :enabled/:disabled로 나눠 CSS 순서에 기대지 않는다.
 // hover·누름은 루트 label(이름 붙인 group/switch)에서 반응한다. 바깥 요소의 group hover에는 반응하지 않는다. label을 눌러도 토글되기 때문이다. 활성(:enabled)일 때만 붙는다.
 // Checkbox·Radio(choice-style.ts)와 같은 규칙이다. hover는 켜짐 solid-hover·꺼짐 subtle, 누름은 한 단계 진한 -active 슬롯이다.
-// - 켜짐: solid-hover / solid-active(Button solid와 같은 규칙). thumb on-solid와 4.5:1 대비 쌍이 등록되어 있다.
+// - 켜짐: solid-hover / solid-active(Button solid와 같은 규칙). thumb on-solid와 4:1(solid 위, ADR 0023) 대비 쌍이 등록되어 있다.
 // - 꺼짐: accent subtle / subtle-active 배경. thumb은 text-accent가 된다. thumb은 글자가 아닌 UI 요소라 기준은 3:1이다.
 //   hover(subtle)는 등록된 대비 쌍(text × 같은 색 subtle 4.5:1, neutral은 text-default × neutral subtle) 안에 있다.
-//   누름(subtle-active) 위 text 쌍은 ADR 0022에서 지웠다(text가 subtle 위 글자가 아니게 되어서). 값은 최저 4.31:1이라
-//   3:1을 넘는다(티켓 03 판단 보류 목록 참고). 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
+//   누름(subtle-active) 위 thumb은 UI 요소 쌍 text × 같은 색 subtle-active 3:1로 등록되어 있다(티켓 46, 최저 4.31:1).
+//   neutral은 text-default × neutral subtle-active 4.5:1 쌍 안에 있다. 경계는 바깥 표면과의 대비(border-strong 3:1)라 그대로다.
 const trackClass =
   "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-accent-subtle group-active/switch:not-checked:enabled:bg-accent-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
 
-// thumb: 색은 currentColor로 칠한다. 꺼짐 text-muted(표면 층 위 4.5:1), 켜짐 text-accent-on-solid(solid 위 4.5:1).
+// thumb: 색은 currentColor로 칠한다. 꺼짐 text-muted(표면 층 위 4.5:1), 켜짐 text-accent-on-solid(solid 위 4:1).
 // 꺼짐 hover·누름은 track이 accent subtle이라 text-accent다. hover가 없는 터치 기기에서도 누르는 동안 맞도록 active에도 붙인다.
 // 이동은 motion-safe일 때만 transition에 넣는다. 움직임 줄이기에서는 위치가 바로 바뀌고 색만 fast로 바뀐다.
 const thumbClass =

@@ -29,8 +29,9 @@ const interactionClass: Record<FillVariant, string> = {
   solid: "hover:bg-accent-solid-hover active:bg-accent-solid-active",
   subtle: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
   // outline·ghost는 색 없이 덮는다(ADR 0022 §3). 기본 투명, hover bg-hover, 누름 bg-active.
-  // text × bg-hover·bg-active(흰 표면 bg-canvas 위 합성)가 4.5:1로 등록되어 있다. raised 표면(dark gray-900) 위의
-  // Role 색 글자는 4.5:1에 못 미치므로 Tide Component는 raised 위에 Role 색 outline·ghost를 두지 않는다(Toast는 neutral).
+  // text × bg-hover·bg-active(흰 표면 bg-canvas 위 합성)가 4:1(일시 상태, ADR 0023)로 등록되어 있다. raised 표면
+  // (dark gray-900) 위의 Role 색 글자는 누름에서 warning·danger가 4:1에도 못 미치므로(3.99·3.89, 티켓 46)
+  // Tide Component는 raised 위에 Role 색 outline·ghost를 두지 않는다(Toast는 neutral).
   outline: "hover:bg-hover active:bg-active",
   ghost: "hover:bg-hover active:bg-active",
 };

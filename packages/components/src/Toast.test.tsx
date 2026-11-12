@@ -526,7 +526,7 @@ describe("위치·표면·색", () => {
     expect(toast).toHaveAttribute("data-color", "info");
     const close = page.getByRole("button", { name: "닫기" }).element() as HTMLElement;
     const action = page.getByRole("button", { name: "새로 고침" }).element() as HTMLElement;
-    // raised 위 Role 색 글자는 bg-hover·bg-active 위에서 4.5:1에 못 미쳐 버튼은 neutral(text-default)이다(티켓 03).
+    // raised 위 Role 색 글자는 bg-active 위에서 4:1에도 못 미치는 색이 있어 버튼은 neutral(text-default)이다(티켓 03·46).
     expect(close).toHaveAttribute("data-color", "neutral");
     expect(action).toHaveAttribute("data-color", "neutral");
     expect(close.getBoundingClientRect().height).toBe(24);

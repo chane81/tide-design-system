@@ -8,7 +8,7 @@
 //   :indeterminate, :disabled)와 aria-invalid로 고른다. 아이콘은 peer-* variant로 보인다.
 // - 경계: 선택 전 border-strong(표면 층 위 3:1). 선택 후에도 border-accent를 둔다. solid는 dark 표면 위 3:1에
 //   못 미치는 색이 있어(dark primary 2.88:1) 등록된 대비 쌍인 border-accent(× 표면 층 3:1)가 상자 경계를 맡는다.
-// - 표시: 체크·indeterminate·점 아이콘은 text-accent-on-solid(× solid 4.5:1).
+// - 표시: 체크·indeterminate·점 아이콘은 text-accent-on-solid(× solid 4:1 등록, ADR 0023. 아이콘이라 UI 기준 3:1을 넘는다).
 // - forced-colors: 기본 동작은 상자 배경을 Canvas로 덮는데, svg는 UA 스타일 `forced-color-adjust: preserve-parent-color`라
 //   흰 표시가 흰 Canvas 위에 남아 사라진다(Chromium에서 확인). Switch(티켓 17, ADR 0015)와 같이 상자와 표시만
 //   forced-color-adjust를 끄고, 쓰는 Token 변수를 시스템 색으로 바꾼다(@theme inline이라 요소에서 바꾼 변수를 바로 쓴다).
@@ -17,11 +17,11 @@
 // - 오류: aria-invalid:border-danger. tailwindcss 4.3.5에서 aria-* variant가 checked·indeterminate보다 뒤에
 //   만들어져 선택 상태에서도 오류 경계가 이긴다. 비활성은 disabled:가 그보다 뒤라 모두를 이긴다.
 // - hover: label 전체(group/choice)에 올리면 활성 상태에서만 바뀐다. 체크됨·indeterminate는 bg-accent-solid-hover
-//   (on-solid × solid-hover 4.5:1 등록), 체크 전은 bg-accent-subtle 배경만 옅게 깐다(경계 border-strong은 그대로라
+//   (on-solid × solid-hover 4:1 등록), 체크 전은 bg-accent-subtle 배경만 옅게 깐다(경계 border-strong은 그대로라
 //   오류 경계도 가리지 않는다). group-hover는 `:is(:where(.group\/choice):hover *)`라 checked:보다 우선순위가 높아
 //   체크 전 규칙에 not-checked·not-indeterminate를 붙인다.
 // - 누름: hover보다 한 단계 진한 -active 슬롯이다. 체크됨·indeterminate는 bg-accent-solid-active(on-solid × solid-active
-//   4.5:1 등록), 체크 전은 bg-accent-subtle-active. Switch(티켓 17)와 같은 규칙이다. group-active는 group-hover보다
+//   4:1 등록), 체크 전은 bg-accent-subtle-active. Switch(티켓 17)와 같은 규칙이다. group-active는 group-hover보다
 //   뒤에 만들어져 누르는 동안 hover 색을 이긴다(Chromium에서 계산값으로 확인).
 // - motion: 혼자 있는 조작 요소라 transition-colors(fast)다.
 

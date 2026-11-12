@@ -40,7 +40,7 @@ export interface BadgeProps extends Omit<ComponentProps<"span">, "color" | "chil
 //   테두리 border-accent-subtle은 꾸밈이라 대비 검사에서 뺐다(바탕과 글자만으로 알아볼 수 있다).
 // - faint: text-accent-on-subtle × bg-accent-faint 4.5:1(Role은 `text-<role>-on-subtle` × `bg-<role>-faint`, 색 이름 규칙은
 //   on-subtle × faint). 테두리는 투명이다.
-// - solid: text-accent-on-solid × bg-accent-solid 4.5:1(Role은 text-on-solid × solid, 색 계열·앱 이름은 on-solid × solid).
+// - solid: text-accent-on-solid × bg-accent-solid 4:1(solid 위 글자, ADR 0023. Role은 text-on-solid × solid, 색 계열·앱 이름은 on-solid × solid).
 const variantClass: Record<BadgeVariant, string> = {
   subtle: "border-accent-subtle bg-accent-subtle text-accent-on-subtle",
   faint: "bg-accent-faint text-accent-on-subtle",

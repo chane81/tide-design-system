@@ -174,8 +174,9 @@ export interface ToastRegionProps extends Omit<ComponentProps<"div">, "children"
 //   (트리거 위에 뜨는 Popover와 같은 방향: 4px 아래에서 올라오고, 퇴장은 2px 아래로).
 //   글자는 text-default, 상태 아이콘만 역할 색(text-accent, × bg-raised 4.5:1)이다.
 // - 닫기(ghost)·액션(outline) 버튼은 Toast 색과 관계없이 neutral이다(글자 text-default, hover·누름 bg-hover·bg-active).
-//   raised 표면(dark gray-900) 위에 bg-hover·bg-active를 덮으면 Role 색 글자가 4.5:1에 못 미친다(dark 누름 3.89~4.10:1).
-//   text-default × bg-hover·bg-active(bg-raised 위 합성)는 4.5:1로 등록되어 있다(사용자 결정 2026-11-12, 티켓 03).
+//   raised 표면(dark gray-900) 위에 bg-hover·bg-active를 덮으면 Role 색 글자가 일시 상태 하한 4:1에도 못 미치는 색이 있다
+//   (dark 누름 warning 3.99·danger 3.89:1, 티켓 46). text-default × bg-hover·bg-active(bg-raised 위 합성)는 4:1로
+//   등록되어 있다(사용자 결정 2026-11-12, 티켓 03).
 const regionClass =
   "fixed end-4 bottom-4 isolate z-toast flex w-[calc(100%-2rem)] max-w-96 flex-col-reverse gap-2 rounded-lg outline-none focus-visible:focus-ring";
 const toastClass = `${alertLayoutClass} ${overlaySurfaceClass} ${popoverMotionClass} outline-none focus-visible:focus-ring`;

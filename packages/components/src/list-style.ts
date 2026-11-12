@@ -32,7 +32,7 @@ export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto
  *   기본 `outline-none`이 outline 모양 변수를 none으로 두므로 `outline-solid`를 함께 쓴다.
  *   항목 안쪽(`-outline-offset-2`)에 그려 이웃 항목·목록 경계와 겹치지 않는다.
  * - `hover`(highlight가 아닐 때): 색 없이 덮는 `bg-hover`(ADR 0022 §3). 키보드로 옮긴 위치가 따로 있을 때
- *   마우스가 다른 항목 위에 있는 경우다. text-default × bg-hover(bg-raised 위 합성)가 4.5:1로 등록되어 있다.
+ *   마우스가 다른 항목 위에 있는 경우다. text-default × bg-hover(bg-raised 위 합성)가 4:1(일시 상태, ADR 0023)로 등록되어 있다.
  * - `data-selected`(highlight가 아닐 때): 선택 유지 `subtle-active`(neutral). 상태를 나타내는 바탕이라 덮기로 바꾸지 않는다.
  *   Select·Combobox의 고른 옵션이 쓴다.
  * - `data-disabled`: `text-disabled`, `cursor-not-allowed`. hover 배경이 없다.
