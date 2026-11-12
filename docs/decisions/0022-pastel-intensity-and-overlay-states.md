@@ -12,11 +12,11 @@ solid가 너무 쨍하다는 피드백에서 시작해, 사용자가 고른 색�
 
 새 슬롯 셋을 `colorSlots`에 더한다. Role Token, accent 변수, 색 계열 변수, `[data-color]` 규칙, `defineColorFamily`의 덮어쓸 값에 기존 슬롯과 똑같이 붙는다.
 
-| 슬롯            | 뜻                                 | accent Utility class    | Role Token(예: primary)      |
-| --------------- | ---------------------------------- | ----------------------- | ---------------------------- |
-| `faint`         | 가장 약한 바탕(새 강도)            | `bg-accent-faint`       | `bg-primary-faint`           |
-| `on-subtle`     | `subtle`·`faint` 바탕 위 글자      | `text-accent-on-subtle` | `text-primary-on-subtle`     |
-| `subtle-border` | 파스텔 테두리(꾸밈)                | `border-accent-subtle`  | `border-primary-subtle`      |
+| 슬롯            | 뜻                            | accent Utility class    | Role Token(예: primary)  |
+| --------------- | ----------------------------- | ----------------------- | ------------------------ |
+| `faint`         | 가장 약한 바탕(새 강도)       | `bg-accent-faint`       | `bg-primary-faint`       |
+| `on-subtle`     | `subtle`·`faint` 바탕 위 글자 | `text-accent-on-subtle` | `text-primary-on-subtle` |
+| `subtle-border` | 파스텔 테두리(꾸밈)           | `border-accent-subtle`  | `border-primary-subtle`  |
 
 - **강도**는 `solid` > `subtle` > `faint` 세 가지가 된다. `faint`는 바탕 한 자리뿐이다(hover·active·전용 글자·테두리 없음). 이름은 `muted`(`text-muted`와 겹침)와 `soft`(다른 시스템에서 subtle보다 진한 뜻)를 피했다.
 - **`text`**는 바탕 없이 쓰는 색 글자 전용이다(Link, Progress, Switch, Pagination, Toast, Button outline·ghost). **`border`**는 outline·선택 표시용으로 그대로다.
@@ -25,11 +25,11 @@ solid가 너무 쨍하다는 피드백에서 시작해, 사용자가 고른 색�
 
 Component 적용 범위:
 
-| 슬롯            | Component                                          |
-| --------------- | -------------------------------------------------- |
+| 슬롯            | Component                                             |
+| --------------- | ----------------------------------------------------- |
 | `on-subtle`     | Badge subtle·faint, Tag, Avatar, Alert, Button subtle |
-| `subtle-border` | Badge subtle, Tag, Alert(`border-accent` 대신)     |
-| `faint`         | Badge(`variant="faint"`)만                          |
+| `subtle-border` | Badge subtle, Tag, Alert(`border-accent` 대신)        |
+| `faint`         | Badge(`variant="faint"`)만                            |
 
 ### 2. 슬롯 규칙: 단계, 덮기, 섞기
 
@@ -38,18 +38,18 @@ Component 적용 범위:
 - **덮기**: 단계 위에 색을 n% 덮은 값. 예: `100 + gray-950 4%`
 - **섞기**: 두 단계를 반씩 섞은 값. 예: `gray-950과 950을 50%`
 
-| 슬롯                             | light                        | dark                          |
-| -------------------------------- | ---------------------------- | ----------------------------- |
-| `faint`                          | 50                           | gray-950과 950을 50%씩 섞기    |
-| `subtle`                         | 100                          | 950                           |
-| `subtle-hover` / `subtle-active` | 100 + gray-950 4% / 8%       | 950 + white 6% / 10%          |
-| `subtle-border`                  | 200                          | 800                           |
-| `on-subtle`                      | 950                          | 100                           |
-| `solid`                          | 600                          | 600                           |
-| `solid-hover` / `solid-active`   | 600 + black 14% / 20%        | 600 + black 14% / 20%         |
-| `text`                           | 700 (지금 800)               | 300 (지금 200)                |
-| `border`                         | 600                          | 400                           |
-| `on-solid`                       | white                        | white                         |
+| 슬롯                             | light                  | dark                        |
+| -------------------------------- | ---------------------- | --------------------------- |
+| `faint`                          | 50                     | gray-950과 950을 50%씩 섞기 |
+| `subtle`                         | 100                    | 950                         |
+| `subtle-hover` / `subtle-active` | 100 + gray-950 4% / 8% | 950 + white 6% / 10%        |
+| `subtle-border`                  | 200                    | 800                         |
+| `on-subtle`                      | 950                    | 100                         |
+| `solid`                          | 600                    | 600                         |
+| `solid-hover` / `solid-active`   | 600 + black 14% / 20%  | 600 + black 14% / 20%       |
+| `text`                           | 700 (지금 800)         | 300 (지금 200)              |
+| `border`                         | 600                    | 400                         |
+| `on-solid`                       | white                  | white                       |
 
 덮은 값은 빌드할 때 hex로 계산해 Token에 넣는다. 그래서 대비 검사와 자동완성은 지금처럼 Token 단위로 된다.
 
@@ -57,10 +57,10 @@ Component 적용 범위:
 
 Button outline·ghost와 목록 항목(Menu, Table 행 등)의 호버·클릭은 색 없이 덮는다. 공통 Token 둘을 더한다.
 
-| Token       | light            | dark          |
-| ----------- | ---------------- | ------------- |
-| `bg-hover`  | gray-950 α 0.04  | white α 0.06  |
-| `bg-active` | gray-950 α 0.08  | white α 0.10  |
+| Token       | light           | dark         |
+| ----------- | --------------- | ------------ |
+| `bg-hover`  | gray-950 α 0.04 | white α 0.06 |
+| `bg-active` | gray-950 α 0.08 | white α 0.10 |
 
 이 바탕 위의 `text`(light 700, dark 300)는 모든 계열에서 4.5:1 이상이다(light 최저 5.15:1).
 

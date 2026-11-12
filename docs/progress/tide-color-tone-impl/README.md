@@ -16,9 +16,9 @@
 
 ## 티켓
 
-| 번호 | 제목 | Blocked by |
-| --- | --- | --- |
-| [01](issues/01-scale-values-and-decorative-families.md) | 스케일 값 교체와 장식 계열 purple·mint 추가 | — |
-| [02](issues/02-slot-rules-overlay-and-new-slots.md) | 슬롯 규칙 확장: 새 슬롯 셋, 덮기·섞기, `bg-hover`·`bg-active` | 01 |
-| [03](issues/03-components-pastel-and-overlay.md) | Component 반영: 파스텔 글자·테두리, Badge faint, 무채색 호버 | 02 |
-| [04](issues/04-docs-color-foundation.md) | 문서: 컬러 Foundation, 앱 계열 가이드, Component 문서 | 03 |
+| 번호                                                    | 제목                                                          | Blocked by |
+| ------------------------------------------------------- | ------------------------------------------------------------- | ---------- |
+| [01](issues/01-scale-values-and-decorative-families.md) | 스케일 값 교체와 장식 계열 purple·mint 추가                   | —          |
+| [02](issues/02-slot-rules-overlay-and-new-slots.md)     | 슬롯 규칙 확장: 새 슬롯 셋, 덮기·섞기, `bg-hover`·`bg-active` | 01         |
+| [03](issues/03-components-pastel-and-overlay.md)        | Component 반영: 파스텔 글자·테두리, Badge faint, 무채색 호버  | 02         |
+| [04](issues/04-docs-color-foundation.md)                | 문서: 컬러 Foundation, 앱 계열 가이드, Component 문서         | 03         |
