@@ -235,8 +235,10 @@ const tailwindCss = [
   // 포커스 표시(tide-v0 티켓 20). @utility로 정의해서 focus-visible:focus-ring, focus:focus-field처럼 variant와 함께 쓴다.
   // - ring: outline 2px, offset 2px. 요소의 radius를 따른다.
   // - field: offset 없이 border를 focus 색으로 바꾸고, 늘어난 1px는 inset shadow로 그려 2px로 보이게 한다(레이아웃이 그대로다).
-  //   투명 outline은 평소에는 보이지 않고, forced-colors 모드에서 시스템 색으로 그려져 포커스 표시가 남는다
-  //   (그 모드는 border 색과 box-shadow를 덮어쓴다).
+  //   평소에는 outline을 없앤다(UA :focus-visible outline도 막는다). forced-colors 모드에서만 투명 outline을 두면
+  //   시스템 색으로 그려져 포커스 표시가 남는다(그 모드는 border 색과 box-shadow를 덮어쓴다).
+  //   평소에도 투명 outline을 두면 transition-colors가 outline-color를 currentColor → transparent로 전환해,
+  //   클릭 직후 150ms 동안 글자색 outline이 번쩍였다 사라진다. 그래서 forced-colors 안으로 옮겼다.
   // - error+focus: 오류 입력창(aria-invalid="true")에서도 포커스 중에는 field가 이긴다. 선택자 순서에 기대지 않도록
   //   [aria-invalid="true"] 조합을 따로 적어 aria-invalid:border-danger(0,2,0)보다 우선순위(0,3,0)를 높인다.
   "@utility focus-ring {",
@@ -247,7 +249,10 @@ const tailwindCss = [
   "@utility focus-field {",
   "  border-color: var(--tide-outline-focus);",
   "  box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",
-  "  outline: var(--tide-focus-ring-width) solid transparent;",
+  "  outline: none;",
+  "  @media (forced-colors: active) {",
+  "    outline: var(--tide-focus-ring-width) solid transparent;",
+  "  }",
   '  &[aria-invalid="true"] {',
   "    border-color: var(--tide-outline-focus);",
   "    box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",

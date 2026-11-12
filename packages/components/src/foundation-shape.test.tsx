@@ -161,7 +161,7 @@ describe("포커스 표시", () => {
     }
   });
 
-  test("focus-field는 border를 focus 색으로 바꾸고 inset 1px와 투명 outline을 둔다", async () => {
+  test("focus-field는 border를 focus 색으로 바꾸고 inset 1px를 두며, 투명 outline은 forced-colors에서만 둔다", async () => {
     await render(
       <input
         aria-label="이름"
@@ -173,16 +173,17 @@ describe("포커스 표시", () => {
     const style = getComputedStyle(input.element());
 
     expect(style.borderTopWidth).toBe("1px");
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
     if (forcedColors()) {
       // border 색과 box-shadow는 시스템 색으로 덮이고, 투명 outline이 보여서 포커스 표시가 남는다.
       expect(style.boxShadow).toBe("none");
+      expect(style.outlineStyle).toBe("solid");
+      expect(style.outlineWidth).toBe("2px");
       expect(style.outlineColor).not.toBe(transparent);
     } else {
       expect(style.borderTopColor).toBe(rgb(color.blue[600]));
       expect(style.boxShadow).toBe(`${rgb(color.blue[600])} 0px 0px 0px 1px inset`);
-      expect(style.outlineColor).toBe(transparent);
+      // 평소에는 outline이 없다. 투명 outline은 forced-colors에서만 둔다.
+      expect(style.outlineStyle).toBe("none");
     }
   });
 
@@ -213,7 +214,7 @@ describe("포커스 표시", () => {
       expect(focused.borderTopColor).toBe(focus);
       expect(focused.borderLeftColor).toBe(focus);
       expect(focused.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      expect(focused.outlineColor).toBe(transparent);
+      expect(focused.outlineStyle).toBe("none");
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));

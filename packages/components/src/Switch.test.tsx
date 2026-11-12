@@ -250,9 +250,9 @@ describe("Field", () => {
 describe("size", () => {
   const sizes: [NonNullable<SwitchProps["size"]>, number, number, number, string][] = [
     // size, track 폭, track 높이, thumb 크기, 텍스트 스타일
-    ["sm", 28, 16, 10, "label-sm"],
-    ["md", 36, 20, 14, "label-md"],
-    ["lg", 44, 24, 18, "label-lg"],
+    ["sm", 28, 16, 10, "body-sm"],
+    ["md", 36, 20, 14, "body-md"],
+    ["lg", 44, 24, 18, "body-lg"],
   ];
 
   test.each(sizes)(

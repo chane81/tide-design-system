@@ -52,7 +52,7 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
 /** 높이, 좌우 padding, 아이콘과 텍스트 사이 간격, 텍스트 스타일(spec size 표). radius는 모든 size에서 `md`다. */
 const sizeClass: Record<ButtonSize, string> = {
   xs: "h-6 gap-1 px-2 text-label-sm",
-  sm: "h-8 gap-1.5 px-3 text-label-sm",
+  sm: "h-8 gap-1.5 px-3 text-label-md",
   md: "h-10 gap-2 px-4 text-label-md",
   lg: "h-12 gap-2 px-5 text-label-lg",
 };

@@ -107,7 +107,7 @@ const buttonClass =
  * listbox 밖(같은 목록 표면 안)에 둔다. listbox 자식은 option·group만 될 수 있어서다. 결과 개수(0개)는 React Aria가
  * live region으로 알린다.
  */
-const emptyClass = "px-2 py-1.5 text-body-md text-muted select-none";
+const emptyClass = "px-2 py-1.5 text-body-sm text-muted select-none";
 
 /** 목록 상태. Combobox가 고른 값의 node key는 옵션의 `value`(문자열)다. */
 type ComboboxListState = ComboBoxState<object>;

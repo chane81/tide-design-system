@@ -111,7 +111,7 @@ describe("스타일 축", () => {
   const sizes: [NonNullable<ButtonProps["size"]>, number, string, number][] = [
     // size, 높이, 텍스트 스타일, 텍스트 옆 아이콘
     ["xs", 24, "label-sm", 14],
-    ["sm", 32, "label-sm", 14],
+    ["sm", 32, "label-md", 14],
     ["md", 40, "label-md", 16],
     ["lg", 48, "label-lg", 20],
   ];

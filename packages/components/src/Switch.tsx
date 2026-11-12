@@ -22,7 +22,7 @@ export interface SwitchProps extends Omit<
 > {
   /** 스위치 옆에 보이는 label. 스위치의 이름이 된다. Field 안에서는 Field의 `label`을 쓰고 비워 둔다. */
   children?: ReactNode;
-  /** track 크기 `sm` 28×16px, `md` 36×20px, `lg` 44×24px. label 텍스트 스타일도 함께 바뀐다. 기본값은 `md`다. */
+  /** track 크기 `sm` 28×16px, `md` 36×20px, `lg` 44×24px. label 텍스트 스타일(Checkbox·Radio와 같은 `body-sm`/`body-md`/`body-lg`)도 함께 바뀐다. 기본값은 `md`다. */
   size?: SwitchSize;
   /**
    * 켜졌을 때 track 색. Role(Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role)을 받는다. 기본값은 `primary`다.
@@ -45,9 +45,9 @@ export interface SwitchProps extends Omit<
 
 /** 루트 높이는 최소 24px라 track이 작아도 누르는 영역이 24×24px 이상이다. */
 const rootSizeClass: Record<SwitchSize, string> = {
-  sm: "gap-1.5 text-label-sm",
-  md: "gap-2 text-label-md",
-  lg: "gap-2.5 text-label-lg",
+  sm: "gap-1.5 text-body-sm",
+  md: "gap-2 text-body-md",
+  lg: "gap-2.5 text-body-lg",
 };
 
 /** track 크기(border 1px 포함). thumb은 track 안쪽에서 2px 떨어진다. */

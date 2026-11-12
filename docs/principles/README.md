@@ -106,3 +106,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ② 명확함, ③ 단순함: [ADR 0017 Badge의 `color`는 Role과 색 계열 이름을 모두 받는다(`Color`)](../decisions/0017-badge-color-accepts-role-and-color-family.md)
 - ① 접근성, ② 명확함, ③ 단순함: [ADR 0022 파스텔 강도와 덮기 방식 상태색으로 컬러 Foundation의 색감을 바꾼다](../decisions/0022-pastel-intensity-and-overlay-states.md)
 - ① 접근성, ② 명확함: [ADR 0023 대비 하한을 상태별 세 등급(4.5 / 4.0 / 3)으로 나눈다](../decisions/0023-tiered-contrast-minimum.md)
+- ① 접근성, ② 명확함: [ADR 0024 조작 요소 글자 크기를 맞춘다: `sm` 14px, Switch 라벨 body, 목록 항목 14px](../decisions/0024-control-text-sizes.md)

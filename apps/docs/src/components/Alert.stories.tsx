@@ -82,7 +82,12 @@ export const OtherRoles: Story = {
 
 /** 제목만, 본문만 */
 export const TitleOrBody: Story = {
+  args: {
+    children: "11월 15일 새벽 2시부터 30분 동안 결제를 쓸 수 없습니다.1231",
+  },
+
   name: "제목만·본문만",
+
   render: () => (
     <div className="flex max-w-lg flex-col gap-3">
       <Alert color="success" title="초대 메일을 보냈습니다" />
