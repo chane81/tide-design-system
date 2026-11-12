@@ -31,6 +31,8 @@ function Preview({ pair, theme }: { pair: ContrastPair; theme: ThemeName }): Rea
   if (pair.minRatio !== 3) {
     return (
       <span
+        // Storybook a11y 검사가 4:1 등급 견본을 4:1로 검사하도록 등급을 적는다(.storybook/preview.tsx).
+        data-contrast-tier={pair.minRatio}
         className="inline-block rounded-md px-2 py-1"
         style={{ color: foreground, backgroundColor: background }}
       >

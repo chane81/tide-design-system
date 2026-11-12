@@ -37,6 +37,52 @@ import.meta.hot?.dispose(() => {
 
 applyTheme(DEFAULT_THEME);
 
+// solid 위 글자는 대비 하한이 4:1이다(ADR 0023, 티켓 47). axe의 color-contrast는 일반 글자에 4.5:1을 걸므로,
+// solid 위 글자(`*-on-solid` class)와 문서 견본 중 4:1 등급(`data-contrast-tier="4"`)만 따로 떼어 4:1로 검사한다.
+// 나머지 요소는 기본 color-contrast(4.5:1) 그대로다. 값 대비는 foundation의 대비 쌍 테스트가 따로 강제한다.
+// axe-core 4.14.0 axe.configure: rules[].selector로 대상 요소를 고르고, checks[]에 기존 evaluate('color-contrast-evaluate')를
+// 다른 옵션으로 등록한다. 옵션은 4.14.0 기본값(color-contrast check)에서 contrastRatio.normal.expected만 바꿨다.
+// runOnly가 tag로 고르므로 새 규칙에도 wcag2aa tag를 단다.
+const lowerTierSelector = '[class*="on-solid"], [data-contrast-tier="4"]';
+const solidContrastConfig = {
+  checks: [
+    {
+      id: "tide-lower-tier-contrast",
+      evaluate: "color-contrast-evaluate",
+      options: {
+        ignoreUnicode: true,
+        ignoreLength: false,
+        ignorePseudo: false,
+        boldValue: 700,
+        boldTextPt: 14,
+        largeTextPt: 18,
+        contrastRatio: { normal: { expected: 4 }, large: { expected: 3 } },
+        pseudoSizeThreshold: 0.25,
+        shadowOutlineEmMax: 0.2,
+        textStrokeEmMin: 0.03,
+      },
+    },
+  ],
+  rules: [
+    { id: "color-contrast", selector: '*:not([class*="on-solid"]):not([data-contrast-tier="4"])' },
+    {
+      id: "tide-lower-tier-contrast",
+      impact: "serious" as const,
+      selector: lowerTierSelector,
+      matches: "color-contrast-matches",
+      excludeHidden: false,
+      tags: ["cat.color", "wcag2aa"],
+      any: ["tide-lower-tier-contrast"],
+      all: [],
+      none: [],
+      metadata: {
+        description: "solid 위 글자와 4:1 등급 견본은 4:1 이상이다(Tide ADR 0023)",
+        help: "solid 위 글자는 4:1 이상이어야 한다",
+      },
+    },
+  ],
+};
+
 const preview: Preview = {
   decorators: [withTheme],
   initialGlobals: {
@@ -72,6 +118,7 @@ const preview: Preview = {
     // 의도적으로 잘못된 Don't story만 story parameters에서 `a11y: { test: "off" }`로 끈다.
     a11y: {
       test: "error",
+      config: solidContrastConfig,
       options: {
         runOnly: {
           type: "tag",
