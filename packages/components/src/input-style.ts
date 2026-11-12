@@ -19,7 +19,7 @@ export type InputSize = Extract<Size, "sm" | "md" | "lg">;
 
 /** 높이, 좌우 padding, 텍스트 스타일(spec size 표). radius는 모든 size에서 `md`다. */
 export const inputSizeClass: Record<InputSize, string> = {
-  sm: "h-8 px-2.5 text-label-sm",
+  sm: "h-8 px-2.5 text-label-md",
   md: "h-10 px-3 text-label-md",
   lg: "h-12 px-4 text-label-lg",
 };

@@ -13,7 +13,7 @@ import type { Size } from "./types.ts";
 type TextareaSize = Extract<Size, "sm" | "md" | "lg">;
 
 export interface TextareaProps extends ComponentProps<"textarea"> {
-  /** 글자 크기와 padding. 글자 크기는 같은 size의 Input과 같다(12/14/16px). 기본값은 `md`다. */
+  /** 글자 크기와 padding. 글자 크기는 같은 size의 Input과 같다(14/14/16px). 기본값은 `md`다. */
   size?: TextareaSize;
   /**
    * 오류 상태. `aria-invalid="true"`와 `data-invalid`가 붙고 경계가 danger 색이 된다.
@@ -23,10 +23,10 @@ export interface TextareaProps extends ComponentProps<"textarea"> {
 }
 
 // 여러 줄을 읽기 좋게 body 텍스트 스타일(보통 굵기, 넉넉한 행간)을 쓴다. 글자 크기는 Input과 같다.
-// 한 줄일 때 글자 위아래 여백이 같은 size의 Input과 같도록 세로 padding을 정했다(border 1px 포함 7/9/13px).
+// 한 줄일 때 글자 위아래 여백이 같은 size의 Input과 같도록 세로 padding을 정했다(border 1px 포함 6/9/13px).
 /** 좌우·세로 padding, 텍스트 스타일 */
 const sizeClass: Record<TextareaSize, string> = {
-  sm: "px-2.5 py-1.5 text-caption",
+  sm: "px-2.5 py-1.25 text-body-sm",
   md: "px-3 py-2 text-body-sm",
   lg: "px-4 py-3 text-body-md",
 };

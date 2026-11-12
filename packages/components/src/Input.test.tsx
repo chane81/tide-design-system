@@ -31,7 +31,7 @@ const settle = (): Promise<void> => new Promise((done) => setTimeout(done, 250))
 describe("size", () => {
   const sizes: [NonNullable<InputProps["size"]>, number, string][] = [
     // size, 높이, 텍스트 스타일
-    ["sm", 32, "label-sm"],
+    ["sm", 32, "label-md"],
     ["md", 40, "label-md"],
     ["lg", 48, "label-lg"],
   ];
