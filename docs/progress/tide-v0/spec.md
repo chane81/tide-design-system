@@ -321,7 +321,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
   | size | 높이 | 텍스트 스타일 |
   | ---- | ---- | ------------- |
   | `xs` | 24px | `label-sm`    |
-  | `sm` | 32px | `label-sm`    |
+  | `sm` | 32px | `label-md`    |
   | `md` | 40px | `label-md`    |
   | `lg` | 48px | `label-lg`    |
   - 높이는 24px 밑으로 내려가지 않는다. 같은 size의 컨트롤은 높이가 같다. 세로 정렬은 고정 높이와 `items-center`로 한다.
