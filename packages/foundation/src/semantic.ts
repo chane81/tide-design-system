@@ -2,18 +2,23 @@ import { primitiveHex, type ColorFamily, type PrimitiveColorName } from "./color
 import {
   colorSlots,
   familyOverrides,
+  mixHex,
   resolveSlotSteps,
   slotPrimitive,
   slotRule,
   type BackgroundSlot,
   type ColorSlot,
+  type SlotColorRef,
   type SlotOverrides,
+  type SlotValue,
 } from "./color-slot.ts";
 
 /** Theme 이름 */
 export type ThemeName = "light" | "dark";
 
-/** Primitive에 투명도를 더한 색. overlay와 shadow 색에만 쓰고, CSS에는 8자리 hex로 나간다. */
+/**
+ * Primitive에 투명도를 더한 색. overlay, 무채색 호버(`bg-hover`·`bg-active`), shadow 색에만 쓰고, CSS에는 8자리 hex로 나간다.
+ */
 export interface AlphaColor {
   readonly primitive: PrimitiveColorName;
   /** 0~1 */
@@ -23,7 +28,18 @@ export interface AlphaColor {
 /**
  * Semantic Token 하나가 가리키는 값. `transparent`는 light raised border에만 쓴다(CSS에서도 `transparent` 키워드로 나간다).
  */
-export type SemanticColorValue = PrimitiveColorName | AlphaColor | "transparent";
+export type SemanticColorValue = PrimitiveColorName | AlphaColor | MixedColor | "transparent";
+
+/**
+ * 두 Primitive를 섞은 불투명한 색(ADR 0022의 덮기·섞기). `base` 위에 `mix`를 `amount`만큼 덮은 값이다.
+ * 빌드할 때 hex(`#rrggbb`)로 계산해 CSS에 넣는다. 예: blue-100 + gray-950 4%
+ */
+export interface MixedColor {
+  readonly base: PrimitiveColorName;
+  readonly mix: PrimitiveColorName;
+  /** 0~1 */
+  readonly amount: number;
+}
 
 /** Theme별로 가리키는 값 */
 export interface ThemedColor {
@@ -55,7 +71,8 @@ roleFamily satisfies Record<TideRole, ColorFamily>;
 // Role은 「색 계열 + 덮어쓸 값」의 별칭이다(tide-v0-impl 티켓 40, ADR 0011).
 // neutral은 gray와 다른 색이다(2026-11-10 사용자 결정). gray는 일반 계열 규칙을 따른다.
 // - dark subtle 3단계: 900 / 800 / 700(gray 규칙의 950은 dark canvas와 같은 색이다)
-// - text, border: 역할 Token을 두지 않고 text-default, border-strong을 쓴다(roleSharedSlots)
+// - text, border, on-subtle: 역할 Token을 두지 않고 text-default, border-strong, text-default를 쓴다(roleSharedSlots)
+// - 새 슬롯 faint, subtle-border는 계열 규칙 그대로다(ADR 0022). gray 스케일은 바꾸지 않는다.
 /**
  * Role별로 계열 규칙에서 덮어쓸 값.
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
@@ -75,8 +92,21 @@ roleOverrides satisfies { readonly [Name in TideRole]?: SlotOverrides };
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleSharedSlots = {
-  neutral: { text: "text-default", border: "border-strong" },
+  neutral: { text: "text-default", border: "border-strong", "on-subtle": "text-default" },
 } as const;
+
+/**
+ * 계열 슬롯 값을 Semantic 값으로 바꾼다. 단계는 Primitive 이름, 덮기·섞기는 `MixedColor`다.
+ * 예: (`blue`, 600) → `blue-600`, (`blue`, 100 + gray-950 4%) → `{ base: "blue-100", mix: "gray-950", amount: 0.04 }`
+ * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ */
+export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticColorValue {
+  const name = (ref: SlotColorRef): PrimitiveColorName =>
+    slotPrimitive(family, ref) as PrimitiveColorName;
+  if (typeof value !== "object") return name(value);
+  if ("mix" in value) return { base: name(value.mix[0]), mix: name(value.mix[1]), amount: 0.5 };
+  return { base: name(value.step), mix: value.overlay, amount: value.amount };
+}
 
 // 색 이름 등록은 둘로 나뉜다(tide-v0-impl 티켓 41, ADR 0016).
 // - RoleRegistry: 뜻이 있는 색. 행동·의미 Component(Button, IconButton, Link 등)의 `color`가 받는다.
@@ -149,13 +179,24 @@ type RoleStep<Name extends TideRole, Slot extends ColorSlot, Theme extends Theme
   Theme,
   FamilyStep<(typeof roleFamily)[Name], Slot, Theme>
 >;
-type StepName<Family extends string, Step> = Step extends number ? `${Family}-${Step}` : Step;
+// 덮기·섞기 슬롯은 MixedColor다(원소 이름까지 타입에 남기지 않는다).
+type StepName<Family extends string, Step> = Step extends number
+  ? `${Family}-${Step}`
+  : Step extends string
+    ? Step
+    : MixedColor;
 type RoleSlotColor<Name extends TideRole, Slot extends ColorSlot> = {
   readonly light: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "light">>;
   readonly dark: StepName<(typeof roleFamily)[Name], RoleStep<Name, Slot, "dark">>;
 };
-/** 역할 text·border Token이 있는 Role(neutral 제외) */
-type AccentRole = Exclude<TideRole, keyof typeof roleSharedSlots>;
+/** 그 슬롯을 공통 Token과 나눠 쓰지 않고 자기 Role Token을 가진 Role. 예: text는 neutral 제외 */
+type OwnRole<Slot extends ColorSlot> = {
+  [Name in TideRole]: Name extends keyof typeof roleSharedSlots
+    ? Slot extends keyof (typeof roleSharedSlots)[Name]
+      ? never
+      : Name
+    : Name;
+}[TideRole];
 type RoleBackgroundTokens = {
   readonly [
     Key in `${TideRole}-${BackgroundSlot}`
@@ -163,17 +204,38 @@ type RoleBackgroundTokens = {
     ? RoleSlotColor<Name, Slot>
     : never;
 };
-type RoleSlotTokens<Slot extends "text" | "border"> = {
-  readonly [Name in AccentRole]: RoleSlotColor<Name, Slot>;
+// text namespace: text-<role>, text-<role>-on-subtle
+// border namespace: border-<role>, border-<role>-subtle(슬롯 subtle-border)
+type RoleTextTokens = {
+  readonly [Name in OwnRole<"text">]: RoleSlotColor<Name, "text">;
+} & {
+  readonly [Name in OwnRole<"on-subtle"> as `${Name}-on-subtle`]: RoleSlotColor<Name, "on-subtle">;
+};
+type RoleBorderTokens = {
+  readonly [Name in OwnRole<"border">]: RoleSlotColor<Name, "border">;
+} & {
+  readonly [Name in OwnRole<"subtle-border"> as `${Name}-subtle`]: RoleSlotColor<
+    Name,
+    "subtle-border"
+  >;
 };
 
 const roles = Object.keys(roleFamily) as TideRole[];
 const backgroundSlots = colorSlots.filter(
-  (slot): slot is BackgroundSlot => slot !== "text" && slot !== "border" && slot !== "on-solid",
+  (slot): slot is BackgroundSlot =>
+    slot !== "text" &&
+    slot !== "border" &&
+    slot !== "subtle-border" &&
+    slot !== "on-solid" &&
+    slot !== "on-subtle",
 );
-const accentRoles = roles.filter((role): role is AccentRole => !(role in roleSharedSlots));
+/** 그 슬롯을 공통 Token과 나눠 쓰지 않는 Role */
+function ownRoles(slot: ColorSlot): TideRole[] {
+  const shared = roleSharedSlots as { [Name in TideRole]?: Partial<Record<ColorSlot, string>> };
+  return roles.filter((role) => !Object.hasOwn(shared[role] ?? {}, slot));
+}
 
-/** Role 슬롯이 가리키는 Primitive. 계열 규칙 → 계열 덮어쓸 값 → Role 덮어쓸 값 순서로 얹는다. */
+/** Role 슬롯이 가리키는 값. 계열 규칙 → 계열 덮어쓸 값 → Role 덮어쓸 값 순서로 얹는다. */
 function roleSlotColor(role: TideRole, slot: ColorSlot): ThemedColor {
   const family = roleFamily[role];
   const steps = resolveSlotSteps(
@@ -181,8 +243,8 @@ function roleSlotColor(role: TideRole, slot: ColorSlot): ThemedColor {
     (roleOverrides as { [Name in TideRole]?: SlotOverrides })[role],
   )[slot];
   return {
-    light: slotPrimitive(family, steps.light) as PrimitiveColorName,
-    dark: slotPrimitive(family, steps.dark) as PrimitiveColorName,
+    light: slotColorValue(family, steps.light),
+    dark: slotColorValue(family, steps.dark),
   };
 }
 
@@ -199,6 +261,15 @@ const commonBackground = {
   overlay: {
     light: { primitive: "gray-950", alpha: 0.5 },
     dark: { primitive: "gray-950", alpha: 0.7 },
+  },
+  // 무채색 호버·클릭(ADR 0022 §3). 색이 없는 바탕(Button outline·ghost, 목록 항목)을 덮는다. 놓인 표면 위에 합성된다.
+  hover: {
+    light: { primitive: "gray-950", alpha: 0.04 },
+    dark: { primitive: "white", alpha: 0.06 },
+  },
+  active: {
+    light: { primitive: "gray-950", alpha: 0.08 },
+    dark: { primitive: "white", alpha: 0.1 },
   },
 } as const;
 
@@ -227,8 +298,8 @@ const commonOutline = {
 
 export const semantic: {
   readonly background: typeof commonBackground & RoleBackgroundTokens;
-  readonly text: typeof commonText & RoleSlotTokens<"text">;
-  readonly border: typeof commonBorder & RoleSlotTokens<"border">;
+  readonly text: typeof commonText & RoleTextTokens;
+  readonly border: typeof commonBorder & RoleBorderTokens;
   readonly outline: typeof commonOutline;
 } = {
   background: {
@@ -241,12 +312,21 @@ export const semantic: {
   } as typeof commonBackground & RoleBackgroundTokens,
   text: {
     ...commonText,
-    ...Object.fromEntries(accentRoles.map((role) => [role, roleSlotColor(role, "text")])),
-  } as typeof commonText & RoleSlotTokens<"text">,
+    ...Object.fromEntries(ownRoles("text").map((role) => [role, roleSlotColor(role, "text")])),
+    ...Object.fromEntries(
+      ownRoles("on-subtle").map((role) => [`${role}-on-subtle`, roleSlotColor(role, "on-subtle")]),
+    ),
+  } as typeof commonText & RoleTextTokens,
   border: {
     ...commonBorder,
-    ...Object.fromEntries(accentRoles.map((role) => [role, roleSlotColor(role, "border")])),
-  } as typeof commonBorder & RoleSlotTokens<"border">,
+    ...Object.fromEntries(ownRoles("border").map((role) => [role, roleSlotColor(role, "border")])),
+    ...Object.fromEntries(
+      ownRoles("subtle-border").map((role) => [
+        `${role}-subtle`,
+        roleSlotColor(role, "subtle-border"),
+      ]),
+    ),
+  } as typeof commonBorder & RoleBorderTokens,
   outline: commonOutline,
 };
 
@@ -307,11 +387,14 @@ export function semanticEntries(): {
 
 /**
  * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다. `transparent`는 `#00000000`이다.
+ * 덮기·섞기(`MixedColor`)는 계산한 6자리 hex다.
  * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function colorValueHex(value: SemanticColorValue): string {
   if (value === "transparent") return "#00000000";
   if (typeof value === "string") return primitiveHex(value);
+  if ("base" in value)
+    return mixHex(primitiveHex(value.base), primitiveHex(value.mix), value.amount);
   const alpha = Math.round(value.alpha * 255)
     .toString(16)
     .padStart(2, "0");

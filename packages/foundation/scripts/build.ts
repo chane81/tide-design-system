@@ -63,7 +63,10 @@ const semantic = semanticEntries();
 const tidePrimitiveVar = (name: string): string => `--tide-color-${name}`;
 const tideSemanticVar = (className: string): string => `--tide-${className}`;
 
-/** Semantic 값의 CSS 표현. Primitive는 변수로 참조하고, alpha가 있으면 8자리 hex로, transparent는 키워드로 쓴다. */
+/**
+ * Semantic 값의 CSS 표현. Primitive는 변수로 참조하고, alpha가 있으면 8자리 hex로, transparent는 키워드로 쓴다.
+ * 덮기·섞기(ADR 0022)는 빌드할 때 계산한 6자리 hex다. 런타임 color-mix()를 쓰지 않아 대비 검사와 같은 값이다.
+ */
 function cssValue(value: SemanticColorValue): string {
   if (value === "transparent") return "transparent";
   return typeof value === "string" ? `var(${tidePrimitiveVar(value)})` : colorValueHex(value);

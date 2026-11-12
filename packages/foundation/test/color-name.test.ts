@@ -140,7 +140,7 @@ describe("테스트 전용 계열을 더하면", () => {
       "  --tide-violet-subtle: var(--tide-color-violet-950);",
     );
     expect(internal.tideFamilyThemeDeclarations("light")).toContain(
-      "  --tide-violet-text: var(--tide-color-violet-800);",
+      "  --tide-violet-text: var(--tide-color-violet-700);",
     );
     expect(internal.dataColorRule("violet")).toContain(
       "  --tide-accent-solid: var(--tide-violet-solid);",

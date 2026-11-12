@@ -1,10 +1,11 @@
-import { color, type ColorFamily, type PrimitiveColorName } from "./color.ts";
-import { colorSlots, familySlotSteps, slotPrimitive, type ColorSlot } from "./color-slot.ts";
+import { color, type ColorFamily } from "./color.ts";
+import { colorSlots, familySlotSteps, type ColorSlot } from "./color-slot.ts";
 import {
   colorValueHex,
   roleFamily,
   roleSharedSlots,
   semanticEntries,
+  slotColorValue,
   type SemanticColorName,
   type ThemedColor,
   type ThemeName,
@@ -51,13 +52,21 @@ export function isRole(name: string): name is TideRole {
  */
 export function roleSlotToken(role: TideRole, slot: ColorSlot): SemanticColorName {
   if (slot === "on-solid") return "text-on-solid";
-  if (slot === "text" || slot === "border") {
-    const shared = (roleSharedSlots as { [Name in TideRole]?: Record<"text" | "border", string> })[
-      role
-    ]?.[slot];
-    return (shared ?? `${slot}-${role}`) as SemanticColorName;
+  const shared = (
+    roleSharedSlots as { [Name in TideRole]?: Partial<Record<ColorSlot, SemanticColorName>> }
+  )[role]?.[slot];
+  if (shared) return shared;
+  switch (slot) {
+    case "text":
+    case "border":
+      return `${slot}-${role}` as SemanticColorName;
+    case "on-subtle":
+      return `text-${role}-on-subtle` as SemanticColorName;
+    case "subtle-border":
+      return `border-${role}-subtle` as SemanticColorName;
+    default:
+      return `bg-${role}-${slot}`;
   }
-  return `bg-${role}-${slot}`;
 }
 
 /**
@@ -76,8 +85,8 @@ export function colorSlotValues(name: TideColor): Record<ColorSlot, ThemedColor>
     colorSlots.map((slot) => [
       slot,
       {
-        light: slotPrimitive(name, steps[slot].light) as PrimitiveColorName,
-        dark: slotPrimitive(name, steps[slot].dark) as PrimitiveColorName,
+        light: slotColorValue(name, steps[slot].light),
+        dark: slotColorValue(name, steps[slot].dark),
       },
     ]),
   ) as Record<ColorSlot, ThemedColor>;

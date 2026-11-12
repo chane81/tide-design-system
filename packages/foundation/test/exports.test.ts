@@ -67,6 +67,11 @@ describe("exports", () => {
         "slotRule",
         "tideColorNames",
         "tideFamilyThemeDeclarations",
+        // 덮기·섞기와 반투명 배경 대비(ADR 0022)
+        "contrastPairRatio",
+        "mixHex",
+        "opaqueSemanticHex",
+        "slotValueHex",
       ].sort(),
     );
   });

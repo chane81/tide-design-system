@@ -338,9 +338,9 @@ describe("색", () => {
       expect(root()).toHaveAttribute("data-color", "brand");
       if (forcedColors()) return;
       const computed = getComputedStyle(root());
-      // light 슬롯: subtle 50, text 800, border 600(ADR 0011 매핑)
-      expect(computed.backgroundColor).toBe(resolve("#f5f3ff"));
-      expect(computed.color).toBe(resolve("#5b21b6"));
+      // light 슬롯: subtle 100, text 700, border 600(ADR 0011 매핑, ADR 0022 값)
+      expect(computed.backgroundColor).toBe(resolve("#ede9fe"));
+      expect(computed.color).toBe(resolve("#6d28d9"));
       expect(computed.borderTopColor).toBe(resolve("#7c3aed"));
     });
   });
