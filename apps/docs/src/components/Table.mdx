@@ -75,7 +75,7 @@ import * as TableStories from "./Table.stories.tsx";
 - 역할: 시맨틱 표 요소라 table·rowgroup·row·columnheader·rowheader·cell 역할이 그대로 나옵니다. 칸은 같은 열의 머리 칸, 같은 행의 행 머리와 이어집니다.
 - 머리 칸 범위: `TableHeaderCell`은 기본 `scope="col"`입니다. 보조 기술마다 scope 추측이 달라 범위를 늘 적습니다.
 - hover: 본문 행 배경이 transition 없이 바로 바뀝니다(반복되는 목록 항목 규칙). 움직임이 없어 움직임 줄이기와 관계없습니다. hover는 꾸밈이라 정보를 전하지 않습니다.
-- 대비: 글자(`text-default`)가 표면 층과 hover 행 배경(`bg-neutral-subtle-hover`) 위에서 4.5:1 이상입니다. 행 구분선은 장식용(`border-default`)이라 대비 검사 대상이 아닙니다.
+- 대비: 글자(`text-default`)가 표면 층과 hover 행 배경(`bg-hover`) 위에서 4.5:1 이상입니다. 행 구분선은 장식용(`border-default`)이라 대비 검사 대상이 아닙니다.
 - 고대비 모드(forced-colors): 행 구분선이 시스템 글자색으로 그려집니다. hover 배경은 시스템 배경색으로 덮입니다.
 
 ### 앱이 할 일

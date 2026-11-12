@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ColorNameContrast, ColorNames } from "../docs-blocks/ColorNames.tsx";
+import { ColorNameContrast, ColorNames, ColorSlotRules } from "../docs-blocks/ColorNames.tsx";
 import { ColorScale } from "../docs-blocks/ColorScale.tsx";
 import { ContrastExclusions, ContrastPairs } from "../docs-blocks/ContrastPairs.tsx";
 
@@ -32,6 +32,12 @@ export const LightPairs: Story = {
 export const DarkPairs: Story = {
   name: "대비 쌍: dark",
   render: () => <ContrastPairs theme="dark" />,
+};
+
+/** 슬롯 12개와 Theme별 단계·덮기 규칙. 브랜드 색 더하기 문서도 이 story를 쓴다. */
+export const Slots: Story = {
+  name: "슬롯 규칙",
+  render: () => <ColorSlotRules />,
 };
 
 /** 색 이름(Role과 색 계열)을 data-color로 고른 accent class 미리보기 */
