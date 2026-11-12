@@ -103,6 +103,8 @@ const categories: readonly Item[] = [
   { value: "sales", label: "영업", color: "amber" },
   { value: "security", label: "보안", color: "red" },
   { value: "data", label: "데이터", color: "cyan" },
+  { value: "schedule", label: "일정", color: "purple" },
+  { value: "education", label: "교육", color: "mint" },
   { value: "docs", label: "문서", color: "gray" },
 ];
 

@@ -1,6 +1,11 @@
 import { color, type ColorFamily, type ColorStep, type Role } from "@tide-tds/foundation";
 // 내부 서브패스(앱 개발자용 아님). 문서 블록이 원본 hex로 대비비를 계산하려고 쓴다.
-import { contrastRatio, roleFamily, semanticHex } from "@tide-tds/foundation/internal";
+import {
+  colorFamilyNames,
+  contrastRatio,
+  roleFamily,
+  semanticHex,
+} from "@tide-tds/foundation/internal";
 import type { ReactElement } from "react";
 
 // 색 Token 블록: Primitive 스케일을 Token 원본에서 그린다(spec 「문서 앱」 Token 블록).
@@ -12,8 +17,12 @@ const canvasDark = semanticHex("bg-canvas", "dark");
 
 const familyRole = Object.fromEntries(
   Object.entries(roleFamily).map(([role, family]) => [family, role]),
-) as Record<ColorFamily, Role>;
-const families = Object.values(roleFamily);
+) as Partial<Record<ColorFamily, Role>>;
+// Role 계열 다음에 Role이 없는 장식 계열(purple, mint)이 온다(ADR 0022 §5).
+const families = [
+  ...Object.values(roleFamily),
+  ...colorFamilyNames.filter((family) => !(family in familyRole)),
+];
 
 // 칸 수를 고정하지 않고, 이름(`amber-950`)과 hex가 한 줄에 들어가는 최소 폭(6rem)으로 들어가는 만큼 둔다.
 const gridClass = "grid grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-2";
@@ -49,7 +58,7 @@ export function ColorScale(): ReactElement {
       {families.map((family) => (
         <section key={family} aria-labelledby={`color-scale-${family}`}>
           <h3 id={`color-scale-${family}`} className="mb-2">
-            {family} <span className="text-muted">({familyRole[family]})</span>
+            {family} <span className="text-muted">({familyRole[family] ?? "장식"})</span>
           </h3>
           <ul className={gridClass}>
             {steps.map((step) => (
