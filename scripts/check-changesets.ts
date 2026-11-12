@@ -2,11 +2,14 @@
 //
 //   node scripts/check-changesets.ts <base ref>   예: node scripts/check-changesets.ts origin/main
 //
-// 1. `packages/*`(private가 아닌 배포 패키지)를 바꿨는데 changeset이 없으면 실패한다.
+// 1. 버전 관리 대상(`packages/*` 배포 패키지와 Storybook `apps/docs`)을 바꿨는데 changeset이 없으면 실패한다.
 //    `changeset status --since <base>`가 판단한다(@changesets/cli 3.0.3: 바뀐 패키지가 있는데
-//    새 changeset이 없으면 exit 1. empty changeset도 changeset으로 센다. private 패키지는 세지 않는다).
-// 2. 배포 패키지가 0.x인 동안 `major` changeset은 실패한다(1.0.0으로 올라가 버린다).
+//    새 changeset이 없으면 exit 1. empty changeset도 changeset으로 센다. private 패키지는
+//    `privatePackages.version`이 켜져 있을 때만 세고(versionablePackages), `version` 필드가 없는 패키지는 세지 않는다
+//    (@changesets/should-skip-package 1.0.0). 그래서 apps/docs는 세고 apps/smoke-next·루트는 세지 않는다. ADR 0020).
+// 2. 배포 패키지가 0.x인 동안 `major` changeset은 실패한다(1.0.0으로 올라가 버린다). Storybook에도 같이 걸린다.
 // 3. 아이콘 이름표에서 키가 빠졌는데 `@tide-tds/icons` minor changeset이 없으면 실패한다.
+// 4. 한 changeset 파일에 TDS 패키지와 `@tide-tds/docs`가 함께 있으면 실패한다(scripts/release-scope.ts, ADR 0020).
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -17,6 +20,7 @@ import {
   nameRemovalProblem,
   removedNameKeys,
 } from "../packages/icons/scripts/name-removal.ts";
+import { mixedChangesetProblems } from "./release-scope.ts";
 
 const NAME_TABLE = "packages/icons/icon-names.json";
 const PUBLISHED = ["foundation", "icons", "components"] as const;
@@ -47,7 +51,7 @@ const status = spawnSync(
 if (status.status !== 0) {
   rmSync(outDir, { recursive: true, force: true });
   console.error(
-    "\n배포 패키지(packages/*)를 바꿨다면 changeset을 더한다. 릴리스가 필요 없으면 `pnpm changeset --empty`.",
+    "\n배포 패키지(packages/*)나 Storybook(apps/docs)을 바꿨다면 changeset을 더한다. 릴리스가 필요 없으면 `pnpm changeset --empty`.",
   );
   process.exit(1);
 }
@@ -89,6 +93,9 @@ if (before.ok) {
   const problem = nameRemovalProblem(removed, plan.changesets);
   if (problem) problems.push(problem);
 }
+
+// 4. TDS와 Storybook을 한 changeset에 섞지 않는다.
+problems.push(...mixedChangesetProblems(plan.changesets));
 
 if (problems.length > 0) {
   console.error(`\n${problems.join("\n\n")}`);
