@@ -14,7 +14,9 @@ concurrency:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    # 러너는 Ubuntu 26.04로 고정한다(ubuntu-latest가 2026-10-19~11-19 사이 26.04로 바뀌는 것을 미리 반영, actions/runner-images#14748).
+    # 테스트는 아래 Playwright 컨테이너(noble, 24.04) 안에서 돌아 러너 OS와 무관하다.
+    runs-on: ubuntu-26.04
     # Playwright 공식 이미지(브라우저·시스템 의존성·폰트·git·zstd 포함, Dockerfile.noble v1.65.0 확인)에서 돌린다.
     # 러너에서 `--with-deps`로 apt를 쓰면 Ubuntu 미러 장애 때 CI가 막힌다(docs/research/ci-apt-mirror-outage.md).
     # 태그는 catalog의 playwright 버전과 맞춘다. `--user 1001`은 playwright.dev/docs/ci GitHub Actions 예시를 따른다.
