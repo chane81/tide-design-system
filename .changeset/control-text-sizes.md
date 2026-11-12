@@ -1,6 +1,5 @@
 ---
 "@tide-tds/components": minor
-"@tide-tds/docs": patch
 ---
 
 조작 요소 글자 크기를 맞췄다(ADR 0024).
