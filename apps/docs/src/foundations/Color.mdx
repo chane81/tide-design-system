@@ -165,7 +165,15 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 ## 대비
 
-실제로 함께 쓰는 Token 조합(**대비 쌍**)이 기준을 넘는지 light와 dark 모두 자동으로 검사합니다. 기준은 WCAG 2.x 대비비로, 글자는 4.5:1, UI 경계와 포커스 표시는 3:1 이상입니다.
+실제로 함께 쓰는 Token 조합(**대비 쌍**)이 기준을 넘는지 light와 dark 모두 자동으로 검사합니다. 기준은 WCAG 2.x 대비비이고, 하한은 세 등급입니다.
+
+| 등급                    | 하한  | 대상                                                                                |
+| ----------------------- | ----- | ----------------------------------------------------------------------------------- |
+| 글자                    | 4.5:1 | 정지 상태의 글자: 표면 층, `subtle`·`faint`, 선택 유지 바탕 위 글자                 |
+| 일시 상태·solid 위 글자 | 4:1   | 호버·누름 배경(`subtle` 호버·누름, `bg-hover`·`bg-active`) 위 글자, `solid` 위 글자 |
+| UI 요소                 | 3:1   | 경계, 포커스 표시, Switch thumb                                                     |
+
+호버·누름은 잠깐 지나가는 상태라 하한을 4:1로 둡니다. 색감을 해치지 않으려는 선택이고, WCAG 1.4.3(상태를 가리지 않고 4.5:1)을 엄격하게 읽으면 그보다 낮을 수 있습니다. 실제 값은 아래 표에서 확인합니다.
 
 <Canvas of={ColorStories.LightPairs} sourceState="none" />
 
@@ -175,12 +183,14 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 색 이름마다 같은 규칙으로 검사합니다. 표는 그중 가장 낮은 값입니다.
 
-| 묶음          | 배경                                      |
-| ------------- | ----------------------------------------- |
-| 글자          | 표면 층, `subtle`, `bg-hover`·`bg-active` |
-| 파스텔 글자   | `faint`, `subtle` 3단계                   |
-| solid 위 글자 | `solid` 3단계                             |
-| UI 경계       | 표면 층                                   |
+| 묶음                  | 배경                                       | 하한  |
+| --------------------- | ------------------------------------------ | ----- |
+| 글자                  | 표면 층, `subtle`                          | 4.5:1 |
+| 글자 호버·누름        | `bg-hover`·`bg-active`                     | 4:1   |
+| 파스텔 글자           | `faint`, `subtle`                          | 4.5:1 |
+| 파스텔 글자 호버·누름 | `subtle` 호버·누름                         | 4:1   |
+| solid 위 글자         | `solid` 3단계                              | 4:1   |
+| UI 요소               | 표면 층(경계), `subtle` 누름(Switch thumb) | 3:1   |
 
 <Canvas of={ColorStories.LightNameContrast} sourceState="none" />
 
@@ -188,7 +198,7 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 ### 표면에 따른 주의
 
-- `bg-hover`·`bg-active` 위 Role 색 글자는 canvas·surface 위에서 검사합니다. dark raised 표면(Dialog, Popover 등)에서는 4.5:1에 못 미칩니다. 그 안의 `outline`·`ghost` 버튼은 `neutral`을 씁니다.
+- `bg-hover`·`bg-active` 위 Role 색 글자는 canvas·surface 위에서 검사합니다. dark raised 표면(Dialog, Popover 등)에서는 누름 배경 위 `warning`·`danger` 글자가 4:1에 못 미칩니다. 그 안의 `outline`·`ghost` 버튼은 `neutral`을 씁니다.
 - `subtle` 바탕 안에 `ghost` 버튼을 두면 글자를 파스텔 글자로 바꿉니다. Alert 닫기 버튼이 이렇게 칠해집니다([Button](?path=/docs/component-button--docs) 「앱이 할 일」).
 
 ### 검사에서 뺀 Token

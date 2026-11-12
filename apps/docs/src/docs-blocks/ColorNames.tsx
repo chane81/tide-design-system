@@ -78,12 +78,34 @@ export function ColorNames(): ReactElement {
   );
 }
 
+// 묶음은 글자 슬롯과 하한 등급(ADR 0023)으로 나눈다. 같은 슬롯이라도 등급이 다르면 최저값을 따로 보여 준다.
+// UI 요소는 경계(border × 표면 층)와 Switch thumb(text × subtle-active)이다.
 const groups = [
-  { label: "글자", foreground: "text" },
-  { label: "파스텔 글자", foreground: "on-subtle" },
-  { label: "solid 위 글자", foreground: "on-solid" },
-  { label: "UI 경계", foreground: "border" },
+  { key: "text-rest", label: "글자", match: { foreground: "text", minRatio: 4.5 } },
+  { key: "text-transient", label: "글자 호버·누름", match: { foreground: "text", minRatio: 4 } },
+  {
+    key: "on-subtle-rest",
+    label: "파스텔 글자",
+    match: { foreground: "on-subtle", minRatio: 4.5 },
+  },
+  {
+    key: "on-subtle-transient",
+    label: "파스텔 글자 호버·누름",
+    match: { foreground: "on-subtle", minRatio: 4 },
+  },
+  { key: "on-solid", label: "solid 위 글자", match: { foreground: "on-solid", minRatio: 4 } },
+  { key: "ui", label: "UI 요소", match: { minRatio: 3 } },
 ] as const;
+
+function inGroup(
+  result: { readonly foreground: string; readonly minRatio: number },
+  match: { readonly foreground?: string; readonly minRatio: number },
+): boolean {
+  return (
+    result.minRatio === match.minRatio &&
+    (match.foreground === undefined || result.foreground === match.foreground)
+  );
+}
 
 /** 색 이름마다 대비 쌍 규칙의 최저 대비비. Theme 하나를 그린다. */
 export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement {
@@ -97,7 +119,7 @@ export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement
               색 이름
             </th>
             {groups.map((group) => (
-              <th key={group.foreground} scope="col" className="py-1 pr-4">
+              <th key={group.key} scope="col" className="py-1 pr-4">
                 {group.label}
               </th>
             ))}
@@ -115,14 +137,12 @@ export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement
                   {name}
                 </th>
                 {groups.map((group) => {
-                  const inGroup = results.filter(
-                    (result) => result.foreground === group.foreground,
-                  );
-                  const lowest = Math.min(...inGroup.map((result) => result.ratio));
+                  const matched = results.filter((result) => inGroup(result, group.match));
+                  const lowest = Math.min(...matched.map((result) => result.ratio));
                   return (
-                    <td key={group.foreground} className="py-1 pr-4 font-mono">
+                    <td key={group.key} className="py-1 pr-4 font-mono">
                       {lowest.toFixed(2)}:1{" "}
-                      <span className="text-muted">≥ {inGroup[0]!.minRatio}</span>
+                      <span className="text-muted">≥ {group.match.minRatio}</span>
                     </td>
                   );
                 })}

@@ -188,7 +188,7 @@ describe("닫기", () => {
     expect(button.getBoundingClientRect().height).toBe(24);
     expect(button).toHaveAttribute("data-color", "danger");
     if (forcedColors()) return;
-    // subtle 바탕 위라 글자는 on-subtle이다(text × subtle-active는 일부 색에서 4.5:1에 못 미친다, ADR 0022).
+    // subtle 바탕 위라 글자는 on-subtle이다(ADR 0022 §1).
     expect(getComputedStyle(button).color).toBe(resolve("var(--tide-text-danger-on-subtle)"));
     await userEvent.hover(button);
     await expect

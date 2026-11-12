@@ -65,7 +65,7 @@ import * as AccordionStories from "./Accordion.stories.tsx";
 - 키보드: Tab으로 트리거를 차례로 지나고 Enter·Space로 펼치고 접습니다. 펼친 패널 안의 조작 요소도 Tab 순서에 있고, 접힌 패널 안은 건너뜁니다.
 - 페이지 찾기: 접힌 패널은 `hidden="until-found"`라 브라우저 페이지 찾기(Ctrl+F)가 그 안의 글자를 찾으면 패널이 펼쳐집니다(지원 브라우저).
 - 포커스 표시: 키보드 포커스에 ring(2px, 2px 떨어짐)이 보입니다.
-- 대비: 제목(`text-default`)과 chevron(`text-muted`)은 표면 층과 4.5:1, ring은 3:1 이상입니다. 경계와 항목 사이 선은 장식용이라 대비 검사 대상이 아닙니다.
+- 대비: 제목(`text-default`)과 chevron(`text-muted`)은 표면 층과 4.5:1, hover 배경(`bg-hover`) 위 제목·chevron은 4:1, ring은 3:1 이상입니다. 경계와 항목 사이 선은 장식용이라 대비 검사 대상이 아닙니다.
 - 고대비 모드(forced-colors): chevron이 버튼 글자의 시스템 색을 따릅니다.
 - 움직임: chevron은 150ms 동안 돕니다. 움직임 줄이기에서는 돌지 않고 바로 방향이 바뀝니다. 패널은 늘 바로 펼쳐집니다.
 

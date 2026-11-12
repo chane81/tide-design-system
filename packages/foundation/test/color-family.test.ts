@@ -170,9 +170,9 @@ describe("앱 계열 CSS와 대비 검사", () => {
     ).toThrow(/faint\.light/);
   });
 
-  it("대비 쌍 규칙 16개를 light·dark에서 검사한다", () => {
+  it("대비 쌍 규칙 17개를 light·dark에서 검사한다", () => {
     const results = checkColorFamily(brand);
-    expect(results).toHaveLength(32);
+    expect(results).toHaveLength(34);
     expect(results.every((result) => result.pass)).toBe(true);
   });
 
@@ -203,14 +203,14 @@ describe("tide-color CLI", () => {
       expect(result.stdout).toContain(`  --tide-brand-${slot}: `);
       expect(result.stdout).toContain(`  --tide-accent-${slot}: var(--tide-brand-${slot});`);
     }
-    expect(result.stderr).toContain("brand: 대비 쌍 32개 중 32개 통과");
+    expect(result.stderr).toContain("brand: 대비 쌍 34개 중 34개 통과");
   });
 
   it("대비 미달이 있으면 CSS를 내지 않고 exit 1이다", () => {
     const result = cli("build", "test/fixtures/yellow.ts");
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
-    expect(result.stderr).toContain("대비 미달 yellow light: on-solid / solid 2.94:1 < 4.5:1");
+    expect(result.stderr).toContain("대비 미달 yellow light: on-solid / solid 2.94:1 < 4:1");
     expect(result.stderr).toContain("대비 미달 yellow light: border / bg-canvas");
   });
 

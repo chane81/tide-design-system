@@ -83,8 +83,12 @@ _Avoid_: 층(Layer와 혼동), level(표면 층과 혼동), elevation(그림자�
 _Avoid_: focus ring(ring 한 종류만 가리킬 때만 씀), 포커스 테두리
 
 **대비 쌍 (Contrast pair)**:
-실제로 함께 쓰는 전경 Token과 배경 Token의 짝. 대비 검사는 모든 조합이 아니라 등록된 대비 쌍만 대상으로 한다.
+실제로 함께 쓰는 전경 Token과 배경 Token의 짝. 대비 검사는 모든 조합이 아니라 등록된 대비 쌍만 대상으로 한다. 쌍마다 하한 등급이 하나 있다.
 _Avoid_: 색 조합, 컬러 페어
+
+**하한 등급 (Contrast tier)**:
+대비 쌍이 넘어야 하는 대비비 하한의 구분. **정지 상태 글자** 4.5:1, **일시 상태 글자**(hover·누름 배경 위)와 **solid 위 글자** 4.0:1, **UI 요소**(경계, 포커스 표시, thumb) 3:1 세 가지다(ADR 0023). 한 짝을 여러 쓰임이 쓰면 가장 엄한 등급을 적는다. 코드에서는 `minRatio`(`ContrastMinRatio`)다.
+_Avoid_: 대비 레벨, AA·AAA(WCAG 적합 수준과 혼동)
 
 **Theme**:
 Semantic Token이 어떤 Primitive Token을 참조할지 정한 묶음. 예: light, dark.

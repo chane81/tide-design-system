@@ -72,12 +72,15 @@ pnpm exec tide-color build brand.ts > app/brand.css
 
 대비도 Tide와 같은 기준으로 light·dark 모두 검사합니다. 기준에 못 미치면 모자란 짝을 출력하고, CSS를 만들지 않고 exit 1로 끝납니다.
 
-| 글자·경계                | 배경                                      | 기준  |
-| ------------------------ | ----------------------------------------- | ----- |
-| `text`                   | 표면 층, `subtle`, `bg-hover`·`bg-active` | 4.5:1 |
-| `on-subtle`(파스텔 글자) | `faint`, `subtle` 3단계                   | 4.5:1 |
-| `on-solid`               | `solid` 3단계                             | 4.5:1 |
-| `border`                 | 표면 층                                   | 3:1   |
+| 글자·경계                | 배경                                 | 기준  |
+| ------------------------ | ------------------------------------ | ----- |
+| `text`                   | 표면 층, `subtle`                    | 4.5:1 |
+| `text`                   | `bg-hover`·`bg-active`(호버·누름)    | 4:1   |
+| `text`                   | `subtle` 누름(Switch thumb, UI 요소) | 3:1   |
+| `on-subtle`(파스텔 글자) | `faint`, `subtle`                    | 4.5:1 |
+| `on-subtle`(파스텔 글자) | `subtle` 호버·누름                   | 4:1   |
+| `on-solid`               | `solid` 3단계                        | 4:1   |
+| `border`                 | 표면 층                              | 3:1   |
 
 밝기·채도 범위와 파스텔 테두리는 검사하지 않습니다. 스케일을 바꿀 때마다 다시 실행하도록 `package.json` script로 두면 편합니다.
 

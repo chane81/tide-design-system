@@ -50,7 +50,7 @@ export const alertCloseClass = "-my-0.5 -me-1";
 /**
  * Alert(subtle 표면) 안 닫기 버튼의 색. ghost의 기본(text-accent, bg-hover·bg-active)을 덮어쓴다.
  * subtle 바탕 위라 글자는 on-subtle이고, hover·누름은 같은 색의 subtle-hover·subtle-active다
- * (on-subtle × subtle 3단계 4.5:1 등록. text × subtle-active는 일부 색에서 4.5:1에 못 미친다, ADR 0022).
+ * (on-subtle × subtle 4.5:1, × subtle-hover·subtle-active 4:1 등록, ADR 0022·0023).
  */
 export const alertSubtleCloseClass =
   "text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active";

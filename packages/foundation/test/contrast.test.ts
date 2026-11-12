@@ -1,5 +1,6 @@
 // 대비 쌍 검사. Token 원본을 직접 import한다(ADR 0003).
-// 기준은 WCAG 2.x 대비비 하나다. 텍스트 4.5:1, UI 경계·포커스 3:1(tide-v0 티켓 09).
+// 기준은 WCAG 2.x 대비비 하나다. 하한은 세 등급이다(ADR 0023): 정지 상태 글자 4.5:1,
+// hover·누름 같은 일시 상태 글자와 solid 위 글자 4:1, UI 경계·포커스·thumb 3:1.
 import { describe, expect, it } from "vitest";
 
 import { color, contrastPairs, type ThemeName } from "../src/index.ts";
@@ -54,7 +55,7 @@ describe("대비 쌍", () => {
     for (const pair of translucent) {
       expect(["bg-canvas", "bg-raised"], pair.background).toContain(pair.surface);
     }
-    // raised 위에는 text-default만 둔다(Role 색 글자는 dark에서 4.5:1에 못 미친다, 티켓 03).
+    // raised 위에는 text-default만 둔다(Role 색 글자는 dark 누름에서 4:1에도 못 미친다, 티켓 03·46).
     expect(
       translucent.filter((pair) => pair.surface === "bg-raised").map((pair) => pair.foreground),
     ).toEqual(["text-default", "text-default"]);
@@ -62,7 +63,7 @@ describe("대비 쌍", () => {
     const hover = {
       foreground: "text-default",
       background: "bg-hover",
-      minRatio: 4.5,
+      minRatio: 4,
       surface: "bg-canvas",
     } as const;
     expect(contrastPairRatio(hover, "light")).toBeCloseTo(
@@ -75,14 +76,59 @@ describe("대비 쌍", () => {
     );
   });
 
-  it("text × subtle-hover·subtle-active와 Alert 경계 × subtle 쌍은 없다(ADR 0022)", () => {
+  it("text × subtle-hover 쌍과 Alert 경계 × subtle 쌍은 없고, text × subtle-active는 thumb용 3:1뿐이다(ADR 0022·0023)", () => {
+    const roleText = /^text-(primary|success|warning|danger|info)$/;
     const removed = contrastPairs.filter(
       (pair) =>
-        (/^text-(primary|success|warning|danger|info)$/.test(pair.foreground) &&
-          /-subtle-(hover|active)$/.test(pair.background)) ||
+        (roleText.test(pair.foreground) && pair.background.endsWith("-subtle-hover")) ||
         (pair.foreground.startsWith("border-") && pair.background.endsWith("-subtle")),
     );
     expect(removed).toEqual([]);
+    // Switch 꺼짐 누름 thumb(text-accent × subtle-active)은 글자가 아닌 UI 요소라 3:1로 등록한다(티켓 46).
+    const thumb = contrastPairs.filter(
+      (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-subtle-active"),
+    );
+    expect(thumb).toHaveLength(5);
+    expect(thumb.every((pair) => pair.minRatio === 3)).toBe(true);
+  });
+
+  it("하한은 세 등급(4.5·4·3)이고 등급마다 쓰임이 나뉜다(ADR 0023)", () => {
+    expect([...new Set(contrastPairs.map((pair) => pair.minRatio))].sort()).toEqual([3, 4, 4.5]);
+    // 일시 상태: hover·누름 배경 위 글자는 4다.
+    for (const pair of contrastPairs) {
+      const transient =
+        pair.background === "bg-hover" ||
+        pair.background === "bg-active" ||
+        /-(subtle-hover|solid-hover|solid-active)$/.test(pair.background);
+      if (
+        transient &&
+        !pair.foreground.startsWith("border-") &&
+        pair.foreground !== "outline-focus"
+      ) {
+        expect(pair.minRatio, `${pair.foreground} × ${pair.background}`).toBe(4);
+      }
+    }
+    // solid 위 글자는 4다.
+    expect(
+      contrastPairs
+        .filter((pair) => pair.foreground === "text-on-solid")
+        .map((pair) => pair.minRatio),
+    ).toEqual(Array(18).fill(4));
+    // 정지 상태 글자(표면 층, subtle·faint 위)는 4.5다.
+    for (const pair of contrastPairs) {
+      if (
+        pair.foreground.startsWith("text-") &&
+        /^bg-(canvas|surface|raised)$|-(subtle|faint)$/.test(pair.background)
+      ) {
+        expect(pair.minRatio, `${pair.foreground} × ${pair.background}`).toBe(4.5);
+      }
+    }
+    // UI 경계·포커스 표시는 3이다.
+    for (const pair of contrastPairs) {
+      if (pair.foreground.startsWith("border-") || pair.foreground === "outline-focus") {
+        expect(pair.minRatio, `${pair.foreground} × ${pair.background}`).toBe(3);
+      }
+    }
   });
 
   it("같은 쌍을 두 번 등록하지 않는다", () => {

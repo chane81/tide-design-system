@@ -150,7 +150,7 @@ import Link from "next/link";
 - 로딩: `aria-disabled="true"`가 붙고 이름 뒤에 「로딩 중」이 붙습니다(`loadingLabel`로 바꿉니다). 포커스를 잃지 않습니다.
 - 비활성: `button`은 `disabled`, 링크 등은 `aria-disabled="true"`로 알립니다. 링크는 포커스를 받지만 실행되지 않습니다.
 - 커서: 누를 수 있으면 손 모양(`pointer`), 로딩 중에는 `wait`, 비활성에는 `not-allowed`입니다. 링크로 렌더해도 같습니다.
-- 대비: 글자는 배경과 호버·누름 배경 위에서 4.5:1 이상입니다. `outline`·`ghost`는 canvas·surface 표면 위에서 잽니다.
+- 대비: `subtle`·`outline`·`ghost` 글자는 기본 상태에서 4.5:1, 호버·누름 배경 위에서 4:1 이상입니다. `solid` 위 글자는 4:1 이상입니다. `outline`·`ghost`는 canvas·surface 표면 위에서 잽니다([Color](?path=/docs/foundation-컬러--docs) 「대비」).
 - 움직임 줄이기: 켜면 누름 축소가 사라집니다. 색 변화는 남습니다.
 - 고대비 모드(forced-colors): 모든 채움 방식에 경계가 보입니다.
 
@@ -158,7 +158,7 @@ import Link from "next/link";
 
 - 텍스트로 무엇을 하는지 적습니다(「확인」보다 「저장」).
 - 로딩이 끝난 결과(저장됨, 실패)는 처음부터 있던 알림 영역에 텍스트로 넣습니다.
-- Dialog·Popover 같은 raised 표면 안의 `outline`·`ghost`는 `color="neutral"`로 둡니다. dark Theme에서 Role 색 글자가 호버·누름 배경 위 4.5:1에 못 미칩니다. IconButton도 같습니다.
+- Dialog·Popover 같은 raised 표면 안의 `outline`·`ghost`는 `color="neutral"`로 둡니다. dark Theme에서 `warning`·`danger` 글자가 누름 배경 위 4:1에 못 미칩니다. IconButton도 같습니다.
 - `subtle` 배경(Alert 등) 안의 `ghost`는 `color`를 바탕과 같은 Role로 주고, `className="text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active"`로 글자를 파스텔 글자로 바꿉니다. 그대로 두면 호버·누름 위 글자 대비가 모자랄 수 있습니다.
 
 ## Props

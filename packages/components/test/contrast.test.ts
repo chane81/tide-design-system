@@ -1,5 +1,6 @@
 // Link·IconButton이 쓰는 글자색이 대비 쌍에 등록되어 있는지 본다(tide-v0-impl 티켓 14, Component 완료 기준 5).
-// 값의 대비비는 foundation이 검사한다. 여기서는 「등록되어 있는지」만 본다.
+// 값의 대비비는 foundation이 검사한다. 여기서는 「등록되어 있는지」와 하한 등급만 본다.
+// 하한 세 등급(ADR 0023): 정지 상태 글자 4.5, hover·누름 같은 일시 상태 글자와 solid 위 글자 4, UI 요소 3.
 import { contrastPairs } from "@tide-tds/foundation";
 import {
   checkColorContrast,
@@ -32,6 +33,12 @@ const ruled = (foreground: string, background: string, minRatio: number): boolea
   colorContrastRules.some(
     (r) => r.foreground === foreground && r.background === background && r.minRatio === minRatio,
   );
+
+/**
+ * on-subtle × subtle-active의 하한. 누름은 일시 상태라 4지만, neutral(text-default × bg-neutral-subtle-active)은
+ * 목록의 선택 유지 바탕이기도 해서 정지 상태 등급 4.5로 한 번 등록되어 있다.
+ */
+const subtleActiveRatio = (role: string): number => (role === "neutral" ? 4.5 : 4);
 
 /** Tide 색 계열 8개가 색 이름 규칙의 그 짝들을 light·dark에서 통과하는지 */
 function familiesPass(pairs: readonly (readonly [string, string])[]): void {
@@ -112,9 +119,9 @@ describe("Badge 대비 쌍", () => {
   );
 
   it.each(["neutral", ...tideRoles])(
-    "solid: text-on-solid × bg-%s-solid가 4.5:1로 등록되어 있다",
+    "solid: text-on-solid × bg-%s-solid가 4:1(solid 위 글자)로 등록되어 있다",
     (role) => {
-      expect(registered("text-on-solid", `bg-${role}-solid`, 4.5)).toBe(true);
+      expect(registered("text-on-solid", `bg-${role}-solid`, 4)).toBe(true);
     },
   );
 
@@ -136,10 +143,10 @@ describe("Badge 대비 쌍", () => {
     ]);
   });
 
-  it("앱 Role·앱 장식 계열은 on-subtle × subtle·faint, on-solid × solid 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+  it("앱 Role·앱 장식 계열은 on-subtle × subtle·faint(4.5:1), on-solid × solid(4:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
     expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
     expect(ruled("on-subtle", "faint", 4.5)).toBe(true);
-    expect(ruled("on-solid", "solid", 4.5)).toBe(true);
+    expect(ruled("on-solid", "solid", 4)).toBe(true);
   });
 });
 
@@ -181,18 +188,20 @@ describe("Alert 대비 쌍", () => {
   );
 
   it.each(allRoles)(
-    "%s: 닫기 버튼(ghost) 글자 on-subtle × subtle·subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
+    "%s: 닫기 버튼(ghost) 글자 on-subtle × subtle(4.5:1)·subtle-hover·subtle-active(일시 상태)가 등록되어 있다",
     (role) => {
-      for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
-        expect(registered(onSubtle(role), `bg-${role}-${state}`, 4.5)).toBe(true);
-      }
+      expect(registered(onSubtle(role), `bg-${role}-subtle`, 4.5)).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle-hover`, 4)).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle-active`, subtleActiveRatio(role))).toBe(
+        true,
+      );
     },
   );
 
-  it("앱 Role은 on-subtle × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
-    }
+  it("앱 Role은 on-subtle × subtle(4.5:1), subtle-hover·subtle-active(4:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
+    expect(ruled("on-subtle", "subtle-hover", 4)).toBe(true);
+    expect(ruled("on-subtle", "subtle-active", 4)).toBe(true);
   });
 });
 
@@ -251,9 +260,9 @@ describe("Table 대비 쌍", () => {
     }
   });
 
-  it("hover 행: text-default × bg-hover(canvas·raised 위 합성)가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
-    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
+  it("hover 행: text-default × bg-hover(canvas·raised 위 합성)가 4:1(일시 상태)로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-hover", 4, "bg-raised")).toBe(true);
   });
 
   it("행 경계 border-default는 장식용으로 대비 검사에서 제외되어 있다", () => {
@@ -276,15 +285,16 @@ describe("Breadcrumb·Pagination 대비 쌍", () => {
     },
   );
 
-  it("번호 hover·누름: text-default × bg-hover·bg-active(canvas 위 합성)가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
-    expect(registered("text-default", "bg-active", 4.5, "bg-canvas")).toBe(true);
+  it("번호 hover·누름: text-default × bg-hover·bg-active(canvas 위 합성)가 4:1(일시 상태)로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-active", 4, "bg-canvas")).toBe(true);
   });
 
-  it("현재 페이지: text-primary-on-subtle × bg-primary-subtle 3단계가 4.5:1로 등록되어 있다", () => {
+  it("현재 페이지: text-primary-on-subtle × bg-primary-subtle(4.5:1)과 hover·누름(4:1)이 등록되어 있다", () => {
     // 현재 페이지도 링크라 hover·누름 배경으로 바뀐다(Button subtle 규칙).
-    for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(registered("text-primary-on-subtle", `bg-primary-${state}`, 4.5), state).toBe(true);
+    expect(registered("text-primary-on-subtle", "bg-primary-subtle", 4.5)).toBe(true);
+    for (const state of ["subtle-hover", "subtle-active"]) {
+      expect(registered("text-primary-on-subtle", `bg-primary-${state}`, 4), state).toBe(true);
     }
   });
 
@@ -331,8 +341,8 @@ describe("Menu(목록) 대비 쌍", () => {
     expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
   });
 
-  it("raised 위 항목 hover: text-default × bg-hover(raised 위 합성)가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
+  it("raised 위 항목 hover: text-default × bg-hover(raised 위 합성)가 4:1(일시 상태)로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4, "bg-raised")).toBe(true);
   });
 
   it("고른 옵션 선택 유지: text-default × bg-neutral-subtle-active가 4.5:1로 등록되어 있다", () => {
@@ -480,9 +490,9 @@ describe("Accordion 대비 쌍", () => {
     },
   );
 
-  it("hover 배경(bg-hover, canvas·raised 위 합성) 위 트리거 글자·chevron(text-default)이 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
-    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
+  it("hover 배경(bg-hover, canvas·raised 위 합성) 위 트리거 글자·chevron(text-default)이 4:1(일시 상태)로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-hover", 4, "bg-raised")).toBe(true);
   });
 
   it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
@@ -504,7 +514,7 @@ describe("Accordion 대비 쌍", () => {
 // Tag(tide-v0-impl 티켓 33)는 색 계열의 on-subtle(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
 // 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(on-subtle × subtle 3단계)으로 검사된다. 테두리는 꾸밈이다.
 describe("Tag 대비 쌍", () => {
-  it("색 계열 8개의 글자(on-subtle) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
+  it("색 계열 8개의 글자(on-subtle) × subtle(4.5:1)·subtle-hover·subtle-active(4:1)가 light·dark에서 통과한다", () => {
     familiesPass([
       ["on-subtle", "subtle"],
       ["on-subtle", "subtle-hover"],
@@ -512,10 +522,10 @@ describe("Tag 대비 쌍", () => {
     ]);
   });
 
-  it("앱 장식 계열도 on-subtle × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
-    }
+  it("앱 장식 계열도 on-subtle × subtle(4.5:1)·subtle-hover·subtle-active(4:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
+    expect(ruled("on-subtle", "subtle-hover", 4)).toBe(true);
+    expect(ruled("on-subtle", "subtle-active", 4)).toBe(true);
   });
 
   it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
@@ -550,15 +560,25 @@ describe("Toast 대비 쌍", () => {
     expect(registered(text(role), "bg-raised", 4.5)).toBe(true);
   });
 
-  it("닫기(ghost)·액션(outline) 버튼 글자 text-default × bg-raised와 bg-hover·bg-active(raised 위 합성)가 4.5:1로 등록되어 있다", () => {
+  it("닫기(ghost)·액션(outline) 버튼 글자 text-default × bg-raised(4.5:1)와 bg-hover·bg-active(raised 위 합성, 4:1)가 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
-    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
-    expect(registered("text-default", "bg-active", 4.5, "bg-raised")).toBe(true);
+    expect(registered("text-default", "bg-hover", 4, "bg-raised")).toBe(true);
+    expect(registered("text-default", "bg-active", 4, "bg-raised")).toBe(true);
   });
 
-  it("raised 위 Role 색 글자 × bg-hover·bg-active는 등록하지 않는다(dark에서 4.5:1 미달, 버튼은 neutral)", () => {
+  it("raised 위 Role 색 글자 × bg-hover·bg-active는 등록하지 않는다(dark 누름 warning·danger가 4:1에도 미달, 버튼은 neutral)", () => {
     for (const role of tideRoles) {
-      expect(registered(`text-${role}`, "bg-active", 4.5, "bg-raised"), role).toBe(false);
+      for (const background of ["bg-hover", "bg-active"]) {
+        expect(
+          contrastPairs.some(
+            (pair) =>
+              pair.foreground === `text-${role}` &&
+              pair.background === background &&
+              pair.surface === "bg-raised",
+          ),
+          `${role} × ${background}`,
+        ).toBe(false);
+      }
     }
   });
 
@@ -588,8 +608,9 @@ describe("Toast 대비 쌍", () => {
 });
 
 // Button·IconButton(tide-v0-impl 티켓 14, tide-color-tone-impl 티켓 03)의 채움 방식별 글자·배경이 등록되어 있는지 본다.
-// - subtle: 파스텔 글자 on-subtle × subtle 3단계(neutral은 text-default)
-// - outline·ghost: 바탕 없는 색 글자 text × 무채색 호버·클릭 bg-hover·bg-active(흰 표면 bg-canvas 위 합성, ADR 0022 §3)
+// - solid: on-solid × solid 3단계(solid 위 글자 4, ADR 0023)
+// - subtle: 파스텔 글자 on-subtle × subtle 3단계(neutral은 text-default). 기본 4.5, hover·누름 4(ADR 0023)
+// - outline·ghost: 바탕 없는 색 글자 text × 무채색 호버·클릭 bg-hover·bg-active(흰 표면 bg-canvas 위 합성, ADR 0022 §3). 4(ADR 0023)
 describe("Button·IconButton 채움 방식 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
@@ -598,25 +619,86 @@ describe("Button·IconButton 채움 방식 대비 쌍", () => {
   const onSubtle = (role: (typeof allRoles)[number]): string =>
     role === "neutral" ? "text-default" : `text-${role}-on-subtle`;
 
-  it.each(allRoles)("%s subtle: on-subtle × subtle 3단계가 4.5:1로 등록되어 있다", (role) => {
-    for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(registered(onSubtle(role), `bg-${role}-${state}`, 4.5), state).toBe(true);
-    }
-  });
-
   it.each(allRoles)(
-    "%s outline·ghost: 글자 × bg-hover·bg-active(canvas 위 합성)가 4.5:1로 등록되어 있다",
+    "%s subtle: on-subtle × subtle(4.5:1), subtle-hover·subtle-active(일시 상태)가 등록되어 있다",
     (role) => {
-      expect(registered(text(role), "bg-hover", 4.5, "bg-canvas")).toBe(true);
-      expect(registered(text(role), "bg-active", 4.5, "bg-canvas")).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle`, 4.5)).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle-hover`, 4)).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle-active`, subtleActiveRatio(role))).toBe(
+        true,
+      );
     },
   );
 
-  it("앱 Role은 on-subtle × subtle 3단계, text × bg-hover·bg-active 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
+  it.each(allRoles)(
+    "%s solid: on-solid × solid 3단계가 4:1(solid 위 글자)로 등록되어 있다",
+    (role) => {
+      for (const state of ["solid", "solid-hover", "solid-active"]) {
+        expect(registered("text-on-solid", `bg-${role}-${state}`, 4), state).toBe(true);
+      }
+    },
+  );
+
+  it.each(allRoles)(
+    "%s outline·ghost: 글자 × bg-hover·bg-active(canvas 위 합성)가 4:1(일시 상태)로 등록되어 있다",
+    (role) => {
+      expect(registered(text(role), "bg-hover", 4, "bg-canvas")).toBe(true);
+      expect(registered(text(role), "bg-active", 4, "bg-canvas")).toBe(true);
+    },
+  );
+
+  it("앱 Role은 on-subtle × subtle 3단계, on-solid × solid 3단계, text × bg-hover·bg-active 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
+    expect(ruled("on-subtle", "subtle-hover", 4)).toBe(true);
+    expect(ruled("on-subtle", "subtle-active", 4)).toBe(true);
+    for (const background of ["solid", "solid-hover", "solid-active"]) {
+      expect(ruled("on-solid", background, 4), background).toBe(true);
     }
-    expect(ruled("text", "bg-hover", 4.5)).toBe(true);
-    expect(ruled("text", "bg-active", 4.5)).toBe(true);
+    expect(ruled("text", "bg-hover", 4)).toBe(true);
+    expect(ruled("text", "bg-active", 4)).toBe(true);
+  });
+});
+
+// Switch(tide-v0-impl 티켓 17)의 track·thumb 색이 등록되어 있는지 본다(티켓 46).
+// - 켜짐: thumb text-accent-on-solid × solid 3단계(solid 위 4, Button·IconButton 쌍과 같다).
+// - 꺼짐: thumb text-muted × 표면 층(4.5), hover thumb text-accent × subtle(4.5),
+//   누름 thumb text-accent × subtle-active(UI 요소 3). neutral 누름은 text-default × bg-neutral-subtle-active(4.5)다.
+// - 경계: border-strong·border-accent × 표면 층(3), 포커스 표시 outline-focus × 표면 층(3).
+describe("Switch 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
+
+  it.each(tideRoles)(
+    "%s: 꺼짐 누름 thumb(역할 text) × 같은 Role subtle-active가 3:1(UI 요소)로 등록되어 있다",
+    (role) => {
+      expect(registered(`text-${role}`, `bg-${role}-subtle-active`, 3)).toBe(true);
+    },
+  );
+
+  it("neutral 꺼짐 누름 thumb(text-default) × bg-neutral-subtle-active는 4.5:1로 등록되어 있다(3:1을 넘는다)", () => {
+    expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
+  });
+
+  it.each(tideRoles)(
+    "%s: 꺼짐 hover thumb(역할 text) × 같은 Role subtle이 4.5:1로 등록되어 있다",
+    (role) => {
+      expect(registered(`text-${role}`, `bg-${role}-subtle`, 4.5)).toBe(true);
+    },
+  );
+
+  it("꺼짐 thumb text-muted × 표면 층이 4.5:1, 경계·포커스 표시 × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const background of surfaces) {
+      expect(registered("text-muted", background, 4.5), background).toBe(true);
+      for (const foreground of ["border-strong", "border-primary", "outline-focus"]) {
+        expect(registered(foreground, background, 3), `${foreground} × ${background}`).toBe(true);
+      }
+    }
+  });
+
+  it("앱 Role은 text × subtle-active(3:1) 규칙으로 thumb을 검사한다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("text", "subtle-active", 3)).toBe(true);
+  });
+
+  it("색 계열 8개가 thumb 규칙(text × subtle-active)을 light·dark에서 통과한다", () => {
+    familiesPass([["text", "subtle-active"]]);
   });
 });

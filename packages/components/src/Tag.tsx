@@ -69,7 +69,7 @@ const tagCellClass = "flex min-w-0 items-center gap-1";
 const tagLabelClass = "inline-flex min-w-0 items-center gap-1 [&>svg]:size-4 [&>svg]:shrink-0";
 
 // 지우기 버튼: IconButton ghost `xs`(24×24). 글자색은 태그 글자(on-subtle)를 따르고(`text-current`), hover·누름 배경은 태그 색의
-// subtle-hover·subtle-active다(덮기로 계산된 값. on-subtle × subtle 3단계가 색 이름 규칙으로 4.5:1). radius는 태그와 같은 sm이다.
+// subtle-hover·subtle-active다(덮기로 계산된 값. 색 이름 규칙 on-subtle × subtle-hover·subtle-active 4:1, ADR 0023). radius는 태그와 같은 sm이다.
 const removeClass = "rounded-sm text-current";
 const removeInteractionClass = "hover:bg-(--tag-remove-hover) active:bg-(--tag-remove-active)";
 
