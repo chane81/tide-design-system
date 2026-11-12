@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.3.2
+
+### 수정 (patch)
+
+- [#30](https://github.com/chane81/tide-design-system/pull/30) [`681864b`](https://github.com/chane81/tide-design-system/commit/681864b63f84cb7c4fb1818343a4f45c693efc57) [@chane81](https://github.com/chane81) - Button·Color·브랜드 색 문서를 outline·ghost의 같은 색 호버·누름(`faint`·`subtle`)에 맞췄다. 「raised 안 outline·ghost는 `neutral`로」 안내를 지웠다.
+
 ## 0.3.1
 
 ### 수정 (patch)

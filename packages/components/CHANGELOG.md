@@ -1,5 +1,17 @@
 # @tide-tds/components
 
+## 0.9.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#30](https://github.com/chane81/tide-design-system/pull/30) [`143de89`](https://github.com/chane81/tide-design-system/commit/143de894fbe3ceb70fafa003bfb058938c4f8d28) [@chane81](https://github.com/chane81) - Button·IconButton `outline`·`ghost`의 호버·누름을 같은 색 파스텔로 채운다(ADR 0025). 호버는 `faint`, 누름은 `subtle`이고 글자 색은 그대로다. `neutral`만 지금처럼 색 없이 덮는다(`bg-hover`·`bg-active`). 대비 쌍에 `text × faint`(4.5:1)를 더하고 쓰지 않게 된 Role 글자 × `bg-hover`·`bg-active`를 지웠다. 앱 계열(`tide-color build`)도 `text × faint`를 4.5:1로 검사한다.
+
+### 기능 추가와 수정 (patch)
+
+- 의존성 업데이트 [[`143de89`](https://github.com/chane81/tide-design-system/commit/143de894fbe3ceb70fafa003bfb058938c4f8d28)]:
+  - @tide-tds/foundation@0.9.0
+  - @tide-tds/icons@0.9.0
+
 ## 0.8.0
 
 ### 호환되지 않는 변경 (minor)
