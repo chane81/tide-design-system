@@ -36,7 +36,7 @@ export default defineColorFamily({
     300: "#e1adc4",
     400: "#dc7dac",
     500: "#c75b93",
-    600: "#a54d7a",
+    600: "#a85c81",
     700: "#90406a",
     800: "#793157",
     900: "#68274a",
@@ -49,17 +49,18 @@ export default defineColorFamily({
 
 단계마다 맡는 자리가 정해져 있습니다. 아래는 light Theme 기준입니다. L은 OKLCH 밝기, C는 채도입니다.
 
-| 단계 | 맡는 자리                      | 권장 범위                 |
-| ---- | ------------------------------ | ------------------------- |
-| 50   | `faint` 바탕                   | —                         |
-| 100  | `subtle` 파스텔 바탕           | L 0.945 안팎, C 0.02~0.05 |
-| 200  | 파스텔 테두리(`subtle-border`) | —                         |
-| 600  | `solid` 바탕, `border`         | 600~900 모두 C 0.13 이하  |
-| 700  | `text`(링크 같은 색 글자)      | —                         |
-| 950  | 파스텔 글자(`on-subtle`)       | L 0.33~0.36               |
+| 단계    | 맡는 자리                       | 권장 범위                                  |
+| ------- | ------------------------------- | ------------------------------------------ |
+| 50      | `faint` 바탕                    | —                                          |
+| 100     | `subtle` 파스텔 바탕            | L 0.945 안팎, C 0.02~0.05                  |
+| 200     | 파스텔 테두리(`subtle-border`)  | —                                          |
+| 600     | `solid` 바탕, `border`          | L 0.57~0.58, C 0.12 이하, 흰 글자 4:1 이상 |
+| 700~900 | 700은 `text`(링크 같은 색 글자) | C 0.13 이하                                |
+| 950     | 파스텔 글자(`on-subtle`)        | L 0.33~0.36                                |
 
 - 범위는 권장이고 대비 검사가 강제하지 않습니다. 계열마다 채도가 조금씩 달라도 됩니다.
-- 위 예시 스케일은 이 범위 안에 있고 대비 검사를 통과합니다.
+- 600은 Tide 계열의 solid처럼 덜 진하게 둡니다. 흰 글자 대비는 4.5:1보다 낮아도 되고 4:1 이상이면 됩니다(아래 대비 기준의 `on-solid` × `solid`). 너무 진하게 두면 Tide 버튼 옆에서 브랜드 버튼만 무거워 보입니다.
+- 위 예시 스케일은 이 범위 안에 있고 대비 검사를 통과합니다. 600의 흰 글자 대비는 4.65:1입니다.
 - dark Theme은 950이 파스텔 바탕, 100이 파스텔 글자, 300이 `text`입니다. 전체 규칙은 아래 「대비가 모자랄 때」의 슬롯 표에 있습니다.
 
 ## 2. CSS 만들기
@@ -186,16 +187,16 @@ declare module "@tide-tds/components" {
 ```css
 /* app/globals.css */
 [data-theme="light"] {
-  --tide-bg-primary-solid: #a54d7a;
-  --tide-bg-primary-solid-hover: #8e4269;
-  --tide-bg-primary-solid-active: #843e62;
+  --tide-bg-primary-solid: #a85c81;
+  --tide-bg-primary-solid-hover: #904f6f;
+  --tide-bg-primary-solid-active: #864a67;
   --tide-bg-primary-subtle: #fee5f0;
   --tide-bg-primary-subtle-hover: #f5dde8;
   --tide-bg-primary-subtle-active: #edd6e0;
   --tide-bg-primary-faint: #fcf0f5;
   --tide-text-primary: #90406a;
   --tide-text-primary-on-subtle: #5c1d3f;
-  --tide-border-primary: #a54d7a;
+  --tide-border-primary: #a85c81;
   --tide-border-primary-subtle: #ebcbd9;
 }
 ```
