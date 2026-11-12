@@ -378,6 +378,72 @@ describe("닫기·액션과 포커스", () => {
   });
 });
 
+describe("퇴장 중 상호작용", () => {
+  /** 요소에서 도는 전환을 멈춘다. 퇴장 전환이 끝나지 않아 Toast가 퇴장 중인 채로 DOM에 남는다(useOverlayPresence). */
+  function pause(element: Element): Animation[] {
+    const running = element.getAnimations();
+    for (const animation of running) animation.pause();
+    return running;
+  }
+
+  test("퇴장 중 Toast는 inert라 안의 버튼에 Tab·포커스가 닿지 않고, 끝나면 DOM에서 빠진다", async () => {
+    const queue = await setup();
+    const older = await show(queue, { title: "하나", action: { label: "되돌리기" } });
+    const newer = await show(queue, { title: "둘", timeout: null });
+    await settle(older);
+    // DOM은 새것이 먼저다(둘, 하나). 하나를 닫으면 Tab 순서의 마지막 Toast가 퇴장한다.
+    expect(page.getByRole("alertdialog").elements()).toEqual([newer, older]);
+    // 퇴장이 시작되는 순간 전환을 멈춰 둔다(test/motion.ts의 captureExit, 렌더링 단계보다 먼저 돈다).
+    const exit = captureExit(older, () => ({ inert: older.inert, paused: pause(older) }));
+    await userEvent.click(page.getByRole("button", { name: "되돌리기" }));
+    const { inert, paused } = await exit;
+    expect(inert).toBe(true);
+    expect(paused.length).toBeGreaterThan(0);
+    expect(older.isConnected).toBe(true);
+
+    const buttons = [...older.querySelectorAll("button")];
+    expect(buttons).toHaveLength(2);
+    // inert 안의 요소는 focus()로도 포커스를 받지 않는다.
+    const newerClose = newer.querySelector("button") as HTMLButtonElement;
+    newerClose.focus();
+    expect(document.activeElement).toBe(newerClose);
+    for (const button of buttons) {
+      button.focus();
+      expect(document.activeElement).toBe(newerClose);
+    }
+    // 남은 Toast의 마지막 버튼에서 Tab을 누르면 퇴장 중 Toast의 버튼을 건너뛴다.
+    await userEvent.tab();
+    expect(older.contains(document.activeElement)).toBe(false);
+    expect(older.inert).toBe(true);
+
+    for (const animation of paused) animation.finish();
+    await expect.poll(() => older.isConnected).toBe(false);
+  });
+
+  test("보이는 수를 넘어 밀려난(퇴장 중) Toast가 다시 보이면 inert가 풀린다", async () => {
+    const queue = await setup({ maxVisible: 1 });
+    const first = await show(queue, { title: "하나", timeout: null });
+    await settle(first);
+    // 둘을 띄우면 하나가 보이는 목록에서 밀려나 퇴장한다. 그 순간 둘을 닫으면 하나가 같은 key로 다시 보인다.
+    let secondKey = "";
+    const reopened = captureExit(first, () => {
+      const inert = first.inert;
+      queue.close(secondKey);
+      return inert;
+    });
+    secondKey = queue.add({ title: "둘", timeout: null });
+    expect(await reopened).toBe(true);
+    await expect.poll(() => first.hasAttribute("data-open")).toBe(true);
+    expect(first.isConnected).toBe(true);
+    expect(first.inert).toBe(false);
+    expect(first.hasAttribute("inert")).toBe(false);
+    expect(first.getAttribute("role")).toBe("alertdialog");
+    const close = first.querySelector("button") as HTMLButtonElement;
+    close.focus();
+    expect(document.activeElement).toBe(close);
+  });
+});
+
 describe("다른 오버레이와 함께", () => {
   test("열린 Dialog 위에 보이고 inert·aria-hidden이 아니며, 눌러도 Dialog가 닫히지 않는다", async () => {
     const queue = new ToastQueue();
@@ -525,14 +591,16 @@ describe("등장과 퇴장 motion", () => {
     const exit = captureExit(toast, () => ({
       connected: toast.isConnected,
       role: toast.getAttribute("role"),
+      inert: toast.inert,
       style: styleSnapshot(toast),
       running: transitions(toast),
     }));
     queue.close(key);
-    const { connected, role, style, running } = await exit;
+    const { connected, role, inert, style, running } = await exit;
     expect(connected).toBe(true);
-    // 퇴장 중에는 역할이 빠져 스크린 리더·포커스 이동에서 빠진다.
+    // 퇴장 중에는 역할이 빠져 스크린 리더·포커스 이동에서 빠지고, inert라 안의 버튼에 닿지 않는다(티켓 43).
     expect(role).toBeNull();
+    expect(inert).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");
     expect(running.get("opacity")?.to["opacity"]).toBe("0");
