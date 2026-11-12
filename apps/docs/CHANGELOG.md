@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.3.0
+
+### 추가와 개편 (minor)
+
+- [#25](https://github.com/chane81/tide-design-system/pull/25) [`418b7b8`](https://github.com/chane81/tide-design-system/commit/418b7b8363198a48b125ff1e6a427d3a097b8a47) [@chane81](https://github.com/chane81) - 컬러 Foundation 「대비」에 하한 세 등급(글자 4.5:1, 일시 상태·solid 위 글자 4:1, UI 요소 3:1) 표를 더했다. 대비 쌍 표가 등급 이름을 적고, 색 이름별 대비 표가 정지·호버·누름을 나눠 등급마다 최저값을 보여 준다. 브랜드 색 검사 표와 Component 문서의 대비 줄을 새 등급에 맞췄다.
+
 ## 0.2.1
 
 ### 수정 (patch)
