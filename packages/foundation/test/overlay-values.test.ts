@@ -7,12 +7,13 @@ import { type ThemeName } from "../src/index.ts";
 import { mixHex, semanticHex } from "../src/internal.ts";
 
 // [Role, 계열, subtle-hover, subtle-active, solid-hover, solid-active] (light)
+// solid-hover·solid-active는 tide-v0-impl 티켓 47에서 600이 바뀌어 다시 계산한 값이다(600 + black 14% / 20%).
 const decided = [
-  ["primary", "blue", "#dce6f5", "#d4deec", "#3460a1", "#305a96"],
-  ["success", "green", "#d4edd8", "#cde5d1", "#22723b", "#1f6a37"],
-  ["warning", "amber", "#efe5c2", "#e6ddbc", "#825700", "#795100"],
-  ["danger", "red", "#f6dedc", "#eed7d4", "#a13731", "#96332e"],
-  ["info", "cyan", "#d6e9f1", "#cfe1e9", "#006b88", "#00637e"],
+  ["primary", "blue", "#dce6f5", "#d4deec", "#4369a0", "#3e6295"],
+  ["success", "green", "#d4edd8", "#cde5d1", "#397749", "#356e44"],
+  ["warning", "amber", "#efe5c2", "#e6ddbc", "#856028", "#7c5a26"],
+  ["danger", "red", "#f6dedc", "#eed7d4", "#9c4d46", "#914841"],
+  ["info", "cyan", "#d6e9f1", "#cfe1e9", "#2d728a", "#2a6a81"],
 ] as const;
 
 const themes: ThemeName[] = ["light", "dark"];

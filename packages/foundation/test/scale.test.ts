@@ -1,5 +1,6 @@
 // Primitive 스케일 값 검사(tide-color-tone-impl 티켓 01, ADR 0022 §4·§5).
 // 기대 값은 Token 원본에서 만들지 않고 결정 표(tide-color-tone 티켓 02 「스케일 값」, 05 Answer)를 그대로 적는다.
+// 600 단계는 tide-v0-impl 티켓 47(solid 덜 진하게: OKLCH L +0.03, 채도 ×0.85·상한 0.12, 색상 유지)의 값이다.
 // 그래서 원본 값이 결정과 한 글자라도 다르면 여기서 실패한다.
 import { describe, expect, it } from "vitest";
 
@@ -7,7 +8,7 @@ import { color, type ColorFamily, type ColorStep } from "../src/index.ts";
 
 const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 
-// 계열별 11단계 hex. 400·500과 gray는 바꾸지 않은 값이다(amber 400만 #ca9734로 바뀜).
+// 계열별 11단계 hex. 400·500과 gray는 바꾸지 않은 값이다(amber 400만 #ca9734로 바뀜). 600은 티켓 47에서 모든 계열이 바뀌었다.
 const expected: Record<ColorFamily, readonly string[]> = {
   blue: [
     "#eff4fc",
@@ -16,7 +17,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#a7c0e3",
     "#65a1f9",
     "#3183f5",
-    "#3c70bb",
+    "#4e7aba",
     "#2b5fa8",
     "#184c93",
     "#114080",
@@ -29,7 +30,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#bec1c4",
     "#9da1a6",
     "#82878e",
-    "#6b7179",
+    "#747a81",
     "#5b6068",
     "#4a4e54",
     "#3f4247",
@@ -42,7 +43,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#9ecba6",
     "#60b775",
     "#15a14c",
-    "#278445",
+    "#428a55",
     "#0b7335",
     "#055f2a",
     "#045123",
@@ -55,7 +56,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#d6bb79",
     "#ca9734",
     "#b47900",
-    "#976500",
+    "#9b702f",
     "#815600",
     "#6a4600",
     "#5b3b00",
@@ -68,7 +69,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#e5aea7",
     "#f47368",
     "#ea3e39",
-    "#bb4039",
+    "#b55a51",
     "#a82d29",
     "#921315",
     "#7c1212",
@@ -81,7 +82,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#97c6da",
     "#51aed0",
     "#0094bc",
-    "#007c9e",
+    "#3484a1",
     "#006a87",
     "#00576f",
     "#004a5f",
@@ -94,7 +95,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#c4b5e4",
     "#ad8de5",
     "#956ed3",
-    "#7d5cb0",
+    "#8469b0",
     "#6b4e99",
     "#583e81",
     "#4b336f",
@@ -107,7 +108,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#91cbc6",
     "#54b3ad",
     "#219a94",
-    "#14817c",
+    "#3a8883",
     "#116e6a",
     "#0b5a57",
     "#0e4c49",

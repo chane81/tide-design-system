@@ -446,7 +446,7 @@ describe("tokens.css", () => {
         "bg-raised": ["white", "gray-900"],
         "bg-disabled": ["gray-100", "gray-900"],
         "text-default": ["gray-900", "gray-50"],
-        "text-muted": ["gray-600", "gray-300"],
+        "text-muted": ["gray-700", "gray-300"],
         "text-disabled": ["gray-400", "gray-600"],
         "text-on-solid": ["white", "white"],
         "border-default": ["gray-200", "gray-800"],
