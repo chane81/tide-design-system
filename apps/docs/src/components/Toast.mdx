@@ -86,7 +86,7 @@ toasts.add({ title: "저장했습니다", color: "success" });
 - 시간(WCAG 2.2.1, 2.2.2): 스스로 닫히는 Toast는 5초 이상 보이고, 영역에 마우스를 올리거나 포커스가 있는 동안 멈춥니다. 액션이나 오류(`danger`)가 있으면 스스로 닫히지 않습니다.
 - 포커스: 포커스가 있던 Toast가 닫히면 옆 Toast로, 마지막 Toast가 닫히면 영역에 들어오기 전 요소로 돌아갑니다.
 - 다른 오버레이: 열린 Dialog·Popover 위에 뜨고(`z-toast` 400 > `z-modal` 200·`z-popover` 300), 그 바깥 막기(`inert`)에 들지 않아 읽히고 눌립니다. 눌러도 Dialog가 닫히지 않습니다.
-- 대비: 글자와 닫기·액션 버튼 글자(`text-default`)는 raised 표면과 버튼의 호버·누름 배경 위에서, 상태 아이콘(Role 색)은 raised 표면 위에서 4.5:1 이상입니다. 액션 버튼 경계는 3:1 이상이고, Toast 경계(`border-raised`)는 장식용입니다.
+- 대비: 글자와 닫기·액션 버튼 글자(`text-default`)는 raised 표면 위에서 4.5:1, 버튼의 호버·누름 배경 위에서 4:1 이상입니다. 상태 아이콘(Role 색)은 raised 표면 위에서 4.5:1 이상입니다. 액션 버튼 경계는 3:1 이상이고, Toast 경계(`border-raised`)는 장식용입니다.
 - 고대비 모드(forced-colors): 그림자는 사라지지만 1px 경계가 시스템 글자색으로 그려집니다.
 - 움직임 줄이기: 이동·blur 없이 opacity만 바뀝니다.
 
