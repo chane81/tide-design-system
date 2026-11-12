@@ -328,7 +328,7 @@ describe("모양과 포커스 표시", () => {
     );
     await userEvent.hover(page.getByTestId("shipping"));
     expect(getComputedStyle(byTestId("shipping")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-neutral-subtle-hover)"),
+      resolve("backgroundColor", "var(--tide-bg-hover)"),
     );
     expect(getComputedStyle(byTestId("shipping")).transitionDuration).toBe("0s");
     // hover 배경 위 chevron은 text-default다(neutral subtle 위 글자 대비 쌍).

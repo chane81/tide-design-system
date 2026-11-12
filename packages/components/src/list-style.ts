@@ -4,7 +4,7 @@
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 나누는 기준(spec 「radius」·「포커스 표시」·「raised 위 항목」·「motion 적용」):
 // - 목록(listPopupClass): 오버레이 표면 + padding 3px(중첩 규칙: 8 = 4 + 3 + 1) + 「자주 씀」 motion + z-popover.
-// - 항목(listItemClass): radius sm, 기본 투명. 키보드 위치와 hover는 highlight, 그 밖의 hover는 subtle-hover,
+// - 항목(listItemClass): radius sm, 기본 투명. 키보드 위치와 hover는 highlight, 그 밖의 hover는 무채색 bg-hover,
 //   선택 유지는 subtle-active. transition이 없어 바로 바뀐다(반복되는 목록 항목).
 // - 묶음 제목(listHeadingClass)과 구분선(listSeparatorClass).
 
@@ -31,9 +31,10 @@ export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto
  *   투명 outline은 평소에는 보이지 않고 forced-colors에서 시스템 색으로 그려져 위치가 남는다(그 모드는 배경을 덮는다).
  *   기본 `outline-none`이 outline 모양 변수를 none으로 두므로 `outline-solid`를 함께 쓴다.
  *   항목 안쪽(`-outline-offset-2`)에 그려 이웃 항목·목록 경계와 겹치지 않는다.
- * - `hover`(highlight가 아닐 때): raised 위 항목 규칙의 `subtle-hover`(neutral). 키보드로 옮긴 위치가 따로 있을 때
- *   마우스가 다른 항목 위에 있는 경우다.
- * - `data-selected`(highlight가 아닐 때): 선택 유지 `subtle-active`(neutral). Select·Combobox의 고른 옵션이 쓴다.
+ * - `hover`(highlight가 아닐 때): 색 없이 덮는 `bg-hover`(ADR 0022 §3). 키보드로 옮긴 위치가 따로 있을 때
+ *   마우스가 다른 항목 위에 있는 경우다. text-default × bg-hover(bg-raised 위 합성)가 4.5:1로 등록되어 있다.
+ * - `data-selected`(highlight가 아닐 때): 선택 유지 `subtle-active`(neutral). 상태를 나타내는 바탕이라 덮기로 바꾸지 않는다.
+ *   Select·Combobox의 고른 옵션이 쓴다.
  * - `data-disabled`: `text-disabled`, `cursor-not-allowed`. hover 배경이 없다.
  * - 상태끼리 겹칠 때 순서에 기대지 않도록 `not-data-highlighted:`로 서로 뺀다.
  * - transition이 없다. 반복되는 목록 항목은 바로 바뀐다(spec 「motion 적용」).
@@ -42,7 +43,7 @@ export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto
  */
 export const listItemClass = [
   "flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-body-md text-default outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
-  "hover:not-data-highlighted:not-data-disabled:bg-neutral-subtle-hover",
+  "hover:not-data-highlighted:not-data-disabled:bg-hover",
   "data-selected:not-data-highlighted:bg-neutral-subtle-active",
   "data-highlighted:bg-primary-subtle data-highlighted:text-primary data-highlighted:outline-2 data-highlighted:outline-solid data-highlighted:-outline-offset-2 data-highlighted:outline-transparent",
   "data-disabled:cursor-not-allowed data-disabled:text-disabled",

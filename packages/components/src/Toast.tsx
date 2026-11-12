@@ -81,7 +81,7 @@ export interface ToastOptions {
   description?: ReactNode;
   /**
    * Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `info`다(Alert와 같다).
-   * 상태 아이콘과 그 색, 닫기·액션 버튼 색을 정한다. `danger`(오류)는 자동으로 닫지 않는다.
+   * 상태 아이콘과 그 색을 정한다. 닫기·액션 버튼은 색과 관계없이 neutral이다. `danger`(오류)는 자동으로 닫지 않는다.
    * 색 계열 이름(`blue` 등)은 받지 않는다(ADR 0016).
    */
   color?: Role;
@@ -172,7 +172,10 @@ export interface ToastRegionProps extends Omit<ComponentProps<"div">, "children"
 // - Toast: Alert 배치(아이콘·내용·닫기, 여백 16px, gap 12px)에 오버레이 표면(raised + shadow-md + radius lg +
 //   border-raised)을 얹고 「가끔 씀」 motion(Popover와 같다)을 쓴다. 아래에서 떠오르므로 data-placement="top"이다
 //   (트리거 위에 뜨는 Popover와 같은 방향: 4px 아래에서 올라오고, 퇴장은 2px 아래로).
-//   글자는 text-default, 상태 아이콘만 역할 색(text-accent)이다.
+//   글자는 text-default, 상태 아이콘만 역할 색(text-accent, × bg-raised 4.5:1)이다.
+// - 닫기(ghost)·액션(outline) 버튼은 Toast 색과 관계없이 neutral이다(글자 text-default, hover·누름 bg-hover·bg-active).
+//   raised 표면(dark gray-900) 위에 bg-hover·bg-active를 덮으면 Role 색 글자가 4.5:1에 못 미친다(dark 누름 3.89~4.10:1).
+//   text-default × bg-hover·bg-active(bg-raised 위 합성)는 4.5:1로 등록되어 있다(사용자 결정 2026-11-12, 티켓 03).
 const regionClass =
   "fixed end-4 bottom-4 isolate z-toast flex w-[calc(100%-2rem)] max-w-96 flex-col-reverse gap-2 rounded-lg outline-none focus-visible:focus-ring";
 const toastClass = `${alertLayoutClass} ${overlaySurfaceClass} ${popoverMotionClass} outline-none focus-visible:focus-ring`;
@@ -312,7 +315,7 @@ function ToastItem({ toast, open, state, onExited }: ToastItemProps): ReactEleme
         {action !== undefined && (
           <Button
             variant="outline"
-            color={color}
+            color="neutral"
             size="sm"
             className="self-start"
             onClick={(event) => {
@@ -327,7 +330,7 @@ function ToastItem({ toast, open, state, onExited }: ToastItemProps): ReactEleme
       <IconButton
         aria-label={closeLabel}
         variant="ghost"
-        color={color}
+        color="neutral"
         size="xs"
         onClick={close}
         className={alertCloseClass}

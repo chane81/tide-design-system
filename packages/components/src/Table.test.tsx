@@ -180,7 +180,7 @@ describe("역할과 헤더 연결", () => {
 });
 
 describe("행 hover", () => {
-  test("본문 행은 transition 없이 바로 neutral subtle-hover 배경이 된다", async () => {
+  test("본문 행은 transition 없이 바로 무채색 bg-hover 배경이 된다", async () => {
     await render(<PlanTable />);
     const row = byTestId("body-row");
     // 반복되는 목록 항목 규칙: transition이 없다(움직임 줄이기와 상관없이 0s).
@@ -192,16 +192,14 @@ describe("행 hover", () => {
     await userEvent.hover(byTestId("cell"));
     // 기다리지 않고 바로 읽는다. transition이 있으면 중간 색이 나온다.
     if (!forcedColors()) {
-      expect(getComputedStyle(row).backgroundColor).toBe(
-        resolve("var(--tide-bg-neutral-subtle-hover)"),
-      );
+      expect(getComputedStyle(row).backgroundColor).toBe(resolve("var(--tide-bg-hover)"));
     }
     // 마우스가 떠나면 바로 투명으로 돌아온다.
     await hoverAway();
     if (!forcedColors()) expect(getComputedStyle(row).backgroundColor).toBe(transparent);
   });
 
-  test("dark Theme에서도 neutral subtle-hover다", async () => {
+  test("dark Theme에서도 무채색 bg-hover다", async () => {
     await render(
       <div data-theme="dark">
         <Table>
@@ -216,7 +214,7 @@ describe("행 hover", () => {
     await userEvent.hover(byTestId("cell"));
     if (forcedColors()) return;
     expect(getComputedStyle(byTestId("row")).backgroundColor).toBe(
-      resolve("var(--tide-bg-neutral-subtle-hover)", "dark"),
+      resolve("var(--tide-bg-hover)", "dark"),
     );
   });
 

@@ -13,10 +13,13 @@ import type { FillVariant, Role } from "./types.ts";
 // 색 축은 맵에 두지 않는다. 루트의 data-color가 accent 슬롯(--tide-accent-*)을 고르고, 맵은 accent class만 쓴다(ADR 0011).
 // 그래서 앱이 Role(예: `brand`)을 더해도 이 파일은 바뀌지 않는다.
 
-/** 기본 색(배경, 글자, 경계). 색 이름마다 Foundation이 같은 대비 규칙으로 검사한다. */
+/**
+ * 기본 색(배경, 글자, 경계). 색 이름마다 Foundation이 같은 대비 규칙으로 검사한다.
+ * subtle 바탕 위 글자는 파스텔 글자 on-subtle이고(ADR 0022 §1), outline·ghost 글자는 바탕 없는 색 글자 text다.
+ */
 const colorClass: Record<FillVariant, string> = {
   solid: "border-transparent bg-accent-solid text-accent-on-solid",
-  subtle: "border-transparent bg-accent-subtle text-accent",
+  subtle: "border-transparent bg-accent-subtle text-accent-on-subtle",
   outline: "border-accent text-accent",
   ghost: "border-transparent text-accent",
 };
@@ -25,9 +28,11 @@ const colorClass: Record<FillVariant, string> = {
 const interactionClass: Record<FillVariant, string> = {
   solid: "hover:bg-accent-solid-hover active:bg-accent-solid-active",
   subtle: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
-  // outline·ghost는 raised 위 항목과 같은 ghost 규칙이다(기본 투명, hover subtle-hover, 누름 subtle-active).
-  outline: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
-  ghost: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
+  // outline·ghost는 색 없이 덮는다(ADR 0022 §3). 기본 투명, hover bg-hover, 누름 bg-active.
+  // text × bg-hover·bg-active(흰 표면 bg-canvas 위 합성)가 4.5:1로 등록되어 있다. raised 표면(dark gray-900) 위의
+  // Role 색 글자는 4.5:1에 못 미치므로 Tide Component는 raised 위에 Role 색 outline·ghost를 두지 않는다(Toast는 neutral).
+  outline: "hover:bg-hover active:bg-active",
+  ghost: "hover:bg-hover active:bg-active",
 };
 
 /** 비활성 색. 색 이름과 관계없이 같다. disabled Token은 대비 검사 대상이 아니다. */

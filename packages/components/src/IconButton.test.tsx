@@ -160,7 +160,7 @@ describe("스타일 축", () => {
   test.each([
     ["ghost", "neutral", null, "text-default"],
     ["outline", "danger", null, "text-danger"],
-    ["subtle", "success", "bg-success-subtle", "text-success"],
+    ["subtle", "success", "bg-success-subtle", "text-success-on-subtle"],
   ] as const)("%s × %s의 색은 Button과 같은 Token이다", async (variant, color, bg, text) => {
     if (forcedColors()) return;
     await render(

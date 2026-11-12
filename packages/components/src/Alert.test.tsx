@@ -177,7 +177,7 @@ describe("닫기", () => {
     expect(page.getByText("새 기능").elements()).toHaveLength(0);
   });
 
-  test("닫기 버튼은 xs(24px) ghost이고 Alert의 Role 색을 쓴다", async () => {
+  test("닫기 버튼은 xs(24px) ghost이고 Alert의 Role 파스텔 글자(on-subtle)와 subtle-hover 배경을 쓴다", async () => {
     await render(
       <div data-theme="light">
         <Alert color="danger" title="오류" onClose={() => {}} />
@@ -188,7 +188,12 @@ describe("닫기", () => {
     expect(button.getBoundingClientRect().height).toBe(24);
     expect(button).toHaveAttribute("data-color", "danger");
     if (forcedColors()) return;
-    expect(getComputedStyle(button).color).toBe(resolve("var(--tide-text-danger)"));
+    // subtle 바탕 위라 글자는 on-subtle이다(text × subtle-active는 일부 색에서 4.5:1에 못 미친다, ADR 0022).
+    expect(getComputedStyle(button).color).toBe(resolve("var(--tide-text-danger-on-subtle)"));
+    await userEvent.hover(button);
+    await expect
+      .poll(() => getComputedStyle(button).backgroundColor)
+      .toBe(resolve("var(--tide-bg-danger-subtle-hover)"));
   });
 
   test("키보드 포커스에 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
@@ -267,21 +272,26 @@ describe("색", () => {
 
   test.each(
     roles.flatMap((role) => (["light", "dark"] as const).map((theme) => [role, theme] as const)),
-  )("%s(%s)는 같은 Role의 subtle 배경, Role 글자, Role 경계다", async (role, theme) => {
-    await render(
-      <div data-theme={theme}>
-        <Alert data-testid="alert" color={role} title={role} />
-      </div>,
-    );
-    expect(root()).toHaveAttribute("data-color", role);
-    if (forcedColors()) return;
-    const text = role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role})`;
-    const border = role === "neutral" ? "var(--tide-border-strong)" : `var(--tide-border-${role})`;
-    const style = getComputedStyle(root());
-    expect(style.backgroundColor).toBe(resolve(`var(--tide-bg-${role}-subtle)`, theme));
-    expect(style.color).toBe(resolve(text, theme));
-    expect(style.borderTopColor).toBe(resolve(border, theme));
-  });
+  )(
+    "%s(%s)는 같은 Role의 subtle 배경, 파스텔 글자(on-subtle), 파스텔 테두리다",
+    async (role, theme) => {
+      await render(
+        <div data-theme={theme}>
+          <Alert data-testid="alert" color={role} title={role} />
+        </div>,
+      );
+      expect(root()).toHaveAttribute("data-color", role);
+      if (forcedColors()) return;
+      // neutral의 on-subtle은 text-default를 공유한다. 파스텔 테두리는 neutral도 Role Token이 있다(ADR 0022).
+      const text =
+        role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role}-on-subtle)`;
+      const border = `var(--tide-border-${role}-subtle)`;
+      const style = getComputedStyle(root());
+      expect(style.backgroundColor).toBe(resolve(`var(--tide-bg-${role}-subtle)`, theme));
+      expect(style.color).toBe(resolve(text, theme));
+      expect(style.borderTopColor).toBe(resolve(border, theme));
+    },
+  );
 
   test("바깥 요소의 data-color를 물려받지 않는다", async () => {
     await render(
@@ -326,7 +336,7 @@ describe("색", () => {
     let style: HTMLStyleElement | undefined;
     afterEach(() => style?.remove());
 
-    test('color="brand"로 앱 Role의 subtle·text·border 슬롯을 쓴다', async () => {
+    test('color="brand"로 앱 Role의 subtle·on-subtle·subtle-border 슬롯을 쓴다', async () => {
       style = document.createElement("style");
       style.textContent = colorFamilyCss([brand]);
       document.head.append(style);
@@ -338,10 +348,10 @@ describe("색", () => {
       expect(root()).toHaveAttribute("data-color", "brand");
       if (forcedColors()) return;
       const computed = getComputedStyle(root());
-      // light 슬롯: subtle 100, text 700, border 600(ADR 0011 매핑, ADR 0022 값)
+      // light 슬롯: subtle 100, on-subtle 950, subtle-border 200(ADR 0022)
       expect(computed.backgroundColor).toBe(resolve("#ede9fe"));
-      expect(computed.color).toBe(resolve("#6d28d9"));
-      expect(computed.borderTopColor).toBe(resolve("#7c3aed"));
+      expect(computed.color).toBe(resolve("#2e1065"));
+      expect(computed.borderTopColor).toBe(resolve("#ddd6fe"));
     });
   });
 });
@@ -356,7 +366,7 @@ describe("forced-colors", () => {
     const style = getComputedStyle(root());
     expect(style.borderTopWidth).toBe("1px");
     if (!forcedColors()) {
-      expect(style.borderTopColor).toBe(resolve("var(--tide-border-danger)"));
+      expect(style.borderTopColor).toBe(resolve("var(--tide-border-danger-subtle)"));
       return;
     }
     expect(style.borderTopColor).toBe(resolve("CanvasText"));

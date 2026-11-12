@@ -48,11 +48,12 @@ const sizeClass: Record<AvatarSize, string> = {
 };
 
 // - radius는 full이다(티켓 21 수용 기준).
-// - fallback 색은 accent 슬롯이다(ADR 0011). text-accent × bg-accent-subtle은 색 이름 규칙 text × subtle(4.5:1)로 검사된다.
+// - fallback 색은 accent 슬롯이다(ADR 0011). text-accent-on-subtle × bg-accent-subtle은 색 이름 규칙 on-subtle × subtle(4.5:1)로
+//   검사된다(ADR 0022).
 // - overflow-hidden으로 이미지 층을 원 안에 자른다.
 // - forced-colors에서는 배경이 Canvas, 아이콘이 CanvasText가 된다. 배경 이미지(url)는 브라우저가 그대로 그린다.
 const baseClass =
-  "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent-subtle text-accent align-middle select-none [&_svg]:shrink-0";
+  "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent-subtle text-accent-on-subtle align-middle select-none [&_svg]:shrink-0";
 
 /** 이미지 층. 아이콘 위에 원 전체를 덮고, `object-fit: cover`처럼 가운데를 채운다. */
 const imageClass = "absolute inset-0 bg-cover bg-center bg-no-repeat";

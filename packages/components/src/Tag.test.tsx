@@ -268,8 +268,8 @@ describe("지우기 버튼", () => {
       expect(getComputedStyle(icon).color).not.toBe(transparent);
       return;
     }
-    expect(getComputedStyle(button).color).toBe(resolve("color", "var(--tide-blue-text)"));
-    expect(getComputedStyle(icon).color).toBe(resolve("color", "var(--tide-blue-text)"));
+    expect(getComputedStyle(button).color).toBe(resolve("color", "var(--tide-blue-on-subtle)"));
+    expect(getComputedStyle(icon).color).toBe(resolve("color", "var(--tide-blue-on-subtle)"));
   });
 
   test("hover 배경은 태그 색의 subtle-hover다(IconButton의 neutral이 아니다)", async () => {
@@ -289,7 +289,7 @@ describe("지우기 버튼", () => {
 });
 
 describe("모양과 포커스 표시", () => {
-  test("태그는 radius sm(4px), 높이 32px, label-md 글자, 색 계열 subtle 배경 + text 글자다(기본 gray)", async () => {
+  test("태그는 radius sm(4px), 높이 32px, label-md 글자, 색 계열 subtle 배경 + on-subtle 글자 + 파스텔 테두리다(기본 gray)", async () => {
     await render(<Example />);
     const design = getComputedStyle(byTestId("design"));
     expect(design.borderTopLeftRadius).toBe("4px");
@@ -307,10 +307,11 @@ describe("모양과 포커스 표시", () => {
       return;
     }
     expect(design.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-blue-subtle)"));
-    expect(design.color).toBe(resolve("color", "var(--tide-blue-text)"));
+    expect(design.color).toBe(resolve("color", "var(--tide-blue-on-subtle)"));
+    expect(design.borderTopColor).toBe(resolve("color", "var(--tide-blue-subtle-border)"));
     const sales = getComputedStyle(byTestId("sales"));
     expect(sales.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-gray-subtle)"));
-    expect(sales.color).toBe(resolve("color", "var(--tide-gray-text)"));
+    expect(sales.color).toBe(resolve("color", "var(--tide-gray-on-subtle)"));
     const archive = getComputedStyle(byTestId("archive"));
     expect(archive.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-disabled)"));
     expect(archive.color).toBe(resolve("color", "var(--tide-text-disabled)"));

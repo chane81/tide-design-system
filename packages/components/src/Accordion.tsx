@@ -68,15 +68,15 @@ const itemClass = "not-first:border-t not-first:border-default";
 
 // 트리거(spec 「포커스 표시」·「motion 적용」):
 // - 글자 `text-label-lg`(16/20, medium), 여백 세로 12px·가로 16px, 글자와 chevron 사이 12px. 조작 요소 radius `md`.
-// - hover는 반복 항목이라 전환 없이 바로 neutral `subtle-hover` 배경이다. 비활성은 `text-disabled` + `cursor-not-allowed`.
+// - hover는 반복 항목이라 전환 없이 바로 색 없이 덮는 `bg-hover` 배경이다(ADR 0022 §3). 비활성은 `text-disabled` + `cursor-not-allowed`.
 // - 포커스: `focus-visible:focus-ring`(ring 2px, offset 2px).
 const triggerClass = [
   "group flex flex-1 cursor-pointer items-center gap-3 rounded-md px-4 py-3 text-start text-label-lg outline-none select-none",
-  "enabled:hover:bg-neutral-subtle-hover focus-visible:focus-ring",
+  "enabled:hover:bg-hover focus-visible:focus-ring",
   "disabled:cursor-not-allowed disabled:text-disabled",
 ].join(" ");
 
-// chevron(장식용, 16px `text-muted`): hover 배경 위에서는 `text-default`다(neutral subtle 위 글자 대비 쌍).
+// chevron(장식용, 16px `text-muted`): hover 배경 위에서는 `text-default`다(text-default × bg-hover 대비 쌍).
 // 펼치면 180° 돈다. 회전은 움직임이라 `motion-safe`일 때만 `fast`(150ms, out)로 전환하고,
 // 움직임 줄이기에서는 바로 돈다(Switch thumb 이동과 같은 규칙). 회전만이 신호가 아니다(`aria-expanded`와 패널이 함께 바뀐다).
 // 패널 높이 애니메이션은 없다(motion 결정 「넣지 않는 것」). 패널은 펼치면 바로 보인다.

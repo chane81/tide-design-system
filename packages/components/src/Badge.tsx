@@ -5,8 +5,11 @@ import type { Color, FillVariant, Size } from "./types.ts";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 
-/** Badge의 채움 방식. 상호작용이 없어 테두리·투명 채움(`outline`·`ghost`)은 받지 않는다. */
-type BadgeVariant = Extract<FillVariant, "subtle" | "solid">;
+/**
+ * Badge의 채움 방식. 상호작용이 없어 테두리·투명 채움(`outline`·`ghost`)은 받지 않는다.
+ * `faint`는 Badge에만 있는 가장 옅은 강도라(ADR 0022 §1) Button류 공통 `FillVariant`에 넣지 않는다.
+ */
+type BadgeVariant = Extract<FillVariant, "subtle" | "solid"> | "faint";
 
 /** Badge의 size. 조작 요소가 아니라 높이가 size 표보다 한 단계 작다(`sm` 20px, `md` 24px). */
 type BadgeSize = Extract<Size, "sm" | "md">;
@@ -14,7 +17,10 @@ type BadgeSize = Extract<Size, "sm" | "md">;
 export interface BadgeProps extends Omit<ComponentProps<"span">, "color" | "children"> {
   /** 상태를 말하는 텍스트. 필수다. 색만으로 상태를 전하지 않기 위해서다(WCAG 1.4.1). */
   children: ReactNode;
-  /** `subtle`(옅은 배경, 기본값)과 `solid`(진한 배경). 같은 화면 안에서는 한 가지로 맞춘다. */
+  /**
+   * `subtle`(파스텔 배경과 테두리, 기본값), `faint`(가장 옅은 배경, 테두리 없음), `solid`(진한 배경).
+   * 같은 화면 안에서는 한 가지로 맞춘다.
+   */
   variant?: BadgeVariant;
   /** `sm` 높이 20px·`label-sm`, `md` 높이 24px·`label-md`. 기본값은 `md`다. */
   size?: BadgeSize;
@@ -28,12 +34,16 @@ export interface BadgeProps extends Omit<ComponentProps<"span">, "color" | "chil
 }
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
-// 색은 accent 슬롯이다(ADR 0011). 둘 다 등록된 대비 쌍이다.
-// - subtle: text-accent × bg-accent-subtle 4.5:1(Role 대비 쌍 `text-<role>` × `bg-<role>-subtle`, neutral은 text-default × bg-neutral-subtle,
-//   색 계열·앱 Role·앱 계열은 색 이름 규칙 colorContrastRules의 text × subtle).
+// 색은 accent 슬롯이다(ADR 0011, ADR 0022). 모두 등록된 대비 쌍이다.
+// - subtle: text-accent-on-subtle × bg-accent-subtle 4.5:1(Role 대비 쌍 `text-<role>-on-subtle` × `bg-<role>-subtle`, neutral은
+//   text-default × bg-neutral-subtle, 색 계열·앱 이름은 색 이름 규칙 colorContrastRules의 on-subtle × subtle).
+//   테두리 border-accent-subtle은 꾸밈이라 대비 검사에서 뺐다(바탕과 글자만으로 알아볼 수 있다).
+// - faint: text-accent-on-subtle × bg-accent-faint 4.5:1(Role은 `text-<role>-on-subtle` × `bg-<role>-faint`, 색 이름 규칙은
+//   on-subtle × faint). 테두리는 투명이다.
 // - solid: text-accent-on-solid × bg-accent-solid 4.5:1(Role은 text-on-solid × solid, 색 계열·앱 이름은 on-solid × solid).
 const variantClass: Record<BadgeVariant, string> = {
-  subtle: "bg-accent-subtle text-accent",
+  subtle: "border-accent-subtle bg-accent-subtle text-accent-on-subtle",
+  faint: "bg-accent-faint text-accent-on-subtle",
   solid: "bg-accent-solid text-accent-on-solid",
 };
 
@@ -44,7 +54,7 @@ const sizeClass: Record<BadgeSize, string> = {
 };
 
 // - radius는 작은 표시 요소의 sm이다(spec radius 「쓰는 곳」).
-// - border는 평소 투명이다. forced-colors에서는 브라우저가 경계를 CanvasText로 덮어 배경 없이도 모양이 남는다.
+// - border는 subtle에서만 파스텔 테두리이고 faint·solid는 투명이다. forced-colors에서는 브라우저가 경계를 CanvasText로 덮어 배경 없이도 모양이 남는다.
 // - 한 줄로만 쓴다(whitespace-nowrap). 짧은 라벨이라 줄바꿈하면 모양이 깨진다.
 // - 아이콘을 함께 넣으면 텍스트 옆 아이콘 크기(12px)로 맞춘다.
 const baseClass =

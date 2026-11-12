@@ -12,13 +12,43 @@ import { describe, expect, it } from "vitest";
 
 const surfaces = ["bg-canvas", "bg-surface", "bg-raised"] as const;
 
-const registered = (foreground: string, background: string, minRatio: number): boolean =>
+/** 등록된 쌍인지. 반투명 배경(bg-hover·bg-active)은 아래 표면(`surface`)까지 같아야 한다. */
+const registered = (
+  foreground: string,
+  background: string,
+  minRatio: number,
+  surface?: string,
+): boolean =>
   contrastPairs.some(
     (pair) =>
       pair.foreground === foreground &&
       pair.background === background &&
-      pair.minRatio === minRatio,
+      pair.minRatio === minRatio &&
+      pair.surface === surface,
   );
+
+/** 색 이름 규칙(colorContrastRules)에 있는지. 앱 Role·앱 계열은 tide-color가 같은 규칙으로 검사한다. */
+const ruled = (foreground: string, background: string, minRatio: number): boolean =>
+  colorContrastRules.some(
+    (r) => r.foreground === foreground && r.background === background && r.minRatio === minRatio,
+  );
+
+/** Tide 색 계열 8개가 색 이름 규칙의 그 짝들을 light·dark에서 통과하는지 */
+function familiesPass(pairs: readonly (readonly [string, string])[]): void {
+  for (const family of colorFamilyNames) {
+    const used = checkColorContrast({
+      light: colorSlotHex(family, "light"),
+      dark: colorSlotHex(family, "dark"),
+    }).filter((result) =>
+      pairs.some(([fg, bg]) => result.foreground === fg && result.background === bg),
+    );
+    expect(used, family).toHaveLength(pairs.length * 2);
+    expect(
+      used.filter((result) => !result.pass),
+      family,
+    ).toEqual([]);
+  }
+}
 
 describe("Link 글자색 대비 쌍", () => {
   // Link는 accent 슬롯의 text를 표면 층 위에 쓴다. Role의 text는 Role Token으로 등록되어 있다.
@@ -58,15 +88,28 @@ describe("Link 글자색 대비 쌍", () => {
 });
 
 // Badge·Card·Separator(tide-v0-impl 티켓 19)가 쓰는 색이 대비 쌍에 등록되어 있거나 제외 목록에 있는지 본다.
+// subtle·faint 글자는 파스텔 글자 on-subtle이고, subtle 테두리(subtle-border)는 꾸밈이라 제외 목록에 있다(ADR 0022).
 describe("Badge 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
-  it.each(tideRoles)("subtle: text-%s × 같은 Role subtle이 4.5:1로 등록되어 있다", (role) => {
-    expect(registered(`text-${role}`, `bg-${role}-subtle`, 4.5)).toBe(true);
+  it.each(tideRoles)(
+    "subtle·faint: text-%s-on-subtle × 같은 Role subtle·faint가 4.5:1로 등록되어 있다",
+    (role) => {
+      expect(registered(`text-${role}-on-subtle`, `bg-${role}-subtle`, 4.5)).toBe(true);
+      expect(registered(`text-${role}-on-subtle`, `bg-${role}-faint`, 4.5)).toBe(true);
+    },
+  );
+
+  it("subtle·faint neutral: text-default × bg-neutral-subtle·faint가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
+    expect(registered("text-default", "bg-neutral-faint", 4.5)).toBe(true);
   });
 
-  it("subtle neutral: text-default × bg-neutral-subtle이 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
-  });
+  it.each(["neutral", ...tideRoles])(
+    "subtle 테두리 border-%s-subtle은 꾸밈이라 대비 검사에서 제외되어 있다",
+    (role) => {
+      expect(contrastExclusions.some((item) => item.token === `border-${role}-subtle`)).toBe(true);
+    },
+  );
 
   it.each(["neutral", ...tideRoles])(
     "solid: text-on-solid × bg-%s-solid가 4.5:1로 등록되어 있다",
@@ -75,7 +118,7 @@ describe("Badge 대비 쌍", () => {
     },
   );
 
-  it("색 계열 8개가 text × subtle, on-solid × solid 규칙을 light·dark에서 통과한다", () => {
+  it("색 계열 8개가 on-subtle × subtle·faint, on-solid × solid 규칙을 light·dark에서 통과한다", () => {
     expect(colorFamilyNames).toEqual([
       "blue",
       "gray",
@@ -86,32 +129,17 @@ describe("Badge 대비 쌍", () => {
       "purple",
       "mint",
     ]);
-    for (const family of colorFamilyNames) {
-      const results = checkColorContrast({
-        light: colorSlotHex(family, "light"),
-        dark: colorSlotHex(family, "dark"),
-      });
-      const used = results.filter(
-        (result) =>
-          (result.foreground === "text" && result.background === "subtle") ||
-          (result.foreground === "on-solid" && result.background === "solid"),
-      );
-      // 규칙 2개 × Theme 2개
-      expect(used, family).toHaveLength(4);
-      expect(
-        used.filter((result) => !result.pass),
-        family,
-      ).toEqual([]);
-    }
+    familiesPass([
+      ["on-subtle", "subtle"],
+      ["on-subtle", "faint"],
+      ["on-solid", "solid"],
+    ]);
   });
 
-  it("앱 Role·앱 장식 계열은 text × subtle, on-solid × solid 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    const rule = (foreground: string, background: string): boolean =>
-      colorContrastRules.some(
-        (r) => r.foreground === foreground && r.background === background && r.minRatio === 4.5,
-      );
-    expect(rule("text", "subtle")).toBe(true);
-    expect(rule("on-solid", "solid")).toBe(true);
+  it("앱 Role·앱 장식 계열은 on-subtle × subtle·faint, on-solid × solid 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
+    expect(ruled("on-subtle", "faint", 4.5)).toBe(true);
+    expect(ruled("on-solid", "solid", 4.5)).toBe(true);
   });
 });
 
@@ -125,30 +153,24 @@ describe("Card·Separator 대비 쌍", () => {
   });
 });
 
-// Alert(tide-v0-impl 티켓 20)가 쓰는 역할 text·border·subtle 배경 조합과 닫기 버튼 포커스 표시가 등록되어 있는지 본다.
+// Alert(tide-v0-impl 티켓 20, tide-color-tone-impl 티켓 03)가 쓰는 파스텔 글자·subtle 배경 조합과 닫기 버튼 색·포커스 표시가
+// 등록되어 있는지 본다. 테두리는 파스텔 테두리(subtle-border)라 꾸밈이고 제외 목록에 있다(ADR 0022 §1).
 describe("Alert 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
-  const border = (role: (typeof allRoles)[number]): string =>
-    role === "neutral" ? "border-strong" : `border-${role}`;
-  const text = (role: (typeof allRoles)[number]): string =>
-    role === "neutral" ? "text-default" : `text-${role}`;
+  // neutral의 on-subtle은 text-default를 공유한다.
+  const onSubtle = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "text-default" : `text-${role}-on-subtle`;
 
   it.each(allRoles)(
-    "%s: 글자·아이콘(역할 text) × 같은 Role subtle이 4.5:1로 등록되어 있다",
+    "%s: 글자·아이콘(on-subtle) × 같은 Role subtle이 4.5:1로 등록되어 있다",
     (role) => {
-      expect(registered(text(role), `bg-${role}-subtle`, 4.5)).toBe(true);
+      expect(registered(onSubtle(role), `bg-${role}-subtle`, 4.5)).toBe(true);
     },
   );
 
-  it.each(allRoles)("%s: 역할 경계 × 같은 Role subtle(안쪽)이 3:1로 등록되어 있다", (role) => {
-    expect(registered(border(role), `bg-${role}-subtle`, 3)).toBe(true);
-  });
-
-  it.each(allRoles)("%s: 역할 경계 × 표면 층(바깥)이 3:1로 등록되어 있다", (role) => {
-    for (const background of surfaces) {
-      expect(registered(border(role), background, 3), `${border(role)} × ${background}`).toBe(true);
-    }
+  it.each(allRoles)("%s: 파스텔 테두리는 꾸밈이라 대비 검사에서 제외되어 있다", (role) => {
+    expect(contrastExclusions.some((item) => item.token === `border-${role}-subtle`)).toBe(true);
   });
 
   it.each(allRoles)(
@@ -159,49 +181,30 @@ describe("Alert 대비 쌍", () => {
   );
 
   it.each(allRoles)(
-    "%s: 닫기 버튼(ghost) hover·누름 글자 × subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
+    "%s: 닫기 버튼(ghost) 글자 on-subtle × subtle·subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
     (role) => {
-      for (const state of ["subtle-hover", "subtle-active"]) {
-        expect(registered(text(role), `bg-${role}-${state}`, 4.5)).toBe(true);
+      for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
+        expect(registered(onSubtle(role), `bg-${role}-${state}`, 4.5)).toBe(true);
       }
     },
   );
 
-  it("앱 Role은 text × subtle(4.5:1), border × 표면 층(3:1) 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    const rule = (foreground: string, background: string, minRatio: number): boolean =>
-      colorContrastRules.some(
-        (r) =>
-          r.foreground === foreground && r.background === background && r.minRatio === minRatio,
-      );
-    expect(rule("text", "subtle", 4.5)).toBe(true);
-    for (const background of surfaces) expect(rule("border", background, 3)).toBe(true);
+  it("앱 Role은 on-subtle × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
+      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
+    }
   });
 });
 
-// Avatar(tide-v0-impl 티켓 21)의 fallback은 색 계열의 text(아이콘) × subtle(배경)이다. 색 이름 규칙으로 검사된다.
+// Avatar(tide-v0-impl 티켓 21)의 fallback은 색 계열의 on-subtle(아이콘) × subtle(배경)이다(ADR 0022). 색 이름 규칙으로 검사된다.
 // 이미지 층은 사용자 사진이라 대비 검사 대상이 아니다.
 describe("Avatar 대비 쌍", () => {
-  it("색 계열 8개의 fallback 아이콘(text) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
-    for (const family of colorFamilyNames) {
-      const used = checkColorContrast({
-        light: colorSlotHex(family, "light"),
-        dark: colorSlotHex(family, "dark"),
-      }).filter((result) => result.foreground === "text" && result.background === "subtle");
-      // Theme 2개
-      expect(used, family).toHaveLength(2);
-      expect(
-        used.filter((result) => !result.pass),
-        family,
-      ).toEqual([]);
-    }
+  it("색 계열 8개의 fallback 아이콘(on-subtle) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
+    familiesPass([["on-subtle", "subtle"]]);
   });
 
-  it("앱 장식 계열은 text × subtle 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
-    expect(
-      colorContrastRules.some(
-        (r) => r.foreground === "text" && r.background === "subtle" && r.minRatio === 4.5,
-      ),
-    ).toBe(true);
+  it("앱 장식 계열은 on-subtle × subtle 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
   });
 });
 
@@ -239,7 +242,7 @@ describe("Skeleton 대비 쌍", () => {
   });
 });
 
-// Table(tide-v0-impl 티켓 23)의 글자는 text-default 하나다(머리 칸도 같다). 배경은 놓인 표면 층과 본문 행 hover(neutral subtle-hover)다.
+// Table(tide-v0-impl 티켓 23)의 글자는 text-default 하나다(머리 칸도 같다). 배경은 놓인 표면 층과 본문 행 hover(bg-hover)다.
 // 행 사이 선은 장식용 border-default라 대비 검사에서 제외된 Token이다.
 describe("Table 대비 쌍", () => {
   it("글자(text-default) × 표면 층 3개가 4.5:1로 등록되어 있다", () => {
@@ -248,8 +251,9 @@ describe("Table 대비 쌍", () => {
     }
   });
 
-  it("hover 행: text-default × bg-neutral-subtle-hover가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  it("hover 행: text-default × bg-hover(canvas·raised 위 합성)가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
   });
 
   it("행 경계 border-default는 장식용으로 대비 검사에서 제외되어 있다", () => {
@@ -260,8 +264,8 @@ describe("Table 대비 쌍", () => {
 // Breadcrumb·Pagination(tide-v0-impl 티켓 24)이 쓰는 글자색과 배경이 대비 쌍에 등록되어 있는지 본다.
 // - Breadcrumb: 링크 text-muted(hover text-default), 현재 페이지 text-default. 배경은 놓인 표면 층이다.
 //   구분자 아이콘은 장식용이라 대비 대상이 아니다(글자색 text-muted를 따른다).
-// - Pagination: 번호·이전/다음은 neutral ghost(text-default, hover bg-neutral-subtle-hover),
-//   현재 페이지는 primary subtle(text-primary × bg-primary-subtle). 생략 아이콘은 장식용이다.
+// - Pagination: 번호·이전/다음은 neutral ghost(text-default, hover·누름 bg-hover·bg-active),
+//   현재 페이지는 primary subtle(text-primary-on-subtle × bg-primary-subtle 3단계). 생략 아이콘은 장식용이다.
 describe("Breadcrumb·Pagination 대비 쌍", () => {
   it.each(["text-muted", "text-default"])(
     "%s × 표면 층 3개가 4.5:1로 등록되어 있다",
@@ -272,15 +276,16 @@ describe("Breadcrumb·Pagination 대비 쌍", () => {
     },
   );
 
-  it("번호 hover: text-default × bg-neutral-subtle-hover가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  it("번호 hover·누름: text-default × bg-hover·bg-active(canvas 위 합성)가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-active", 4.5, "bg-canvas")).toBe(true);
   });
 
-  it("현재 페이지: text-primary × bg-primary-subtle이 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
+  it("현재 페이지: text-primary-on-subtle × bg-primary-subtle 3단계가 4.5:1로 등록되어 있다", () => {
     // 현재 페이지도 링크라 hover·누름 배경으로 바뀐다(Button subtle 규칙).
-    expect(registered("text-primary", "bg-primary-subtle-hover", 4.5)).toBe(true);
-    expect(registered("text-primary", "bg-primary-subtle-active", 4.5)).toBe(true);
+    for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
+      expect(registered("text-primary-on-subtle", `bg-primary-${state}`, 4.5), state).toBe(true);
+    }
   });
 
   it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
@@ -326,8 +331,11 @@ describe("Menu(목록) 대비 쌍", () => {
     expect(registered("text-primary", "bg-primary-subtle", 4.5)).toBe(true);
   });
 
-  it("raised 위 항목: text-default × neutral subtle-hover·subtle-active가 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  it("raised 위 항목 hover: text-default × bg-hover(raised 위 합성)가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
+  });
+
+  it("고른 옵션 선택 유지: text-default × bg-neutral-subtle-active가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
   });
 
@@ -460,7 +468,7 @@ describe("Tabs 대비 쌍", () => {
 
 // Accordion(tide-v0-impl 티켓 32)이 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 배경이 없어 놓인 표면 층 위에 그린다.
 // - 글자: 트리거·패널 text-default, chevron text-muted(펼침 상태를 보이는 그래픽이라 3:1이면 되지만 4.5:1 쌍으로 등록되어 있다).
-// - 트리거 hover 배경 bg-neutral-subtle-hover 위 글자와 chevron은 둘 다 text-default다.
+// - 트리거 hover 배경 bg-hover 위 글자와 chevron은 둘 다 text-default다.
 // - 포커스 표시: 트리거의 outline-focus. 루트 경계·항목 사이 선 border-default와 비활성 text-disabled는 제외 Token이다.
 describe("Accordion 대비 쌍", () => {
   it.each(["text-default", "text-muted"])(
@@ -472,8 +480,9 @@ describe("Accordion 대비 쌍", () => {
     },
   );
 
-  it("hover 배경(bg-neutral-subtle-hover) 위 트리거 글자·chevron(text-default)이 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-default", "bg-neutral-subtle-hover", 4.5)).toBe(true);
+  it("hover 배경(bg-hover, canvas·raised 위 합성) 위 트리거 글자·chevron(text-default)이 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-hover", 4.5, "bg-canvas")).toBe(true);
+    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
   });
 
   it("포커스 표시(outline-focus) × 표면 층이 3:1로 등록되어 있다", () => {
@@ -492,36 +501,20 @@ describe("Accordion 대비 쌍", () => {
   });
 });
 
-// Tag(tide-v0-impl 티켓 33)는 색 계열의 text(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
-// 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(text × subtle 3단계)으로 검사된다.
+// Tag(tide-v0-impl 티켓 33)는 색 계열의 on-subtle(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
+// 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(on-subtle × subtle 3단계)으로 검사된다. 테두리는 꾸밈이다.
 describe("Tag 대비 쌍", () => {
-  it("색 계열 8개의 글자(text) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
-    for (const family of colorFamilyNames) {
-      const used = checkColorContrast({
-        light: colorSlotHex(family, "light"),
-        dark: colorSlotHex(family, "dark"),
-      }).filter(
-        (result) =>
-          result.foreground === "text" &&
-          ["subtle", "subtle-hover", "subtle-active"].includes(result.background),
-      );
-      // 배경 3단계 × Theme 2개
-      expect(used, family).toHaveLength(6);
-      expect(
-        used.filter((result) => !result.pass),
-        family,
-      ).toEqual([]);
-    }
+  it("색 계열 8개의 글자(on-subtle) × subtle·subtle-hover·subtle-active가 light·dark에서 4.5:1을 통과한다", () => {
+    familiesPass([
+      ["on-subtle", "subtle"],
+      ["on-subtle", "subtle-hover"],
+      ["on-subtle", "subtle-active"],
+    ]);
   });
 
-  it("앱 장식 계열도 text × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+  it("앱 장식 계열도 on-subtle × subtle 3단계 규칙(4.5:1)으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
     for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
-      expect(
-        colorContrastRules.some(
-          (r) => r.foreground === "text" && r.background === background && r.minRatio === 4.5,
-        ),
-        background,
-      ).toBe(true);
+      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
     }
   });
 
@@ -541,38 +534,36 @@ describe("Tag 대비 쌍", () => {
   });
 });
 
-// Toast(tide-v0-impl 티켓 34)는 Alert 배치에 오버레이 raised 표면을 얹는다. 글자는 text-default, 상태 아이콘과
-// 닫기(ghost)·액션(outline) 버튼은 Toast의 Role 색(accent 슬롯)이고 모두 bg-raised 위에 그린다.
+// Toast(tide-v0-impl 티켓 34)는 Alert 배치에 오버레이 raised 표면을 얹는다. 글자는 text-default, 상태 아이콘은 Toast의
+// Role 색(accent 슬롯)이고, 닫기(ghost)·액션(outline) 버튼은 neutral이다(티켓 03 사용자 결정). 모두 bg-raised 위에 그린다.
 describe("Toast 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
   const text = (role: (typeof allRoles)[number]): string =>
     role === "neutral" ? "text-default" : `text-${role}`;
-  const border = (role: (typeof allRoles)[number]): string =>
-    role === "neutral" ? "border-strong" : `border-${role}`;
 
   it("제목·본문 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
   });
 
-  it.each(allRoles)(
-    "%s: 상태 아이콘·버튼 글자(역할 text) × bg-raised가 4.5:1로 등록되어 있다",
-    (role) => {
-      expect(registered(text(role), "bg-raised", 4.5)).toBe(true);
-    },
-  );
+  it.each(allRoles)("%s: 상태 아이콘(역할 text) × bg-raised가 4.5:1로 등록되어 있다", (role) => {
+    expect(registered(text(role), "bg-raised", 4.5)).toBe(true);
+  });
 
-  it.each(allRoles)(
-    "%s: 닫기(ghost)·액션(outline) 버튼 hover·누름 글자 × subtle-hover·subtle-active가 4.5:1로 등록되어 있다",
-    (role) => {
-      for (const state of ["subtle-hover", "subtle-active"]) {
-        expect(registered(text(role), `bg-${role}-${state}`, 4.5)).toBe(true);
-      }
-    },
-  );
+  it("닫기(ghost)·액션(outline) 버튼 글자 text-default × bg-raised와 bg-hover·bg-active(raised 위 합성)가 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
+    expect(registered("text-default", "bg-hover", 4.5, "bg-raised")).toBe(true);
+    expect(registered("text-default", "bg-active", 4.5, "bg-raised")).toBe(true);
+  });
 
-  it.each(allRoles)("%s: 액션 버튼(outline) 경계 × bg-raised가 3:1로 등록되어 있다", (role) => {
-    expect(registered(border(role), "bg-raised", 3)).toBe(true);
+  it("raised 위 Role 색 글자 × bg-hover·bg-active는 등록하지 않는다(dark에서 4.5:1 미달, 버튼은 neutral)", () => {
+    for (const role of tideRoles) {
+      expect(registered(`text-${role}`, "bg-active", 4.5, "bg-raised"), role).toBe(false);
+    }
+  });
+
+  it("액션 버튼(outline, neutral) 경계 border-strong × bg-raised가 3:1로 등록되어 있다", () => {
+    expect(registered("border-strong", "bg-raised", 3)).toBe(true);
   });
 
   it("Toast·영역·버튼 포커스 표시: outline-focus × bg-raised·표면 층이 3:1로 등록되어 있다", () => {
@@ -593,5 +584,39 @@ describe("Toast 대비 쌍", () => {
 
   it("경계(border-raised)는 장식용이라 대비 검사에서 제외되어 있다", () => {
     expect(contrastExclusions.some((item) => item.token === "border-raised")).toBe(true);
+  });
+});
+
+// Button·IconButton(tide-v0-impl 티켓 14, tide-color-tone-impl 티켓 03)의 채움 방식별 글자·배경이 등록되어 있는지 본다.
+// - subtle: 파스텔 글자 on-subtle × subtle 3단계(neutral은 text-default)
+// - outline·ghost: 바탕 없는 색 글자 text × 무채색 호버·클릭 bg-hover·bg-active(흰 표면 bg-canvas 위 합성, ADR 0022 §3)
+describe("Button·IconButton 채움 방식 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
+  const allRoles = ["neutral", ...tideRoles] as const;
+  const text = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "text-default" : `text-${role}`;
+  const onSubtle = (role: (typeof allRoles)[number]): string =>
+    role === "neutral" ? "text-default" : `text-${role}-on-subtle`;
+
+  it.each(allRoles)("%s subtle: on-subtle × subtle 3단계가 4.5:1로 등록되어 있다", (role) => {
+    for (const state of ["subtle", "subtle-hover", "subtle-active"]) {
+      expect(registered(onSubtle(role), `bg-${role}-${state}`, 4.5), state).toBe(true);
+    }
+  });
+
+  it.each(allRoles)(
+    "%s outline·ghost: 글자 × bg-hover·bg-active(canvas 위 합성)가 4.5:1로 등록되어 있다",
+    (role) => {
+      expect(registered(text(role), "bg-hover", 4.5, "bg-canvas")).toBe(true);
+      expect(registered(text(role), "bg-active", 4.5, "bg-canvas")).toBe(true);
+    },
+  );
+
+  it("앱 Role은 on-subtle × subtle 3단계, text × bg-hover·bg-active 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+    for (const background of ["subtle", "subtle-hover", "subtle-active"]) {
+      expect(ruled("on-subtle", background, 4.5), background).toBe(true);
+    }
+    expect(ruled("text", "bg-hover", 4.5)).toBe(true);
+    expect(ruled("text", "bg-active", 4.5)).toBe(true);
   });
 });
