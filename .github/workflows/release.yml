@@ -84,9 +84,21 @@ jobs:
       # changeset version 뒤에 CHANGELOG의 고정 영어 문구를 한글로 바꾼다(scripts/changelog-ko.ts).
       # 액션이 GITHUB_TOKEN을 환경 변수로 넘겨서 changelog-github가 PR 링크와 작성자를 찾는다.
       # 열린 Version PR이 있으면 액션이 제목도 새 값으로 바꾼다(src/run.ts updatePullRequest).
+      # Version PR을 GitHub App(tide-release-bot) 신원으로 만든다. 기본 GITHUB_TOKEN(github-actions[bot])이 만든 PR은
+      # 2026-06부터 CI를 돌리려면 사람 승인이 필요하다(docs/research/bot-pr-workflow-approval.md).
+      # actions/create-github-app-token v3.3.0: client-id(app-id는 deprecated)·private-key 입력, token output, 잡이 끝나면 token 폐기.
+      - id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
       - id: version
         uses: changesets/action/version@v2
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: pnpm release:version
           commit-message: "chore: 릴리스 버전 올리기"
           pr-title: ${{ steps.next.outputs.title }}
@@ -96,7 +108,7 @@ jobs:
       # 액션의 pr-number output은 만든 PR과 갱신한 PR 모두에 나온다(version/action.yml).
       - if: steps.version.outputs.pr-number != ''
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_NUMBER: ${{ steps.version.outputs.pr-number }}
           ACTOR: ${{ github.actor }}
         run: |

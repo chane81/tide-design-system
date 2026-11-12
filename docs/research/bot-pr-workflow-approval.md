@@ -37,4 +37,4 @@ changesets Version PR(「Release x.y.z」)의 CI(`ci.yml`, `pull_request`)가 `a
 
 ## 결정
 
-- 2026-11-12: 사용자 결정 대기. Storybook Release 분리 작업(티켓 미정)과 함께 적용할 수 있다.
+- 2026-11-12: 1번(GitHub App token)으로 결정. App `tide-release-bot`, 저장소 변수 `RELEASE_APP_CLIENT_ID`, secret `RELEASE_APP_PRIVATE_KEY`. version job이 App token으로 Version PR을 만들고 assignee·라벨을 단다.
