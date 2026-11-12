@@ -128,7 +128,7 @@ describe("앱 계열 CSS와 대비 검사", () => {
     expect(css).toContain("  --tide-accent-subtle-border: var(--tide-brand-subtle-border);");
   });
 
-  it("앱 계열 대비 검사는 on-subtle × faint·subtle 3단계, text × 무채색 호버·클릭을 돈다", () => {
+  it("앱 계열 대비 검사는 on-subtle × faint·subtle 3단계, text × faint(outline·ghost hover)를 돈다", () => {
     const pairs = checkColorFamily(brand).map(
       (result) => `${result.theme} ${result.foreground}/${result.background}`,
     );
@@ -136,11 +136,14 @@ describe("앱 계열 CSS와 대비 검사", () => {
       for (const background of ["faint", "subtle", "subtle-hover", "subtle-active"]) {
         expect(pairs).toContain(`${theme} on-subtle/${background}`);
       }
-      expect(pairs).toContain(`${theme} text/bg-hover`);
-      expect(pairs).toContain(`${theme} text/bg-active`);
-      // subtle-border는 꾸밈이라 검사하지 않고, text는 subtle-hover·subtle-active 위에 쓰지 않는다.
-      expect(pairs.filter((pair) => pair.includes("subtle-border"))).toEqual([]);
+      // outline·ghost는 hover faint, 누름 subtle로 채운다(ADR 0025). 무채색 덮기는 neutral만 쓴다.
+      expect(pairs).toContain(`${theme} text/faint`);
+      expect(pairs).toContain(`${theme} text/subtle`);
       expect(pairs).not.toContain(`${theme} text/subtle-hover`);
+      expect(pairs).not.toContain(`${theme} text/bg-hover`);
+      expect(pairs).not.toContain(`${theme} text/bg-active`);
+      // subtle-border는 꾸밈이라 검사하지 않는다.
+      expect(pairs.filter((pair) => pair.includes("subtle-border"))).toEqual([]);
     }
   });
 
@@ -170,9 +173,9 @@ describe("앱 계열 CSS와 대비 검사", () => {
     ).toThrow(/faint\.light/);
   });
 
-  it("대비 쌍 규칙 17개를 light·dark에서 검사한다", () => {
+  it("대비 쌍 규칙 16개를 light·dark에서 검사한다", () => {
     const results = checkColorFamily(brand);
-    expect(results).toHaveLength(34);
+    expect(results).toHaveLength(32);
     expect(results.every((result) => result.pass)).toBe(true);
   });
 
@@ -203,7 +206,7 @@ describe("tide-color CLI", () => {
       expect(result.stdout).toContain(`  --tide-brand-${slot}: `);
       expect(result.stdout).toContain(`  --tide-accent-${slot}: var(--tide-brand-${slot});`);
     }
-    expect(result.stderr).toContain("brand: 대비 쌍 34개 중 34개 통과");
+    expect(result.stderr).toContain("brand: 대비 쌍 32개 중 32개 통과");
   });
 
   it("대비 미달이 있으면 CSS를 내지 않고 exit 1이다", () => {

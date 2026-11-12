@@ -24,16 +24,23 @@ const colorClass: Record<FillVariant, string> = {
   ghost: "border-transparent text-accent",
 };
 
+/** outline·ghost의 hover·누름 색. 아래 `interactionClass` 주석 참고. */
+const pressableTintClass =
+  "[--pressable-hover:var(--tide-accent-faint)] [--pressable-active:var(--tide-accent-subtle)] data-[color=neutral]:[--pressable-hover:var(--tide-bg-hover)] data-[color=neutral]:[--pressable-active:var(--tide-bg-active)] hover:bg-(--pressable-hover) active:bg-(--pressable-active)";
+
 /** hover·누름 색. 활성 상태일 때만 붙인다(비활성·로딩에는 붙이지 않아 CSS 순서에 기대지 않는다). */
 const interactionClass: Record<FillVariant, string> = {
   solid: "hover:bg-accent-solid-hover active:bg-accent-solid-active",
   subtle: "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
-  // outline·ghost는 색 없이 덮는다(ADR 0022 §3). 기본 투명, hover bg-hover, 누름 bg-active.
-  // text × bg-hover·bg-active(흰 표면 bg-canvas 위 합성)가 4:1(일시 상태, ADR 0023)로 등록되어 있다. raised 표면
-  // (dark gray-900) 위의 Role 색 글자는 누름에서 warning·danger가 4:1에도 못 미치므로(3.99·3.89, 티켓 46)
-  // Tide Component는 raised 위에 Role 색 outline·ghost를 두지 않는다(Toast는 neutral).
-  outline: "hover:bg-hover active:bg-active",
-  ghost: "hover:bg-hover active:bg-active",
+  // outline·ghost는 같은 색의 연한 파스텔로 채운다(ADR 0025). 기본 투명, hover faint(가장 연함), 누름 subtle.
+  // text × faint·subtle이 4.5:1로 등록되어 있다(실제 최저 5.43·5.16:1). 불투명 색이라
+  // 놓인 표면(canvas·raised)과 관계없이 대비가 같다.
+  // neutral만 색 없이 덮는다(bg-hover·bg-active). dark neutral subtle이 raised 표면과 같은 색이라 Dialog·Toast 안
+  // 닫기 버튼의 hover가 보이지 않기 때문이다. 회색 덮기가 곧 neutral의 색이다.
+  // 색은 변수로 고른다. hover·누름 class가 하나라서 Component가 `hover:`·`active:` class로 덮어쓰면(Alert·Tag 닫기
+  // 버튼) tailwind-merge가 그대로 바꾼다. 색 이름별 선택자를 hover class에 두면 우선순위가 높아 덮어쓰기를 이긴다.
+  outline: pressableTintClass,
+  ghost: pressableTintClass,
 };
 
 /** 비활성 색. 색 이름과 관계없이 같다. disabled Token은 대비 검사 대상이 아니다. */
