@@ -209,3 +209,7 @@
 - (결정됨) Storybook 릴리스 감지는 `git ls-remote`(익명, 공개 저장소 전제)로 원격 tag를 본다. 저장소를 비공개로 바꾸면 token이 필요하다.
 - (결정됨) `changeset status` 계획에 smoke-next가 `none`(버전 `undefined`)으로 나온다. 파일은 바뀌지 않아 그대로 둔다.
 - (결정됨) 루트 `scripts/` 테스트는 루트 `vitest.config.ts` + `pnpm test:scripts`로 turbo 밖에서 돈다. 루트 devDependency에 `vitest`(catalog)를 더했다.
+
+## 43 퇴장 중 Toast inert
+
+- 보이는 수(`maxVisible`)를 넘어 밀려난 Toast(닫히지 않음)도 퇴장 전환을 거치므로 그동안 `inert`다. 다시 보이면 같은 요소에서 `inert`가 풀린다. 밀려남을 퇴장으로 보이는 동작은 그대로 두었다.
