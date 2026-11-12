@@ -155,7 +155,8 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 계열 8개(`blue`, `gray`, `green`, `amber`, `red`, `cyan`과 장식 계열 `purple`, `mint`)가 50~950의 11단계이고, 그 밖에 `white`, `black`이 있습니다. `blue-500`이 Tide의 기준색입니다.
 
-- 읽는 법: 괄호 안은 그 계열을 쓰는 Role입니다. 단계 아래 L, D는 light canvas(흰색)와 dark canvas(`gray-950`) 위 대비비입니다.
+- 읽는 법: 계열 이름 옆은 그 계열을 쓰는 Role입니다(Role이 없으면 「장식」). 타일마다 단계, hex, OKLCH 채도(C)를 적고, 글자색은 타일 위에서 대비가 더 높은 검정·흰색 중 하나입니다. 대비비는 아래 「대비」 절에서 봅니다.
+- 타일 아래 「쓰임」은 그 계열로 칠한 실제 Badge·Button·Link입니다. 장식 계열은 Badge와 accent 글자만 보입니다.
 - 단계마다 맡는 슬롯은 위 슬롯 표에 있습니다. 앱 계열의 단계별 역할은 [브랜드 색 더하기](?path=/docs/시작하기-브랜드-색-더하기--docs)의 「단계별 역할」을 봅니다.
 - Primitive class는 브랜드 색처럼 Semantic Token으로 표현할 수 없는 곳에만 씁니다.
 - `bg-blue-500`은 Tide 값입니다. `bg-slate-500` 같은 Tailwind 기본 팔레트 class는 없습니다.
