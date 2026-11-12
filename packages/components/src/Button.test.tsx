@@ -205,36 +205,54 @@ describe("스타일 축", () => {
     );
   });
 
-  // outline·ghost의 hover·누름은 색 없이 덮는다(ADR 0022 §3). 계산된 색이 Token 값과 같은지 light·dark에서 본다.
-  test.each(
-    (["light", "dark"] as const).flatMap((theme) =>
-      (["outline", "ghost"] as const).map((variant) => [theme, variant] as const),
+  // outline·ghost의 hover·누름은 같은 색으로 채운다(ADR 0025). Role은 hover faint·누름 subtle이고,
+  // neutral만 색 없이 덮는다(bg-hover·bg-active). 계산된 색이 Token 값과 같은지 light·dark에서 본다.
+  const tintCases = (["light", "dark"] as const).flatMap((theme) =>
+    (["outline", "ghost"] as const).flatMap((variant) =>
+      (
+        [
+          ["primary", "bg-primary-faint", "bg-primary-subtle", "text-primary"],
+          ["danger", "bg-danger-faint", "bg-danger-subtle", "text-danger"],
+          ["neutral", "bg-hover", "bg-active", "text-default"],
+        ] as const
+      ).map(([role, hover, press, text]) => [theme, variant, role, hover, press, text] as const),
     ),
-  )("%s %s hover 배경은 bg-hover, 글자는 그대로 Role text다", async (theme, variant) => {
-    if (forcedColors()) return;
-    await render(
-      <div data-theme={theme}>
-        <Button variant={variant} color="primary" noPressScale>
-          저장
-        </Button>
-      </div>,
-    );
-    const probe = (property: "backgroundColor" | "color", value: string): string => {
-      const div = document.createElement("div");
-      div.dataset["theme"] = theme;
-      div.style[property] = value;
-      document.body.append(div);
-      const resolved = getComputedStyle(div)[property];
-      div.remove();
-      return resolved;
-    };
-    const button = page.getByRole("button").element() as HTMLElement;
-    await userEvent.hover(button);
-    await expect
-      .poll(() => getComputedStyle(button).backgroundColor)
-      .toBe(probe("backgroundColor", "var(--tide-bg-hover)"));
-    expect(getComputedStyle(button).color).toBe(probe("color", "var(--tide-text-primary)"));
-  });
+  );
+  test.each(tintCases)(
+    "%s %s %s: hover 배경은 %s, 누름 배경은 %s, 글자는 그대로 %s다",
+    async (theme, variant, role, hover, press, text) => {
+      if (forcedColors()) return;
+      await render(
+        <div data-theme={theme}>
+          <Button variant={variant} color={role} noPressScale data-testid="target">
+            저장
+          </Button>
+        </div>,
+      );
+      const probe = (property: "backgroundColor" | "color", value: string): string => {
+        const div = document.createElement("div");
+        div.dataset["theme"] = theme;
+        div.style[property] = value;
+        document.body.append(div);
+        const resolved = getComputedStyle(div)[property];
+        div.remove();
+        return resolved;
+      };
+      const button = page.getByRole("button").element() as HTMLElement;
+      await userEvent.hover(button);
+      await expect
+        .poll(() => getComputedStyle(button).backgroundColor)
+        .toBe(probe("backgroundColor", `var(--tide-${hover})`));
+      expect(getComputedStyle(button).color).toBe(probe("color", `var(--tide-${text})`));
+
+      await commands.mouseDownOn("target");
+      await expect
+        .poll(() => getComputedStyle(button).backgroundColor)
+        .toBe(probe("backgroundColor", `var(--tide-${press})`));
+      expect(getComputedStyle(button).color).toBe(probe("color", `var(--tide-${text})`));
+      await commands.mouseUp();
+    },
+  );
 
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {
     // @ts-expect-error -- variant는 채움 방식 4개만 받는다.

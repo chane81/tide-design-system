@@ -76,14 +76,30 @@ describe("대비 쌍", () => {
     );
   });
 
-  it("text × subtle-hover 쌍과 Alert 경계 × subtle 쌍은 없고, text × subtle-active는 thumb용 3:1뿐이다(ADR 0022·0023)", () => {
+  it("Role 글자 × 같은 Role faint는 4.5:1(outline·ghost hover, ADR 0025), × subtle-hover 쌍은 없고, Alert 경계 × subtle 쌍은 없고, text × subtle-active는 thumb용 3:1뿐이다(ADR 0022·0023)", () => {
     const roleText = /^text-(primary|success|warning|danger|info)$/;
-    const removed = contrastPairs.filter(
-      (pair) =>
-        (roleText.test(pair.foreground) && pair.background.endsWith("-subtle-hover")) ||
-        (pair.foreground.startsWith("border-") && pair.background.endsWith("-subtle")),
+    const hover = contrastPairs.filter(
+      (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-faint"),
     );
-    expect(removed).toEqual([]);
+    expect(hover).toHaveLength(5);
+    expect(hover.every((pair) => pair.minRatio === 4.5)).toBe(true);
+    expect(
+      contrastPairs.filter(
+        (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-subtle-hover"),
+      ),
+    ).toEqual([]);
+    // Role 글자 × 무채색 덮기는 쓰지 않는다(무채색 덮기는 neutral 글자 text-default만).
+    expect(
+      contrastPairs.filter(
+        (pair) =>
+          roleText.test(pair.foreground) && ["bg-hover", "bg-active"].includes(pair.background),
+      ),
+    ).toEqual([]);
+    expect(
+      contrastPairs.filter(
+        (pair) => pair.foreground.startsWith("border-") && pair.background.endsWith("-subtle"),
+      ),
+    ).toEqual([]);
     // Switch 꺼짐 누름 thumb(text-accent × subtle-active)은 글자가 아닌 UI 요소라 3:1로 등록한다(티켓 46).
     const thumb = contrastPairs.filter(
       (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-subtle-active"),

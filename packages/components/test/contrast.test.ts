@@ -614,8 +614,6 @@ describe("Toast 대비 쌍", () => {
 describe("Button·IconButton 채움 방식 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
-  const text = (role: (typeof allRoles)[number]): string =>
-    role === "neutral" ? "text-default" : `text-${role}`;
   const onSubtle = (role: (typeof allRoles)[number]): string =>
     role === "neutral" ? "text-default" : `text-${role}-on-subtle`;
 
@@ -639,23 +637,32 @@ describe("Button·IconButton 채움 방식 대비 쌍", () => {
     },
   );
 
-  it.each(allRoles)(
-    "%s outline·ghost: 글자 × bg-hover·bg-active(canvas 위 합성)가 4:1(일시 상태)로 등록되어 있다",
+  // outline·ghost는 같은 색으로 채운다(ADR 0025): Role은 hover faint·누름 subtle(4.5),
+  // neutral은 색 없이 덮는다(bg-hover·bg-active, canvas·raised 위 합성 4).
+  it.each(tideRoles)(
+    "%s outline·ghost: text × 같은 Role faint·subtle이 4.5:1로 등록되어 있다",
     (role) => {
-      expect(registered(text(role), "bg-hover", 4, "bg-canvas")).toBe(true);
-      expect(registered(text(role), "bg-active", 4, "bg-canvas")).toBe(true);
+      expect(registered(`text-${role}`, `bg-${role}-faint`, 4.5)).toBe(true);
+      expect(registered(`text-${role}`, `bg-${role}-subtle`, 4.5)).toBe(true);
     },
   );
 
-  it("앱 Role은 on-subtle × subtle 3단계, on-solid × solid 3단계, text × bg-hover·bg-active 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
+  it("neutral outline·ghost: text-default × bg-hover·bg-active(canvas·raised 위 합성)가 4:1(일시 상태)로 등록되어 있다", () => {
+    for (const surface of ["bg-canvas", "bg-raised"] as const) {
+      expect(registered("text-default", "bg-hover", 4, surface)).toBe(true);
+      expect(registered("text-default", "bg-active", 4, surface)).toBe(true);
+    }
+  });
+
+  it("앱 Role은 on-subtle × subtle 3단계, on-solid × solid 3단계, text × faint·subtle 규칙으로 검사된다(tide-color가 같은 규칙을 쓴다)", () => {
     expect(ruled("on-subtle", "subtle", 4.5)).toBe(true);
     expect(ruled("on-subtle", "subtle-hover", 4)).toBe(true);
     expect(ruled("on-subtle", "subtle-active", 4)).toBe(true);
     for (const background of ["solid", "solid-hover", "solid-active"]) {
       expect(ruled("on-solid", background, 4), background).toBe(true);
     }
-    expect(ruled("text", "bg-hover", 4)).toBe(true);
-    expect(ruled("text", "bg-active", 4)).toBe(true);
+    expect(ruled("text", "faint", 4.5)).toBe(true);
+    expect(ruled("text", "subtle", 4.5)).toBe(true);
   });
 });
 

@@ -88,19 +88,19 @@ export const contrastPairs: readonly ContrastPair[] = [
       4,
     ),
   ),
-  // 글자 × 무채색 호버·클릭(흰 표면 위에 합성). Button outline·ghost, 목록 항목, Table 행, Accordion 트리거의 hover·누름이다.
-  ...["text-default" as const, ...roles.map((role) => `text-${role}` as const)].flatMap(
-    (foreground) =>
-      neutralStates.map((background) => ({
-        foreground,
-        background,
-        minRatio: 4 as const,
-        surface: neutralStateSurface,
-      })),
-  ),
+  // 역할 글자 × 같은 역할 faint. Button·IconButton outline·ghost의 hover다(누름은 위의 text × subtle, ADR 0025).
+  // hover라 일시 상태지만 subtle·faint 위 글자는 4.5로 맞춘다(실제 최저 5.43:1).
+  ...roles.flatMap((role) => pairs([`text-${role}`], [`bg-${role}-faint`], 4.5)),
+  // text-default × 무채색 호버·클릭(흰 표면 위에 합성). neutral Button outline·ghost, 목록 항목, Table 행,
+  // Accordion 트리거의 hover·누름이다. Role 색 outline·ghost는 같은 색 subtle로 채운다(ADR 0025).
+  ...neutralStates.map((background) => ({
+    foreground: "text-default" as const,
+    background,
+    minRatio: 4 as const,
+    surface: neutralStateSurface,
+  })),
   // text-default × 무채색 호버·클릭(raised 표면 위에 합성). 목록 오버레이 항목(Menu·Select·Combobox)과
-  // Toast 닫기·액션 버튼(neutral)이다. raised 위 Role 색 글자는 dark 누름에서 warning 3.99·danger 3.89로 4:1에도
-  // 못 미쳐 Tide Component는 쓰지 않는다(티켓 03·46).
+  // Toast 닫기·액션 버튼, Dialog 닫기 버튼(neutral)이다.
   ...neutralStates.map((background) => ({
     foreground: "text-default" as const,
     background,
@@ -191,12 +191,8 @@ export const colorContrastRules: readonly ColorContrastRule[] = [
     background,
     minRatio: 4.5 as const,
   })),
-  ...neutralStates.map((background) => ({
-    foreground: "text" as const,
-    background,
-    minRatio: 4 as const,
-    surface: neutralStateSurface,
-  })),
+  // outline·ghost hover(ADR 0025). 누름은 위의 text × subtle이다.
+  { foreground: "text" as const, background: "faint" as const, minRatio: 4.5 as const },
   ...onSubtleRest.map((background) => ({
     foreground: "on-subtle" as const,
     background,
