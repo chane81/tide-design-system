@@ -29,11 +29,24 @@
 
 ### 그 밖의 항목
 
-- **text × bg-hover·bg-active의 표면**: 티켓의 「흰 표면에 얹은 값」을 두 Theme 모두 `bg-canvas`(light white, dark gray-950)로 구현했다. dark `bg-raised`(gray-900, Menu·popover) 위에서는 역할 text × bg-hover가 4.41~4.68, × bg-active가 3.91~4.14로 미달이다. raised 위 목록 항목 글자는 text-default라 지금 쓰는 조합은 아니다. 03에서 raised 위에 역할 text를 bg-hover와 함께 쓰는지 확인이 필요하다.
+- **text × bg-hover·bg-active의 표면**: 티켓의 「흰 표면에 얹은 값」을 두 Theme 모두 `bg-canvas`(light white, dark gray-950)로 구현했다. dark `bg-raised`(gray-900, Menu·popover) 위에서는 역할 text × bg-hover가 4.41~4.68, × bg-active가 3.91~4.14로 미달이다. → 03에서 Toast 버튼을 neutral로 정해 해결했다(아래 티켓 03 항목).
 - **neutral dark subtle 3단계**: 기존 덮어쓴 값 900 / 800 / 700을 그대로 두었다(덮기 규칙 950 + white 6%·10%로 바꾸지 않음). neutral light는 규칙을 따라 100, 100 + gray-950 4%·8%로 바뀌었다. 이제 light `bg-neutral-subtle`과 `bg-disabled`가 둘 다 gray-100(`#e8e8ea`)이다.
 - **neutral·gray dark faint**: gray-950과 gray-950을 섞으면 gray-950이라 dark canvas와 같은 색이다. 테두리 없는 Badge faint(03)는 dark에서 바탕이 보이지 않는다.
 - **섞기 색 공간**: 「반씩 섞기」(dark faint)는 덮기와 같은 sRGB 채널 보간으로 계산했다. 결정 표에는 참고 값이 없다.
 - **테스트 픽스처**: 앱 계열 CLI 테스트용 `yellow-overrides`가 새 규칙(text 700)에서 text × bg-active light 4.24:1로 미달이라, 픽스처에 `text: { light: 800 }`를 더했다(Tide 값이 아니라 테스트 데이터).
+
+## 티켓 03 (2026-11-12)
+
+### 정함: Toast 닫기·액션 버튼
+
+**결정(사용자, 2026-11-12): Toast 닫기·액션 버튼은 `color="neutral"`(글자 text-default)로 바꾼다.** 상태 아이콘은 Role 색(text-accent)을 유지하고 ADR 값은 바꾸지 않는다. 수치는 [티켓 03 Comments](issues/03-components-pastel-and-overlay.md#2026-11-12-결과)에 있다.
+
+### 보류 항목
+
+- **ADR 0022 §3의 4.5 보장은 canvas 기준이다.** 앱이 raised 표면(Dialog, Popover 등, dark gray-900)에 Role 색 ghost·outline 버튼을 두면 hover·누름에서 4.5:1에 못 미친다(dark 누름 3.89~4.10:1, danger hover 4.42:1). 문서(티켓 04)에 안내할지, ADR을 보강할지(예: raised 위 bg-hover·bg-active 값 따로 두기) 검토가 필요하다.
+- **Switch 꺼짐 누름 thumb**: 꺼짐 상태에서 누르면 thumb(`text-accent`)이 `subtle-active` 위에 놓인다. 이 쌍은 02에서 지웠다. thumb은 글자가 아닌 UI 요소라 3:1이 기준이고, 실제 값은 최저 4.31:1(info dark)이라 통과한다. 주석만 고쳤다. 등록 쌍(3:1 UI 쌍)을 더할지 정해야 한다.
+- **Alert 닫기 버튼 덮어쓰기**: ghost의 기본(text-accent, bg-hover)을 Alert 안에서만 `text-accent-on-subtle` + `subtle-hover`·`subtle-active`로 덮어썼다. 다른 subtle 표면 안에 ghost 버튼을 두는 앱도 같은 문제를 겪는다. 문서(04)에 「subtle 표면 안 버튼」 안내가 필요할 수 있다.
+- **Toast.mdx 한 문장**: 「닫기·액션 버튼 색이 바뀐다」가 사실과 달라져 한 문장만 고쳤다. 설명 전체는 04에서 다시 본다.
 
 ## 티켓 01에서 넘어온 항목
 
