@@ -13,3 +13,5 @@ RUN pnpm turbo run build --filter=@tide-tds/docs
 
 FROM nginx:1.30-alpine
 COPY --from=build /repo/apps/docs/storybook-static /usr/share/nginx/html
+# 이미지 기본 default.conf에 Cache-Control만 더한 설정(apps/docs/nginx.conf, 티켓 44).
+COPY apps/docs/nginx.conf /etc/nginx/conf.d/default.conf
