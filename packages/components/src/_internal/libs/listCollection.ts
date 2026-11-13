@@ -1,14 +1,5 @@
-// 목록 Component의 항목을 React Stately 컬렉션으로 모으는 공통 부분(tide-v0-impl 티켓 27, ADR 0019).
-// Menu가 처음 쓰고 Select·Combobox(28·29)가 옵션·묶음에 다시 쓴다. 옵션은 `value`를 key로 쓰는
-// `valueItemCollectionNode`(티켓 28)를 붙인다. hook·state를 쓰지 않으므로 "use client"가 없다.
-//
-// React Stately의 `useTreeState`·`useListState`는 children 요소의 type에 붙은 `getCollectionNode`로 항목을 모은다
-// (react-stately 3.51.0 `Item`·`Section`과 같은 방식, 설치본 CollectionBuilder 소스로 확인). Tide 항목 Component
-// (`MenuItem` 등)는 렌더하지 않는 표시 요소이고, 여기 함수를 `getCollectionNode`로 붙인다. 마크업은 목록 Component가
-// 컬렉션의 node를 돌며 직접 그린다(ADR 0004).
-//
-// 이 방식은 항목이 목록의 바로 아래(또는 Fragment·배열 안)에 있어야 한다. 서버 컴포넌트에서 만든 항목 요소는 type이
-// client 참조(React lazy)로 오므로 `resolveCollectionChildren`으로 실제 Component로 바꿔 넘긴다.
+// 항목 Component는 렌더하지 않는 표시 요소이고, 여기 함수를 `getCollectionNode`로 붙여 React Stately가 모은다(ADR 0019).
+// 항목은 목록의 바로 아래(또는 Fragment·배열 안)에 있어야 한다.
 
 import {
   Children,
@@ -68,9 +59,7 @@ interface LazyComponent {
 const isLazy = (type: unknown): type is LazyComponent =>
   typeof type === "object" && type !== null && (type as LazyComponent).$$typeof === lazyType;
 
-/**
- * children 안의 React node에서 글자만 모은다. 항목의 기본 타입어헤드 글자다. 아이콘(글자 없는 요소)은 빠진다.
- */
+/** children에서 글자만 모은다. 항목의 기본 타입어헤드 글자다. */
 export function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map((child: ReactNode) => textOf(child)).join("");
@@ -80,13 +69,7 @@ export function textOf(node: ReactNode): string {
 }
 
 /**
- * 목록에 넘길 children을 컬렉션 빌더가 읽을 수 있게 고친다.
- *
- * - 서버 컴포넌트가 만든 요소는 client Component type이 React lazy 참조(RSC payload의 `$L`)로 온다. 컬렉션 빌더는
- *   type의 `getCollectionNode`를 직접 보므로 lazy를 풀어 실제 Component로 바꾼다. 목록 Component와 항목 Component는
- *   같은 모듈이라 목록이 렌더되는 시점에는 이미 불러와져 있다(풀 때 기다리지 않는다).
- * - Fragment는 펼친다. 배열·Fragment 안의 lazy도 같이 푼다.
- * - 묶음 안의 항목은 묶음의 `getCollectionNode`(`sectionCollectionNode`)가 같은 함수로 푼다.
+ * 서버 컴포넌트가 만든 항목은 type이 React lazy 참조로 오므로 풀어 실제 Component로 바꾼다(ADR 0019). Fragment는 펼친다.
  */
 export function resolveCollectionChildren(children: ReactNode): ReactNode[] {
   const resolved: ReactNode[] = [];
@@ -102,7 +85,7 @@ export function resolveCollectionChildren(children: ReactNode): ReactNode[] {
       return;
     }
     if (isLazy(child.type)) {
-      // React lazy의 `_init(_payload)`는 불러온 Component를 돌려준다(아직이면 Promise를 던져 Suspense로 기다린다).
+      // `_init`·`_payload`는 React 공개 API가 아니다. React를 올리면 Menu의 lazy 항목 테스트를 확인한다.
       const type = child.type._init(child.type._payload) as CollectionComponent<object>;
       resolved.push(createElement(type, { ...child.props, key: child.key }));
 
@@ -111,14 +94,10 @@ export function resolveCollectionChildren(children: ReactNode): ReactNode[] {
     resolved.push(child);
   });
 
-  // 항목 key는 컬렉션 빌더가 요소의 key로, 없으면 자리 번호로 만든다.
   return resolved;
 }
 
-/**
- * 항목 Component의 `getCollectionNode`. node의 props에 `isDisabled`를 더한다(React Stately `SelectionManager`·
- * 키보드 이동이 `props.isDisabled`를 읽는다). 렌더는 목록 Component가 node.props(항목에 준 props 그대로)로 한다.
- */
+/** node props에 `isDisabled`를 더한다. React Stately 선택·키보드 이동이 그 이름을 읽는다. */
 export function* itemCollectionNode(props: CollectionItemProps): Generator<PartialNode> {
   yield {
     type: "item",
@@ -136,12 +115,7 @@ export interface CollectionValueItemProps extends CollectionItemProps {
   value: string;
 }
 
-/**
- * 옵션 Component의 `getCollectionNode`. `itemCollectionNode`와 같고, `value`를 node의 key로 yield한다.
- * 컬렉션 빌더는 yield한 node에 key가 있으면 요소 key·자리 번호 대신 그 값을 쓴다(react-stately 3.51.0
- * `CollectionBuilder.getFullNode`). 그래서 목록 상태의 선택 key가 곧 앱의 값이고, 묶음 안에 있어도 앞에 묶음 key가
- * 붙지 않는다(묶음은 key 없는 부분 node로 항목을 넘긴다).
- */
+/** `value`를 node key로 yield해, 묶음 안에서도 목록의 선택 key가 곧 앱의 값이 된다. */
 export function* valueItemCollectionNode(props: CollectionValueItemProps): Generator<PartialNode> {
   for (const node of itemCollectionNode(props)) yield { ...node, key: props.value };
 }
@@ -162,9 +136,7 @@ export function* sectionCollectionNode(props: CollectionSectionProps): Generator
   };
 }
 
-/**
- * 렌더하지 않는 표시 Component에 컬렉션 node 생성 함수를 붙인다. 공개 타입에는 드러나지 않는다.
- */
+/** 렌더하지 않는 표시 Component에 컬렉션 node 생성 함수를 붙인다. 공개 타입에는 드러나지 않는다. */
 export function asCollectionComponent<P>(
   component: (props: P) => null,
   getCollectionNode: (props: P) => Generator<PartialNode>,
