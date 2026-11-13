@@ -1,47 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" width="920" height="500" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- light가 기본, 보는 환경이 dark면 아래 media query로 바뀐다. 색은 Tide 색 계열 값이다 -->
+  <style>
+    .bg { fill: #f5f5f6; }
+    .title { fill: #28292c; }
+    .t1 { fill: #3f4247; }
+    .t2 { fill: #5b6068; }
+    .note { fill: #2b5fa8; }
+    .ln { fill: none; stroke: #82878e; }
+    .purple { fill: #f0e9ff; stroke: #c4b5e4; } .purple-1 { fill: #412963; } .purple-2 { fill: #6b4e99; }
+    .cyan { fill: #ddf1f9; stroke: #97c6da; } .cyan-1 { fill: #1c4351; } .cyan-2 { fill: #006a87; }
+    .mint { fill: #d7f4f1; stroke: #91cbc6; } .mint-1 { fill: #11403e; } .mint-2 { fill: #116e6a; }
+    .blue { fill: #e3eefd; stroke: #a7c0e3; } .blue-1 { fill: #113465; } .blue-2 { fill: #2b5fa8; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1a1a1a; }
+      .title { fill: #f0f0f0; }
+      .t1 { fill: #e8e8e8; }
+      .t2 { fill: #9a9a9a; }
+      .note { fill: #65a1f9; }
+      .ln { stroke: #8a8a8a; }
+      .purple { fill: #412963; stroke: #c4b5e4; } .purple-1 { fill: #f0e9ff; } .purple-2 { fill: #c4b5e4; }
+      .cyan { fill: #1c4351; stroke: #97c6da; } .cyan-1 { fill: #ddf1f9; } .cyan-2 { fill: #97c6da; }
+      .mint { fill: #11403e; stroke: #91cbc6; } .mint-1 { fill: #d7f4f1; } .mint-2 { fill: #91cbc6; }
+      .blue { fill: #113465; stroke: #65a1f9; } .blue-1 { fill: #e3eefd; } .blue-2 { fill: #a7c0e3; }
+    }
+  </style>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#9a9a9a" stroke-width="1.5"/>
+      <path class="ln" d="M0,0 L10,5 L0,10" stroke-width="1.5"/>
     </marker>
   </defs>
-  <rect width="920" height="500" rx="16" fill="#1a1a1a"/>
+  <rect class="bg" width="920" height="500" rx="16"/>
 
-  <text x="460" y="40" fill="#f0f0f0" font-size="18" font-weight="700" text-anchor="middle">원칙에서 Component까지 — 위가 아래의 근거</text>
+  <text class="title" x="460" y="40" font-size="18" font-weight="700" text-anchor="middle">원칙에서 Component까지 — 위가 아래의 근거</text>
 
-  <!-- Principle (purple 계열) -->
-  <rect x="60" y="70" width="260" height="64" rx="10" fill="#412963" stroke="#c4b5e4"/>
-  <text x="190" y="98" fill="#f0e9ff" font-size="18" font-weight="700" text-anchor="middle">Principle</text>
-  <text x="190" y="120" fill="#c4b5e4" font-size="13" text-anchor="middle">원칙</text>
-  <text x="360" y="98" fill="#e8e8e8" font-size="15" font-weight="700">가치 판단 네 가지. 번호가 곧 우선순위</text>
-  <text x="360" y="120" fill="#9a9a9a" font-size="12">① 접근성 &gt; 미려함   ② 명확함 &gt; 화려함   ③ 단순함 &gt; 유연함   ④ 발견 &gt; 암기</text>
+  <!-- Principle -->
+  <rect class="purple" x="60" y="70" width="260" height="64" rx="10"/>
+  <text class="purple-1" x="190" y="98" font-size="18" font-weight="700" text-anchor="middle">Principle</text>
+  <text class="purple-2" x="190" y="120" font-size="13" text-anchor="middle">원칙</text>
+  <text class="t1" x="360" y="98" font-size="15" font-weight="700">가치 판단 네 가지. 번호가 곧 우선순위</text>
+  <text class="t2" x="360" y="120" font-size="12">① 접근성 &gt; 미려함   ② 명확함 &gt; 화려함   ③ 단순함 &gt; 유연함   ④ 발견 &gt; 암기</text>
 
-  <line x1="190" y1="134" x2="190" y2="168" stroke="#8a8a8a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="190" y1="134" x2="190" y2="168" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- Standard (cyan 계열) -->
-  <rect x="60" y="170" width="260" height="64" rx="10" fill="#1c4351" stroke="#97c6da"/>
-  <text x="190" y="198" fill="#ddf1f9" font-size="18" font-weight="700" text-anchor="middle">Standard</text>
-  <text x="190" y="220" fill="#97c6da" font-size="13" text-anchor="middle">기준</text>
-  <text x="360" y="198" fill="#e8e8e8" font-size="15" font-weight="700">통과 여부를 잴 수 있는 규칙</text>
-  <text x="360" y="220" fill="#9a9a9a" font-size="12">본문 글자 대비 4.5:1 · solid 위 글자 4.0:1 · UI 요소 3:1 · 키보드 조작</text>
+  <!-- Standard -->
+  <rect class="cyan" x="60" y="170" width="260" height="64" rx="10"/>
+  <text class="cyan-1" x="190" y="198" font-size="18" font-weight="700" text-anchor="middle">Standard</text>
+  <text class="cyan-2" x="190" y="220" font-size="13" text-anchor="middle">기준</text>
+  <text class="t1" x="360" y="198" font-size="15" font-weight="700">통과 여부를 잴 수 있는 규칙</text>
+  <text class="t2" x="360" y="220" font-size="12">본문 글자 대비 4.5:1 · solid 위 글자 4.0:1 · UI 요소 3:1 · 키보드 조작</text>
 
-  <line x1="190" y1="234" x2="190" y2="268" stroke="#8a8a8a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="190" y1="234" x2="190" y2="268" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- Foundation (mint 계열) -->
-  <rect x="60" y="270" width="260" height="64" rx="10" fill="#11403e" stroke="#91cbc6"/>
-  <text x="190" y="298" fill="#d7f4f1" font-size="18" font-weight="700" text-anchor="middle">Foundation</text>
-  <text x="190" y="320" fill="#91cbc6" font-size="13" text-anchor="middle">파운데이션</text>
-  <text x="360" y="298" fill="#e8e8e8" font-size="15" font-weight="700">색 · 타이포그래피 · 간격 · 모션 · 그림자를 Token으로</text>
-  <text x="360" y="320" fill="#9a9a9a" font-size="12">Primitive Token → Semantic Token → Utility class (bg-primary-solid)</text>
+  <!-- Foundation -->
+  <rect class="mint" x="60" y="270" width="260" height="64" rx="10"/>
+  <text class="mint-1" x="190" y="298" font-size="18" font-weight="700" text-anchor="middle">Foundation</text>
+  <text class="mint-2" x="190" y="320" font-size="13" text-anchor="middle">파운데이션</text>
+  <text class="t1" x="360" y="298" font-size="15" font-weight="700">색 · 타이포그래피 · 간격 · 모션 · 그림자를 Token으로</text>
+  <text class="t2" x="360" y="320" font-size="12">Primitive Token → Semantic Token → Utility class (bg-primary-solid)</text>
 
-  <line x1="190" y1="334" x2="190" y2="368" stroke="#8a8a8a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="190" y1="334" x2="190" y2="368" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- Component (blue 계열) -->
-  <rect x="60" y="370" width="260" height="64" rx="10" fill="#113465" stroke="#65a1f9"/>
-  <text x="190" y="398" fill="#e3eefd" font-size="18" font-weight="700" text-anchor="middle">Component</text>
-  <text x="190" y="420" fill="#a7c0e3" font-size="13" text-anchor="middle">컴포넌트</text>
-  <text x="360" y="398" fill="#e8e8e8" font-size="15" font-weight="700">Token만 쓰는 React Component</text>
-  <text x="360" y="420" fill="#9a9a9a" font-size="12">Button · Field · Select · Dialog · Toast … 접근성 동작은 react-aria hook</text>
+  <!-- Component -->
+  <rect class="blue" x="60" y="370" width="260" height="64" rx="10"/>
+  <text class="blue-1" x="190" y="398" font-size="18" font-weight="700" text-anchor="middle">Component</text>
+  <text class="blue-2" x="190" y="420" font-size="13" text-anchor="middle">컴포넌트</text>
+  <text class="t1" x="360" y="398" font-size="15" font-weight="700">Token만 쓰는 React Component</text>
+  <text class="t2" x="360" y="420" font-size="12">Button · Field · Select · Dialog · Toast … 접근성 동작은 react-aria hook</text>
 
   <!-- 하단 설명 -->
-  <text x="460" y="474" fill="#65a1f9" font-size="14" font-weight="700" text-anchor="middle">원칙끼리 부딪히면 번호가 작은 쪽을 따른다 — 기준을 넘지 못한 색은 Token이 되지 않는다</text>
+  <text class="note" x="460" y="474" font-size="14" font-weight="700" text-anchor="middle">원칙끼리 부딪히면 번호가 작은 쪽을 따른다 — 기준을 넘지 못한 색은 Token이 되지 않는다</text>
 </svg>
