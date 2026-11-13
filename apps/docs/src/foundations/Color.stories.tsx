@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 // 내부 서브패스(앱 개발자용 아님). 렌더된 타일 글자색의 대비비를 계산한다.
-import { colorFamilyNames, contrastRatio } from "@tide-tds/foundation/internal";
+import { colorFamilyNames, contrastRatio } from "@tide-design/foundation/internal";
 import { expect, within } from "storybook/test";
 
 import { ColorNameContrast, ColorNames, ColorSlotRules } from "../docs-blocks/ColorNames.tsx";

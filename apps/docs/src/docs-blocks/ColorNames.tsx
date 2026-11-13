@@ -1,4 +1,4 @@
-import { semanticPrefix, type ColorSlot, type ThemeName } from "@tide-tds/foundation";
+import { semanticPrefix, type ColorSlot, type ThemeName } from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님). 문서 블록이 Tide 색 이름 목록, 슬롯 규칙, 원본 hex로 대비비를 계산하려고 쓴다.
 import {
   accentUtilities,
@@ -9,7 +9,7 @@ import {
   slotRule,
   tideColorNames,
   type SlotValue,
-} from "@tide-tds/foundation/internal";
+} from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // 색 Token 블록: 색 이름(Color)마다 data-color로 accent 슬롯을 꽂아 그린다(tide-v0-impl 티켓 40).

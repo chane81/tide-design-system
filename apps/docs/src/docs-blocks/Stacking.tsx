@@ -1,4 +1,4 @@
-import { zIndex, type ZIndexName } from "@tide-tds/foundation";
+import { zIndex, type ZIndexName } from "@tide-design/foundation";
 import type { ReactElement } from "react";
 
 // 쌓임 단계 Token 블록: Token 원본에서 단계 목록과 값을 그린다(spec 「문서 앱」).

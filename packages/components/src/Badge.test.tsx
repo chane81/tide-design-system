@@ -1,6 +1,6 @@
 // Badge의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 19).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서는 배경이 사라져도 경계로 모양이 남는지 본다.
-import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
+import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { afterEach, describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -8,7 +8,7 @@ import { render } from "vitest-browser-react";
 import { Badge, type BadgeProps } from "./Badge.tsx";
 
 // 앱 Role(brand)과 앱 장식 계열(leaf)을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-declare module "@tide-tds/foundation" {
+declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
   }

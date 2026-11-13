@@ -1,4 +1,4 @@
-import { tailwindMergeConfig } from "@tide-tds/foundation/tailwind-merge";
+import { tailwindMergeConfig } from "@tide-design/foundation/tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 

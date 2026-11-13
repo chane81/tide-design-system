@@ -134,7 +134,7 @@ export const contrastPairs: readonly ContrastPair[] = [
 
 /**
  * 대비 검사에서 뺀 Semantic Token과 이유.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const contrastExclusions: readonly ContrastExclusion[] = [
   { token: "border-default", reason: "장식용 구분선이다. 경계 식별에 쓰지 않는다." },
@@ -183,7 +183,7 @@ export interface ColorContrastRule {
 
 /**
  * 색 이름 하나의 대비 쌍 규칙.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const colorContrastRules: readonly ColorContrastRule[] = [
   ...[...surfaces, "subtle" as const].map((background) => ({
@@ -225,7 +225,7 @@ export interface ColorContrastResult extends ColorContrastRule {
 
 /**
  * 색 이름 하나의 슬롯 hex로 대비 쌍 규칙을 light·dark에서 검사한다. 표면 층은 Tide Token 값을 쓴다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function checkColorContrast(
   slotHex: Readonly<Record<ThemeName, Readonly<Record<ColorSlot, string>>>>,
@@ -243,7 +243,7 @@ export function checkColorContrast(
 
 /**
  * Semantic Token의 불투명한 hex. 반투명 Token(8자리 hex)은 `surface` 위에 합성한다(브라우저가 그리는 값과 같다).
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function opaqueSemanticHex(
   name: SemanticColorName,
@@ -259,7 +259,7 @@ export function opaqueSemanticHex(
 
 /**
  * 대비 쌍 하나의 Theme별 대비비. 반투명 배경은 쌍의 표면(`surface`) 위에 합성한 값으로 계산한다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function contrastPairRatio(pair: ContrastPair, theme: ThemeName): number {
   return contrastRatio(
@@ -282,7 +282,7 @@ function relativeLuminance(hex: string): number {
 /**
  * 두 색의 WCAG 2.x 대비비(1~21). 순서는 상관없다.
  * 반투명 색(8자리 hex)은 받지 않는다. 대비 검사에서 overlay와 shadow는 제외한다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function contrastRatio(foreground: string, background: string): number {
   const a = relativeLuminance(foreground);

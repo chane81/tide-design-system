@@ -4,8 +4,8 @@ Tide의 버전과 릴리스 규칙을 적는다. 근거는 [tide-v0 spec](docs/p
 
 버전은 두 묶음으로 따로 간다.
 
-- **TDS**: 배포 패키지 `@tide-tds/foundation`, `@tide-tds/icons`, `@tide-tds/components`. 언제나 같은 버전이다.
-- **Storybook**: 문서 앱 `@tide-tds/docs`(`apps/docs`, npm에 내지 않음). 자기 changeset으로만 버전이 오른다.
+- **TDS**: 배포 패키지 `@tide-design/foundation`, `@tide-design/icons`, `@tide-design/components`. 언제나 같은 버전이다.
+- **Storybook**: 문서 앱 `@tide-design/docs`(`apps/docs`, npm에 내지 않음). 자기 changeset으로만 버전이 오른다.
 
 ## changeset
 
@@ -17,7 +17,7 @@ pnpm changeset --empty  # 바꿨지만 릴리스가 필요 없을 때(테스트,
 ```
 
 - 문서(`docs/`), smoke 앱(`apps/smoke-next`), 저장소 설정만 바꾼 PR은 changeset이 없어도 통과한다. 남기고 싶으면 empty changeset을 쓴다.
-- **TDS 패키지와 `@tide-tds/docs`를 한 changeset 파일에 섞지 않는다.** CI가 실패한다. 둘 다 올리려면 파일을 둘로 나눈다(`pnpm changeset`을 두 번).
+- **TDS 패키지와 `@tide-design/docs`를 한 changeset 파일에 섞지 않는다.** CI가 실패한다. 둘 다 올리려면 파일을 둘로 나눈다(`pnpm changeset`을 두 번).
 - Component를 더하면서 그 문서 페이지도 만든 PR은 TDS changeset 하나로 검사를 통과한다. Storybook 버전도 올리고 싶으면 docs changeset을 따로 더한다.
 - 요약은 **한글**로 쓴다. CHANGELOG와 GitHub Release에 그대로 들어간다. 코드 식별자는 원문 그대로 backtick으로 감싼다.
 - 요약 첫 줄은 사용자가 무엇을 해야 하는지 알 수 있게 쓴다. breaking이면 바꿔야 할 코드(옛 이름 → 새 이름)를 적는다.
@@ -33,7 +33,7 @@ pnpm changeset --empty  # 바꿨지만 릴리스가 필요 없을 때(테스트,
   - Utility class 이름
   - 텍스트 스타일 이름
   - Component export, props, props 값, 콜백 시그니처
-  - 아이콘 이름표(`packages/icons/icon-names.json`)의 키. 키를 지우거나 이름을 바꾸면 `"@tide-tds/icons": minor`가 있어야 한다. 없으면 CI가 실패한다.
+  - 아이콘 이름표(`packages/icons/icon-names.json`)의 키. 키를 지우거나 이름을 바꾸면 `"@tide-design/icons": minor`가 있어야 한다. 없으면 CI가 실패한다.
   - peer 범위를 올리는 것(React, Tailwind 등)
 - **patch**: 그 밖의 모든 것.
   - 새 Token, 새 Component, 새 props, 이름표에 키 더하기
@@ -54,7 +54,7 @@ pnpm changeset --empty  # 바꿨지만 릴리스가 필요 없을 때(테스트,
 
 1. changeset이 든 PR을 main에 머지하면 「chore: 릴리스 버전 올리기」 PR(Version PR)이 생기거나 갱신된다. 버전과 CHANGELOG 변경이 들어 있다. Version PR은 하나이고 제목은 든 묶음에 따라 `[TDS] Release 0.6.0`, `[Storybook] Release 0.1.0`, `[TDS] Release 0.6.0 · [Storybook] Release 0.2.0` 중 하나다. TDS가 오르면 Storybook도 따라 오르므로 TDS가 든 Version PR은 「둘 다」 꼴이 된다.
 2. 릴리스할 때 Version PR을 머지한다. 단계 경계(0.1.0 … 0.5.0)는 이 PR을 머지할 때 사람이 고른다.
-3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-tds/components@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
-4. publish가 실제로 일어났으면 문서 사이트(`tds.lakegreen.net`) 배포를 요청하고, Dokploy에서 배포가 끝날 때까지 기다린다(실패하거나 15분 안에 끝나지 않으면 job이 실패한다). Storybook만 오른 Version PR을 머지했을 때는 npm publish 없이 문서만 배포하고, 성공하면 tag `@tide-tds/docs@0.1.0`을 만든다(GitHub Release는 없다). 아직 릴리스하지 않은 TDS changeset이 main에 남아 있으면 Storybook만으로는 배포하지 않는다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
+3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-design/components@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
+4. publish가 실제로 일어났으면 문서 사이트(`tds.lakegreen.net`) 배포를 요청하고, Dokploy에서 배포가 끝날 때까지 기다린다(실패하거나 15분 안에 끝나지 않으면 job이 실패한다). Storybook만 오른 Version PR을 머지했을 때는 npm publish 없이 문서만 배포하고, 성공하면 tag `@tide-design/docs@0.1.0`을 만든다(GitHub Release는 없다). 아직 릴리스하지 않은 TDS changeset이 main에 남아 있으면 Storybook만으로는 배포하지 않는다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
 
 prerelease dist-tag(`next`, `canary`)는 v0에서 쓰지 않는다.

@@ -3,14 +3,14 @@
 // 두 Component의 모양이 어긋나지 않게 하려는 것이다. Toast는 표면만 raised(shadow-md)로 바꾸고 나머지를 그대로 쓴다.
 // 이 파일은 JSX를 렌더하지 않고 hook·이벤트도 없다. 서버 컴포넌트에서 import해도 된다.
 
-import type { TideRole } from "@tide-tds/foundation";
+import type { TideRole } from "@tide-design/foundation";
 import {
   CircleCheckIcon,
   InfoIcon,
   OctagonExclamationPointIcon,
   TriangleExclamationPointIcon,
   type IconProps,
-} from "@tide-tds/icons";
+} from "@tide-design/icons";
 import type { ReactElement } from "react";
 
 import type { Role } from "./types.ts";

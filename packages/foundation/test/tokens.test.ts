@@ -1,5 +1,5 @@
 // 빌드한 tokens.css(Tailwind 없이 쓰는 사용자의 공개 계약)를 검사한다.
-// 기대 목록은 Token 원본에서 만들지 않고 spec 「`@tide-tds/foundation`」 컬러 항목을 그대로 적는다.
+// 기대 목록은 Token 원본에서 만들지 않고 spec 「`@tide-design/foundation`」 컬러 항목을 그대로 적는다.
 // 그래서 원본에서 Token이 빠지거나 이름이 바뀌면(breaking change) 여기서 실패한다.
 import { readFile } from "node:fs/promises";
 
@@ -59,7 +59,7 @@ const semanticClasses = [
   "outline-focus",
 ];
 
-// spec 「`@tide-tds/foundation`」 타이포그래피. [이름, 크기 px, 행간 px, 굵기]
+// spec 「`@tide-design/foundation`」 타이포그래피. [이름, 크기 px, 행간 px, 굵기]
 const textStyles = [
   ["display-lg", 56, 64, 700],
   ["display-md", 48, 56, 700],
@@ -91,7 +91,7 @@ const typographyVars = [
   ]),
 ];
 
-// spec 「`@tide-tds/foundation`」 radius·Elevation·포커스 표시. [이름, 값]
+// spec 「`@tide-design/foundation`」 radius·Elevation·포커스 표시. [이름, 값]
 const radii = [
   ["sm", "0.25rem"],
   ["md", "0.375rem"],
@@ -112,7 +112,7 @@ const shapeVars = [
 ];
 const shadowVars = shadows.map(([name]) => `--tide-shadow-${name}`);
 
-// spec 「`@tide-tds/foundation`」 motion·z-index. [이름, 값]
+// spec 「`@tide-design/foundation`」 motion·z-index. [이름, 값]
 const durations = [
   ["fast", "150ms"],
   ["normal", "300ms"],

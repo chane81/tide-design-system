@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "@tide-tds/icons";
+import { ChevronRightIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "./cn.ts";

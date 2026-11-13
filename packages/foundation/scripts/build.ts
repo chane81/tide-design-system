@@ -37,7 +37,8 @@ import {
 } from "../src/internal.ts";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
-const header = "/* 이 파일은 @tide-tds/foundation 빌드 스크립트가 만든다. 직접 고치지 않는다. */\n";
+const header =
+  "/* 이 파일은 @tide-design/foundation 빌드 스크립트가 만든다. 직접 고치지 않는다. */\n";
 
 // Tailwind 속성별 namespace 이름(tailwindcss 4.3.5 dist/lib.mjs의 themeKeys로 확인, ADR 0003).
 // 예: background → --background-color-*

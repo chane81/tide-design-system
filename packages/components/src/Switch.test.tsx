@@ -1,7 +1,7 @@
 // Switch의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 17).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // 켜짐·꺼짐이 시스템 색 채움과 thumb 위치로 구분되는지, thumb 이동 transition이 빠지는지를 계산값으로 단언한다.
-import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
+import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
@@ -11,7 +11,7 @@ import { Field } from "./Field.tsx";
 import { Switch, type SwitchProps } from "./Switch.tsx";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-declare module "@tide-tds/foundation" {
+declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
   }

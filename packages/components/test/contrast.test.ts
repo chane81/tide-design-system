@@ -1,14 +1,14 @@
 // Link·IconButton이 쓰는 글자색이 대비 쌍에 등록되어 있는지 본다(tide-v0-impl 티켓 14, Component 완료 기준 5).
 // 값의 대비비는 foundation이 검사한다. 여기서는 「등록되어 있는지」와 하한 등급만 본다.
 // 하한 세 등급(ADR 0023): 정지 상태 글자 4.5, hover·누름 같은 일시 상태 글자와 solid 위 글자 4, UI 요소 3.
-import { contrastPairs } from "@tide-tds/foundation";
+import { contrastPairs } from "@tide-design/foundation";
 import {
   checkColorContrast,
   colorContrastRules,
   colorFamilyNames,
   colorSlotHex,
   contrastExclusions,
-} from "@tide-tds/foundation/internal";
+} from "@tide-design/foundation/internal";
 import { describe, expect, it } from "vitest";
 
 const surfaces = ["bg-canvas", "bg-surface", "bg-raised"] as const;

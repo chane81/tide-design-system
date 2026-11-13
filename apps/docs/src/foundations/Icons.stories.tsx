@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CircleCheckIcon, PlusIcon, SearchIcon, TrashIcon, XIcon } from "@tide-tds/icons";
+import { CircleCheckIcon, PlusIcon, SearchIcon, TrashIcon, XIcon } from "@tide-design/icons";
 
 import { IconSearch } from "../docs-blocks/IconSearch.tsx";
 

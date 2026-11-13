@@ -11,7 +11,7 @@
 //   option·group만 될 수 있어 닫기 버튼을 바깥 요소에 둔다(Popover와 같은 DismissButton).
 // - `SelectItem`: `role="option"`. `value`가 고른 값이고 폼에 제출된다. `SelectSection`: 옵션 묶음(`role="group"`).
 
-import { ChevronDownIcon } from "@tide-tds/icons";
+import { ChevronDownIcon } from "@tide-design/icons";
 import {
   use,
   useLayoutEffect,

@@ -13,10 +13,10 @@ import * as ColorStories from "../foundations/Color.stories.tsx";
 - [설치](?path=/docs/시작하기-설치--docs)를 마친 앱
 - 계열 파일을 `.ts`로 쓰면 Node.js 23.6 이상. 이 버전부터 Node가 TypeScript를 바로 읽습니다. `.js`·`.mjs`로 써도 됩니다.
 
-계열 정의 API와 CLI는 `@tide-tds/foundation`에 있습니다. `@tide-tds/components`와 같은 버전으로 개발 의존성에 더합니다.
+계열 정의 API와 CLI는 `@tide-design/foundation`에 있습니다. `@tide-design/components`와 같은 버전으로 개발 의존성에 더합니다.
 
 ```sh
-pnpm add -D @tide-tds/foundation@<@tide-tds/components와 같은 버전>
+pnpm add -D @tide-design/foundation@<@tide-design/components와 같은 버전>
 ```
 
 ## 1. 색 정의하기
@@ -25,7 +25,7 @@ pnpm add -D @tide-tds/foundation@<@tide-tds/components와 같은 버전>
 
 ```ts
 // brand.ts
-import { defineColorFamily } from "@tide-tds/foundation/color-family";
+import { defineColorFamily } from "@tide-design/foundation/color-family";
 
 export default defineColorFamily({
   name: "brand",
@@ -99,7 +99,7 @@ Tide CSS 다음 줄에 만든 CSS를 불러옵니다. 순서가 바뀌면 `data-
 ```css
 /* app/globals.css */
 @import "tailwindcss";
-@import "@tide-tds/components/styles.css";
+@import "@tide-design/components/styles.css";
 @import "./brand.css";
 ```
 
@@ -109,9 +109,9 @@ Tide CSS 다음 줄에 만든 CSS를 불러옵니다. 순서가 바뀌면 `data-
 
 ```ts
 // app/colors.ts
-import type { Role } from "@tide-tds/components";
+import type { Role } from "@tide-design/components";
 
-declare module "@tide-tds/components" {
+declare module "@tide-design/components" {
   interface RoleRegistry {
     brand: true;
   }
@@ -161,7 +161,7 @@ Badge·Tag처럼 뜻 없이 색만 구분하는 Component에 쓰려면 `ColorFam
 
 ```ts
 // app/colors.ts
-declare module "@tide-tds/components" {
+declare module "@tide-design/components" {
   interface ColorFamilyRegistry {
     brand: true;
   }

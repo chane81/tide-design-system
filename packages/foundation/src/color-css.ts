@@ -62,7 +62,7 @@ function slotCss(
 /**
  * 계열 하나의 Theme 블록 선언(슬롯마다 한 줄).
  * @param stepHex 계열 단계의 hex. 덮기·섞기 값을 계산할 때 쓴다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function familyThemeDeclarations(
   family: string,
@@ -82,7 +82,7 @@ function accentDeclarations(source: (slot: ColorSlot) => string): string[] {
 
 /**
  * `[data-color="<색 이름>"]` 규칙 하나. Role은 Role Token을, 계열은 계열 변수를 꽂는다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function dataColorRule(name: string): string {
   const source = isRole(name)
@@ -93,7 +93,7 @@ export function dataColorRule(name: string): string {
 
 /**
  * Theme 블록의 accent 기본값(primary). data-color가 없는 요소도 그 Theme의 값을 읽는다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function accentDefaultDeclarations(): string[] {
   return accentDeclarations((slot) => semanticVar(roleSlotToken("primary", slot)));
@@ -101,7 +101,7 @@ export function accentDefaultDeclarations(): string[] {
 
 /**
  * Tide 색 계열 전체의 Theme 블록 선언.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function tideFamilyThemeDeclarations(theme: ThemeName): string[] {
   return colorFamilyNames.flatMap((family) =>
@@ -122,7 +122,7 @@ const roleAliases = new Map<SemanticColorName, { family: string; slot: ColorSlot
 
 /**
  * Role Token이 Theme에서 계열 변수의 별칭이면 그 변수 참조를 돌려준다. 덮어쓴 슬롯이거나 Role Token이 아니면 undefined다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function roleAliasCss(className: SemanticColorName, theme: ThemeName): string | undefined {
   const alias = roleAliases.get(className);
@@ -146,7 +146,7 @@ export interface AccentUtility {
 /**
  * accent Utility class 목록. 예: `bg-accent-solid` → `--tide-accent-solid`, `text-accent` → `--tide-accent-text`,
  * `border-accent-subtle` → `--tide-accent-subtle-border`
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const accentUtilities: readonly AccentUtility[] = [
   ...colorSlots

@@ -1,4 +1,4 @@
-import type { TextStyleName } from "@tide-tds/foundation";
+import type { TextStyleName } from "@tide-design/foundation";
 import type { HTMLAttributes, ReactElement, Ref } from "react";
 
 import { renderElement } from "./render.ts";

@@ -6,7 +6,7 @@
 // Switch와 같은 구조다(티켓 17, ADR 0015): ref와 나머지 HTML 속성은 input에, className·style은 루트 label에 간다.
 // 루트 label에는 data-color와 상태 노출용 data-disabled·data-invalid도 붙는다.
 
-import { CheckIcon, MinusIcon } from "@tide-tds/icons";
+import { CheckIcon, MinusIcon } from "@tide-design/icons";
 import {
   use,
   useImperativeHandle,

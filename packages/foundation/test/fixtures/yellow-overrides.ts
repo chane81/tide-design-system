@@ -1,5 +1,5 @@
 // tide-color CLI 테스트용: 밝은 계열을 overrides로 고쳐 대비를 맞춘다. 배열로 계열 둘을 한 파일에 둔다.
-import { defineColorFamily } from "@tide-tds/foundation/color-family";
+import { defineColorFamily } from "@tide-design/foundation/color-family";
 
 import brand from "./brand.ts";
 import { yellowScale } from "./yellow.ts";

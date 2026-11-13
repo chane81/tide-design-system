@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge, Button, Tag, TagGroup, type ColorFamilyName } from "@tide-tds/components";
-import { HashIcon } from "@tide-tds/icons";
+import { Badge, Button, Tag, TagGroup, type ColorFamilyName } from "@tide-design/components";
+import { HashIcon } from "@tide-design/icons";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

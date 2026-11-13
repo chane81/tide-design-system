@@ -1,4 +1,4 @@
-// motion Token(tide-v0 티켓 21·24, spec 「`@tide-tds/foundation`」 motion).
+// motion Token(tide-v0 티켓 21·24, spec 「`@tide-design/foundation`」 motion).
 // - duration은 2단계다. 들어올 때는 길게(normal), 나갈 때와 상태 변화는 짧게(fast) 구분한다.
 // - easing은 out 하나다. 값은 Tailwind 기본 `--ease-out`과 같다. Tailwind의 ease-in, ease-in-out은 지우지 않는다.
 // - 시간을 적지 않은 transition class(transition-colors 등)의 기본값은 fast와 out이다.

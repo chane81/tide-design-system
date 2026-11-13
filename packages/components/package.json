@@ -1,5 +1,5 @@
 {
-  "name": "@tide-tds/components",
+  "name": "@tide-design/components",
   "version": "0.10.0",
   "description": "Tide 디자인 시스템의 React Component",
   "license": "MIT",
@@ -17,7 +17,7 @@
   ],
   "exports": {
     ".": {
-      "@tide-tds/source": "./src/index.ts",
+      "@tide-design/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
@@ -38,8 +38,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tide-tds/foundation": "workspace:*",
-    "@tide-tds/icons": "workspace:*",
+    "@tide-design/foundation": "workspace:*",
+    "@tide-design/icons": "workspace:*",
     "clsx": "catalog:",
     "react-aria": "catalog:",
     "react-stately": "catalog:",

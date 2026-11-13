@@ -10,7 +10,7 @@ import { defaultClientConditions, mergeConfig, type UserConfig } from "vite";
 //   설치본 @storybook/addon-docs 10.6.6 `mdx-plugin`이 이 옵션을 compile에 넘기는 것 확인).
 // - resolve.conditions: Vite 8.3.6에서 사용자 조건을 넣으면 기본 조건을 대체하므로 defaultClientConditions를 함께 펼친다
 //   (Vite 8 docs config/shared-options `resolve.conditions`).
-//   `@tide-tds/source` 조건이 있는 components는 원본(src)으로, 조건이 없는 foundation은 빌드 결과(dist)로 resolve된다.
+//   `@tide-design/source` 조건이 있는 components는 원본(src)으로, 조건이 없는 foundation은 빌드 결과(dist)로 resolve된다.
 const config: StorybookConfig = {
   framework: "@storybook/react-vite",
   stories: ["../src/**/*.mdx", "../src/**/*.stories.tsx"],
@@ -39,19 +39,19 @@ const config: StorybookConfig = {
     mergeConfig(viteConfig, {
       plugins: [tailwindcss()],
       resolve: {
-        conditions: ["@tide-tds/source", ...defaultClientConditions],
+        conditions: ["@tide-design/source", ...defaultClientConditions],
       },
       // components 원본이 쓰는 react-aria·react-stately(오버레이 hook, 티켓 25)를 처음부터 사전 번들한다. 실행 중에 발견하면
       // Vite가 다시 최적화하며 페이지를 새로 고쳐 story 테스트가 흔들린다. docs가 직접 의존하지 않으므로 중첩 문법을 쓴다
       // (Vite docs dep-optimization-options `optimizeDeps.include`).
-      // `@tide-tds/icons`는 workspace 링크라 기본으로는 사전 번들되지 않는다("linked packages not inside node_modules are
+      // `@tide-design/icons`는 workspace 링크라 기본으로는 사전 번들되지 않는다("linked packages not inside node_modules are
       // not pre-bundled", 같은 문서). dev 서버는 트리셰이킹을 하지 않아 index.js가 아이콘 파일 2031개를 하나씩 요청하므로,
       // 사전 번들해 한 파일로 받는다. icons dist를 다시 빌드했다면 `storybook dev --force`로 다시 번들한다.
       optimizeDeps: {
         include: [
-          "@tide-tds/icons",
-          "@tide-tds/components > react-aria",
-          "@tide-tds/components > react-stately",
+          "@tide-design/icons",
+          "@tide-design/components > react-aria",
+          "@tide-design/components > react-stately",
         ],
       },
       // components 원본을 직접 번들하므로 Rolldown이 원본의 "use client"마다 MODULE_LEVEL_DIRECTIVE 경고를 낸다.

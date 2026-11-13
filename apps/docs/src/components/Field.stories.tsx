@@ -8,7 +8,7 @@ import {
   Radio,
   RadioGroup,
   Textarea,
-} from "@tide-tds/components";
+} from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 
 // Field 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.

@@ -15,12 +15,12 @@ import {
 } from "./release-scope.ts";
 
 const tds = (newVersion: string, type = "minor") => [
-  { name: "@tide-tds/foundation", type, newVersion },
-  { name: "@tide-tds/icons", type, newVersion },
-  { name: "@tide-tds/components", type, newVersion },
+  { name: "@tide-design/foundation", type, newVersion },
+  { name: "@tide-design/icons", type, newVersion },
+  { name: "@tide-design/components", type, newVersion },
 ];
 const docs = (newVersion: string, type = "minor") => ({
-  name: "@tide-tds/docs",
+  name: "@tide-design/docs",
   type,
   newVersion,
 });
@@ -54,15 +54,15 @@ describe("묶음별 다음 버전", () => {
 
   it("TDS 패키지 버전이 서로 다르면 fixed가 깨진 것이라 오류다", () => {
     const broken = [
-      { name: "@tide-tds/components", type: "minor", newVersion: "0.6.0" },
-      { name: "@tide-tds/icons", type: "patch", newVersion: "0.5.1" },
+      { name: "@tide-design/components", type: "minor", newVersion: "0.6.0" },
+      { name: "@tide-design/icons", type: "patch", newVersion: "0.5.1" },
     ];
     expect(() => bundleVersions(broken)).toThrow("fixed");
   });
 
   it("묶음에 속하지 않는 패키지는 무시한다", () => {
     expect(
-      bundleVersions([{ name: "@tide-tds/smoke-next", type: "none", newVersion: "0.0.0" }]),
+      bundleVersions([{ name: "@tide-design/smoke-next", type: "none", newVersion: "0.0.0" }]),
     ).toEqual({ tds: null, storybook: null });
   });
 });
@@ -93,8 +93,8 @@ describe("섞인 changeset", () => {
       {
         id: "mixed",
         releases: [
-          { name: "@tide-tds/components", type: "patch" },
-          { name: "@tide-tds/docs", type: "patch" },
+          { name: "@tide-design/components", type: "patch" },
+          { name: "@tide-design/docs", type: "patch" },
         ],
       },
     ]);
@@ -106,7 +106,7 @@ describe("섞인 changeset", () => {
     expect(
       mixedChangesetProblems([
         { id: "tds", releases: tds("0.6.0").map(({ name, type }) => ({ name, type })) },
-        { id: "docs", releases: [{ name: "@tide-tds/docs", type: "minor" }] },
+        { id: "docs", releases: [{ name: "@tide-design/docs", type: "minor" }] },
         { id: "empty", releases: [] },
       ]),
     ).toEqual([]);
@@ -115,7 +115,7 @@ describe("섞인 changeset", () => {
 
 describe("Storybook 릴리스 판단", () => {
   it("tag는 changesets 모노레포 형식 <name>@<version>이다", () => {
-    expect(storybookTag("0.1.0")).toBe("@tide-tds/docs@0.1.0");
+    expect(storybookTag("0.1.0")).toBe("@tide-design/docs@0.1.0");
   });
 
   it("tag가 없는 버전은 릴리스한다", () => {
@@ -134,16 +134,16 @@ describe("Storybook 릴리스 판단", () => {
 describe("Storybook이 TDS 릴리스를 따라 오르기", () => {
   const tdsChangeset = (type: string) => ({
     id: `tds-${type}`,
-    releases: [{ name: "@tide-tds/components", type }],
+    releases: [{ name: "@tide-design/components", type }],
   });
   const docsChangeset = (type: string) => ({
     id: `docs-${type}`,
-    releases: [{ name: "@tide-tds/docs", type }],
+    releases: [{ name: "@tide-design/docs", type }],
   });
   const empty = { id: "empty", releases: [] };
   // changeset status는 오르지 않는 docs도 type none으로 releases에 넣는다.
   const docsNone = {
-    name: "@tide-tds/docs",
+    name: "@tide-design/docs",
     type: "none",
     oldVersion: "0.1.0",
     newVersion: "0.1.0",
@@ -192,7 +192,7 @@ describe("Storybook이 TDS 릴리스를 따라 오르기", () => {
 
   it("자동 changeset은 docs 한 패키지만 담고 반영한 TDS 버전을 요약에 적는다", () => {
     const content = storybookFollowChangeset("minor", "0.6.0");
-    expect(content).toMatch(/^---\n"@tide-tds\/docs": minor\n---\n/);
+    expect(content).toMatch(/^---\n"@tide-design\/docs": minor\n---\n/);
     expect(content).toContain("TDS 0.6.0 반영");
   });
 });

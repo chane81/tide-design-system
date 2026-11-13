@@ -8,8 +8,8 @@ import {
   PopoverContent,
   PopoverTrigger,
   Switch,
-} from "@tide-tds/components";
-import { SettingsIcon } from "@tide-tds/icons";
+} from "@tide-design/components";
+import { SettingsIcon } from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

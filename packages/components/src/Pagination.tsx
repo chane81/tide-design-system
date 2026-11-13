@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon, EllipsisIcon } from "@tide-tds/icons";
+import { ChevronLeftIcon, ChevronRightIcon, EllipsisIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
 import { Button, type ButtonProps } from "./Button.tsx";

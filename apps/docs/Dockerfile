@@ -9,7 +9,7 @@ WORKDIR /repo
 COPY . .
 RUN pnpm install --frozen-lockfile
 # docs의 build는 turbo `^build`로 foundation·icons·components를 먼저 빌드한다.
-RUN pnpm turbo run build --filter=@tide-tds/docs
+RUN pnpm turbo run build --filter=@tide-design/docs
 
 FROM nginx:1.30-alpine
 COPY --from=build /repo/apps/docs/storybook-static /usr/share/nginx/html

@@ -7,7 +7,7 @@ import { render } from "vitest-browser-react";
 import { Progress, type ProgressProps } from "./Progress.tsx";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-declare module "@tide-tds/foundation" {
+declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
   }

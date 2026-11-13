@@ -1,8 +1,8 @@
 // 색 스케일 블록(ColorScale.tsx)이 그리는 값. 화면과 떨어진 순수 함수라 Node unit 테스트가 바로 검사한다.
 // 값은 모두 foundation 원본(`color`, `roleFamily`, `colorFamilyNames`)에서 읽는다. hex를 손으로 적지 않는다.
-import { color, type ColorFamily, type ColorStep, type Role } from "@tide-tds/foundation";
+import { color, type ColorFamily, type ColorStep, type Role } from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님). 타일 글자색을 고르려고 대비비를 계산한다.
-import { colorFamilyNames, contrastRatio, roleFamily } from "@tide-tds/foundation/internal";
+import { colorFamilyNames, contrastRatio, roleFamily } from "@tide-design/foundation/internal";
 
 /** 타일 하나. `label`은 타일에 보이는 글자(단계 숫자나 `white`), `name`은 스크린리더가 읽는 전체 이름이다. */
 export interface ColorTile {

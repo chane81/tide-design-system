@@ -1,4 +1,4 @@
-import * as icons from "@tide-tds/icons";
+import * as icons from "@tide-design/icons";
 import { describe, expect, it } from "vitest";
 
 import { buildIconIndex, iconIndex, importStatement, searchIcons } from "./iconSearch.ts";
@@ -68,6 +68,6 @@ describe("실제 검색 목록", () => {
   });
 
   it("import 문을 만든다", () => {
-    expect(importStatement("PlusIcon")).toBe('import { PlusIcon } from "@tide-tds/icons";');
+    expect(importStatement("PlusIcon")).toBe('import { PlusIcon } from "@tide-design/icons";');
   });
 });

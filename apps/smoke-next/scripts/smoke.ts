@@ -78,7 +78,7 @@ try {
     if (!created) {
       throw new Error(`${name} tarball을 찾지 못했다.`);
     }
-    tarballs[`@tide-tds/${name}`] = `file:${join(tarballDir, created)}`;
+    tarballs[`@tide-design/${name}`] = `file:${join(tarballDir, created)}`;
     run(
       join(appDir, "node_modules/.bin/publint"),
       ["run", join(tarballDir, created), "--strict"],
@@ -225,7 +225,7 @@ try {
     "Checkbox 내부 class(checked:bg-accent-solid, peer-indeterminate:block)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
-  const componentsDist = join(consumerDir, "node_modules/@tide-tds/components/dist");
+  const componentsDist = join(consumerDir, "node_modules/@tide-design/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
     /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
   // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(pressable.js)은 이벤트를 DOM에 넘기지 않는다.
@@ -790,7 +790,7 @@ try {
   ).join("\n");
   const iconShape = async (file: string): Promise<string> => {
     const source = await readFile(
-      join(consumerDir, "node_modules/@tide-tds/icons/dist/generated", file),
+      join(consumerDir, "node_modules/@tide-design/icons/dist/generated", file),
       "utf8",
     );
     const d = /d: "([^"]+)"/.exec(source)?.[1];

@@ -1,4 +1,4 @@
-// 모양·깊이·포커스 Token(tide-v0 티켓 20·24, spec 「`@tide-tds/foundation`」 radius·Elevation·포커스 표시).
+// 모양·깊이·포커스 Token(tide-v0 티켓 20·24, spec 「`@tide-design/foundation`」 radius·Elevation·포커스 표시).
 // - radius는 5단계만 둔다. 값은 Tailwind 기본값과 같고 나머지 기본 단계는 지운다.
 // - 그림자는 raised 표면 층에서만 쓴다. 단계마다 2레이어이고 두 레이어 모두 `--tide-shadow-color`를 color-mix로 낮춘다.
 // - 포커스 표시 ring의 두께와 offset을 Token으로 둔다. 색은 Semantic `outline-focus`다.
@@ -74,7 +74,7 @@ const length = (px: number): string => (px === 0 ? "0" : `${px}px`);
 /**
  * Elevation 단계를 CSS `box-shadow` 값으로 만든다. 두 레이어 모두
  * `color-mix(in srgb, var(--tide-shadow-color) N%, transparent)`로 색을 낮춘다(100%도 같은 형태로 쓴다).
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function shadowCss(name: ShadowName): string {
   return shadow[name]

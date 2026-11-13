@@ -18,7 +18,7 @@
 // 「제목 요소 안의 버튼」 구조가 아니고(제목을 summary 안에 넣으면 보조 기술에 따라 제목으로 읽히지 않는다), 제어
 // 상태(`value`)를 막을 수 없으며(`toggle` 이벤트는 바뀐 뒤 온다), 단일 펼침(`name`)을 끄고 켜는 것도 속성 하나에 묶인다.
 
-import { ChevronDownIcon } from "@tide-tds/icons";
+import { ChevronDownIcon } from "@tide-design/icons";
 import {
   createContext,
   use,

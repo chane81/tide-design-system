@@ -1,5 +1,5 @@
 // 루트와 internal 서브패스의 export 이름(공개 표면)을 확인한다.
-// 루트는 Token 객체만 낸다. 도우미는 앱 개발자용이 아닌 `@tide-tds/foundation/internal`에 있다.
+// 루트는 Token 객체만 낸다. 도우미는 앱 개발자용이 아닌 `@tide-design/foundation/internal`에 있다.
 import { describe, expect, it } from "vitest";
 
 describe("exports", () => {

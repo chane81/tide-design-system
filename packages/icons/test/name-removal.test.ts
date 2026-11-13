@@ -14,11 +14,14 @@ function without(...keys: string[]): Record<string, string> {
   return Object.fromEntries(Object.entries(base).filter(([key]) => !keys.includes(key)));
 }
 
-const iconsMinor = { id: "rename-house", releases: [{ name: "@tide-tds/icons", type: "minor" }] };
-const iconsPatch = { id: "fix-house", releases: [{ name: "@tide-tds/icons", type: "patch" }] };
+const iconsMinor = {
+  id: "rename-house",
+  releases: [{ name: "@tide-design/icons", type: "minor" }],
+};
+const iconsPatch = { id: "fix-house", releases: [{ name: "@tide-design/icons", type: "patch" }] };
 const componentsMinor = {
   id: "components-break",
-  releases: [{ name: "@tide-tds/components", type: "minor" }],
+  releases: [{ name: "@tide-design/components", type: "minor" }],
 };
 const empty = { id: "docs-only", releases: [] };
 
@@ -53,7 +56,9 @@ describe("minor changeset 요구", () => {
   });
 
   it("icons가 patch뿐이면 실패한다", () => {
-    expect(nameRemovalProblem(["HouseIcon"], [iconsPatch])).toContain('"@tide-tds/icons": minor');
+    expect(nameRemovalProblem(["HouseIcon"], [iconsPatch])).toContain(
+      '"@tide-design/icons": minor',
+    );
   });
 
   it("다른 패키지의 minor로는 통과하지 않는다", () => {

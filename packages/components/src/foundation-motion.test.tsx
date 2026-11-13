@@ -3,7 +3,7 @@
 // 두 instance에서 모두 돈다. 두 번째 instance(contextOptions reducedMotion: "reduce")에서는
 // motion-safe: class가 빠지고, Tide Token 자체(transition-colors의 fast)는 그대로인지를 단언한다
 // (tide-v0 티켓 21: hover 색 변화는 reduced-motion에서도 유지, 이동·확대·blur만 motion-safe:로 감싼다).
-import { duration, easing, zIndex, type ZIndexName } from "@tide-tds/foundation";
+import { duration, easing, zIndex, type ZIndexName } from "@tide-design/foundation";
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";

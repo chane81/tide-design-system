@@ -3,13 +3,13 @@ import {
   type ContrastMinRatio,
   type ContrastPair,
   type ThemeName,
-} from "@tide-tds/foundation";
+} from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님). 문서 블록이 원본 hex로 대비비를 계산하려고 쓴다.
 import {
   contrastExclusions,
   contrastPairRatio,
   opaqueSemanticHex,
-} from "@tide-tds/foundation/internal";
+} from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // 색 Token 블록: 대비 쌍 목록과 Theme별 대비비를 Token 원본에서 그린다.

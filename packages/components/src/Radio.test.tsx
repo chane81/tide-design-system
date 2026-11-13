@@ -1,6 +1,6 @@
 // Radio·RadioGroup의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 16).
 // 화살표 이동과 하나만 선택되는 동작은 네이티브 라디오가 맡으므로, 같은 name이 넘어가는지와 실제 키 동작을 단언한다.
-import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
+import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
@@ -11,7 +11,7 @@ import { Radio, type RadioProps } from "./Radio.tsx";
 import { RadioGroup } from "./RadioGroup.tsx";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-declare module "@tide-tds/foundation" {
+declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
   }

@@ -75,8 +75,8 @@ import {
   TooltipTrigger,
   Typography,
   VisuallyHidden,
-} from "@tide-tds/components";
-import { PlusIcon } from "@tide-tds/icons";
+} from "@tide-design/components";
+import { PlusIcon } from "@tide-design/icons";
 import Link from "next/link";
 
 import { brandColor } from "./colors";
