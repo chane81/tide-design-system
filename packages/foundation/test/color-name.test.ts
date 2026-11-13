@@ -1,6 +1,6 @@
 // 색 이름(Color)과 색 계열(tide-v0-impl 티켓 40).
 // 1. Tide 색 이름마다 대비 쌍 규칙을 light·dark에서 검사한다.
-// 2. 테스트 전용 계열(violet)을 Primitive에 더하면 계열 변수, [data-color] 규칙, 대비 쌍이 따라오는지 본다.
+// 2. 테스트 전용 계열(pink)을 Primitive에 더하면 계열 변수, [data-color] 규칙, 대비 쌍이 따라오는지 본다.
 // 3. RoleRegistry·ColorFamilyRegistry 타입과 module augmentation(타입 검사는 `tsc --noEmit`이 이 파일도 본다).
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
@@ -95,26 +95,26 @@ describe("Tide 색 이름", () => {
 });
 
 describe("테스트 전용 계열을 더하면", () => {
-  // Primitive 원본(color.ts)에 violet 계열을 더한 것처럼 바꾼다. primitiveHex도 같은 표를 보게 한다.
-  const violet = {
-    50: "#f5f3ff",
-    100: "#ede9fe",
-    200: "#ddd6fe",
-    300: "#c4b5fd",
-    400: "#a78bfa",
-    500: "#8b5cf6",
-    600: "#7c3aed",
-    700: "#6d28d9",
-    800: "#5b21b6",
-    900: "#4c1d95",
-    950: "#2e1065",
+  // Primitive 원본(color.ts)에 pink 계열을 더한 것처럼 바꾼다. primitiveHex도 같은 표를 보게 한다.
+  const pink = {
+    50: "#fcf0f5",
+    100: "#fee5f0",
+    200: "#ebcbd9",
+    300: "#e1adc4",
+    400: "#dc7dac",
+    500: "#c75b93",
+    600: "#a85c81",
+    700: "#90406a",
+    800: "#793157",
+    900: "#68274a",
+    950: "#5c1d3f",
   } as const;
 
-  async function withViolet() {
+  async function withPink() {
     vi.resetModules();
     vi.doMock("../src/color.ts", async (importOriginal) => {
       const original = await importOriginal<typeof import("../src/color.ts")>();
-      const color = { ...original.color, violet };
+      const color = { ...original.color, pink };
       return {
         ...original,
         color,
@@ -133,21 +133,21 @@ describe("테스트 전용 계열을 더하면", () => {
   }
 
   it("색 이름 목록, 계열 변수, [data-color] 규칙, 대비 쌍이 함께 따라온다", async () => {
-    const internal = await withViolet();
+    const internal = await withPink();
 
-    expect(internal.tideColorNames).toContain("violet");
+    expect(internal.tideColorNames).toContain("pink");
     expect(internal.tideFamilyThemeDeclarations("dark")).toContain(
-      "  --tide-violet-subtle: var(--tide-color-violet-950);",
+      "  --tide-pink-subtle: var(--tide-color-pink-950);",
     );
     expect(internal.tideFamilyThemeDeclarations("light")).toContain(
-      "  --tide-violet-text: var(--tide-color-violet-700);",
+      "  --tide-pink-text: var(--tide-color-pink-700);",
     );
-    expect(internal.dataColorRule("violet")).toContain(
-      "  --tide-accent-solid: var(--tide-violet-solid);",
+    expect(internal.dataColorRule("pink")).toContain(
+      "  --tide-accent-solid: var(--tide-pink-solid);",
     );
     const results = internal.checkColorContrast({
-      light: internal.colorSlotHex("violet" as never, "light"),
-      dark: internal.colorSlotHex("violet" as never, "dark"),
+      light: internal.colorSlotHex("pink" as never, "light"),
+      dark: internal.colorSlotHex("pink" as never, "dark"),
     });
     expect(results).toHaveLength(internal.colorContrastRules.length * 2);
     expect(results.filter((result) => !result.pass)).toEqual([]);
@@ -185,8 +185,8 @@ describe("색 이름 등록 타입", () => {
   it("Color는 Role과 색 계열 이름을 합친 것이다", () => {
     expectTypeOf<Color>().toEqualTypeOf<Role | ColorFamilyName>();
     // @ts-expect-error 등록하지 않은 색 이름은 Color가 아니다.
-    const unknown: Color = "violet";
-    expect(unknown).toBe("violet");
+    const unknown: Color = "pink";
+    expect(unknown).toBe("pink");
   });
 
   it("앱 Role은 Semantic Token 이름을 넓히지 않는다", () => {
