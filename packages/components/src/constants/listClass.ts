@@ -8,7 +8,7 @@
 //   선택 유지는 subtle-active. transition이 없어 바로 바뀐다(반복되는 목록 항목).
 // - 묶음 제목(listHeadingClass)과 구분선(listSeparatorClass).
 
-import { frequentMotionClass, overlaySurfaceClass } from "./overlay-style.ts";
+import { frequentMotionClass, overlaySurfaceClass } from "./overlayClass.ts";
 
 /**
  * 목록 오버레이(Menu 목록, Select·Combobox 목록)의 루트. 요소에 `data-open`이 있어야 한다(`frequentMotionClass`).

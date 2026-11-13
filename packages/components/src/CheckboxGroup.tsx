@@ -4,9 +4,13 @@
 
 import type { ComponentProps, ReactElement } from "react";
 
-import { CheckboxGroupContext, useChoiceGroup, type ChoiceGroupState } from "./choice-group.ts";
-import { cn } from "./cn.ts";
-import { FieldContext } from "./field-context.ts";
+import {
+  CheckboxGroupContext,
+  useChoiceGroup,
+  type ChoiceGroupState,
+} from "./hooks/useChoiceGroup.ts";
+import { cn } from "./libs/cn.ts";
+import { FieldContext } from "./hooks/useFieldControl.ts";
 
 /** 항목을 쌓는 방향 */
 export type ChoiceOrientation = "vertical" | "horizontal";

@@ -2,8 +2,8 @@
 // 잠깐 떠서 알리는 Toast(tide-v0-impl 티켓 34). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useToastRegion, useToast, mergeProps, mergeRefs), react-stately 3.51.0
 // (ToastQueue, useToastQueue). context7 `/websites/react-aria_adobe`(Toast·useToast)와 설치본 dist 소스로 확인했다.
-// portal·DOM에서 빼는 시점·motion은 오버레이 공통 부분(overlay.tsx, overlay-style.ts, ADR 0018)을, 배치·아이콘·글자는
-// Alert와 같은 내부 모듈(alert-style.ts)을 쓴다.
+// portal·DOM에서 빼는 시점·motion은 오버레이 공통 부분(components/OverlayPortal.tsx, constants/overlayClass.ts, ADR 0018)을, 배치·아이콘·글자는
+// Alert와 같은 내부 모듈(constants/alertClass.ts, libs/alertStatusIcon.ts)을 쓴다.
 //
 // 구조:
 // - `ToastQueue`: Toast를 쌓는 큐. React 밖에 두어 어디서든 `queue.add({...})`로 띄운다. 한 번에 보이는 수
@@ -50,14 +50,15 @@ import {
   alertDescriptionClass,
   alertIconClass,
   alertLayoutClass,
-  alertStatusIcon,
   alertTitleClass,
-} from "./alert-style.ts";
+} from "./constants/alertClass.ts";
+import { alertStatusIcon } from "./libs/alertStatusIcon.ts";
 import { Button } from "./Button.tsx";
-import { cn } from "./cn.ts";
+import { cn } from "./libs/cn.ts";
 import { IconButton } from "./IconButton.tsx";
-import { OverlayPortal, useOverlayPresence } from "./overlay.tsx";
-import { overlaySurfaceClass, popoverMotionClass } from "./overlay-style.ts";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { overlaySurfaceClass, popoverMotionClass } from "./constants/overlayClass.ts";
 import type { Role } from "./types.ts";
 
 /** 자동으로 닫히는 Toast가 보이는 가장 짧은 시간(ms). React Aria 문서가 권하는 최소값과 같다. */

@@ -1,7 +1,7 @@
 "use client";
 // 트리거 옆에 내용을 띄우는 Popover(tide-v0-impl 티켓 25). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useOverlayTrigger, usePress, useDialog, DismissButton, mergeProps, mergeRefs),
-// react-stately 3.51.0(useOverlayTriggerState). 위치·portal·motion은 오버레이 공통 부분(overlay.tsx, overlay-style.ts)을 쓴다.
+// react-stately 3.51.0(useOverlayTriggerState). 위치·portal·motion은 오버레이 공통 부분(components/OverlayPortal.tsx, constants/overlayClass.ts)을 쓴다.
 //
 // 구조:
 // - `Popover`: 열림 상태만 갖는다(DOM 없음). `open`/`defaultOpen`/`onOpenChange(open)`.
@@ -37,16 +37,14 @@ import {
 } from "react-aria";
 import { useOverlayTriggerState, type OverlayTriggerState } from "react-stately";
 
-import { cn } from "./cn.ts";
-import {
-  OverlayPortal,
-  useOverlayPresence,
-  useOverlayTheme,
-  usePopoverOverlay,
-  type OverlayPlacement,
-} from "./overlay.tsx";
-import { overlaySurfaceClass, popoverMotionClass } from "./overlay-style.ts";
-import { renderElement } from "./render.ts";
+import { cn } from "./libs/cn.ts";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import { usePopoverOverlay } from "./hooks/usePopoverOverlay.ts";
+import type { OverlayPlacement } from "./libs/overlayPosition.ts";
+import { overlaySurfaceClass, popoverMotionClass } from "./constants/overlayClass.ts";
+import { renderElement } from "./libs/renderElement.ts";
 
 /** Popover 내용의 위치. 앞은 트리거의 어느 쪽, 뒤는 그 변에서 맞출 끝이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */
 export type PopoverPlacement = OverlayPlacement;
@@ -163,7 +161,7 @@ export interface PopoverContentProps extends Omit<ComponentProps<"div">, "id" | 
   offset?: number;
 }
 
-// class는 문자열 그대로 적는다(overlay-style.ts 참고).
+// class는 문자열 그대로 적는다(constants/overlayClass.ts 참고).
 // - 표면: raised + shadow-md + radius lg + border-raised(overlaySurfaceClass). 쌓임은 z-popover(300)다.
 // - 크기: 안쪽 여백 16px(Card와 같음), 폭은 내용에 맞추되 20rem(max-w-80)을 넘지 않는다. 높이는 React Aria가
 //   max-height로 화면 안에 맞추고 넘치면 스크롤한다(overflow-auto).

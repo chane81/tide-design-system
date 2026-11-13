@@ -1,8 +1,8 @@
 "use client";
 // 글자를 쳐서 옵션을 거르고 하나를 고르는 Combobox(tide-v0-impl 티켓 29). React Aria hooks만 쓰고 마크업은 직접 만든다
 // (ADR 0004). 근거 버전: react-aria 3.53.1(useComboBox, useButton, useListBox, useFilter, mergeProps, mergeRefs),
-// react-stately 3.51.0(useComboBoxState). 위치·portal·motion은 오버레이 공통 부분(overlay.tsx, ADR 0018), 목록 class와
-// 옵션 모으기·그리기는 Select와 같은 목록 공통 부분(list-style.ts, list-collection.ts, listbox.tsx, ADR 0019)을 쓴다.
+// react-stately 3.51.0(useComboBoxState). 위치·portal·motion은 오버레이 공통 부분(components/OverlayPortal.tsx, ADR 0018), 목록 class와
+// 옵션 모으기·그리기는 Select와 같은 목록 공통 부분(constants/listClass.ts, libs/listCollection.ts, components/ListBoxNodes.tsx, ADR 0019)을 쓴다.
 //
 // 구조:
 // - `Combobox`: 루트 DOM은 `role="combobox"` 텍스트 `<input>`이다(입력창 모양, Input과 같은 size). 감싸개 `<div>` 안에서
@@ -10,7 +10,7 @@
 //   열리면 `document.body`에 목록을 portal한다.
 // - 포커스는 늘 입력에 있다. 목록 안 위치는 가상 포커스(`aria-activedescendant`)로 옮기고 옵션의 `data-highlighted`로 보인다.
 //   그래서 목록은 바깥을 inert로 막지 않는 non-modal이고(입력이 바깥이다), 포커스 가두기·복귀도 하지 않는다.
-// - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(listbox.tsx).
+// - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(components/ListBoxNodes.tsx).
 
 import { ChevronDownIcon } from "@tide-design/icons";
 import {
@@ -28,23 +28,25 @@ import {
 import { mergeProps, mergeRefs, useButton, useComboBox, useFilter, useListBox } from "react-aria";
 import { useComboBoxState, type ComboBoxState } from "react-stately";
 
-import { cn } from "./cn.ts";
-import { FieldContext, useFieldControl } from "./field-context.ts";
-import { inputBaseClass, inputSizeClass, type InputSize } from "./input-style.ts";
+import { cn } from "./libs/cn.ts";
+import { FieldContext, useFieldControl } from "./hooks/useFieldControl.ts";
+import { inputBaseClass, inputSizeClass, type InputSize } from "./constants/inputClass.ts";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   sectionCollectionNode,
   valueItemCollectionNode,
-} from "./list-collection.ts";
-import { listPopupClass } from "./list-style.ts";
-import { ListBoxNodes, type ListBoxOptionProps, type ListBoxSectionProps } from "./listbox.tsx";
+} from "./libs/listCollection.ts";
+import { listPopupClass } from "./constants/listClass.ts";
 import {
-  OverlayPortal,
-  useOverlayPresence,
-  useOverlayTheme,
-  usePopoverOverlay,
-} from "./overlay.tsx";
+  ListBoxNodes,
+  type ListBoxOptionProps,
+  type ListBoxSectionProps,
+} from "./components/ListBoxNodes.tsx";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import { usePopoverOverlay } from "./hooks/usePopoverOverlay.ts";
 
 export interface ComboboxProps extends Omit<
   ComponentProps<"input">,
@@ -82,7 +84,7 @@ export interface ComboboxProps extends Omit<
   children?: ReactNode;
 }
 
-// class는 문자열 그대로 적는다(input-style.ts 참고).
+// class는 문자열 그대로 적는다(constants/inputClass.ts 참고).
 // - 감싸개: 입력과 chevron 버튼을 한 줄에 둔다. 버튼은 음수 margin으로 입력의 끝 안쪽에 겹친다. 그래서 사용자 className으로
 //   입력 폭을 바꿔도 버튼이 입력 끝에 붙어 있다.
 // - 입력: 입력창 모양(inputBaseClass)에 Input과 같은 size class. 끝 padding은 chevron(16px)과 글자 사이 8px를 더 둔다.
@@ -168,7 +170,7 @@ export function Combobox({
   const { contains } = useFilter({ sensitivity: "base" });
   const state = useComboBoxState<object>({
     // useComboBoxState의 children 타입은 React Stately 요소(Item·Section)지만, 같은 방식으로 getCollectionNode를 붙인
-    // Tide 옵션 요소를 넘긴다(list-collection.ts, Select와 같다).
+    // Tide 옵션 요소를 넘긴다(libs/listCollection.ts, Select와 같다).
     children: items as unknown as Parameters<typeof useComboBoxState<object>>[0]["children"],
     defaultFilter: contains,
     value,
@@ -333,7 +335,7 @@ export interface ComboboxItemProps extends ListBoxOptionProps {}
  * 상태는 `data-highlighted`, `data-selected`, `data-disabled`로 노출한다.
  */
 export function ComboboxItem(_props: ComboboxItemProps): null {
-  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(listbox.tsx).
+  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(components/ListBoxNodes.tsx).
   return null;
 }
 asCollectionComponent(ComboboxItem, valueItemCollectionNode);
@@ -345,7 +347,7 @@ export interface ComboboxSectionProps extends ListBoxSectionProps {}
  * 거른 결과 묶음 안에 남은 옵션이 없으면 묶음도 빠진다.
  */
 export function ComboboxSection(_props: ComboboxSectionProps): null {
-  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(listbox.tsx).
+  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(components/ListBoxNodes.tsx).
   return null;
 }
 asCollectionComponent(ComboboxSection, sectionCollectionNode);

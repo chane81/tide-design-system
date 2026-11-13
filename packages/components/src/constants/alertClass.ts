@@ -1,19 +1,7 @@
-// Alert와 Toast(티켓 34)가 함께 쓰는 내부 모듈(tide-v0-impl 티켓 20). 루트에서 export하지 않는다.
-// 배치(아이콘·내용·닫기 버튼), 글자, subtle 표면, 상태 아이콘 고르기를 한 곳에 둔다.
+// Alert와 Toast(티켓 34)가 함께 쓰는 class(tide-v0-impl 티켓 20). 루트에서 export하지 않는다.
+// 배치(아이콘·내용·닫기 버튼), 글자, subtle 표면을 한 곳에 둔다. 상태 아이콘 고르기는 libs/alertStatusIcon.ts에 있다.
 // 두 Component의 모양이 어긋나지 않게 하려는 것이다. Toast는 표면만 raised(shadow-md)로 바꾸고 나머지를 그대로 쓴다.
-// 이 파일은 JSX를 렌더하지 않고 hook·이벤트도 없다. 서버 컴포넌트에서 import해도 된다.
-
-import type { TideRole } from "@tide-design/foundation";
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  OctagonExclamationPointIcon,
-  TriangleExclamationPointIcon,
-  type IconProps,
-} from "@tide-design/icons";
-import type { ReactElement } from "react";
-
-import type { Role } from "./types.ts";
+// 이 파일은 class 문자열만 있으므로 "use client"가 없다. 서버 컴포넌트에서 import해도 된다.
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 색은 accent 슬롯이다(ADR 0011). 루트의 data-color가 Role을 고른다.
@@ -54,21 +42,3 @@ export const alertCloseClass = "-my-0.5 -me-1";
  */
 export const alertSubtleCloseClass =
   "text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active";
-
-type IconComponent = (props: IconProps) => ReactElement;
-
-// 상태 아이콘은 모양으로도 서로 구분된다(WCAG 1.4.1): 원 안 i, 원 안 체크, 삼각형 안 느낌표, 팔각형 안 느낌표.
-// neutral·primary는 「상태」가 아닌 일반 알림이라 info와 같은 i 아이콘이다.
-const statusIcons: Record<TideRole, IconComponent> = {
-  neutral: InfoIcon,
-  primary: InfoIcon,
-  info: InfoIcon,
-  success: CircleCheckIcon,
-  warning: TriangleExclamationPointIcon,
-  danger: OctagonExclamationPointIcon,
-};
-
-/** Role의 상태 아이콘. 앱이 더한 Role(예: `brand`)은 일반 알림으로 보고 i 아이콘을 쓴다. */
-export function alertStatusIcon(color: Role): IconComponent {
-  return Object.hasOwn(statusIcons, color) ? statusIcons[color as TideRole] : InfoIcon;
-}

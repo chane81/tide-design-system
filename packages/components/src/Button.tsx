@@ -4,8 +4,9 @@
 
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { pressableBaseClass, pressableState } from "./pressable.ts";
-import { renderElement } from "./render.ts";
+import { pressableBaseClass } from "./constants/pressableClass.ts";
+import { pressableState } from "./libs/pressableState.ts";
+import { renderElement } from "./libs/renderElement.ts";
 import { Spinner } from "./Spinner.tsx";
 import type { FillVariant, Role, Size } from "./types.ts";
 import { VisuallyHidden } from "./VisuallyHidden.tsx";
@@ -47,7 +48,7 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   render?: ReactElement;
 }
 
-// 채움 방식 맵, 누름 축소, 상태 처리는 IconButton과 함께 쓰는 `pressable.ts`에 있다(티켓 14).
+// 채움 방식 맵, 누름 축소, 상태 처리는 IconButton과 함께 쓰는 `constants/pressableClass.ts`·`libs/pressableState.ts`에 있다(티켓 14).
 
 /** 높이, 좌우 padding, 아이콘과 텍스트 사이 간격, 텍스트 스타일(spec size 표). radius는 모든 size에서 `md`다. */
 const sizeClass: Record<ButtonSize, string> = {

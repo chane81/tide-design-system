@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon, EllipsisIcon } from "@tide-design/ic
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
 import { Button, type ButtonProps } from "./Button.tsx";
-import { cn } from "./cn.ts";
+import { cn } from "./libs/cn.ts";
 import { IconButton, type IconButtonProps } from "./IconButton.tsx";
 import { VisuallyHidden } from "./VisuallyHidden.tsx";
 

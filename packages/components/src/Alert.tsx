@@ -8,11 +8,11 @@ import {
   alertDescriptionClass,
   alertIconClass,
   alertLayoutClass,
-  alertStatusIcon,
   alertSurfaceClass,
   alertTitleClass,
-} from "./alert-style.ts";
-import { cn } from "./cn.ts";
+} from "./constants/alertClass.ts";
+import { alertStatusIcon } from "./libs/alertStatusIcon.ts";
+import { cn } from "./libs/cn.ts";
 import { IconButton } from "./IconButton.tsx";
 import type { Role } from "./types.ts";
 
