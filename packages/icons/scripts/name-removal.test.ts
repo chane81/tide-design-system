@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 
 import { describe, expect, it } from "vitest";
 
-import { nameRemovalProblem, removedNameKeys } from "../scripts/name-removal.ts";
+import { nameRemovalProblem, removedNameKeys } from "./name-removal.ts";
 
 const base = JSON.parse(
   await readFile(new URL("../icon-names.json", import.meta.url), "utf8"),
