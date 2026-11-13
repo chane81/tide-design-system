@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Progress, type Role, Spinner } from "@tide-design/components";
 
-// Progress 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(역할·값·이름, 움직임 줄이기)은 components의 `Progress.test.tsx`에 있다.
-
 const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
 
 // Storybook의 Meta 타입은 이름(aria-label | aria-labelledby) union props를 풀지 못한다.

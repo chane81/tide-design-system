@@ -1,4 +1,3 @@
-// 문서 앱의 Theme 상태. `<html data-theme>`를 바꾸고, Docs 컨테이너가 같은 값을 구독한다.
 // Theme은 기본이 light이고 OS 설정(prefers-color-scheme)은 따르지 않는다.
 
 export const THEMES = ["light", "dark"] as const;
@@ -26,10 +25,7 @@ export function subscribeTheme(listener: () => void): () => void {
   };
 }
 
-/**
- * Theme을 바꾸는 유일한 함수. 툴바 decorator와 globals 채널 구독이 함께 쓴다.
- * 전환 순간에는 transition을 꺼서 색이 한꺼번에 바뀌게 한다.
- */
+/** Theme을 바꾸는 유일한 함수. 전환 순간에는 transition을 꺼서 색이 한꺼번에 바뀌게 한다. */
 export function applyTheme(theme: ThemeName): void {
   const root = document.documentElement;
   if (root.dataset.theme !== theme) {

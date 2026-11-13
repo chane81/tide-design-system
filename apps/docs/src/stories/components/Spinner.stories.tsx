@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Spinner } from "@tide-design/components";
 
-// Spinner 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언은 components의 `Spinner.test.tsx`에 있다.
 const meta = {
   title: "Component/Spinner",
   component: Spinner,
   args: {
     size: "md",
   },
-  // react-docgen이 `Extract<Size, ...>` 별칭을 풀지 못해 size가 JSON 편집으로 나온다. 선택지와 타입을 직접 적는다.
+  // react-docgen이 `Extract<...>` 별칭을 풀지 못한다. 선택지와 타입을 직접 적는다.
   argTypes: {
     size: {
       control: "inline-radio",
@@ -26,7 +24,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// 예시용 버튼 모양. Button Component(티켓 13) 전이라 네이티브 버튼에 class를 직접 쓴다.
+// 예시용 네이티브 버튼 모양.
 const buttonClass =
   "inline-flex h-8 items-center gap-2 rounded-md bg-primary-solid px-3 text-label-sm text-on-solid";
 

@@ -8,15 +8,9 @@ import {
   type ColorTileGroup,
 } from "../libs/colorTiles";
 
-// 색 Token 블록: Primitive 스케일을 Token 원본에서 그린다(spec 「문서 앱」 Token 블록, 티켓 45).
-// - 계열마다 카드 하나. 제목은 계열 이름과 그 계열을 쓰는 Role(장식 계열은 「장식」)이다.
-// - 11단계를 한 줄의 타일로 두고, 단계·hex·OKLCH 채도를 모두 타일 안에 적는다. 타일 밖에는 글자를 두지 않는다.
-// - 타일 바탕과 글자색만 원본 hex로 칠한다. 글자색은 colorTiles.ts의 tileTextColor가 대비가 높은 쪽(4.5:1 이상)을 고른다.
-// - 타일 아래 「쓰임」 패널은 실제 Component(color prop)와 accent class로 그린다. 색을 손으로 칠하지 않는다.
-// - 좁은 폭에서는 블록 전체가 가로로 스크롤된다(Table 문서의 overflow-x-auto 영역과 같은 방식). 타일이 줄바꿈되지 않아 11칸이 늘 한 줄이다.
+// 타일만 원본 hex로 칠하고, 「쓰임」 패널은 실제 Component와 accent class로 그린다.
 
-// 11칸의 최소 폭. 고정폭 hex(`#f0f6fe`)가 caption 크기로 타일 여백 안에 들어가는 폭이다.
-// white·black 카드도 같은 격자라 두 타일이 계열 타일과 같은 폭이다.
+// 최소 폭은 고정폭 hex(`#f0f6fe`)가 caption 크기로 타일 안에 들어가는 폭이다. 좁으면 블록이 가로로 스크롤된다.
 const tileGridClass = "grid grid-cols-[repeat(11,minmax(4.5rem,1fr))] gap-1.5";
 
 function Tile({ tile, prefix }: { tile: ColorTile; prefix: string | null }): ReactElement {
@@ -39,7 +33,7 @@ function Tile({ tile, prefix }: { tile: ColorTile; prefix: string | null }): Rea
   );
 }
 
-// 계열로 칠한 견본. Role 계열은 Role 이름으로 Badge·Button·Link를, 장식 계열은 계열 이름을 받는 Badge와 accent 글자를 둔다.
+// Role 계열은 Role 이름으로 행동 Component를, 장식 계열은 계열 이름을 받는 Badge와 accent 글자를 둔다.
 function Samples({ group }: { group: ColorTileGroup }): ReactElement | null {
   const { role, family } = group;
   if (role === null || family === null) return null;
@@ -111,7 +105,7 @@ function ScaleCard({ group }: { group: ColorTileGroup }): ReactElement {
 export function ColorScale(): ReactElement {
   return (
     <div className="bg-canvas p-4 text-default">
-      {/* 키보드로도 가로 스크롤할 수 있게 포커스와 이름을 준다(Table 문서의 스크롤 영역 안내와 같다). */}
+      {/* 키보드로도 가로 스크롤할 수 있게 포커스와 이름을 준다. */}
       <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="색 스케일">
         <div className="flex w-max min-w-full flex-col gap-4">
           {colorTileGroups.map((group) => (

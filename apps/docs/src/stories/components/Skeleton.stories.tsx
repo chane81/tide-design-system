@@ -2,9 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentType } from "react";
 import { Avatar, Skeleton } from "@tide-design/components";
 
-// Skeleton 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(숨김, 깜빡임 정지)은 components의 `Skeleton.test.tsx`에 있다.
-
 // Storybook의 Meta 타입은 variant에 따라 size가 갈리는 union props를 풀지 못한다(never가 된다).
 // story에서는 평평한 args 타입을 쓴다. 실제 타입 제약은 components의 `Skeleton.test.tsx`가 단언한다.
 interface SkeletonStoryArgs {

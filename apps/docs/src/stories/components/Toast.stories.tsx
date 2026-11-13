@@ -3,12 +3,8 @@ import { Button, ToastQueue, ToastRegion, type ToastOptions } from "@tide-design
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Toast 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(영역 랜드마크, 큐, 자동 닫힘 시간과 hover/focus 정지, 액션·오류 유지,
-// 닫기와 포커스 이동, 열린 Dialog 위, motion)은 components의 `Toast.test.tsx`에 있다.
-//
-// Toast는 document.body로 portal된다. 뜬 상태의 a11y를 검사하려고 story마다 play에서 버튼을 눌러 띄운다.
-// play는 Docs 페이지에서 돌지 않으므로 문서에서는 버튼을 눌러야 뜬다. story마다 큐를 새로 만든다.
+// 뜬 상태의 a11y를 보려고 story마다 play에서 띄운다(play는 Docs 페이지에서 돌지 않는다).
+// story마다 큐를 새로 만든다.
 
 const meta = {
   title: "Component/Toast",

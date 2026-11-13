@@ -4,12 +4,8 @@ import { BikeIcon, BusIcon, CarIcon, PlaneIcon, TrainFrontIcon } from "@tide-des
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Select 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(키보드로 열고 고르기, 타입어헤드, 폼 제출, focus-field)은
-// components의 `Select.test.tsx`에 있다.
-//
-// 목록은 document.body로 portal된다. 열린 상태(키보드 위치 highlight 포함)의 a11y를 검사하려고 목록이 있는 story는
-// play에서 트리거에 포커스하고 Enter로 연다. play는 Docs 페이지에서 돌지 않으므로 문서에서는 닫혀 있다.
+// 열린 상태의 a11y를 보려고 목록이 있는 story는 play에서 트리거에 포커스하고 Enter로 연다.
+// play는 Docs 페이지에서 돌지 않으므로 문서에서는 닫혀 있다.
 
 const meta = {
   title: "Component/Select",

@@ -1,5 +1,5 @@
 import { semanticPrefix, type ColorSlot, type ThemeName } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님). 문서 블록이 Tide 색 이름 목록, 슬롯 규칙, 원본 hex로 대비비를 계산하려고 쓴다.
+// 내부 서브패스(앱 개발자용 아님).
 import {
   accentUtilities,
   checkColorContrast,
@@ -12,9 +12,7 @@ import {
 } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
-// 색 Token 블록: 색 이름(Color)마다 data-color로 accent 슬롯을 꽂아 그린다(tide-v0-impl 티켓 40).
-// 미리보기는 실제 CSS(data-color + accent Utility class)로 칠하므로 현재 Theme을 따른다.
-// 강도 세 가지와 파스텔 글자·테두리는 ADR 0022 §1을 따른다(tide-color-tone-impl 티켓 04).
+// 미리보기는 실제 CSS(data-color + accent class)로 칠하므로 현재 Theme을 따른다(ADR 0022 §1).
 
 /** 색 이름 미리보기. 행마다 data-color 하나와 강도 세 가지, 바탕 없는 글자·테두리 */
 export function ColorNames(): ReactElement {
@@ -78,8 +76,7 @@ export function ColorNames(): ReactElement {
   );
 }
 
-// 묶음은 글자 슬롯과 하한 등급(ADR 0023)으로 나눈다. 같은 슬롯이라도 등급이 다르면 최저값을 따로 보여 준다.
-// UI 요소는 경계(border × 표면 층)와 Switch thumb(text × subtle-active)이다.
+// 같은 슬롯이라도 하한 등급(ADR 0023)이 다르면 최저값을 따로 보여 준다.
 const groups = [
   { key: "text-rest", label: "글자", match: { foreground: "text", minRatio: 4.5 } },
   { key: "text-transient", label: "글자 호버·누름", match: { foreground: "text", minRatio: 4 } },
@@ -157,7 +154,7 @@ export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement
   );
 }
 
-// 슬롯마다 맡는 자리. Record라 슬롯이 늘면 여기를 채우지 않은 채로는 타입 검사가 실패한다.
+// Record라 슬롯이 늘면 여기를 채우지 않은 채로는 타입 검사가 실패한다.
 const slotRole: Record<ColorSlot, string> = {
   solid: "진한 바탕",
   "solid-hover": "진한 바탕 호버",
