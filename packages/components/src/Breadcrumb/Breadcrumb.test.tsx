@@ -14,7 +14,7 @@ import {
   type BreadcrumbItemProps,
   type BreadcrumbLinkProps,
   type BreadcrumbProps,
-} from "./Breadcrumb.tsx";
+} from "./index.ts";
 
 // nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
 const Next = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
