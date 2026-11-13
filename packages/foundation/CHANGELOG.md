@@ -1,5 +1,22 @@
 # @tide-tds/foundation
 
+## 0.11.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#45](https://github.com/chane81/tide-design-system/pull/45) [`495e135`](https://github.com/chane81/tide-design-system/commit/495e135327108dd2c401edf99bb771e2327f0894) [@chane81](https://github.com/chane81) - npm 패키지 이름을 `@tide-tds/*`에서 `@tide-design/*`로 바꿨다. 옛 패키지를 지우고 새 이름으로 설치한 뒤, import와 CSS `@import` 경로의 `@tide-tds/`를 `@tide-design/`로 바꾼다.
+
+  ```sh
+  pnpm remove @tide-tds/components @tide-tds/icons
+  pnpm add @tide-design/components @tide-design/icons
+  ```
+
+  ```css
+  @import "@tide-design/components/styles.css";
+  ```
+
+  CSS 변수(`--tide-*`), Utility class, Component와 props 이름은 그대로다.
+
 ## 0.10.0
 
 ### 호환되지 않는 변경 (minor)
