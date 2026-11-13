@@ -1,7 +1,6 @@
-// 색 스케일 블록(ColorScale.tsx)이 그리는 값. 화면과 떨어진 순수 함수라 Node unit 테스트가 바로 검사한다.
-// 값은 모두 foundation 원본(`color`, `roleFamily`, `colorFamilyNames`)에서 읽는다. hex를 손으로 적지 않는다.
+// 값은 모두 foundation 원본에서 읽는다. hex를 손으로 적지 않는다.
 import { color, type ColorFamily, type ColorStep, type Role } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님). 타일 글자색을 고르려고 대비비를 계산한다.
+// 내부 서브패스(앱 개발자용 아님).
 import { colorFamilyNames, contrastRatio, roleFamily } from "@tide-design/foundation/internal";
 
 /** 타일 하나. `label`은 타일에 보이는 글자(단계 숫자나 `white`), `name`은 스크린리더가 읽는 전체 이름이다. */
@@ -37,8 +36,7 @@ export const scaleFamilies: readonly ColorFamily[] = [
   ...colorFamilyNames.filter((family) => !(family in familyRole)),
 ];
 
-// 글자색 후보. 진한 글자는 black, 밝은 글자는 white다.
-// 어떤 바탕이든 둘 중 높은 쪽은 √21 ≈ 4.58:1 이상이다(두 대비가 같아지는 휘도에서 가장 낮다). 그래서 4.5:1을 늘 넘는다.
+// 어떤 바탕이든 black·white 중 높은 쪽은 √21 ≈ 4.58:1 이상이라 4.5:1을 늘 넘는다.
 const textCandidates = [color.black, color.white] as const;
 
 /** 바탕 위 글자색. 후보 중 대비가 더 높은 쪽을 고른다(같으면 진한 글자). */
@@ -48,19 +46,14 @@ export function tileTextColor(background: string): string {
   return contrastRatio(light, background) > contrastRatio(dark, background) ? light : dark;
 }
 
-// sRGB 채널(0~255 hex 두 자리) → 선형 값. sRGB 전달 함수(IEC 61966-2-1)의 역이다.
+// sRGB 채널(hex 두 자리) → 선형 값. sRGB 전달 함수(IEC 61966-2-1)의 역이다.
 function linearChannel(hex: string, index: number): number {
   const channel = Number.parseInt(hex.slice(index, index + 2), 16) / 255;
 
   return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
 }
 
-/**
- * sRGB hex → OKLCH 채도 C.
- * Björn Ottosson의 OKLab 정의(2020, 「A perceptual color space for image processing」)대로
- * 선형 sRGB → LMS(M1) → 세제곱근 → Lab(M2)로 바꾸고, C = √(a² + b²)다.
- * 행렬 값은 그 정의의 값이며 foundation 스케일 테스트(OKLCH L 계산)와 같다.
- */
+/** sRGB hex → OKLCH 채도 C. 행렬은 Björn Ottosson의 OKLab 정의(2020) 값이다. */
 export function oklchChroma(hex: string): number {
   const [r, g, b] = [1, 3, 5].map((index) => linearChannel(hex, index)) as [number, number, number];
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);

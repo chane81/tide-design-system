@@ -11,10 +11,7 @@ export interface RepoMarkdownProps {
   path: string;
 }
 
-/**
- * 저장소의 `.md` 원문을 Storybook `Markdown` 블록으로 그린다(@storybook/addon-docs 10.6.6).
- * 상대 링크는 Storybook 경로나 GitHub 주소로 바꾸고, 제목 id는 GitHub와 같게 만든다.
- */
+/** 저장소의 `.md` 원문을 Storybook `Markdown` 블록으로 그린다. 상대 링크와 제목 id를 GitHub와 맞춘다. */
 export function RepoMarkdown({ source, path }: RepoMarkdownProps): ReactElement {
   return (
     <>

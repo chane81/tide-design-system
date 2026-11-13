@@ -4,7 +4,7 @@ import {
   type ContrastPair,
   type ThemeName,
 } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님). 문서 블록이 원본 hex로 대비비를 계산하려고 쓴다.
+// 내부 서브패스(앱 개발자용 아님).
 import {
   contrastExclusions,
   contrastPairRatio,
@@ -12,10 +12,7 @@ import {
 } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
-// 색 Token 블록: 대비 쌍 목록과 Theme별 대비비를 Token 원본에서 그린다.
-// CI(foundation unit)가 같은 목록을 검사하므로, 여기 나오는 쌍은 모두 기준을 넘는다.
-// 기준은 세 등급이다(ADR 0023): 정지 상태 글자 4.5, 일시 상태 글자와 solid 위 글자 4, UI 요소 3.
-// 미리보기는 현재 Theme과 무관하게 원본 hex로 칠한다. 그래서 light와 dark 표를 한 화면에서 볼 수 있다.
+// light와 dark 표를 한 화면에 보이려고 현재 Theme과 무관하게 원본 hex로 칠한다.
 
 /** 하한 등급의 이름(ADR 0023) */
 const tierLabel: Record<ContrastMinRatio, string> = {

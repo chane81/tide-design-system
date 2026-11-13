@@ -4,9 +4,6 @@ import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color
 import { ArrowRightIcon, PlusIcon, TrashIcon } from "@tide-design/icons";
 import { useState, type ReactElement } from "react";
 
-// Button 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언은 components의 `Button.test.tsx`에 있다.
-
 const variants = ["solid", "subtle", "outline", "ghost"] as const;
 const colors = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
 const sizes = ["xs", "sm", "md", "lg"] as const;
@@ -14,7 +11,7 @@ const sizes = ["xs", "sm", "md", "lg"] as const;
 const union = (values: readonly string[]): string =>
   values.map((value) => `"${value}"`).join(" | ");
 
-// 예시 앱 Role(brand)을 Role 타입에 더한다. 앱도 같은 augmentation을 쓴다(「브랜드 색 더하기」, ADR 0016).
+// 예시 앱 Role(brand)을 Role 타입에 더한다. 앱도 같은 augmentation을 쓴다(ADR 0016).
 declare module "@tide-design/components" {
   interface RoleRegistry {
     brand: true;

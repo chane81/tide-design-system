@@ -1,18 +1,10 @@
-/*
- * 문서 앱 전용 CSS. 배포 사용자 경로(`@import "@tide-design/components/styles.css"`, 빌드 결과를 스캔)와 다르다.
- * 문서 앱은 components 원본을 직접 읽으므로(`@tide-design/source` 조건) 원본 폴더를 스캔해야
- * 원본을 고쳤을 때 새 class가 HMR로 반영된다.
- */
+/* 문서 앱은 components 원본을 읽으므로(`@tide-design/source` 조건) 원본을 스캔해야 새 class가 HMR로 반영된다. */
 @import "tailwindcss";
 @import "@tide-design/foundation/tailwind.css";
 
-/* components 원본. 경로는 이 CSS 파일 위치 기준이다. */
 @source "../../../packages/components/src";
 
-/*
- * Docs 페이지 배경과 예시 영역을 Tide Theme에 맞춘다. 글·표·코드 색은 ThemedDocsContainer가 Storybook theme으로 바꾼다.
- * Storybook 스타일(emotion, class 하나)보다 앞서도록 class 두 개로 쓴다.
- */
+/* Storybook 스타일(emotion, class 하나)보다 앞서도록 class 두 개로 쓴다. */
 .sbdocs.sbdocs-wrapper,
 .sbdocs .docs-story {
   background-color: var(--tide-bg-canvas);
@@ -22,10 +14,7 @@
   color: var(--tide-text-default);
 }
 
-/*
- * MDX 표와 링크도 Tide Token 색으로 맞춘다. Storybook dark theme의 짝수 행 배경과 링크 색은 대비가 3.1에 그친다.
- * 짝수 행은 neutral-subtle, 링크는 text-primary(둘 다 light·dark 대비 쌍이 있는 Token)를 쓴다.
- */
+/* Storybook dark theme의 짝수 행 배경과 링크 색은 대비가 3.1에 그쳐 Tide Token으로 덮는다. */
 .sbdocs.sbdocs-content table tr {
   border-color: var(--tide-border-default);
   background-color: var(--tide-bg-canvas);

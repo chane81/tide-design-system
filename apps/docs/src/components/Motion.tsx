@@ -1,13 +1,11 @@
 import { duration, easing, type DurationName } from "@tide-design/foundation";
 import { useEffect, useState, type ReactElement } from "react";
 
-// motion Token 블록: Token 원본에서 단계 목록과 값을 그리고, 버튼으로 실제 duration·easing을 재생한다
-// (spec 「문서 앱」 Token 블록). 미리보기는 class 이름을 조합하지 않고 공개 계약 변수(--tide-*)를 inline style로 쓴다.
-// 움직임 줄이기를 켠 사용자에게는 이동 대신 opacity 전환으로 보여 준다(tide-v0 티켓 21 「prefers-reduced-motion」).
+// 움직임 줄이기를 켠 사용자에게는 이동 대신 opacity 전환으로 보여 준다.
 
 const durationNames = Object.keys(duration) as DurationName[];
 
-/** 단계별 쓰는 곳(tide-v0 티켓 21 「Token」) */
+/** 단계별 쓰는 곳 */
 const durationUsage: Record<DurationName, string> = {
   fast: "hover·press, 색 전환, Switch thumb, 오버레이가 사라질 때. 시간을 적지 않은 transition의 기본값",
   normal: "가끔 쓰는 오버레이(Popover, Toast, Dialog류)가 나타날 때",

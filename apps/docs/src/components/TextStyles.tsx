@@ -6,13 +6,11 @@ import {
   type FontFamilyName,
   type TextStyleName,
 } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님). 스택을 CSS 값 그대로 보여 주려고 쓴다.
+// 내부 서브패스(앱 개발자용 아님).
 import { fontFamilyCss } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
-// 타이포그래피 Token 블록: 텍스트 스타일, 굵기, font-family를 Token 원본에서 그린다(spec 「문서 앱」 Token 블록).
-// 미리보기는 class 이름을 조합하지 않고 공개 계약 변수(--tide-*)를 inline style로 쓴다.
-// Tailwind는 소스에 그대로 적힌 class만 만들기 때문이다.
+// Tailwind는 소스에 그대로 적힌 class만 만들므로 class를 조합하지 않고 변수(--tide-*)를 inline style로 쓴다.
 
 const textStyleNames = Object.keys(textStyle) as TextStyleName[];
 const fontFamilyNames = Object.keys(fontFamily) as FontFamilyName[];

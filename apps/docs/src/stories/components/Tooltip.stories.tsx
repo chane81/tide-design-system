@@ -12,17 +12,12 @@ import {
 import { CopyIcon, InfoIcon, SettingsIcon } from "@tide-design/icons";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 
-// Tooltip 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(hover·focus 열림, Esc, 설명 연결, motion)은 components의 `Tooltip.test.tsx`에 있다.
-//
-// 설명은 document.body로 portal된다. 열린 상태의 a11y를 검사하려고 story마다 play에서 트리거에 키보드 포커스를 줘서 연다.
-// React Aria는 마지막 입력이 키보드일 때만 포커스로 연다(useTooltipTrigger, react-aria 3.53.1). 그래서 Tab을 누른 뒤
-// 포커스한다. play는 Docs 페이지에서 돌지 않으므로(storybook 10.6.5 `parameters.docs.story.autoplay` 기본 false) 문서에서는 닫혀 있다.
+// 열린 상태의 a11y를 보려고 story마다 play에서 트리거에 키보드 포커스를 줘서 연다.
+// React Aria는 마지막 입력이 키보드일 때만 포커스로 연다. play는 Docs 페이지에서 돌지 않는다.
 
 const meta = {
   title: "Component/Tooltip",
   component: Tooltip,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: { TooltipTrigger, TooltipContent },
   argTypes: {
     children: { control: false, table: { type: { summary: "ReactNode" } } },
