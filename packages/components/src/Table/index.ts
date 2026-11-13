@@ -1,9 +1,12 @@
-export { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "./Table.tsx";
-export type {
-  TableBodyProps,
-  TableCellProps,
-  TableHeadProps,
-  TableHeaderCellProps,
-  TableProps,
-  TableRowProps,
-} from "./Table.tsx";
+export { Table } from "./Table.tsx";
+export type { TableProps } from "./Table.tsx";
+export { TableHead } from "./components/TableHead.tsx";
+export type { TableHeadProps } from "./components/TableHead.tsx";
+export { TableBody } from "./components/TableBody.tsx";
+export type { TableBodyProps } from "./components/TableBody.tsx";
+export { TableRow } from "./components/TableRow.tsx";
+export type { TableRowProps } from "./components/TableRow.tsx";
+export { TableHeaderCell } from "./components/TableHeaderCell.tsx";
+export type { TableHeaderCellProps } from "./components/TableHeaderCell.tsx";
+export { TableCell } from "./components/TableCell.tsx";
+export type { TableCellProps } from "./components/TableCell.tsx";
