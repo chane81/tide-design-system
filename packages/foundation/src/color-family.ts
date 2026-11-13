@@ -129,7 +129,7 @@ function isSlotValue(value: unknown): value is SlotValue {
  *
  * export default defineColorFamily({
  *   name: "brand",
- *   scale: { 50: "#f5f3ff", 100: "#ede9fe", ... 950: "#2e1065" },
+ *   scale: { 50: "#fcf0f5", 100: "#fee5f0", ... 950: "#5c1d3f" },
  * });
  * ```
  *

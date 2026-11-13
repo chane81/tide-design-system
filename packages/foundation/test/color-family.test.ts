@@ -23,10 +23,10 @@ describe("defineColorFamily", () => {
   it("검증한 계열을 그대로 돌려주고 hex는 소문자로 맞춘다", () => {
     const family = defineColorFamily({
       name: "brand-sub",
-      scale: { ...yellowScale, 500: "#EAB308" },
+      scale: { ...yellowScale, 500: "#D4BF3A" },
     });
     expect(family.name).toBe("brand-sub");
-    expect(family.scale[500]).toBe("#eab308");
+    expect(family.scale[500]).toBe("#d4bf3a");
     expect(family.overrides).toEqual({});
   });
 
@@ -48,7 +48,7 @@ describe("defineColorFamily", () => {
       defineColorFamily({ name: "brand", scale: partial as unknown as typeof yellowScale }),
     ).toThrow(/brand-950/);
     expect(() =>
-      defineColorFamily({ name: "brand", scale: { ...yellowScale, 600: "#ca8a0480" } }),
+      defineColorFamily({ name: "brand", scale: { ...yellowScale, 600: "#b49f0380" } }),
     ).toThrow(/brand-600/);
   });
 
@@ -73,7 +73,7 @@ describe("defineColorFamily", () => {
 describe("앱 계열 CSS와 대비 검사", () => {
   it("Tide 계열과 같은 매핑 규칙으로 light·dark 계열 변수와 [data-color] 규칙을 만든다", () => {
     const css = colorFamilyCss([brand]);
-    expect(css).toContain("  --tide-color-brand-600: #7c3aed;");
+    expect(css).toContain("  --tide-color-brand-600: #a85c81;");
     expect(css).toMatch(
       /:root,\n\[data-theme="light"\] \{\n {2}--tide-brand-solid: var\(--tide-color-brand-600\);/,
     );
@@ -213,7 +213,7 @@ describe("tide-color CLI", () => {
     const result = cli("build", "test/fixtures/yellow.ts");
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
-    expect(result.stderr).toContain("대비 미달 yellow light: on-solid / solid 2.94:1 < 4:1");
+    expect(result.stderr).toContain("대비 미달 yellow light: on-solid / solid 2.66:1 < 4:1");
     expect(result.stderr).toContain("대비 미달 yellow light: border / bg-canvas");
   });
 

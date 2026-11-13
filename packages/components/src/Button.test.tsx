@@ -319,17 +319,17 @@ describe("Role(data-color)", () => {
     const brand = defineColorFamily({
       name: "brand",
       scale: {
-        50: "#f5f3ff",
-        100: "#ede9fe",
-        200: "#ddd6fe",
-        300: "#c4b5fd",
-        400: "#a78bfa",
-        500: "#8b5cf6",
-        600: "#7c3aed",
-        700: "#6d28d9",
-        800: "#5b21b6",
-        900: "#4c1d95",
-        950: "#2e1065",
+        50: "#fcf0f5",
+        100: "#fee5f0",
+        200: "#ebcbd9",
+        300: "#e1adc4",
+        400: "#dc7dac",
+        500: "#c75b93",
+        600: "#a85c81",
+        700: "#90406a",
+        800: "#793157",
+        900: "#68274a",
+        950: "#5c1d3f",
       },
     });
     let style: HTMLStyleElement | undefined;
@@ -355,13 +355,13 @@ describe("Role(data-color)", () => {
       const solid = page.getByTestId("solid").element();
       expect(solid).toHaveAttribute("data-color", "brand");
       expect(getComputedStyle(solid).getPropertyValue("--tide-accent-solid").trim()).toBe(
-        "#7c3aed",
+        "#a85c81",
       );
       if (!forcedColors()) {
-        expect(getComputedStyle(solid).backgroundColor).toBe(rgb("#7c3aed"));
+        expect(getComputedStyle(solid).backgroundColor).toBe(rgb("#a85c81"));
         expect(getComputedStyle(solid).color).toBe(rgb(color.white));
         expect(getComputedStyle(page.getByTestId("dark").element()).backgroundColor).toBe(
-          rgb("#2e1065"),
+          rgb("#5c1d3f"),
         );
       }
     });
@@ -375,7 +375,7 @@ describe("Role(data-color)", () => {
 
     test("Theme 블록에서 --tide-bg-primary-solid를 덮어쓰면 기본 Button이 그 색이 된다", async () => {
       style = document.createElement("style");
-      style.textContent = '[data-theme="light"] { --tide-bg-primary-solid: #7c3aed; }';
+      style.textContent = '[data-theme="light"] { --tide-bg-primary-solid: #a85c81; }';
       document.head.append(style);
       await render(
         <div data-theme="light">
@@ -389,7 +389,7 @@ describe("Role(data-color)", () => {
         getComputedStyle(page.getByTestId(testId).element())
           .getPropertyValue("--tide-accent-solid")
           .trim();
-      expect(accent("primary")).toBe("#7c3aed");
+      expect(accent("primary")).toBe("#a85c81");
       // 다른 Role은 그대로다.
       expect(accent("success")).toBe(color.green[600]);
     });

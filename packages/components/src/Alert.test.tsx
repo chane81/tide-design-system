@@ -320,17 +320,17 @@ describe("색", () => {
     const brand = defineColorFamily({
       name: "brand",
       scale: {
-        50: "#f5f3ff",
-        100: "#ede9fe",
-        200: "#ddd6fe",
-        300: "#c4b5fd",
-        400: "#a78bfa",
-        500: "#8b5cf6",
-        600: "#7c3aed",
-        700: "#6d28d9",
-        800: "#5b21b6",
-        900: "#4c1d95",
-        950: "#2e1065",
+        50: "#fcf0f5",
+        100: "#fee5f0",
+        200: "#ebcbd9",
+        300: "#e1adc4",
+        400: "#dc7dac",
+        500: "#c75b93",
+        600: "#a85c81",
+        700: "#90406a",
+        800: "#793157",
+        900: "#68274a",
+        950: "#5c1d3f",
       },
     });
     let style: HTMLStyleElement | undefined;
@@ -349,9 +349,9 @@ describe("색", () => {
       if (forcedColors()) return;
       const computed = getComputedStyle(root());
       // light 슬롯: subtle 100, on-subtle 950, subtle-border 200(ADR 0022)
-      expect(computed.backgroundColor).toBe(resolve("#ede9fe"));
-      expect(computed.color).toBe(resolve("#2e1065"));
-      expect(computed.borderTopColor).toBe(resolve("#ddd6fe"));
+      expect(computed.backgroundColor).toBe(resolve("#fee5f0"));
+      expect(computed.color).toBe(resolve("#5c1d3f"));
+      expect(computed.borderTopColor).toBe(resolve("#ebcbd9"));
     });
   });
 });

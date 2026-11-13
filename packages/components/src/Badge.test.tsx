@@ -306,20 +306,20 @@ describe("색", () => {
     const brand = defineColorFamily({
       name: "brand",
       scale: {
-        50: "#f5f3ff",
-        100: "#ede9fe",
-        200: "#ddd6fe",
-        300: "#c4b5fd",
-        400: "#a78bfa",
-        500: "#8b5cf6",
-        600: "#7c3aed",
-        700: "#6d28d9",
-        800: "#5b21b6",
-        900: "#4c1d95",
-        950: "#2e1065",
+        50: "#fcf0f5",
+        100: "#fee5f0",
+        200: "#ebcbd9",
+        300: "#e1adc4",
+        400: "#dc7dac",
+        500: "#c75b93",
+        600: "#a85c81",
+        700: "#90406a",
+        800: "#793157",
+        900: "#68274a",
+        950: "#5c1d3f",
       },
     });
-    const leaf = defineColorFamily({ name: "leaf", scale: { ...brand.scale, 600: "#15803d" } });
+    const leaf = defineColorFamily({ name: "leaf", scale: { ...brand.scale, 600: "#428a55" } });
     let style: HTMLStyleElement | undefined;
     afterEach(() => style?.remove());
 
@@ -338,7 +338,7 @@ describe("색", () => {
       const element = badge("브랜드");
       expect(element).toHaveAttribute("data-color", "brand");
       if (forcedColors()) return;
-      expect(getComputedStyle(element).backgroundColor).toBe(resolve("#7c3aed"));
+      expect(getComputedStyle(element).backgroundColor).toBe(resolve("#a85c81"));
       expect(getComputedStyle(element).color).toBe(resolve("#ffffff"));
     });
 
@@ -357,7 +357,7 @@ describe("색", () => {
       const element = badge("분류");
       expect(element).toHaveAttribute("data-color", "leaf");
       if (forcedColors()) return;
-      expect(getComputedStyle(element).backgroundColor).toBe(resolve("#15803d"));
+      expect(getComputedStyle(element).backgroundColor).toBe(resolve("#428a55"));
     });
   });
 });
