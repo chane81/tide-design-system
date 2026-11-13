@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Spinner } from "@tide-design/components";
+import { Button, Spinner } from "@tide-design/components";
 
 const meta = {
   title: "Component/Spinner",
@@ -23,10 +23,6 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-
-// 예시용 네이티브 버튼 모양.
-const buttonClass =
-  "inline-flex h-8 items-center gap-2 rounded-md bg-primary-solid px-3 text-label-sm text-on-solid";
 
 /** 기본: md(16px), 이름 「로딩 중」 */
 export const Basic: Story = {
@@ -81,14 +77,13 @@ export const WithColor: Story = {
   ),
 };
 
-/** 버튼 안에서는 같은 size의 텍스트 옆 아이콘 자리에 둔다. */
+/** 버튼 안에서는 Button `loading`이 같은 size의 Spinner를 앞 아이콘 자리에 둔다. */
 export const InButton: Story = {
   name: "버튼 안에서",
   render: () => (
-    <button type="button" className={buttonClass}>
-      <Spinner size="sm" aria-hidden="true" />
-      저장 중
-    </button>
+    <Button size="sm" loading>
+      저장
+    </Button>
   ),
 };
 
