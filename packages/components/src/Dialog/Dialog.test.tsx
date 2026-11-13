@@ -1,7 +1,3 @@
-// Dialog·AlertDialog 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 30).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 경계가 시스템 색으로 남는지와
-// 등장·퇴장이 opacity 전환만 남는지를 본다.
-//
 // 열려 있는 동안 바깥은 inert라 Playwright click(누를 수 있는지 먼저 확인)이 바깥 요소를 누르지 못한다.
 // 바깥 막(backdrop)은 가운데가 Dialog로 덮여 있어 모서리를 좌표로 누른다(mouseDownAtCorner·mouseUp).
 import { useState, type ReactElement } from "react";
@@ -97,17 +93,13 @@ const content = (): HTMLElement => page.getByTestId("content").element() as HTML
 const backdrop = (): HTMLElement => content().parentElement as HTMLElement;
 const trigger = (): HTMLElement => page.getByTestId("trigger").element() as HTMLElement;
 
-/** 바깥 막의 모서리를 누른다. */
 async function pressBackdrop(): Promise<void> {
   backdrop().dataset["testid"] = "backdrop";
   await commands.mouseDownAtCorner("backdrop");
   await commands.mouseUp();
 }
 
-/**
- * 포커스가 그 요소에 올 때까지 기다린다. React Aria FocusScope는 내용이 DOM에서 빠진 뒤 다음 프레임에 포커스를
- * 되돌린다(Popover와 같다, 디버그 기록으로 확인).
- */
+/** React Aria FocusScope는 내용이 DOM에서 빠진 뒤 다음 프레임에 포커스를 되돌리므로 기다린다. */
 async function expectFocused(element: Element): Promise<void> {
   await expect.poll(() => document.activeElement).toBe(element);
 }
@@ -120,7 +112,7 @@ async function expectClosed(): Promise<void> {
 describe("역할과 이름", () => {
   test("트리거는 dialog를 여는 버튼이고, 내용은 제목을 이름으로·설명을 설명으로 가진 dialog다", async () => {
     await render(<Example />);
-    // React Aria는 dialog 트리거에 aria-haspopup을 붙이지 않는다(스크린리더가 menu로 읽는 경우가 많아서, useOverlayTrigger 소스).
+    // React Aria는 dialog 트리거에 aria-haspopup을 붙이지 않는다(스크린리더가 menu로 읽는 경우가 많아서).
     expect(trigger()).not.toHaveAttribute("aria-haspopup");
     expect(trigger()).toHaveAttribute("aria-expanded", "false");
     await userEvent.click(trigger());
@@ -175,7 +167,6 @@ describe("열고 닫기와 포커스 복귀", () => {
     trigger().focus();
     await userEvent.keyboard("{Enter}");
     await expect.element(page.getByRole("dialog")).toBeVisible();
-    // 열리면 포커스가 Dialog 안으로 온다(Dialog 요소 자신).
     expect(content().contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Escape}");
     await expectClosed();
@@ -542,7 +533,6 @@ describe("등장과 퇴장 motion", () => {
     expect(backdropRunning.get("opacity")?.from["opacity"]).toBe("0");
 
     if (reducedMotion()) {
-      // 움직임 줄이기: 확대 없이 opacity만 바뀐다.
       expect(style.transitionProperty).toBe("opacity");
       expect(running.has("scale")).toBe(false);
 
@@ -576,7 +566,6 @@ describe("등장과 퇴장 motion", () => {
     expect(connected).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(layerStyle.transitionDuration.split(", ")[0]).toBe("0.15s");
-    // 퇴장 중에는 막과 Dialog가 눌리지 않는다.
     expect(layerStyle.pointerEvents).toBe("none");
     expect(style.pointerEvents).toBe("none");
     expect(running.get("opacity")?.to["opacity"]).toBe("0");

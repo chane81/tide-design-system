@@ -1,8 +1,4 @@
 "use client";
-// Radio 묶음(tide-v0-impl 티켓 16). `role="radiogroup"`인 div이고 Field label·설명을 이름·설명으로 받는다.
-// 안의 Radio에 같은 `name`을 넘겨 네이티브 라디오 묶음(화살표 이동, 하나만 선택)을 만든다.
-// 선택 값은 spec 공통 규칙대로 `value`/`defaultValue`/`onValueChange(value)`다. context를 읽으므로 client Component다.
-
 import { useId, type ComponentProps, type ReactElement } from "react";
 
 import { orientationClass, type ChoiceOrientation } from "../_internal/constants/choiceGroupClass";

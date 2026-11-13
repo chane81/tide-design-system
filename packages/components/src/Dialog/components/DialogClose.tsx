@@ -5,10 +5,7 @@ import { useDialogContext } from "../../_internal/hooks/useDialogContext";
 import { renderElement } from "../../_internal/libs/renderElement";
 
 export interface DialogCloseProps extends ComponentProps<"button"> {
-  /**
-   * 다른 요소로 렌더한다. 예: `render={<Button variant="ghost" color="neutral" />}`.
-   * 기본은 class 없는 `<button type="button">`이다.
-   */
+  /** 다른 요소로 렌더한다(예: `render={<Button variant="ghost" color="neutral" />}`). 기본은 class 없는 `<button type="button">`. */
   render?: ReactElement;
 }
 

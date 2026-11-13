@@ -1,12 +1,10 @@
-// Avatar의 이름, JS 없는 fallback, 모양을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 21).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서도 이미지가 그려지고 fallback 아이콘이 남는지 본다.
 import { describe, expect, test } from "vitest";
 import { commands, page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Avatar, type AvatarProps } from "./Avatar";
 
-// 앱 장식 계열(leaf)을 색 계열 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 장식 계열(leaf)을 색 계열 이름 타입에 더한다(앱의 augmentation과 같다).
 declare module "@tide-design/foundation" {
   interface ColorFamilyRegistry {
     leaf: true;

@@ -15,8 +15,7 @@ export interface PopoverContentProps extends Omit<ComponentProps<"div">, "id" | 
 }
 
 /**
- * 트리거 옆에 뜨는 내용(`role="dialog"`). 열릴 때만 `document.body`에 portal로 렌더하고 `z-popover`로 쌓는다.
- * 등장은 opacity + blur 4px + 4px 이동(`normal`), 퇴장은 그 절반(`fast`)이다. 움직임 줄이기에서는 opacity만 바뀐다.
+ * 트리거 옆에 뜨는 내용(`role="dialog"`). 열릴 때만 `document.body`에 portal로 렌더한다.
  * 열려 있으면 `data-open`이, 트리거 기준 방향이 `data-placement`(`top`/`bottom`/`left`/`right`)로 붙는다.
  */
 export function PopoverContent(props: PopoverContentProps): ReactElement | null {
@@ -25,7 +24,7 @@ export function PopoverContent(props: PopoverContentProps): ReactElement | null 
   const present = useOverlayPresence(context.state.isOpen, popoverRef);
   if (!present) return null;
 
-  // 역할 hook(useDialog)이 포커스 가두기를 Overlay context로 요청하므로 hook을 부르는 쪽이 portal 안에 있어야 한다.
+  // 역할 hook(useDialog)이 포커스 가두기를 Overlay context로 요청하므로 portal 안에서 부른다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen}>
       <PopoverContentInner {...props} context={context} popoverRef={popoverRef} />

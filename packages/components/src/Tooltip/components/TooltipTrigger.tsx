@@ -8,9 +8,8 @@ import { useTooltipContext } from "../hooks/useTooltipContext";
 
 export interface TooltipTriggerProps extends ComponentProps<"button"> {
   /**
-   * 다른 요소로 렌더한다. 예: `render={<IconButton aria-label="복사" />}`, `render={<Button variant="ghost" />}`.
-   * props, ref, className, 이벤트 핸들러를 그 요소에 병합한다. 기본은 class 없는 `<button type="button">`이다.
-   * 포커스를 받을 수 있는 요소여야 키보드 사용자도 설명을 본다.
+   * 다른 요소로 렌더하고 props·ref·이벤트 핸들러를 병합한다(예: `render={<IconButton aria-label="복사" />}`).
+   * 기본은 class 없는 `<button type="button">`. 포커스를 받을 수 있는 요소여야 키보드 사용자도 설명을 본다.
    */
   render?: ReactElement;
 }
@@ -40,7 +39,6 @@ export function TooltipTrigger({
     ref: mergedRef,
   };
   if (!render) {
-    // 기본 요소는 class가 없다. className을 주면 그대로 붙는다.
     return createElement("button", { type: "button", ...merged, className });
   }
 

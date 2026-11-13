@@ -1,7 +1,3 @@
-// Popover 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 25).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 경계가 시스템 색으로 남는지와
-// 등장·퇴장이 opacity 전환만 남는지를 본다.
-//
 // 열려 있는 동안 바깥은 inert라 Playwright click(누를 수 있는지 먼저 확인)이 바깥 요소를 누르지 못한다.
 // 바깥 누름은 좌표로 마우스를 누르는 사용자 명령(mouseDownOn·mouseUp)으로 한다.
 import { useState, type ReactElement } from "react";
@@ -113,7 +109,6 @@ describe("열고 닫기", () => {
     expect(document.activeElement).toBe(trigger());
     await userEvent.keyboard("{Enter}");
     await expect.element(page.getByRole("dialog")).toBeVisible();
-    // 열리면 포커스가 내용(dialog) 자신으로 간다.
     await expect.element(page.getByTestId("content")).toHaveFocus();
 
     await userEvent.keyboard("{Escape}");
@@ -429,7 +424,7 @@ describe("표면", () => {
 
 describe("등장과 퇴장 motion", () => {
   // 전환 중 값(등장 300ms, 퇴장 150ms)은 data-open이 붙거나 빠지는 순간에 붙잡는다(test/motion.ts).
-  // 입력 명령이나 rerender가 돌아온 뒤에 읽으면 부하가 클 때 전환이 먼저 끝난다(전체 실행에서 재현).
+  // 입력 명령이나 rerender가 돌아온 뒤에 읽으면 부하가 클 때 전환이 먼저 끝난다.
   test("등장: opacity + blur 4px + 트리거 쪽 4px에서 normal(300ms)로 들어온다", async () => {
     const screen = await render(<Example open={false} />);
     const entered = captureWhen(
@@ -445,7 +440,6 @@ describe("등장과 퇴장 motion", () => {
 
     expect(running.get("opacity")?.from["opacity"]).toBe("0");
     if (reducedMotion()) {
-      // 움직임 줄이기: 이동·blur 없이 opacity만 바뀐다.
       expect(style.transitionProperty).toBe("opacity, display");
       expect(running.has("filter")).toBe(false);
       expect(running.has("translate")).toBe(false);
@@ -476,7 +470,6 @@ describe("등장과 퇴장 motion", () => {
     await screen.rerender(<Example open={false} />);
     const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
-    // 퇴장 중에도 DOM에 남아 전환을 그린다.
     expect(connected).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.pointerEvents).toBe("none");
