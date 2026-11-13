@@ -1,16 +1,12 @@
-export {
-  Pagination,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "./Pagination.tsx";
-export type {
-  PaginationEllipsisProps,
-  PaginationItemProps,
-  PaginationLinkProps,
-  PaginationNextProps,
-  PaginationPreviousProps,
-  PaginationProps,
-} from "./Pagination.tsx";
+export { Pagination } from "./Pagination.tsx";
+export type { PaginationProps } from "./Pagination.tsx";
+export { PaginationItem } from "./components/PaginationItem.tsx";
+export type { PaginationItemProps } from "./components/PaginationItem.tsx";
+export { PaginationLink } from "./components/PaginationLink.tsx";
+export type { PaginationLinkProps } from "./components/PaginationLink.tsx";
+export { PaginationPrevious } from "./components/PaginationPrevious.tsx";
+export type { PaginationPreviousProps } from "./components/PaginationPrevious.tsx";
+export { PaginationNext } from "./components/PaginationNext.tsx";
+export type { PaginationNextProps } from "./components/PaginationNext.tsx";
+export { PaginationEllipsis } from "./components/PaginationEllipsis.tsx";
+export type { PaginationEllipsisProps } from "./components/PaginationEllipsis.tsx";
