@@ -2,6 +2,17 @@
   "name": "@tide-design/components",
   "version": "0.11.3",
   "description": "Tide 디자인 시스템의 React Component",
+  "keywords": [
+    "accessibility",
+    "design-system",
+    "react",
+    "react-aria",
+    "react-components",
+    "tailwindcss",
+    "tide",
+    "tide-design",
+    "ui"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
