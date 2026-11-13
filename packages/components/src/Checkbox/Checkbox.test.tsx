@@ -1,6 +1,4 @@
-// Checkbox·CheckboxGroup의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 16).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 배경이 Canvas로 바뀌므로
-// 체크 표시 아이콘이 상자 배경과 다른 색(시스템 글자색)으로 보이는지를 계산값으로 단언한다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -11,7 +9,7 @@ import { Checkbox, type CheckboxProps } from "./Checkbox";
 import { CheckboxGroup } from "../CheckboxGroup/CheckboxGroup";
 import { Field } from "../Field/Field";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -21,7 +19,6 @@ declare module "@tide-design/foundation" {
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
-/** CSS 값 하나를 light Theme에서 실제로 계산한 결과 */
 function resolve(value: string): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = "light";
@@ -33,7 +30,7 @@ function resolve(value: string): string {
   return resolved;
 }
 
-/** 마우스를 Component 밖으로 옮기고 transition-colors(fast 150ms)가 끝난 뒤 계산값을 읽는다(hover 색 배제). */
+/** hover 색을 빼려고 마우스를 밖으로 옮기고 전환(fast 150ms)이 끝난 뒤 읽는다. */
 async function settle(): Promise<void> {
   const away = document.createElement("div");
   away.style.cssText = "position:fixed;right:0;bottom:0;width:8px;height:8px";
@@ -43,7 +40,6 @@ async function settle(): Promise<void> {
   await new Promise((done) => setTimeout(done, 250));
 }
 
-/** 체크박스 input 옆의 표시 아이콘 */
 const mark = (input: Element, kind: "check" | "indeterminate"): SVGElement =>
   input.parentElement!.querySelector(`[data-mark="${kind}"]`)!;
 
@@ -249,9 +245,8 @@ describe("크기", () => {
   test("지원하지 않는 size·color는 타입 오류다", () => {
     // @ts-expect-error lg는 Checkbox size가 아니다.
     const props: CheckboxProps = { size: "lg" };
-    // @ts-expect-error 색 계열 이름은 장식·분류 Component용이라 Checkbox는 받지 않는다(ADR 0016).
+    // @ts-expect-error 색 계열 이름은 받지 않는다(ADR 0016).
     const blue: CheckboxProps = { color: "blue" };
-    // augmentation한 앱 Role은 타입을 통과한다.
     const brand: CheckboxProps = { color: "brand" };
     expect([props, blue, brand]).toHaveLength(3);
   });
@@ -294,7 +289,7 @@ describe("색", () => {
   });
 
   describe("앱 Role", () => {
-    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -365,7 +360,6 @@ describe("hover", () => {
     expect(getComputedStyle(box("체크 전")).borderTopColor).toBe(
       resolve("var(--tide-border-strong)"),
     );
-    // 마우스가 떠난 체크박스는 원래 색으로 돌아온다.
     expect(getComputedStyle(box("체크됨")).backgroundColor).toBe(
       resolve("var(--tide-bg-primary-solid)"),
     );
@@ -404,9 +398,8 @@ describe("hover", () => {
     const checked = await pressed("checked", "체크됨");
     const unchecked = await pressed("unchecked", "체크 전");
     const indeterminate = await pressed("indeterminate", "일부");
-    // 값은 누르는 동안(떼어서 토글되기 전) 읽는다.
+    // 떼면 토글되므로 누르는 동안 읽는다.
     if (forcedColors()) {
-      // forced-colors에서는 누름에도 시스템 색 그대로다.
       expect([checked, unchecked, indeterminate]).toEqual([
         resolve("Highlight"),
         resolve("Canvas"),
@@ -512,7 +505,6 @@ describe("forced-colors", () => {
       expect(getComputedStyle(icon).color).not.toBe(transparent);
       expect(box.borderTopWidth).toBe("1px");
       expect(box.borderTopColor).not.toBe(transparent);
-      // 선택한 상자는 Highlight, 표시는 HighlightText다(Switch와 같은 시스템 색).
       if (forcedColors()) {
         expect(box.backgroundColor).toBe(resolve("Highlight"));
         expect(getComputedStyle(icon).color).toBe(resolve("HighlightText"));
@@ -589,10 +581,8 @@ describe("CheckboxGroup", () => {
     const sms = page.getByRole("checkbox", { name: "문자" });
     await expect.element(email).toHaveAttribute("aria-invalid", "true");
     await expect.element(sms).toHaveAttribute("aria-invalid", "true");
-    // 각 Checkbox는 자기 label로만 이름이 붙고, Field id를 나눠 쓰지 않는다.
     expect(email.element().id).not.toBe("notify");
     expect(email.element().id).toBe("");
-    // group 모드의 Field label은 label 요소가 아니다(for가 묶음을 가리키지 않는다).
     expect(page.getByText("알림 받을 곳").element().tagName).toBe("SPAN");
   });
 
@@ -607,7 +597,7 @@ describe("CheckboxGroup", () => {
     );
     await expect.element(page.getByRole("checkbox", { name: "디자인" })).toBeDisabled();
     await expect.element(page.getByRole("checkbox", { name: "개발" })).toBeDisabled();
-    // 체크박스 묶음의 「하나 이상」은 네이티브 required로 나타낼 수 없다(각자 필수가 되어 버린다).
+    // 묶음의 「하나 이상」은 네이티브 required로 나타낼 수 없다(각자 필수가 된다).
     await expect.element(page.getByRole("checkbox", { name: "디자인" })).not.toBeRequired();
     expect(page.getByRole("group").element()).toHaveAttribute("data-disabled", "");
   });

@@ -1,12 +1,11 @@
-// Progress의 역할·값·이름, 모양, 색, 움직임 줄이기를 실제 Chromium에서 확인한다(tide-v0-impl 티켓 22).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 진행 표시가 유지되는지를 계산값으로 단언한다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { Progress, type ProgressProps } from "./Progress";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -16,7 +15,6 @@ declare module "@tide-design/foundation" {
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-/** CSS 값 하나를 실제로 계산한 결과. 시스템 색 이름을 계산값과 비교할 때 쓴다. */
 function resolve(value: string): string {
   const probe = document.createElement("div");
   probe.style.forcedColorAdjust = "none";
@@ -129,7 +127,7 @@ describe("값과 막대 너비", () => {
       </div>,
     );
     await expect.element(page.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "80");
-    // 너비 전환(motion-safe일 때 fast 150ms)이 끝나기를 기다린다.
+    // 너비 전환(fast 150ms)이 끝나기를 기다린다.
     await expect.poll(ratio).toBeCloseTo(0.8, 2);
   });
 });
@@ -220,11 +218,10 @@ describe("움직임 줄이기와 forced-colors", () => {
         <Progress value={60} aria-label="업로드" />
       </div>,
     );
-    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다. 분기가 실제로 두 쪽 다 도는지 확인한다.
+    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다.
     expect(reducedMotion()).toBe(forcedColors());
     const style = getComputedStyle(bar());
 
-    // 진행 표시는 두 instance에서 같다: 막대가 보이고 너비가 값과 같다. keyframe은 없다.
     expect(style.display).toBe("block");
     expect(style.visibility).toBe("visible");
     expect(style.opacity).toBe("1");
@@ -234,11 +231,9 @@ describe("움직임 줄이기와 forced-colors", () => {
     expect(style.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
 
     if (reducedMotion()) {
-      // motion-safe:로 감싼 전환이 빠져 값이 바로 바뀐다.
       expect(style.transitionDuration).toBe("0s");
     } else {
       expect(style.transitionProperty).toBe("width");
-      // 시간을 적지 않은 transition의 기본값 fast(150ms)와 out
       expect(style.transitionDuration).toBe("0.15s");
       expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
     }

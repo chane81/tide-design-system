@@ -1,5 +1,4 @@
-// Skeleton의 숨김, 모양, 깜빡임과 움직임 줄이기, forced-colors를 실제 Chromium에서 확인한다(tide-v0-impl 티켓 22).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 깜빡임이 멈추는지를 계산값으로 단언한다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -9,7 +8,6 @@ import { Skeleton, type SkeletonProps } from "./Skeleton";
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수와 시스템 색을 계산값과 비교할 때 쓴다. */
 function resolve(value: string, theme: "light" | "dark" = "light"): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = theme;
@@ -33,7 +31,6 @@ describe("스크린 리더", () => {
       </section>,
     );
     expect(byTestId("skeleton")).toHaveAttribute("aria-hidden", "true");
-    // 영역만 보이고 Skeleton은 아무것도 노출하지 않는다.
     await expect
       .element(page.getByRole("region", { name: "댓글" }))
       .toMatchAriaInlineSnapshot(`- region "댓글"`);
@@ -54,10 +51,9 @@ describe("깜빡임과 움직임 줄이기", () => {
     const element = byTestId("skeleton");
     const style = getComputedStyle(element);
 
-    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다. 분기가 실제로 두 쪽 다 도는지 확인한다.
+    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다.
     expect(reducedMotion()).toBe(forcedColors());
     if (reducedMotion()) {
-      // motion-safe:로 감싸 움직임 줄이기에서는 animation이 없다. 모양은 그대로 보인다.
       expect(style.animationName).toBe("none");
       expect(element.getAnimations()).toHaveLength(0);
       expect(style.opacity).toBe("1");
@@ -70,7 +66,6 @@ describe("깜빡임과 움직임 줄이기", () => {
       expect(style.animationTimingFunction).toBe("cubic-bezier(0.4, 0, 0.6, 1)");
       const [animation] = element.getAnimations();
       expect(animation?.playState).toBe("running");
-      // 시간이 흐르며 opacity가 1에서 내려간다(50%에서 0.5).
       await new Promise((resolve) => setTimeout(resolve, 300));
       expect(Number(getComputedStyle(element).opacity)).toBeLessThan(1);
     }
@@ -103,7 +98,6 @@ describe("모양", () => {
     expect(getComputedStyle(byTestId("skeleton")).borderTopLeftRadius).toBe("6px");
   });
 
-  // Avatar size와 같다(Avatar 자리를 그대로 채운다).
   test.each([
     ["xs", 24],
     ["sm", 32],

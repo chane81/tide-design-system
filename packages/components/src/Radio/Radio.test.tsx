@@ -1,5 +1,4 @@
-// Radio·RadioGroup의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 16).
-// 화살표 이동과 하나만 선택되는 동작은 네이티브 라디오가 맡으므로, 같은 name이 넘어가는지와 실제 키 동작을 단언한다.
+// 화살표 이동·단일 선택은 네이티브가 맡으므로 같은 name이 넘어가는지와 실제 키 동작을 본다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -10,7 +9,7 @@ import { Field } from "../Field/Field";
 import { Radio, type RadioProps } from "./Radio";
 import { RadioGroup } from "../RadioGroup/RadioGroup";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -31,7 +30,7 @@ function resolve(value: string): string {
   return resolved;
 }
 
-/** 마우스를 Component 밖으로 옮기고 transition-colors(fast 150ms)가 끝난 뒤 계산값을 읽는다(hover 색 배제). */
+/** hover 색을 빼려고 마우스를 밖으로 옮기고 전환(fast 150ms)이 끝난 뒤 읽는다. */
 async function settle(): Promise<void> {
   const away = document.createElement("div");
   away.style.cssText = "position:fixed;right:0;bottom:0;width:8px;height:8px";
@@ -279,9 +278,8 @@ describe("모양", () => {
     const missing: RadioProps = {};
     // @ts-expect-error lg는 Radio size가 아니다.
     const large: RadioProps = { value: "a", size: "lg" };
-    // @ts-expect-error 색 계열 이름은 장식·분류 Component용이라 Radio는 받지 않는다(ADR 0016).
+    // @ts-expect-error 색 계열 이름은 받지 않는다(ADR 0016).
     const blue: RadioProps = { value: "a", color: "blue" };
-    // augmentation한 앱 Role은 타입을 통과한다.
     const brand: RadioProps = { value: "a", color: "brand" };
     expect([missing, large, blue, brand]).toHaveLength(4);
   });
@@ -304,7 +302,7 @@ describe("모양", () => {
   });
 
   describe("앱 Role", () => {
-    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -379,7 +377,7 @@ describe("모양", () => {
       </div>,
     );
     const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
-    // 값은 누르는 동안(떼어서 선택이 바뀌기 전) 읽는다.
+    // 떼면 선택이 바뀌므로 누르는 동안 읽는다.
     const pressed = async (testId: string, name: string): Promise<string> => {
       await commands.mouseDownOn(testId);
       await wait();

@@ -14,6 +14,7 @@ export function BreadcrumbItem({
 }: BreadcrumbItemProps): ReactElement {
   return (
     <li {...props} className={cn(itemClass, className)}>
+      {/* 이름 없는 아이콘이라 IconBase가 aria-hidden을 붙여 읽히지 않는다. */}
       <ChevronRightIcon className={separatorClass} />
       {children}
     </li>

@@ -1,6 +1,4 @@
-// Button 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 13).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
-// press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
 import { color } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import Link from "next/link.js";
@@ -11,8 +9,7 @@ import { render } from "vitest-browser-react";
 
 import { Button, type ButtonProps } from "./Button";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-// 테스트 안에서는 interface를 선언한 foundation을 넓힌다. 앱이 `@tide-design/components`를 넓히는 경우는 smoke가 본다.
+// 앱 Role(brand)을 더한다. 테스트는 interface를 선언한 foundation을 넓히고, components를 넓히는 경우는 smoke가 본다.
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -29,7 +26,6 @@ const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
 async function resolve(
   property: "backgroundColor" | "color" | "borderColor",
   value: string,
@@ -82,7 +78,6 @@ describe("역할과 이름", () => {
       "aria-hidden",
       "true",
     );
-    // 다른 라이브러리 아이콘의 width/height(24)를 덮어써 md 크기(16px)가 된다.
     const box = svg.getBoundingClientRect();
     expect([box.width, box.height]).toEqual([16, 16]);
   });
@@ -157,8 +152,7 @@ describe("스타일 축", () => {
     }
   });
 
-  // 채움 방식마다 배경·글자·경계 Token. neutral은 역할 text·border·on-subtle이 없어 default·strong을 쓴다.
-  // subtle 글자는 파스텔 글자 on-subtle이다(ADR 0022).
+  // neutral은 Role text·border·on-subtle이 없어 default·strong을 쓴다(ADR 0022).
   const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
   const expected = (variant: NonNullable<ButtonProps["variant"]>, role: (typeof roles)[number]) => {
     const text = role === "neutral" ? "text-default" : `text-${role}`;
@@ -203,8 +197,7 @@ describe("스타일 축", () => {
     );
   });
 
-  // outline·ghost의 hover·누름은 같은 색으로 채운다(ADR 0025). Role은 hover faint·누름 subtle이고,
-  // neutral만 색 없이 덮는다(bg-hover·bg-active). 계산된 색이 Token 값과 같은지 light·dark에서 본다.
+  // neutral만 색 없이 bg-hover·bg-active로 덮는다(ADR 0025).
   const tintCases = (["light", "dark"] as const).flatMap((theme) =>
     (["outline", "ghost"] as const).flatMap((variant) =>
       (
@@ -256,15 +249,14 @@ describe("스타일 축", () => {
   test("지원하지 않는 variant·color·size는 타입 오류다", () => {
     // @ts-expect-error -- variant는 채움 방식 4개만 받는다.
     const a: ButtonProps = { variant: "link" };
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
+    // @ts-expect-error -- color는 Role만 받는다. 장식 계열 purple도 Role이 아니다.
     const b: ButtonProps = { color: "purple" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다.
     const c: ButtonProps = { size: "xl" };
-    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 Button은 받지 않는다(ADR 0016).
+    // @ts-expect-error -- 색 계열 이름은 받지 않는다(ADR 0016).
     const blue: ButtonProps = { color: "blue" };
     // @ts-expect-error -- neutral과 다른 색인 gray도 받지 않는다.
     const gray: ButtonProps = { color: "gray" };
-    // augmentation한 앱 Role은 타입을 통과한다.
     const d: ButtonProps = { color: "brand" };
     expect([a, b, c, blue, gray, d]).toHaveLength(6);
   });
@@ -314,7 +306,7 @@ describe("Role(data-color)", () => {
   });
 
   describe("앱 Role", () => {
-    // 앱이 RoleRegistry에 brand를 더하고, tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -367,8 +359,7 @@ describe("Role(data-color)", () => {
   });
 
   describe("Tide Role 변수 덮어쓰기", () => {
-    // 「브랜드 색 더하기」 문서의 「Tide Role의 색을 바꿀 때」와 같다. 앱 CSS를 Tide CSS 뒤에 둔다.
-    // 별도 기능이 아니라 CSS 변수 덮어쓰기라 대비 검사는 받지 않는다.
+    // 앱 CSS를 Tide CSS 뒤에 둬 변수를 덮어쓴다. CSS 덮어쓰기라 대비 검사는 받지 않는다.
     let style: HTMLStyleElement | undefined;
     afterEach(() => style?.remove());
 
@@ -389,7 +380,6 @@ describe("Role(data-color)", () => {
           .getPropertyValue("--tide-accent-solid")
           .trim();
       expect(accent("primary")).toBe("#a85c81");
-      // 다른 Role은 그대로다.
       expect(accent("success")).toBe(color.green[600]);
     });
   });
@@ -416,7 +406,7 @@ describe("press 축소", () => {
   }
 
   test("누르면 0.96으로 줄어든다. 움직임 줄이기에서는 줄어들지 않는다", async () => {
-    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다. 분기가 실제로 두 쪽 다 도는지 확인한다.
+    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다.
     expect(reducedMotion()).toBe(forcedColors());
     const scale = await scaleWhilePressed(<Button data-testid="target">저장</Button>);
     expect(scale).toBe(reducedMotion() ? "none" : "0.96");
@@ -494,7 +484,6 @@ describe("forced-colors", () => {
 });
 
 describe("커서", () => {
-  // 활성 pointer, 비활성 not-allowed, 로딩 wait. button과 render 요소(Next Link, <a>)가 같다.
   const cursorOf = (testId: string): string =>
     getComputedStyle(page.getByTestId(testId).element()).cursor;
 
@@ -583,12 +572,10 @@ describe("render", () => {
     expect(element).not.toHaveAttribute("type");
     expect(node).toBe(element);
     expect(element).toHaveClass("underline");
-    // 사용자 className이 기본 padding을 이긴다.
     expect(element).toHaveClass("px-8");
     expect(element).not.toHaveClass("px-4");
     expect(getComputedStyle(element).height).toBe("40px");
 
-    // 키보드로 이동해 Enter로 실행한다.
     await userEvent.tab();
     await expect.element(link).toHaveFocus();
     await userEvent.keyboard("{Enter}");
@@ -618,12 +605,11 @@ describe("render", () => {
 
     const event = new MouseEvent("click", { bubbles: true, cancelable: true });
     element.dispatchEvent(event);
-    // 이동(기본 동작)이 막히고, 사용자 onClick도 불리지 않는다.
     expect(event.defaultPrevented).toBe(true);
     expect(onClick).not.toHaveBeenCalled();
     expect(location.pathname).not.toBe("/settings");
 
-    // 포커스는 받을 수 있다(스크린 리더가 비활성 링크를 찾을 수 있게).
+    // 스크린 리더가 비활성 링크를 찾을 수 있게 포커스는 받는다.
     await userEvent.tab();
     await expect.element(link).toHaveFocus();
     await userEvent.keyboard("{Enter}");
@@ -673,7 +659,6 @@ describe("로딩", () => {
     expect(element).not.toHaveAttribute("disabled");
     expect(getComputedStyle(element).cursor).toBe("wait");
 
-    // Spinner는 앞 아이콘 자리(sm 14px)에 보이고 접근성 트리에서는 숨는다.
     const spinner = element.querySelector("svg")!;
     expect(spinner).toHaveAttribute("aria-hidden", "true");
     expect(spinner.getBoundingClientRect().width).toBe(14);

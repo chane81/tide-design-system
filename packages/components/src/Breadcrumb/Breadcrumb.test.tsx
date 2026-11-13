@@ -1,5 +1,4 @@
-// Breadcrumb 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 24).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 밑줄·구분자 숨김·포커스 ring을 본다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
 import Next from "next/link.js";
 import type { ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
@@ -55,7 +54,6 @@ describe("랜드마크와 이름", () => {
     await expect.element(nav).toBeInTheDocument();
     expect(nav.element().tagName).toBe("NAV");
     expect(nav.element().firstElementChild?.tagName).toBe("OL");
-    // 구분자 아이콘은 접근성 트리에 나오지 않는다. 항목은 링크 둘과 현재 페이지 텍스트다.
     await expect.element(nav).toMatchAriaInlineSnapshot(`
       - navigation "이동 경로":
         - list:
@@ -82,7 +80,6 @@ describe("랜드마크와 이름", () => {
       </>,
     );
     await expect.element(page.getByRole("navigation", { name: "문서 경로" })).toBeInTheDocument();
-    // aria-labelledby가 aria-label(기본값)보다 먼저 이름이 된다(accname 계산 순서).
     await expect.element(page.getByRole("navigation", { name: "위치" })).toBeInTheDocument();
   });
 });
@@ -107,7 +104,6 @@ describe("현재 페이지", () => {
     expect(current.textDecorationLine).toBe("none");
     expect(current.fontSize).toBe("14px");
     expect(current.lineHeight).toBe("20px");
-    // 색과 관계없이 밑줄로도 링크를 구분한다(WCAG 1.4.1). 고대비 모드에서도 남는다.
     expect(link.textDecorationLine).toBe("underline");
     expect(link.textDecorationThickness).toBe("1px");
     expect(link.textUnderlineOffset).toBe("2px");
@@ -144,14 +140,12 @@ describe("구분자", () => {
     for (const testId of ["second", "last"]) {
       const svg = separatorOf(testId);
       expect(svg).toHaveAttribute("aria-hidden", "true");
-      // 내용보다 앞에 있다.
       expect(svg.nextElementSibling?.tagName).toMatch(/^(A|SPAN)$/);
       const style = getComputedStyle(svg);
       expect(style.display).not.toBe("none");
       expect(style.width).toBe("16px");
       expect(style.height).toBe("16px");
     }
-    // 목록 항목 이름에 구분자가 섞이지 않는다.
     await expect.element(page.getByRole("listitem").nth(2)).toHaveAccessibleName("");
     expect(page.getByRole("img").elements()).toHaveLength(0);
   });
@@ -182,7 +176,6 @@ describe("포커스", () => {
     }
     await userEvent.tab();
     await expect.element(page.getByRole("link", { name: "문서" })).toHaveFocus();
-    // 현재 페이지는 포커스하지 않는다.
     await userEvent.tab();
     expect(document.activeElement).toBe(document.body);
   });
@@ -217,7 +210,6 @@ describe("render", () => {
     expect(element).toHaveAttribute("data-testid", "link");
     expect(node).toBe(element);
     expect(element).toHaveClass("font-bold");
-    // 사용자 className이 기본 밑줄을 이긴다.
     expect(getComputedStyle(element).textDecorationLine).toBe("none");
     await userEvent.click(link);
     expect(onLinkClick).toHaveBeenCalledTimes(1);
@@ -268,7 +260,6 @@ describe("공통 API", () => {
     expect(refs["current"]?.tagName).toBe("SPAN");
     expect(getComputedStyle(refs["nav"] as Element).marginBottom).toBe("16px");
     expect(getComputedStyle(refs["item"] as Element).columnGap).toBe("12px");
-    // 현재 페이지의 label-md를 사용자 body-sm이 이긴다(굵기 400).
     expect(getComputedStyle(refs["current"] as Element).fontWeight).toBe("400");
   });
 
