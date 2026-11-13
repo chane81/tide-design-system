@@ -2,6 +2,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
+import { maxWorkers } from "../../vitest.workers.ts";
+
 import {
   mouseDownAtCorner,
   mouseDownOn,
@@ -16,6 +18,8 @@ import {
 //   instance의 provider 옵션은 부모와 병합되지 않고 덮어쓴다.
 export default defineConfig({
   test: {
+    // 로컬은 동시 실행 수를 줄인다(루트 vitest.workers.ts).
+    maxWorkers,
     projects: [
       {
         test: {

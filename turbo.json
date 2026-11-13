@@ -4,7 +4,7 @@
     "githubActionsRemoteBaseRefFallback": true,
     "affectedUsingTaskInputs": true
   },
-  "globalPassThroughEnv": ["PLAYWRIGHT_*"],
+  "globalPassThroughEnv": ["PLAYWRIGHT_*", "TIDE_TEST_WORKERS"],
   "tasks": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "storybook-static/**"] },
     "typecheck": { "dependsOn": ["^build"] },
