@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" width="920" height="420" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#9a9a9a" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect width="920" height="420" rx="16" fill="#1a1a1a"/>
+
+  <text x="460" y="40" fill="#f0f0f0" font-size="18" font-weight="700" text-anchor="middle">data-theme 하나로 같은 이름이 다른 값을 가리킨다</text>
+
+  <!-- Token -->
+  <rect x="30" y="182" width="250" height="64" rx="10" fill="#2a2b2e" stroke="#5b6068"/>
+  <text x="155" y="210" fill="#e8e8ea" font-size="15" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">--tide-blue-subtle</text>
+  <text x="155" y="232" fill="#9a9a9a" font-size="12" text-anchor="middle">파스텔 바탕 (subtle)</text>
+
+  <line x1="280" y1="205" x2="358" y2="135" stroke="#8a8a8a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="280" y1="223" x2="358" y2="293" stroke="#8a8a8a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- light 패널 -->
+  <rect x="360" y="64" width="530" height="140" rx="12" fill="#ffffff" stroke="#d7d8da"/>
+  <text x="384" y="94" fill="#3f4247" font-size="15" font-weight="700">light</text>
+  <text x="430" y="94" fill="#5b6068" font-size="12" font-family="ui-monospace, Menlo, monospace">data-theme="light" (기본)</text>
+  <rect x="384" y="112" width="32" height="32" rx="6" fill="#e3eefd" stroke="#c9d7eb"/>
+  <text x="428" y="133" fill="#3f4247" font-size="13" font-family="ui-monospace, Menlo, monospace">→ --tide-color-blue-100  #e3eefd</text>
+  <rect x="384" y="156" width="96" height="34" rx="8" fill="#e3eefd" stroke="#c9d7eb"/>
+  <text x="432" y="178" fill="#113465" font-size="14" font-weight="700" text-anchor="middle">추가</text>
+  <text x="496" y="178" fill="#5b6068" font-size="12">subtle Button — 파스텔 바탕 + 진한 같은 색 글자</text>
+
+  <!-- dark 패널 -->
+  <rect x="360" y="224" width="530" height="140" rx="12" fill="#28292c" stroke="#5b6068"/>
+  <text x="384" y="254" fill="#f5f5f6" font-size="15" font-weight="700">dark</text>
+  <text x="430" y="254" fill="#bec1c4" font-size="12" font-family="ui-monospace, Menlo, monospace">data-theme="dark"</text>
+  <rect x="384" y="272" width="32" height="32" rx="6" fill="#113465" stroke="#184c93"/>
+  <text x="428" y="293" fill="#f5f5f6" font-size="13" font-family="ui-monospace, Menlo, monospace">→ --tide-color-blue-950  #113465</text>
+  <rect x="384" y="316" width="96" height="34" rx="8" fill="#113465" stroke="#184c93"/>
+  <text x="432" y="338" fill="#e3eefd" font-size="14" font-weight="700" text-anchor="middle">추가</text>
+  <text x="496" y="338" fill="#bec1c4" font-size="12">같은 Button, 바탕과 글자 단계만 뒤집힌다</text>
+
+  <!-- 하단 설명 -->
+  <text x="460" y="398" fill="#65a1f9" font-size="14" font-weight="700" text-anchor="middle">&lt;html&gt;에 주면 페이지 전체, 요소에 주면 그 안쪽만 — OS 설정을 따를지는 앱이 정한다</text>
+</svg>

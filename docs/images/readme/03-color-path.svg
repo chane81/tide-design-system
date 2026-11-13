@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" width="920" height="520" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <rect width="920" height="520" rx="16" fill="#1a1a1a"/>
+
+  <text x="460" y="40" fill="#f0f0f0" font-size="18" font-weight="700" text-anchor="middle">&lt;Button color="primary"&gt;의 배경이 hex를 찾아가는 길</text>
+
+  <!-- 연결선: 각 줄 왼쪽 아래에서 다음 줄 왼쪽 가운데로 꺾는다 -->
+  <g fill="none" stroke="#8a8a8a" stroke-width="1.5">
+    <path d="M60,114 V140 H88"/>
+    <path d="M90,182 V208 H118"/>
+    <path d="M120,250 V276 H148"/>
+    <path d="M150,318 V344 H178"/>
+    <path d="M180,386 V412 H208"/>
+  </g>
+
+  <g font-family="ui-monospace, Menlo, monospace" font-size="14" font-weight="700">
+    <!-- 0: Component -->
+    <rect x="40" y="70" width="270" height="44" rx="8" fill="#113465" stroke="#65a1f9"/>
+    <text x="56" y="97" fill="#e3eefd">&lt;Button color="primary"&gt;</text>
+    <!-- 1: Utility class -->
+    <rect x="90" y="138" width="250" height="44" rx="8" fill="#2a2b2e" stroke="#5b6068"/>
+    <text x="106" y="165" fill="#e8e8ea">bg-accent-solid</text>
+    <!-- 2: accent 슬롯 -->
+    <rect x="120" y="206" width="250" height="44" rx="8" fill="#2a2b2e" stroke="#5b6068"/>
+    <text x="136" y="233" fill="#e8e8ea">--tide-accent-solid</text>
+    <!-- 3: Semantic Token -->
+    <rect x="150" y="274" width="250" height="44" rx="8" fill="#2a2b2e" stroke="#5b6068"/>
+    <text x="166" y="301" fill="#e8e8ea">--tide-bg-primary-solid</text>
+    <!-- 4: 색 계열 슬롯 -->
+    <rect x="180" y="342" width="250" height="44" rx="8" fill="#2a2b2e" stroke="#5b6068"/>
+    <text x="196" y="369" fill="#e8e8ea">--tide-blue-solid</text>
+    <!-- 5: Primitive -->
+    <rect x="210" y="410" width="250" height="44" rx="8" fill="#11403e" stroke="#91cbc6"/>
+    <text x="226" y="437" fill="#d7f4f1">--tide-color-blue-600</text>
+  </g>
+
+  <!-- 오른쪽 설명 -->
+  <g font-size="14" font-weight="700">
+    <text x="490" y="90" fill="#a7c0e3">Component</text>
+    <text x="490" y="158" fill="#e8e8e8">Utility class</text>
+    <text x="490" y="226" fill="#e8e8e8">accent 슬롯</text>
+    <text x="490" y="294" fill="#e8e8e8">Semantic Token</text>
+    <text x="490" y="362" fill="#e8e8e8">색 계열 슬롯</text>
+    <text x="490" y="430" fill="#91cbc6">Primitive Token</text>
+  </g>
+  <g font-size="12" fill="#9a9a9a">
+    <text x="490" y="108">루트에 data-color="primary"를 붙인다</text>
+    <text x="490" y="176">Component 원본에 적힌 class</text>
+    <text x="490" y="244">data-color가 고른 Role의 값을 받는 자리</text>
+    <text x="490" y="312">Role primary는 blue 계열을 가리킨다</text>
+    <text x="490" y="380">data-theme이 light·dark 값을 고른다</text>
+    <text x="490" y="448">용도 없이 값만 가진 Token</text>
+  </g>
+
+  <!-- 결과 미리보기: 버튼과 색 -->
+  <rect x="770" y="74" width="110" height="38" rx="8" fill="#4e7aba"/>
+  <text x="825" y="99" fill="#ffffff" font-size="15" font-weight="700" text-anchor="middle">추가</text>
+  <rect x="770" y="412" width="40" height="40" rx="8" fill="#4e7aba" stroke="#a7c0e3"/>
+  <text x="820" y="437" fill="#e8e8e8" font-size="13" font-family="ui-monospace, Menlo, monospace">#4e7aba</text>
+
+  <!-- 하단 설명 -->
+  <text x="460" y="494" fill="#65a1f9" font-size="14" font-weight="700" text-anchor="middle">Component는 hex를 모른다 — color="danger"로 바꾸면 슬롯만 red 계열로 바뀐다</text>
+</svg>
