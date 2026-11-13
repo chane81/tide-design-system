@@ -2,7 +2,7 @@
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
 // 채움 방식·색 맵과 상태 처리는 Button과 같은 모듈(pressable.ts)이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
-import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
+import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import NextLink from "next/link.js";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -15,7 +15,7 @@ import { IconButton, type IconButtonProps } from "./IconButton.tsx";
 const Link = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
-declare module "@tide-tds/foundation" {
+declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
   }

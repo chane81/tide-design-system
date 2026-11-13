@@ -14,7 +14,7 @@
 // - `DialogTitle`(`<h2>`)·`DialogDescription`(`<p>`): 있으면 dialog의 `aria-labelledby`·`aria-describedby`가 가리킨다.
 // - `DialogFooter`: 동작 버튼 줄. `DialogClose`: 누르면 닫는 버튼(`render`로 Button 모양).
 
-import { XIcon } from "@tide-tds/icons";
+import { XIcon } from "@tide-design/icons";
 import {
   createContext,
   createElement,

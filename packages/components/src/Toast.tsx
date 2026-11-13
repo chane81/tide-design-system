@@ -23,7 +23,7 @@
 // 버튼(액션·닫기)에 Tab·누름이 닿지 않게 한다(티켓 43). 보이는 수(`maxVisible`)를 넘어 밀려난 Toast는 앞의 것이 닫히면
 // 같은 key로 다시 보이므로, 그때는 `open`이 다시 참이 되어 `inert`가 풀린다.
 
-import { XIcon } from "@tide-tds/icons";
+import { XIcon } from "@tide-design/icons";
 import {
   useCallback,
   useEffect,

@@ -7,7 +7,7 @@ import {
   MenuItem,
   MenuSection,
   MenuTrigger,
-} from "@tide-tds/components";
+} from "@tide-design/components";
 import {
   ArchiveIcon,
   ArrowUpDownIcon,
@@ -16,7 +16,7 @@ import {
   EllipsisIcon,
   PencilIcon,
   TrashIcon,
-} from "@tide-tds/icons";
+} from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

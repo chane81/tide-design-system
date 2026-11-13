@@ -1,6 +1,6 @@
-// main의 Storybook(`@tide-tds/docs`) 버전을 아직 릴리스하지 않았는지 본다(ADR 0020).
+// main의 Storybook(`@tide-design/docs`) 버전을 아직 릴리스하지 않았는지 본다(ADR 0020).
 //
-//   node scripts/storybook-release.ts   → 표준 출력에 `version=0.1.0`, `tag=@tide-tds/docs@0.1.0`, `release=true|false`
+//   node scripts/storybook-release.ts   → 표준 출력에 `version=0.1.0`, `tag=@tide-design/docs@0.1.0`, `release=true|false`
 //
 // release.yml이 이 출력을 그대로 $GITHUB_OUTPUT에 붙인다. tag 유무는 원격(origin)에서 본다.
 // actions/checkout은 기본으로 tag를 받지 않으므로(fetch-depth 1) 로컬 tag 목록에 기대지 않는다.

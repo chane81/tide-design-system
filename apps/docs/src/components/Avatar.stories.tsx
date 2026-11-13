@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Avatar, Button, IconButton } from "@tide-tds/components";
+import { Avatar, Button, IconButton } from "@tide-design/components";
 
 // Avatar 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
 // story는 문서·렌더·a11y만 맡는다. 동작 단언(이름, 로드 실패 fallback)은 components의 `Avatar.test.tsx`에 있다.

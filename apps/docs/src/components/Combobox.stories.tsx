@@ -8,7 +8,7 @@ import {
   Input,
   Select,
   SelectItem,
-} from "@tide-tds/components";
+} from "@tide-design/components";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

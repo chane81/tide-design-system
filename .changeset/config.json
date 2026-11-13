@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "chane81/tide-design-system" }],
   "commit": false,
-  "fixed": [["@tide-tds/foundation", "@tide-tds/icons", "@tide-tds/components"]],
+  "fixed": [["@tide-design/foundation", "@tide-design/icons", "@tide-design/components"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

@@ -1,4 +1,4 @@
-import { XIcon } from "@tide-tds/icons";
+import { XIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
 import {

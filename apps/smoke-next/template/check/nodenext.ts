@@ -157,14 +157,14 @@ import {
   type FillVariant,
   type Role,
   type VisuallyHiddenProps,
-} from "@tide-tds/components";
-import { color, semantic } from "@tide-tds/foundation";
-import { defineColorFamily } from "@tide-tds/foundation/color-family";
-import { tailwindMergeConfig } from "@tide-tds/foundation/tailwind-merge";
-import { PlusIcon, type IconProps } from "@tide-tds/icons";
+} from "@tide-design/components";
+import { color, semantic } from "@tide-design/foundation";
+import { defineColorFamily } from "@tide-design/foundation/color-family";
+import { tailwindMergeConfig } from "@tide-design/foundation/tailwind-merge";
+import { PlusIcon, type IconProps } from "@tide-design/icons";
 
 // 앱 Role(brand)을 더한다(티켓 41). components가 다시 낸 interface를 augmentation한다.
-declare module "@tide-tds/components" {
+declare module "@tide-design/components" {
   interface RoleRegistry {
     brand: true;
   }

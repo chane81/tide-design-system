@@ -1,6 +1,6 @@
-import { radius, shadow, type RadiusName, type ShadowName } from "@tide-tds/foundation";
+import { radius, shadow, type RadiusName, type ShadowName } from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님). 그림자 값을 CSS 그대로 보여 주려고 쓴다.
-import { shadowCss } from "@tide-tds/foundation/internal";
+import { shadowCss } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // radius·Elevation Token 블록: Token 원본에서 단계 목록과 값을 그린다(spec 「문서 앱」 Token 블록).
@@ -10,7 +10,7 @@ import type { ReactElement } from "react";
 const radiusNames = Object.keys(radius) as RadiusName[];
 const shadowNames = Object.keys(shadow) as ShadowName[];
 
-/** 단계별 쓰는 곳(spec 「`@tide-tds/foundation`」 radius·Elevation) */
+/** 단계별 쓰는 곳(spec 「`@tide-design/foundation`」 radius·Elevation) */
 const radiusUsage: Record<RadiusName, string> = {
   sm: "작은 표시 요소, 목록 안 항목",
   md: "조작 요소(모든 size)",

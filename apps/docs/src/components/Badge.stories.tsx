@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge } from "@tide-tds/components";
-import { CheckIcon } from "@tide-tds/icons";
+import { Badge } from "@tide-design/components";
+import { CheckIcon } from "@tide-design/icons";
 
 // Badge 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
 // story는 문서·렌더·a11y만 맡는다. 동작 단언은 components의 `Badge.test.tsx`에 있다.

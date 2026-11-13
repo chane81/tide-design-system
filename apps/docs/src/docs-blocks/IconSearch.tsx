@@ -1,5 +1,5 @@
-import * as icons from "@tide-tds/icons";
-import type { IconProps } from "@tide-tds/icons";
+import * as icons from "@tide-design/icons";
+import type { IconProps } from "@tide-design/icons";
 import { type ReactElement, useDeferredValue, useId, useState } from "react";
 
 import { iconIndex, importStatement, searchIcons } from "./iconSearch.ts";

@@ -4,7 +4,7 @@
 // 저장소 CI 검사(`scripts/check-changesets.ts`)가 git과 `changeset status` 결과를 넣어 부른다.
 
 /** 아이콘 패키지 이름. changeset의 release 이름과 비교한다. */
-export const ICONS_PACKAGE = "@tide-tds/icons";
+export const ICONS_PACKAGE = "@tide-design/icons";
 
 /** `changeset status --output` JSON의 changeset 하나에서 이 규칙이 쓰는 부분(@changesets/types 7.0.0 `NewChangeset`). */
 export type ChangesetSummary = {
@@ -23,7 +23,7 @@ export function removedNameKeys(
 }
 
 /**
- * 빠진 키가 있는데 `@tide-tds/icons`를 minor로 올리는 changeset이 없으면 실패 메시지를, 아니면 null을 돌려준다.
+ * 빠진 키가 있는데 `@tide-design/icons`를 minor로 올리는 changeset이 없으면 실패 메시지를, 아니면 null을 돌려준다.
  * fixed 묶음이라 다른 패키지의 minor로도 버전은 같이 오르지만, CHANGELOG에 아이콘 변경이 남도록 icons에 직접 minor를 요구한다.
  */
 export function nameRemovalProblem(

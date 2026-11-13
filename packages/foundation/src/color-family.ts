@@ -1,5 +1,5 @@
 /**
- * `@tide-tds/foundation/color-family`: 앱이 자기 브랜드 색 계열을 더하는 API.
+ * `@tide-design/foundation/color-family`: 앱이 자기 브랜드 색 계열을 더하는 API.
  *
  * 앱은 `defineColorFamily`로 11단계 스케일을 정의하고, `tide-color build <파일>`로 CSS를 만든다.
  * CSS는 Tide 계열과 같은 매핑 규칙으로 light·dark 계열 변수와 `[data-color="<이름>"]` 규칙을 담는다.
@@ -125,7 +125,7 @@ function isSlotValue(value: unknown): value is SlotValue {
  *
  * ```ts
  * // brand.ts
- * import { defineColorFamily } from "@tide-tds/foundation/color-family";
+ * import { defineColorFamily } from "@tide-design/foundation/color-family";
  *
  * export default defineColorFamily({
  *   name: "brand",
@@ -205,7 +205,7 @@ export function checkColorFamily(family: ColorFamilyDefinition): ColorContrastRe
 
 /**
  * 앱 계열의 CSS. Primitive 변수, light·dark 계열 변수, `[data-color]` 규칙을 담는다.
- * Tide CSS(`@tide-tds/components/styles.css` 또는 foundation CSS) 다음에 불러온다.
+ * Tide CSS(`@tide-design/components/styles.css` 또는 foundation CSS) 다음에 불러온다.
  */
 export function colorFamilyCss(families: readonly ColorFamilyDefinition[]): string {
   const themeBlock = (theme: ThemeName): string[] =>

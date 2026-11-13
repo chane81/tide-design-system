@@ -8,8 +8,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@tide-tds/components";
-import { CopyIcon, InfoIcon, SettingsIcon } from "@tide-tds/icons";
+} from "@tide-design/components";
+import { CopyIcon, InfoIcon, SettingsIcon } from "@tide-design/icons";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 
 // Tooltip 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.

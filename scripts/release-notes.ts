@@ -1,6 +1,6 @@
 // 릴리스 하나의 GitHub Release 본문을 만든다(spec 릴리스 절: tag는 패키지마다, GitHub Release는 릴리스당 하나).
 //
-//   PUBLISHED_PACKAGES='[{"name":"@tide-tds/icons","version":"0.2.0"}, …]' node scripts/release-notes.ts <본문 파일>
+//   PUBLISHED_PACKAGES='[{"name":"@tide-design/icons","version":"0.2.0"}, …]' node scripts/release-notes.ts <본문 파일>
 //
 // PUBLISHED_PACKAGES는 changesets/action/publish v2.1.2의 `published-packages` 출력이다.
 // 세 패키지는 fixed라 버전이 하나여야 한다. 다르면 실패한다. 본문 파일에 각 패키지 CHANGELOG의 그 버전 항목을
@@ -9,7 +9,7 @@ import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 // 문서와 같은 순서(Token → 아이콘 → Component)로 붙인다.
-const ORDER = ["@tide-tds/foundation", "@tide-tds/icons", "@tide-tds/components"];
+const ORDER = ["@tide-design/foundation", "@tide-design/icons", "@tide-design/components"];
 
 const outPath = process.argv[2];
 const published = JSON.parse(process.env.PUBLISHED_PACKAGES ?? "[]") as Array<{

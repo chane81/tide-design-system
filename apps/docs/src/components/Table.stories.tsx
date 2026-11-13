@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from "@tide-tds/components";
+} from "@tide-design/components";
 
 // Table 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
 // story는 문서·렌더·a11y만 맡는다. 동작 단언(역할, 헤더 연결, 행 hover)은 components의 `Table.test.tsx`에 있다.

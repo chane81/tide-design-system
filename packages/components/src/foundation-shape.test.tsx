@@ -2,7 +2,7 @@
 // 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
 // 두 instance에서 모두 돈다. forced-colors instance(contextOptions forcedColors: "active")에서는
 // 그림자와 border 색이 시스템 색으로 덮이므로, 투명 border·outline이 보이는지를 따로 단언한다.
-import { color } from "@tide-tds/foundation";
+import { color } from "@tide-design/foundation";
 import { describe, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";

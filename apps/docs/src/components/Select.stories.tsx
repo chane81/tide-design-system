@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Field, Input, Select, SelectItem, SelectSection } from "@tide-tds/components";
-import { BikeIcon, BusIcon, CarIcon, PlaneIcon, TrainFrontIcon } from "@tide-tds/icons";
+import { Button, Field, Input, Select, SelectItem, SelectSection } from "@tide-design/components";
+import { BikeIcon, BusIcon, CarIcon, PlaneIcon, TrainFrontIcon } from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

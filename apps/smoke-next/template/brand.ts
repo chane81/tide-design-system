@@ -1,5 +1,5 @@
 // 앱 브랜드 색 계열. smoke가 `tide-color build brand.ts`로 app/brand.css를 만든다(브랜드 색 더하기 문서와 같은 구조).
-import { defineColorFamily } from "@tide-tds/foundation/color-family";
+import { defineColorFamily } from "@tide-design/foundation/color-family";
 
 export default defineColorFamily({
   name: "brand",

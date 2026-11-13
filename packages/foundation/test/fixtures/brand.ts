@@ -1,5 +1,5 @@
 // tide-color CLI 테스트용 앱 브랜드 계열. 앱과 같은 방식으로 패키지 이름(self-reference)으로 import한다.
-import { defineColorFamily } from "@tide-tds/foundation/color-family";
+import { defineColorFamily } from "@tide-design/foundation/color-family";
 
 export default defineColorFamily({
   name: "brand",

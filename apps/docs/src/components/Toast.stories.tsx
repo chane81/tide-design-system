@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, ToastQueue, ToastRegion, type ToastOptions } from "@tide-tds/components";
+import { Button, ToastQueue, ToastRegion, type ToastOptions } from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

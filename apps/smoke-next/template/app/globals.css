@@ -1,5 +1,5 @@
 /* 설치 페이지의 안내와 같은 두 줄 */
 @import "tailwindcss";
-@import "@tide-tds/components/styles.css";
+@import "@tide-design/components/styles.css";
 /* 앱 브랜드 계열. smoke가 tide-color CLI로 만든다(브랜드 색 더하기 문서). Tide CSS 다음에 둔다. */
 @import "./brand.css";

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Alert, Button, Link } from "@tide-tds/components";
+import { Alert, Button, Link } from "@tide-design/components";
 import { useState } from "react";
 
 // Alert 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.

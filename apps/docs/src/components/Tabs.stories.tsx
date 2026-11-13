@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge, Button, Tab, TabList, TabPanel, Tabs } from "@tide-tds/components";
-import { BellIcon, LockIcon, UserIcon } from "@tide-tds/icons";
+import { Badge, Button, Tab, TabList, TabPanel, Tabs } from "@tide-design/components";
+import { BellIcon, LockIcon, UserIcon } from "@tide-design/icons";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

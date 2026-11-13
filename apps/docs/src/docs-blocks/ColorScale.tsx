@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Link, VisuallyHidden } from "@tide-tds/components";
+import { Badge, Button, Card, Link, VisuallyHidden } from "@tide-design/components";
 import type { ReactElement } from "react";
 
 import {

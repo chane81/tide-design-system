@@ -1,11 +1,11 @@
 {
-  // 타입 검사 전용(배포 출력 없음). components는 `@tide-tds/source` 조건으로 원본 타입을 읽는다.
+  // 타입 검사 전용(배포 출력 없음). components는 `@tide-design/source` 조건으로 원본 타입을 읽는다.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["es2024", "dom", "dom.iterable"],
     "jsx": "react-jsx",
     "types": ["node", "vite/client"],
-    "customConditions": ["@tide-tds/source"],
+    "customConditions": ["@tide-design/source"],
     "resolveJsonModule": true,
     "declaration": false,
     "isolatedDeclarations": false

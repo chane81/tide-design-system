@@ -3,7 +3,7 @@
 // 서버 컴포넌트는 client 모듈이 만든 context를 provider로 렌더할 수 있다(react.dev 「Server Components」). React 19.3.1.
 // 값을 읽는 쪽(Input, Textarea)만 client Component다.
 
-import { CircleExclamationPointIcon } from "@tide-tds/icons";
+import { CircleExclamationPointIcon } from "@tide-design/icons";
 import { useId, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
 import { cn } from "./cn.ts";

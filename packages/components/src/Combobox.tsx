@@ -12,7 +12,7 @@
 //   그래서 목록은 바깥을 inert로 막지 않는 non-modal이고(입력이 바깥이다), 포커스 가두기·복귀도 하지 않는다.
 // - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(listbox.tsx).
 
-import { ChevronDownIcon } from "@tide-tds/icons";
+import { ChevronDownIcon } from "@tide-design/icons";
 import {
   use,
   useLayoutEffect,

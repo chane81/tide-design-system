@@ -1,5 +1,5 @@
 /* 앱 CSS에는 @import "tailwindcss"와 이 파일, 두 줄만 쓴다. */
-@import "@tide-tds/foundation/tailwind.css";
+@import "@tide-design/foundation/tailwind.css";
 
 /* 패키지 자신(빌드 결과)을 Tailwind 스캔 대상으로 등록한다. 경로는 이 CSS 파일 위치 기준이다. */
 @source "./";

@@ -2,8 +2,8 @@
 // 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
 // accent 슬롯 변수(--tide-accent-*)는 forced-colors에서도 바뀌지 않으므로 두 instance에서 변수 값을 단언하고,
 // 실제 배경색은 forced-colors가 아닐 때만 단언한다.
-import { color } from "@tide-tds/foundation";
-import { colorFamilyCss, defineColorFamily } from "@tide-tds/foundation/color-family";
+import { color } from "@tide-design/foundation";
+import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { afterEach, describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";

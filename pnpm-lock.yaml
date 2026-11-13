@@ -316,13 +316,13 @@ importers:
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.5(vite@8.3.6(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
-      '@tide-tds/components':
+      '@tide-design/components':
         specifier: workspace:*
         version: link:../../packages/components
-      '@tide-tds/foundation':
+      '@tide-design/foundation':
         specifier: workspace:*
         version: link:../../packages/foundation
-      '@tide-tds/icons':
+      '@tide-design/icons':
         specifier: workspace:*
         version: link:../../packages/icons
       '@types/node':
@@ -373,13 +373,13 @@ importers:
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.3.5
-      '@tide-tds/components':
+      '@tide-design/components':
         specifier: workspace:*
         version: link:../../packages/components
-      '@tide-tds/foundation':
+      '@tide-design/foundation':
         specifier: workspace:*
         version: link:../../packages/foundation
-      '@tide-tds/icons':
+      '@tide-design/icons':
         specifier: workspace:*
         version: link:../../packages/icons
       '@types/node':
@@ -412,10 +412,10 @@ importers:
 
   packages/components:
     dependencies:
-      '@tide-tds/foundation':
+      '@tide-design/foundation':
         specifier: workspace:*
         version: link:../foundation
-      '@tide-tds/icons':
+      '@tide-design/icons':
         specifier: workspace:*
         version: link:../icons
       clsx:

@@ -9,10 +9,10 @@
 # - publish job은 저장소 변수 NPM_TRUSTED_PUBLISHING이 'true'일 때만 돈다. 첫 publish(0.1.0)는 사람이 로컬에서
 #   2FA로 하고(티켓 12), trusted publisher를 설정하는 릴리스(티켓 18)부터 켠다.
 # - workflow_dispatch로 실행하면 문서 배포만 다시 한다(문서 배포가 실패했을 때, 첫 문서 배포).
-# - Storybook(`@tide-tds/docs`)은 독립 버전을 갖는다(ADR 0020). Version PR은 하나이고 제목만 들어간 묶음에 따라
+# - Storybook(`@tide-design/docs`)은 독립 버전을 갖는다(ADR 0020). Version PR은 하나이고 제목만 들어간 묶음에 따라
 #   「[TDS] Release x」「[Storybook] Release y」「둘 다」로 정한다. Storybook만 오른 Version PR을 머지하면
 #   select-mode가 none이라(npm에 낼 버전 없음) pack·publish는 돌지 않고, storybook job이 tag 없는 docs 버전을 찾아
-#   문서를 배포하고 tag `@tide-tds/docs@<버전>`을 만든다. Storybook용 GitHub Release는 만들지 않는다.
+#   문서를 배포하고 tag `@tide-design/docs@<버전>`을 만든다. Storybook용 GitHub Release는 만들지 않는다.
 name: Release
 
 on:
@@ -144,7 +144,7 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tide-tds/components exec playwright install --only-shell chromium
+      - run: pnpm --filter @tide-design/components exec playwright install --only-shell chromium
       # --affected 없이 전체를 돌린다. build 결과(dist)가 그대로 pack에 들어간다.
       - run: pnpm turbo run typecheck test build smoke
       # changeset pack이 pnpm pack을 불러서 workspace:·catalog:가 실제 버전으로 바뀐다(@changesets/cli 3.0.3).
@@ -176,7 +176,7 @@ jobs:
       # pack job의 tarball을 `changeset publish --from-pack-dir`로 올린다. 실제 업로드는
       # `pnpm publish <tarball> --access public --tag latest`이고, pnpm 12가 OIDC 토큰을 받아 인증하고
       # 공개 저장소의 공개 패키지에 provenance를 붙인다(pnpm publish 문서 --provenance).
-      # tag는 패키지마다(`@tide-tds/foundation@0.2.0` …) 만들고, GitHub Release는 아래 job에서 하나로 만든다.
+      # tag는 패키지마다(`@tide-design/foundation@0.2.0` …) 만들고, GitHub Release는 아래 job에서 하나로 만든다.
       - id: publish
         uses: changesets/action/publish@v2
         with:
@@ -212,7 +212,7 @@ jobs:
           --title "v$VERSION"
           --notes-file "$RUNNER_TEMP/release-notes.md"
 
-  # main의 Storybook 버전에 tag(`@tide-tds/docs@<버전>`)가 아직 없으면 release=true(scripts/storybook-release.ts).
+  # main의 Storybook 버전에 tag(`@tide-design/docs@<버전>`)가 아직 없으면 release=true(scripts/storybook-release.ts).
   # 시작값 0.0.0은 릴리스하지 않는다. changesets의 privatePackages.tag는 끄고(published-packages에 docs가 섞이지 않게,
   # 근거 문서 2.1·3.3절) tag는 아래 storybook-tag job이 직접 만든다. 수동 실행에서도 돌아, 배포가 실패해 tag가
   # 없는 버전은 workflow_dispatch로 다시 배포하면 tag까지 만든다.

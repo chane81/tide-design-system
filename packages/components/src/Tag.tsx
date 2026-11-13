@@ -14,7 +14,7 @@
 // 선택(켜고 끄기)은 받지 않는다. Tag는 고르거나 입력한 값을 보여 주는 라벨이고, 눌러서 켜고 끄는 칩과 다르다(GLOSSARY).
 // 상호작용이 없는 상태 표시는 Badge(서버 컴포넌트)다. Tag는 키보드 탐색에 hook·state가 필요해 client Component다.
 
-import { XIcon } from "@tide-tds/icons";
+import { XIcon } from "@tide-design/icons";
 import {
   createContext,
   use,

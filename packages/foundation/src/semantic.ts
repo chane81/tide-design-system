@@ -55,7 +55,7 @@ export type TideRole = "neutral" | "primary" | "success" | "warning" | "danger" 
 
 /**
  * Role이 참조하는 Primitive 계열.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleFamily = {
   neutral: "gray",
@@ -75,7 +75,7 @@ roleFamily satisfies Record<TideRole, ColorFamily>;
 // - 새 슬롯 faint, subtle-border는 계열 규칙 그대로다(ADR 0022). gray 스케일은 바꾸지 않는다.
 /**
  * Role별로 계열 규칙에서 덮어쓸 값.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleOverrides = {
   neutral: {
@@ -89,7 +89,7 @@ roleOverrides satisfies { readonly [Name in TideRole]?: SlotOverrides };
 
 /**
  * 역할 Token 대신 공통 Semantic Token을 쓰는 Role 슬롯. on-solid는 모든 Role이 `text-on-solid`를 쓴다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleSharedSlots = {
   neutral: { text: "text-default", border: "border-strong", "on-subtle": "text-default" },
@@ -98,7 +98,7 @@ export const roleSharedSlots = {
 /**
  * 계열 슬롯 값을 Semantic 값으로 바꾼다. 단계는 Primitive 이름, 덮기·섞기는 `MixedColor`다.
  * 예: (`blue`, 600) → `blue-600`, (`blue`, 100 + gray-950 4%) → `{ base: "blue-100", mix: "gray-950", amount: 0.04 }`
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticColorValue {
   const name = (ref: SlotColorRef): PrimitiveColorName =>
@@ -115,10 +115,10 @@ export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticC
 
 /**
  * Role 목록. Tide Role 6개가 들어 있고, 앱은 module augmentation으로 자기 Role(예: `brand`)을 더한다.
- * 앱 Role의 색은 `@tide-tds/foundation/color-family`의 `defineColorFamily`와 `tide-color build`로 만든다.
+ * 앱 Role의 색은 `@tide-design/foundation/color-family`의 `defineColorFamily`와 `tide-color build`로 만든다.
  *
  * ```ts
- * declare module "@tide-tds/components" {
+ * declare module "@tide-design/components" {
  *   interface RoleRegistry {
  *     brand: true;
  *   }
@@ -138,7 +138,7 @@ export type Role = keyof RoleRegistry;
  * Tide가 Primitive 계열을 더하면 이 목록도 함께 넓어진다.
  *
  * ```ts
- * declare module "@tide-tds/components" {
+ * declare module "@tide-design/components" {
  *   interface ColorFamilyRegistry {
  *     brand: true;
  *   }
@@ -357,7 +357,7 @@ export type SemanticColorName = {
 // alpha는 tide-v0 티켓 24(그림자·포커스 표시 시각 비교)에서 light 8%, dark 30%로 정했다.
 /**
  * Theme별 shadow 색. CSS에서는 `--tide-shadow-color`로 쓴다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export const shadowColor = {
   light: { primitive: "gray-950", alpha: 0.08 },
@@ -368,7 +368,7 @@ shadowColor satisfies ThemedColor;
 
 /**
  * 모든 Semantic Token(namespace, Utility class 이름, Theme별 값).
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function semanticEntries(): {
   readonly namespace: SemanticNamespace;
@@ -389,7 +389,7 @@ export function semanticEntries(): {
 /**
  * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다. `transparent`는 `#00000000`이다.
  * 덮기·섞기(`MixedColor`)는 계산한 6자리 hex다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function colorValueHex(value: SemanticColorValue): string {
   if (value === "transparent") return "#00000000";
@@ -404,7 +404,7 @@ export function colorValueHex(value: SemanticColorValue): string {
 
 /**
  * Semantic Token이 Theme에서 가리키는 hex.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function semanticHex(name: SemanticColorName, theme: ThemeName): string {
   const entry = semanticEntries().find((candidate) => candidate.className === name);

@@ -1,4 +1,4 @@
-// Component가 함께 쓰는 공통 union 타입(spec 「`@tide-tds/components` 공통 API」 스타일 축).
+// Component가 함께 쓰는 공통 union 타입(spec 「`@tide-design/components` 공통 API」 스타일 축).
 // 한 곳에서 정의하고, Component마다 `Extract`로 필요한 값만 고른다.
 
 /** Component size. 높이는 `xs` 24px, `sm` 32px, `md` 40px, `lg` 48px다(spec size 표). */
@@ -14,7 +14,7 @@ export type FillVariant = "solid" | "subtle" | "outline" | "ghost";
 // - Role: 행동·의미 Component(Button, IconButton, Link 등)의 `color`. Tide Role 6개 + 앱 Role
 // - ColorFamilyName: 장식·분류 Component(Badge, Tag, Avatar 등)가 쓰는 색 계열. Tide 색 계열 8개(장식 계열 purple·mint 포함) + 앱 장식 계열
 //   Badge는 Role도 함께 받아 `Color`(Role | ColorFamilyName)를 쓴다(ADR 0017). Avatar는 ColorFamilyName만 받는다(티켓 21).
-// 앱은 `declare module "@tide-tds/components" { interface RoleRegistry { brand: true } }`로 Role을 더한다.
+// 앱은 `declare module "@tide-design/components" { interface RoleRegistry { brand: true } }`로 Role을 더한다.
 // re-export한 interface에 한 augmentation도 원래 interface에 합쳐진다(TypeScript 7.0.2에서 확인).
 export type {
   Color,
@@ -22,4 +22,4 @@ export type {
   ColorFamilyRegistry,
   Role,
   RoleRegistry,
-} from "@tide-tds/foundation";
+} from "@tide-design/foundation";

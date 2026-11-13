@@ -1,5 +1,5 @@
 {
-  "name": "@tide-tds/smoke-next",
+  "name": "@tide-design/smoke-next",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,9 +8,9 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",
-    "@tide-tds/components": "workspace:*",
-    "@tide-tds/foundation": "workspace:*",
-    "@tide-tds/icons": "workspace:*",
+    "@tide-design/components": "workspace:*",
+    "@tide-design/foundation": "workspace:*",
+    "@tide-design/icons": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

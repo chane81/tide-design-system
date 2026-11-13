@@ -55,13 +55,13 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 ## 1. 패키지 설치
 
-`@tide-tds/components`와 `@tide-tds/icons`를 함께 설치합니다. 아이콘을 쓰지 않으면 icons는 빼도 됩니다.
+`@tide-design/components`와 `@tide-design/icons`를 함께 설치합니다. 아이콘을 쓰지 않으면 icons는 빼도 됩니다.
 
 ```sh
-pnpm add @tide-tds/components @tide-tds/icons
+pnpm add @tide-design/components @tide-design/icons
 ```
 
-- `@tide-tds/foundation`(Token, CSS)은 components의 의존성으로 함께 설치됩니다. 앱에서 직접 import하지 않으므로 따로 설치하지 않아도 됩니다.
+- `@tide-design/foundation`(Token, CSS)은 components의 의존성으로 함께 설치됩니다. 앱에서 직접 import하지 않으므로 따로 설치하지 않아도 됩니다.
 - icons는 components의 의존성이지만, pnpm은 앱이 직접 설치하지 않은 패키지를 import하지 못하게 합니다.
 - npm처럼 의존성을 끌어올리는 매니저에서는 components만 설치해도 import될 수 있습니다. 그래도 직접 설치합니다. 전이 의존성에 기대면 components의 의존성이 바뀔 때 앱이 깨집니다.
 
@@ -72,7 +72,7 @@ pnpm add @tide-tds/components @tide-tds/icons
 ```css
 /* app/globals.css */
 @import "tailwindcss";
-@import "@tide-tds/components/styles.css";
+@import "@tide-design/components/styles.css";
 ```
 
 따로 설정할 것은 없습니다. Tide CSS가 하는 일은 두 가지입니다.
@@ -99,11 +99,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ## 4. 쓰기
 
-Component와 `cn`을 `@tide-tds/components`에서 import합니다. 서버 컴포넌트에서 바로 써도 됩니다. 상호작용하는 Component에는 `"use client"` 경계가 이미 들어 있습니다.
+Component와 `cn`을 `@tide-design/components`에서 import합니다. 서버 컴포넌트에서 바로 써도 됩니다. 상호작용하는 Component에는 `"use client"` 경계가 이미 들어 있습니다.
 
 ```tsx
 // app/page.tsx
-import { cn, VisuallyHidden } from "@tide-tds/components";
+import { cn, VisuallyHidden } from "@tide-design/components";
 
 export default function Page() {
   return (
@@ -122,30 +122,30 @@ export default function Page() {
 
 ## 패키지를 직접 설치할 때는 같은 버전으로
 
-`@tide-tds/components`, `@tide-tds/foundation`, `@tide-tds/icons`는 항상 같은 버전으로 함께 릴리스되고, components는 나머지 둘을 정확히 같은 버전으로 의존합니다. icons나 foundation을 앱에 직접 설치할 때는 components와 같은 버전을 적습니다.
+`@tide-design/components`, `@tide-design/foundation`, `@tide-design/icons`는 항상 같은 버전으로 함께 릴리스되고, components는 나머지 둘을 정확히 같은 버전으로 의존합니다. icons나 foundation을 앱에 직접 설치할 때는 components와 같은 버전을 적습니다.
 
 ```sh
 # 예: 0.1.0을 쓰는 경우. 세 패키지의 버전을 맞춘다.
-pnpm add @tide-tds/components@0.1.0 @tide-tds/icons@0.1.0
+pnpm add @tide-design/components@0.1.0 @tide-design/icons@0.1.0
 ```
 
 버전이 다르면 foundation이 두 벌 설치되어 Token CSS가 두 번 들어가거나 서로 다른 값이 섞일 수 있습니다. 한 벌인지는 아래 명령으로 확인합니다.
 
 ```sh
-pnpm why @tide-tds/foundation
+pnpm why @tide-design/foundation
 ```
 
 ## Tailwind CSS 없이 Token만 쓰기
 
-`@tide-tds/foundation`을 설치하고 tokens CSS를 import합니다. tokens CSS에는 `--tide-*` CSS 변수와 Theme 덮어쓰기(`[data-theme]`)만 들어 있습니다.
+`@tide-design/foundation`을 설치하고 tokens CSS를 import합니다. tokens CSS에는 `--tide-*` CSS 변수와 Theme 덮어쓰기(`[data-theme]`)만 들어 있습니다.
 
 ```sh
-pnpm add @tide-tds/foundation
+pnpm add @tide-design/foundation
 ```
 
 ```css
 /* app/globals.css */
-@import "@tide-tds/foundation/tokens.css";
+@import "@tide-design/foundation/tokens.css";
 
 .call-to-action {
   background-color: var(--tide-bg-primary-solid);
@@ -153,7 +153,7 @@ pnpm add @tide-tds/foundation
 ```
 
 - 변수 이름: Utility class 이름 앞에 `--tide-`를 붙입니다. `bg-primary-solid`의 값은 `--tide-bg-primary-solid`입니다. 이 이름이 Tailwind CSS 없이 쓰는 사용자와의 약속(공개 계약)입니다.
-- 제약: `@tide-tds/components`의 Component는 Tailwind CSS로 스타일을 만들므로 이 방법으로는 쓸 수 없습니다.
+- 제약: `@tide-design/components`의 Component는 Tailwind CSS로 스타일을 만들므로 이 방법으로는 쓸 수 없습니다.
 
 ## 다음 단계
 

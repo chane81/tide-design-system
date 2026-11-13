@@ -1,4 +1,4 @@
-import { duration, easing, type DurationName } from "@tide-tds/foundation";
+import { duration, easing, type DurationName } from "@tide-design/foundation";
 import { useEffect, useState, type ReactElement } from "react";
 
 // motion Token 블록: Token 원본에서 단계 목록과 값을 그리고, 버튼으로 실제 duration·easing을 재생한다

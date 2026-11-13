@@ -1,4 +1,4 @@
-// Primitive 색. 정본은 hex다(tide-v0 티켓 08·09, spec 「`@tide-tds/foundation`」 컬러).
+// Primitive 색. 정본은 hex다(tide-v0 티켓 08·09, spec 「`@tide-design/foundation`」 컬러).
 // 초안은 OKLCH L 계단(티켓 08의 A)으로 만들었고, 손으로 조정해도 된다. 조정하면 대비 쌍 검사가 다시 보장한다.
 // 지금 값은 ADR 0022(docs/decisions/0022-pastel-intensity-and-overlay-states.md)를 따른다. 50~300·950은 계열마다 손으로
 // 맞춘 값이고(파스텔 바탕·테두리·글자), solid 쪽(600~900)은 채도 상한을 둔 값이다. amber의 연한 단계(50~400)는 노랑 쪽이다.
@@ -134,7 +134,7 @@ export type PrimitiveColorName =
 
 /**
  * Primitive 이름을 정본 hex로 바꾼다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function primitiveHex(name: PrimitiveColorName): string {
   if (name === "white" || name === "black") return color[name];

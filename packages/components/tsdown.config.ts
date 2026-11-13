@@ -18,6 +18,6 @@ export default defineConfig({
   // unbundle에서는 파일마다 지시어가 그대로 남는다(티켓 36 대조 실험, smoke의 next build가 경계를 검사한다).
   // Rolldown의 MODULE_LEVEL_DIRECTIVE 경고는 번들링할 때를 위한 것이라 "use client"에 한해 끈다.
   suppressWarnings: /MODULE_LEVEL_DIRECTIVE.*"use client"/,
-  // exports는 package.json에서 손으로 관리한다(@tide-tds/source 조건, publishConfig.exports).
+  // exports는 package.json에서 손으로 관리한다(@tide-design/source 조건, publishConfig.exports).
   exports: false,
 });

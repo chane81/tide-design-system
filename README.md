@@ -26,11 +26,11 @@ Tide는 원칙(Principle), 파운데이션(Foundation), 컴포넌트(Component) 
 
 ## 패키지
 
-| 패키지                                        | 내용                                                             |
-| --------------------------------------------- | ---------------------------------------------------------------- |
-| [`@tide-tds/components`](packages/components) | React Component와 앱이 불러올 CSS(`styles.css`)                  |
-| [`@tide-tds/icons`](packages/icons)           | React 아이콘 Component(`PlusIcon`처럼 `Icon` 접미사)             |
-| [`@tide-tds/foundation`](packages/foundation) | Token, Tailwind 연결 CSS, 앱 브랜드 색을 만드는 `tide-color` CLI |
+| 패키지                                           | 내용                                                             |
+| ------------------------------------------------ | ---------------------------------------------------------------- |
+| [`@tide-design/components`](packages/components) | React Component와 앱이 불러올 CSS(`styles.css`)                  |
+| [`@tide-design/icons`](packages/icons)           | React 아이콘 Component(`PlusIcon`처럼 `Icon` 접미사)             |
+| [`@tide-design/foundation`](packages/foundation) | Token, Tailwind 연결 CSS, 앱 브랜드 색을 만드는 `tide-color` CLI |
 
 세 패키지는 언제나 같은 버전으로 함께 나갑니다.
 
@@ -45,24 +45,24 @@ Next.js App Router 기준입니다. 자세한 안내는 문서의 「시작하�
 **1. 설치**
 
 ```sh
-pnpm add @tide-tds/components @tide-tds/icons
+pnpm add @tide-design/components @tide-design/icons
 ```
 
-`@tide-tds/foundation`은 components와 함께 설치됩니다. 아이콘을 쓰지 않으면 icons는 빼도 됩니다.
+`@tide-design/foundation`은 components와 함께 설치됩니다. 아이콘을 쓰지 않으면 icons는 빼도 됩니다.
 
 **2. 전역 CSS 두 줄**
 
 ```css
 /* app/globals.css */
 @import "tailwindcss";
-@import "@tide-tds/components/styles.css";
+@import "@tide-design/components/styles.css";
 ```
 
 **3. 쓰기**
 
 ```tsx
-import { Button } from "@tide-tds/components";
-import { PlusIcon } from "@tide-tds/icons";
+import { Button } from "@tide-design/components";
+import { PlusIcon } from "@tide-design/icons";
 
 export default function Page() {
   return (

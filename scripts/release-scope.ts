@@ -1,20 +1,20 @@
 // 릴리스 묶음(TDS, Storybook)을 가르는 규칙. ADR 0020, docs/research/changesets-split-version-prs.md 추천안 (a).
 //
 // - TDS: npm에 내는 세 패키지. `.changeset/config.json`의 `fixed`로 언제나 같은 버전이다(ADR 0008).
-// - Storybook: private 앱 `@tide-tds/docs`(apps/docs). `privatePackages.version`으로 자기 changeset으로만 버전이 오른다.
+// - Storybook: private 앱 `@tide-design/docs`(apps/docs). `privatePackages.version`으로 자기 changeset으로만 버전이 오른다.
 //
 // Version PR은 하나다. 제목만 들어간 묶음에 따라 정한다. 이 파일은 순수 함수만 두고,
 // git·파일을 읽는 일은 `version-pr-title.ts`, `storybook-release.ts`, `check-changesets.ts`가 한다.
 
 /** npm에 내는 TDS 패키지. 문서와 같은 순서(Token → 아이콘 → Component). */
 export const TDS_PACKAGES = [
-  "@tide-tds/foundation",
-  "@tide-tds/icons",
-  "@tide-tds/components",
+  "@tide-design/foundation",
+  "@tide-design/icons",
+  "@tide-design/components",
 ] as const;
 
 /** Storybook 문서 앱 패키지. */
-export const STORYBOOK_PACKAGE = "@tide-tds/docs";
+export const STORYBOOK_PACKAGE = "@tide-design/docs";
 
 /** `changeset status --output` JSON의 releases 항목 하나(@changesets/cli 3.0.3, @changesets/types 7.0.0 `ComprehensiveRelease`). */
 export type StatusRelease = { name: string; type: string; oldVersion?: string; newVersion: string };

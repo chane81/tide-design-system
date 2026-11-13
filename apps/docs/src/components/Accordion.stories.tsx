@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
   Badge,
   Button,
-} from "@tide-tds/components";
+} from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

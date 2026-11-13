@@ -1,4 +1,4 @@
-// 쌓임 단계 Token(tide-v0 티켓 22, spec 「`@tide-tds/foundation`」 z-index).
+// 쌓임 단계 Token(tide-v0 티켓 22, spec 「`@tide-design/foundation`」 z-index).
 // - top-layer를 쓰지 않고, 모든 오버레이를 portal과 이 단계로 쌓는다.
 // - popover가 modal 위다. Dialog 안에서 연 Select 목록이 Dialog 위에 보여야 하기 때문이다.
 // - 100 간격이라 앱이 자기 단계를 사이에 끼울 수 있다(예: 150).

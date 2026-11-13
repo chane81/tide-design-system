@@ -1,5 +1,5 @@
-// 루트는 Token 객체와 그 타입만 낸다(spec 「`@tide-tds/foundation`」 공개 표면).
-// 대비 계산 같은 도우미는 앱 개발자용이 아니라서 `./internal.ts`(`@tide-tds/foundation/internal`)에 둔다.
+// 루트는 Token 객체와 그 타입만 낸다(spec 「`@tide-design/foundation`」 공개 표면).
+// 대비 계산 같은 도우미는 앱 개발자용이 아니라서 `./internal.ts`(`@tide-design/foundation/internal`)에 둔다.
 export { color, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color.ts";
 export type { ColorSlot } from "./color-slot.ts";
 export {

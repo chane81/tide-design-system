@@ -9,7 +9,7 @@
 //   `data-selected`(고른 옵션, 끝에 장식용 체크 아이콘), `data-disabled`. class는 Menu 항목과 같은 `listItemClass`다.
 // - 목록 루트(`role="listbox"`)와 위치·portal은 부르는 쪽이 정한다(useListBox, overlay.tsx).
 
-import { CheckIcon } from "@tide-tds/icons";
+import { CheckIcon } from "@tide-design/icons";
 import { useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode } from "react";
 import { mergeProps, mergeRefs, useListBoxSection, useOption } from "react-aria";
 import type { ListState } from "react-stately";

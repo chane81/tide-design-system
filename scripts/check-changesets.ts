@@ -8,8 +8,8 @@
 //    `privatePackages.version`이 켜져 있을 때만 세고(versionablePackages), `version` 필드가 없는 패키지는 세지 않는다
 //    (@changesets/should-skip-package 1.0.0). 그래서 apps/docs는 세고 apps/smoke-next·루트는 세지 않는다. ADR 0020).
 // 2. 배포 패키지가 0.x인 동안 `major` changeset은 실패한다(1.0.0으로 올라가 버린다). Storybook에도 같이 걸린다.
-// 3. 아이콘 이름표에서 키가 빠졌는데 `@tide-tds/icons` minor changeset이 없으면 실패한다.
-// 4. 한 changeset 파일에 TDS 패키지와 `@tide-tds/docs`가 함께 있으면 실패한다(scripts/release-scope.ts, ADR 0020).
+// 3. 아이콘 이름표에서 키가 빠졌는데 `@tide-design/icons` minor changeset이 없으면 실패한다.
+// 4. 한 changeset 파일에 TDS 패키지와 `@tide-design/docs`가 함께 있으면 실패한다(scripts/release-scope.ts, ADR 0020).
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";

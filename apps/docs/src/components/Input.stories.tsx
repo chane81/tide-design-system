@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Field, Input } from "@tide-tds/components";
+import { Button, Field, Input } from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 
 // Input 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.

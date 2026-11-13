@@ -5,9 +5,9 @@ import {
   textStyle,
   type FontFamilyName,
   type TextStyleName,
-} from "@tide-tds/foundation";
+} from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님). 스택을 CSS 값 그대로 보여 주려고 쓴다.
-import { fontFamilyCss } from "@tide-tds/foundation/internal";
+import { fontFamilyCss } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // 타이포그래피 Token 블록: 텍스트 스타일, 굵기, font-family를 Token 원본에서 그린다(spec 「문서 앱」 Token 블록).

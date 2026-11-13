@@ -1,4 +1,4 @@
-import { UserIcon } from "@tide-tds/icons";
+import { UserIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "./cn.ts";

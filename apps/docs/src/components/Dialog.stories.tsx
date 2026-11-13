@@ -14,8 +14,8 @@ import {
   Input,
   Select,
   SelectItem,
-} from "@tide-tds/components";
-import { TrashIcon } from "@tide-tds/icons";
+} from "@tide-design/components";
+import { TrashIcon } from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

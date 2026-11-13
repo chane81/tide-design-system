@@ -28,7 +28,7 @@ const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as 
 const accentRoles = roles.filter((role) => role !== "neutral");
 const states = ["solid", "solid-hover", "solid-active", "subtle", "subtle-hover", "subtle-active"];
 
-// spec 「`@tide-tds/foundation`」 Semantic 색. [class, CSS 속성]
+// spec 「`@tide-design/foundation`」 Semantic 색. [class, CSS 속성]
 const semanticClasses: [string, string][] = [
   ...["canvas", "surface", "raised", "disabled", "overlay"].map(
     (name) => [`bg-${name}`, "background-color"] as [string, string],
@@ -192,7 +192,7 @@ describe("tailwind.css", () => {
   });
 });
 
-// spec 「`@tide-tds/foundation`」 타이포그래피. 기대 목록은 Token 원본에서 만들지 않고 spec을 그대로 적는다.
+// spec 「`@tide-design/foundation`」 타이포그래피. 기대 목록은 Token 원본에서 만들지 않고 spec을 그대로 적는다.
 const textStyles = [
   "display-lg",
   "display-md",
@@ -303,7 +303,7 @@ describe("tailwind.css 타이포그래피", () => {
   });
 });
 
-// spec 「`@tide-tds/foundation`」 radius·Elevation·포커스 표시. 기대 목록은 spec을 그대로 적는다.
+// spec 「`@tide-design/foundation`」 radius·Elevation·포커스 표시. 기대 목록은 spec을 그대로 적는다.
 const radii = ["sm", "md", "lg", "xl", "full"];
 const shadows = ["sm", "md", "lg"];
 // Tailwind 기본값 중 지워야 하는 것
@@ -436,7 +436,7 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
   });
 });
 
-// spec 「`@tide-tds/foundation`」 motion·z-index. 기대 목록은 spec을 그대로 적는다.
+// spec 「`@tide-design/foundation`」 motion·z-index. 기대 목록은 spec을 그대로 적는다.
 const durations = ["fast", "normal"];
 const zIndices = ["sticky", "modal", "popover", "toast", "tooltip"];
 // 시간을 적지 않은 transition class. 모두 --default-transition-* 를 읽는다.

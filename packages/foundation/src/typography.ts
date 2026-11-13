@@ -1,4 +1,4 @@
-// 타이포그래피 Token(tide-v0 티켓 11, spec 「`@tide-tds/foundation`」 타이포그래피).
+// 타이포그래피 Token(tide-v0 티켓 11, spec 「`@tide-design/foundation`」 타이포그래피).
 // - font-family는 sans와 mono 두 개다. 웹폰트와 @font-face는 넣지 않는다(웹폰트는 앱이 로드한다).
 // - 크기와 행간은 rem이다. 루트 font-size를 바꾸지 않으므로 브라우저 글자 크기를 키우면 함께 커진다(WCAG 1.4.4).
 // - 자간은 모든 스타일이 0이라서 letter-spacing 하위 변수를 두지 않는다.
@@ -113,7 +113,7 @@ export type TextStyleName = keyof typeof textStyle;
 
 /**
  * font-family 스택을 CSS 값으로 만든다. 영문과 하이픈만으로 된 이름은 그대로 두고, 나머지(공백이 있는 이름)는 따옴표로 감싼다.
- * @internal `@tide-tds/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
  */
 export function fontFamilyCss(name: FontFamilyName): string {
   return fontFamily[name]
