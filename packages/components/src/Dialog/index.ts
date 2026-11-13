@@ -1,19 +1,15 @@
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "./Dialog.tsx";
-export type {
-  DialogCloseProps,
-  DialogContentProps,
-  DialogDescriptionProps,
-  DialogFooterProps,
-  DialogProps,
-  DialogSize,
-  DialogTitleProps,
-  DialogTriggerProps,
-} from "./Dialog.tsx";
+export { Dialog } from "./Dialog.tsx";
+export type { DialogProps } from "./Dialog.tsx";
+export { DialogTrigger } from "./components/DialogTrigger.tsx";
+export type { DialogTriggerProps } from "./components/DialogTrigger.tsx";
+export { DialogContent } from "./components/DialogContent.tsx";
+export type { DialogContentProps } from "./components/DialogContent.tsx";
+export { DialogTitle } from "./components/DialogTitle.tsx";
+export type { DialogTitleProps } from "./components/DialogTitle.tsx";
+export { DialogDescription } from "./components/DialogDescription.tsx";
+export type { DialogDescriptionProps } from "./components/DialogDescription.tsx";
+export { DialogFooter } from "./components/DialogFooter.tsx";
+export type { DialogFooterProps } from "./components/DialogFooter.tsx";
+export { DialogClose } from "./components/DialogClose.tsx";
+export type { DialogCloseProps } from "./components/DialogClose.tsx";
+export type { DialogSize } from "./types.ts";

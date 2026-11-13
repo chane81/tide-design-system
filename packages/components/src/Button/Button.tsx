@@ -8,14 +8,11 @@ import { pressableBaseClass } from "../_internal/constants/pressableClass.ts";
 import { pressableState } from "../_internal/libs/pressableState.ts";
 import { renderElement } from "../_internal/libs/renderElement.ts";
 import { Spinner } from "../Spinner/Spinner.tsx";
-import type { FillVariant, Role, Size } from "../types.ts";
+import type { Role } from "../types.ts";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden.tsx";
-
-/** Button의 채움 방식. 4개를 모두 받는다. */
-type ButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;
-
-/** Button의 size. 공통 size 4개를 모두 받는다. */
-type ButtonSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
+import { Icon } from "./components/Icon.tsx";
+import { sizeClass } from "./constants/buttonClass.ts";
+import type { ButtonSize, ButtonVariant } from "./types.ts";
 
 export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   /** 채움 방식. 기본값은 `solid`다. */
@@ -46,35 +43,6 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
    * props, ref, className을 그 요소에 병합한다. `button`이 아닌 요소의 `disabled`는 `aria-disabled`로 바뀐다.
    */
   render?: ReactElement;
-}
-
-// 채움 방식 맵, 누름 축소, 상태 처리는 IconButton과 함께 쓰는 `_internal/constants/pressableClass.ts`·`_internal/libs/pressableState.ts`에 있다(티켓 14).
-
-/** 높이, 좌우 padding, 아이콘과 텍스트 사이 간격, 텍스트 스타일(spec size 표). radius는 모든 size에서 `md`다. */
-const sizeClass: Record<ButtonSize, string> = {
-  xs: "h-6 gap-1 px-2 text-label-sm",
-  sm: "h-8 gap-1.5 px-3 text-label-md",
-  md: "h-10 gap-2 px-4 text-label-md",
-  lg: "h-12 gap-2 px-5 text-label-lg",
-};
-
-/** 텍스트 옆 아이콘 크기(spec 아이콘 크기 규칙). 감싼 span의 크기이고 안의 요소가 꽉 채운다. */
-const iconSizeClass: Record<ButtonSize, string> = {
-  xs: "size-3.5",
-  sm: "size-3.5",
-  md: "size-4",
-  lg: "size-5",
-};
-
-function Icon({ size, children }: { size: ButtonSize; children: ReactNode }): ReactElement {
-  return (
-    <span
-      aria-hidden="true"
-      className={`inline-flex shrink-0 items-center justify-center *:size-full ${iconSizeClass[size]}`}
-    >
-      {children}
-    </span>
-  );
 }
 
 /**

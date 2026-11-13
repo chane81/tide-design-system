@@ -73,8 +73,15 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
        └── hooks/useSelectValue.ts   # 전용 조각도 이 폴더 안
    ```
    - 공개 Component 하나가 폴더 하나다. `CheckboxGroup`처럼 따로 공개되는 Component는 자기 폴더를 갖는다.
-   - `TableRow`처럼 대표 Component와 늘 함께 쓰는 하위 Component는 대표 Component 본문 파일이나 `<C>/components/`에 둔다. 대표 폴더의 `index.ts`가 함께 재수출한다.
+   - 하위 Component(`MenuTrigger`, `TableRow` 등)는 `<C>/components/<Sub>.tsx`에 둔다(7-1). 공개 하위 Component는 대표 폴더의 `index.ts`가 함께 재수출한다.
    - 그 밖의 Component(`src/_internal/components/`, 문서 앱 블록)는 단순하면 `PascalCase.tsx` 파일 하나로 두고, 전용 `components`·`hooks`·`libs`·`constants`, `types.ts`, 테스트 중 하나라도 생기면 폴더로 바꾼다.
+     7-1. **파일 하나에 Component 하나.** 공개·비공개를 가리지 않고 Component 함수는 파일마다 하나다. 대표 본문 파일(`<C>.tsx`)에는 대표 Component와 그 Props만 남긴다.
+   - 하위·보조 Component(`MenuContentInner`, `MenuItemView`처럼 그 Component만 쓰는 작은 조각 포함) → `<C>/components/<Name>.tsx`. Props 타입은 그 Component 파일에 같이 둔다.
+   - Context와 그것을 읽는 hook → `<C>/hooks/use<C>Context.ts`. Component 밖으로 뺄 수 있는 상태·이벤트 로직 → `<C>/hooks/useXxx.ts`.
+   - 하위 Component들이 함께 쓰는 타입 → `<C>/types.ts`. class 맵·고정 값 → `<C>/constants/`, 순수 함수 → `<C>/libs/`.
+   - 같은 파일에 남겨도 되는 것: 그 Component만 쓰는 짧은 비-Component 헬퍼(몇 줄짜리 함수·상수). 다른 파일이 쓰기 시작하면 위 폴더로 뺀다.
+   - 신호: 본문 파일이 200줄을 넘거나 `function` Component가 둘 이상 보이면 나눌 곳부터 찾는다.
+   - `_internal/components/`와 문서 앱 블록도 같은 규칙이다. 나누면서 전용 조각이 생기면 폴더로 바꾼다(7).
 8. **이름**
    - Component: `PascalCase.tsx`. hook: `useXxx.ts`.
    - 그 밖의 소스 파일(`libs`·`constants`·foundation 모듈·문서 앱 lib): `camelCase.ts`. 대표 export나 주제 이름을 쓴다(`cn.ts`, `renderElement.ts`, `overlayClass.ts`, `colorFamily.ts`).

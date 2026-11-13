@@ -13,14 +13,14 @@ import { render } from "vitest-browser-react";
 import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion.ts";
 
 import { Button } from "../Button/Button.tsx";
-import { Dialog, DialogContent, DialogTitle } from "../Dialog/Dialog.tsx";
+import { Dialog, DialogContent, DialogTitle } from "../Dialog/index.ts";
 import {
   ToastQueue,
   ToastRegion,
   type ToastOptions,
   type ToastQueueOptions,
   type ToastRegionProps,
-} from "./Toast.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

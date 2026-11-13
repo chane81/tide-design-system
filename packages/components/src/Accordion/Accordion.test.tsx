@@ -17,7 +17,7 @@ import {
   type AccordionPanelProps,
   type AccordionProps,
   type AccordionTriggerProps,
-} from "./Accordion.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

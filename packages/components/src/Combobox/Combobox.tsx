@@ -2,7 +2,7 @@
 // 글자를 쳐서 옵션을 거르고 하나를 고르는 Combobox(tide-v0-impl 티켓 29). React Aria hooks만 쓰고 마크업은 직접 만든다
 // (ADR 0004). 근거 버전: react-aria 3.53.1(useComboBox, useButton, useListBox, useFilter, mergeProps, mergeRefs),
 // react-stately 3.51.0(useComboBoxState). 위치·portal·motion은 오버레이 공통 부분(_internal/components/OverlayPortal.tsx, ADR 0018), 목록 class와
-// 옵션 모으기·그리기는 Select와 같은 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, _internal/components/ListBoxNodes.tsx, ADR 0019)을 쓴다.
+// 옵션 모으기·그리기는 Select와 같은 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, _internal/components/ListBoxNodes/ListBoxNodes.tsx, ADR 0019)을 쓴다.
 //
 // 구조:
 // - `Combobox`: 루트 DOM은 `role="combobox"` 텍스트 `<input>`이다(입력창 모양, Input과 같은 size). 감싸개 `<div>` 안에서
@@ -10,47 +10,37 @@
 //   열리면 `document.body`에 목록을 portal한다.
 // - 포커스는 늘 입력에 있다. 목록 안 위치는 가상 포커스(`aria-activedescendant`)로 옮기고 옵션의 `data-highlighted`로 보인다.
 //   그래서 목록은 바깥을 inert로 막지 않는 non-modal이고(입력이 바깥이다), 포커스 가두기·복귀도 하지 않는다.
-// - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(_internal/components/ListBoxNodes.tsx).
+// - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(_internal/components/ListBoxNodes/ListBoxNodes.tsx).
 
 import { ChevronDownIcon } from "@tide-design/icons";
 import {
   use,
-  useLayoutEffect,
   useMemo,
   useRef,
   type ComponentProps,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
-  type RefObject,
 } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
-import { mergeProps, mergeRefs, useButton, useComboBox, useFilter, useListBox } from "react-aria";
-import { useComboBoxState, type ComboBoxState } from "react-stately";
+import { mergeProps, mergeRefs, useButton, useComboBox, useFilter } from "react-aria";
+import { useComboBoxState } from "react-stately";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
 import {
   inputBaseClass,
   inputSizeClass,
   type InputSize,
 } from "../_internal/constants/inputClass.ts";
+import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
+import { cn } from "../_internal/libs/cn.ts";
+import { resolveCollectionChildren } from "../_internal/libs/listCollection.ts";
+import { ComboboxPopover } from "./components/ComboboxPopover.tsx";
 import {
-  asCollectionComponent,
-  resolveCollectionChildren,
-  sectionCollectionNode,
-  valueItemCollectionNode,
-} from "../_internal/libs/listCollection.ts";
-import { listPopupClass } from "../_internal/constants/listClass.ts";
-import {
-  ListBoxNodes,
-  type ListBoxOptionProps,
-  type ListBoxSectionProps,
-} from "../_internal/components/ListBoxNodes.tsx";
-import { OverlayPortal } from "../_internal/components/OverlayPortal.tsx";
-import { useOverlayPresence } from "../_internal/hooks/useOverlayPresence.ts";
-import { useOverlayTheme } from "../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../_internal/hooks/usePopoverOverlay.ts";
+  buttonClass,
+  buttonSizeClass,
+  inputEndClass,
+  wrapperClass,
+} from "./constants/comboboxClass.ts";
 
 export interface ComboboxProps extends Omit<
   ComponentProps<"input">,
@@ -87,36 +77,6 @@ export interface ComboboxProps extends Omit<
   /** `ComboboxItem`과 `ComboboxSection`. 이 요소들을 바로 아래(또는 Fragment·배열 안)에 둔다. */
   children?: ReactNode;
 }
-
-// class는 문자열 그대로 적는다(_internal/constants/inputClass.ts 참고).
-// - 감싸개: 입력과 chevron 버튼을 한 줄에 둔다. 버튼은 음수 margin으로 입력의 끝 안쪽에 겹친다. 그래서 사용자 className으로
-//   입력 폭을 바꿔도 버튼이 입력 끝에 붙어 있다.
-// - 입력: 입력창 모양(inputBaseClass)에 Input과 같은 size class. 끝 padding은 chevron(16px)과 글자 사이 8px를 더 둔다.
-// - 버튼: 장식이 아닌 실제 버튼(누르면 전체 목록을 연다)이지만 Tab 순서 밖이다(React Aria). chevron 16px은 Select 트리거와
-//   같은 자리(입력 바깥 끝에서 size별 좌우 padding + border 1px)에 온다. `text-muted`, 비활성이면 `text-disabled`.
-const wrapperClass = "flex w-full";
-const inputEndClass: Record<InputSize, string> = {
-  sm: "pe-[34px]",
-  md: "pe-9",
-  lg: "pe-10",
-};
-const buttonSizeClass: Record<InputSize, string> = {
-  sm: "-ms-[35px] w-[35px] pe-[11px]",
-  md: "-ms-[37px] w-[37px] pe-[13px]",
-  lg: "-ms-[41px] w-[41px] pe-[17px]",
-};
-const buttonClass =
-  "inline-flex shrink-0 cursor-pointer items-center justify-end text-muted outline-none disabled:cursor-not-allowed disabled:text-disabled";
-
-/**
- * 거른 결과가 없을 때의 글자. 옵션과 같은 여백·글자 크기라 목록 높이가 옵션 하나와 같다. `text-muted`.
- * listbox 밖(같은 목록 표면 안)에 둔다. listbox 자식은 option·group만 될 수 있어서다. 결과 개수(0개)는 React Aria가
- * live region으로 알린다.
- */
-const emptyClass = "px-2 py-1.5 text-body-sm text-muted select-none";
-
-/** 목록 상태. Combobox가 고른 값의 node key는 옵션의 `value`(문자열)다. */
-type ComboboxListState = ComboBoxState<object>;
 
 /**
  * 한글 IME 조합 중의 keydown인지. 조합 중 Enter·화살표·Esc는 IME가 쓰므로 목록 동작에 쓰지 않는다.
@@ -257,101 +217,3 @@ export function Combobox({
     </div>
   );
 }
-
-type ComboboxListBoxProps = ReturnType<typeof useComboBox<object>>["listBoxProps"];
-
-interface ComboboxPopoverProps {
-  readonly state: ComboboxListState;
-  readonly inputRef: RefObject<HTMLInputElement | null>;
-  readonly popoverRef: RefObject<HTMLDivElement | null>;
-  readonly listBoxRef: RefObject<HTMLDivElement | null>;
-  readonly listBoxProps: ComboboxListBoxProps;
-  readonly emptyMessage: ReactNode;
-}
-
-/**
- * 목록을 DOM에 둘지 정하고 portal한다. 닫혀도 퇴장 전환이 끝날 때까지 남긴다(ADR 0018).
- * 포커스는 입력에 머물므로 FocusScope로 감싸지 않는다(`focusManagement={false}`). 감싸면 바깥 빈 곳을 눌러 포커스가
- * body로 간 뒤 목록이 빠질 때 FocusScope가 입력으로 포커스를 되돌린다(react-aria 3.53.1 FocusScope restoreFocus).
- */
-function ComboboxPopover(props: ComboboxPopoverProps): ReactElement | null {
-  const present = useOverlayPresence(props.state.isOpen, props.popoverRef);
-  if (!present) return null;
-  return (
-    <OverlayPortal isExiting={!props.state.isOpen} focusManagement={false}>
-      <ComboboxPopoverInner {...props} />
-    </OverlayPortal>
-  );
-}
-
-/**
- * 목록 표면(`listPopupClass`)과 그 안의 `role="listbox"`. 입력 아래 시작 끝에 4px 떨어져 붙고(Select와 같다),
- * 폭은 입력보다 좁지 않다. 거른 결과가 없으면 listbox 뒤에 `emptyMessage`를 보인다.
- */
-function ComboboxPopoverInner({
-  state,
-  inputRef,
-  popoverRef,
-  listBoxRef,
-  listBoxProps,
-  emptyMessage,
-}: ComboboxPopoverProps): ReactElement {
-  useOverlayTheme(inputRef, popoverRef);
-  // 목록 폭이 입력보다 좁지 않게 한다. 위치를 계산하기 전(위치 hook보다 먼저)에 붙인다(Select와 같다).
-  // 다만 화면 폭에서 위치 여백(React Aria containerPadding 12px, 양쪽)을 뺀 것보다 넓지 않게 한다. 입력이 화면을 꽉
-  // 채우면(모바일) 목록이 화면 밖으로 넘치고, 옵션을 화면에 보이려는 스크롤이 문서를 움직여 non-modal 목록이 닫힌다
-  // (react-aria 3.53.1 useCloseOnScroll, 테스트로 확인).
-  useLayoutEffect(() => {
-    const popover = popoverRef.current;
-    const width = inputRef.current?.offsetWidth;
-    if (popover && width) popover.style.minWidth = `min(${width}px, 100vw - 24px)`;
-  }, [inputRef, popoverRef]);
-  // 입력이 목록 바깥이라 non-modal이다. 바깥을 inert로 막거나 바깥 누름으로 닫지 않고, 포커스가 입력을 떠나면
-  // useComboBox가 닫는다. 보조기술에서는 useComboBox가 입력과 목록 밖을 숨긴다(aria-hidden).
-  const { overlayProps } = usePopoverOverlay(
-    { triggerRef: inputRef, popoverRef, placement: "bottom start", offset: 4, nonModal: true },
-    state,
-  );
-  const { listBoxProps: listProps } = useListBox(listBoxProps, state, listBoxRef);
-  const empty = state.collection.size === 0;
-
-  return (
-    <div
-      {...overlayProps}
-      ref={popoverRef}
-      data-open={state.isOpen ? "" : undefined}
-      className={listPopupClass}
-    >
-      <div {...listProps} ref={listBoxRef} className="outline-none">
-        <ListBoxNodes state={state} />
-      </div>
-      {empty && <div className={emptyClass}>{emptyMessage}</div>}
-    </div>
-  );
-}
-
-export interface ComboboxItemProps extends ListBoxOptionProps {}
-
-/**
- * Combobox의 옵션(`role="option"`). `Combobox`나 `ComboboxSection` 바로 안에 둔다. `value`가 고른 값이고 폼에
- * 제출된다. 거르기와 고른 뒤 입력에 들어가는 글자는 `textValue`(기본은 내용의 글자)다. 키보드 위치와 마우스를 올린
- * 옵션은 highlight, 고른 옵션은 neutral subtle-active 배경과 끝의 체크 아이콘이다(Select 옵션과 같다).
- * 상태는 `data-highlighted`, `data-selected`, `data-disabled`로 노출한다.
- */
-export function ComboboxItem(_props: ComboboxItemProps): null {
-  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(_internal/components/ListBoxNodes.tsx).
-  return null;
-}
-asCollectionComponent(ComboboxItem, valueItemCollectionNode);
-
-export interface ComboboxSectionProps extends ListBoxSectionProps {}
-
-/**
- * 옵션 묶음(`role="group"`). `heading`이 화면에 보이는 제목이자 묶음의 이름이고, 없으면 `aria-label`이 이름이다.
- * 거른 결과 묶음 안에 남은 옵션이 없으면 묶음도 빠진다.
- */
-export function ComboboxSection(_props: ComboboxSectionProps): null {
-  // 렌더하지 않는다. Combobox가 컬렉션으로 모아 그린다(_internal/components/ListBoxNodes.tsx).
-  return null;
-}
-asCollectionComponent(ComboboxSection, sectionCollectionNode);

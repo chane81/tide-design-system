@@ -11,6 +11,7 @@
 | [03](issues/03-docs-app-layout.md)                  | 문서 앱 섹션·블록 재배치                          | 없음 |
 | [04](issues/04-components-folders.md)               | components 공개 Component를 모두 폴더로(ADR 0029) | 01   |
 | [05](issues/05-components-internal-folder.md)       | components 공용 코드를 `_internal/`로(ADR 0030)   | 04   |
+| [06](issues/06-components-split-files.md)           | Component 파일 하나에 Component 하나(규칙 7-1)    | 05   |
 
 01~03은 서로 다른 패키지만 건드리므로 worktree별로 동시에 진행할 수 있다. 04는 01(내부 모듈 재배치)이 끝난 뒤에, 05는 04와 같은 PR(#53)에서 했다.
 

@@ -2,7 +2,7 @@
 // 값 하나를 고르는 Select(tide-v0-impl 티켓 28). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useSelect, useButton, useListBox, HiddenSelect, DismissButton, mergeProps, mergeRefs),
 // react-stately 3.51.0(useSelectState). 위치·portal·motion은 오버레이 공통 부분(_internal/components/OverlayPortal.tsx, ADR 0018), 목록 class와
-// 옵션 모으기는 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, ADR 0019), 옵션·묶음 그리기는 _internal/components/ListBoxNodes.tsx를 쓴다.
+// 옵션 모으기는 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, ADR 0019), 옵션·묶음 그리기는 _internal/components/ListBoxNodes/ListBoxNodes.tsx를 쓴다.
 //
 // 구조:
 // - `Select`: 루트 DOM은 트리거 `<button type="button">`이다(입력창 모양, Input과 같은 size). 그 옆에 폼 제출용 숨은
@@ -14,50 +14,31 @@
 import { ChevronDownIcon } from "@tide-design/icons";
 import {
   use,
-  useLayoutEffect,
   useMemo,
   useRef,
   type ComponentProps,
   type ReactElement,
   type ReactNode,
-  type RefObject,
 } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
-import {
-  DismissButton,
-  HiddenSelect,
-  mergeProps,
-  mergeRefs,
-  useButton,
-  useListBox,
-  useSelect,
-} from "react-aria";
-import { useSelectState, type SelectState } from "react-stately";
+import { HiddenSelect, mergeProps, mergeRefs, useButton, useSelect } from "react-aria";
+import { useSelectState } from "react-stately";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
 import {
   inputBaseClass,
   inputSizeClass,
   type InputSize,
 } from "../_internal/constants/inputClass.ts";
+import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
+import { cn } from "../_internal/libs/cn.ts";
+import { resolveCollectionChildren } from "../_internal/libs/listCollection.ts";
+import { SelectPopover } from "./components/SelectPopover.tsx";
 import {
-  asCollectionComponent,
-  resolveCollectionChildren,
-  sectionCollectionNode,
-  valueItemCollectionNode,
-} from "../_internal/libs/listCollection.ts";
-import { listPopupClass } from "../_internal/constants/listClass.ts";
-import {
-  ListBoxNodes,
-  type ListBoxOptionProps,
-  type ListBoxSectionProps,
-} from "../_internal/components/ListBoxNodes.tsx";
-import { OverlayPortal } from "../_internal/components/OverlayPortal.tsx";
-import { useCloseOnTab } from "../_internal/hooks/useCloseOnTab.ts";
-import { useOverlayPresence } from "../_internal/hooks/useOverlayPresence.ts";
-import { useOverlayTheme } from "../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../_internal/hooks/usePopoverOverlay.ts";
+  chevronClass,
+  placeholderClass,
+  triggerClass,
+  valueClass,
+} from "./constants/selectClass.ts";
 
 export interface SelectProps extends Omit<
   ComponentProps<"button">,
@@ -98,21 +79,6 @@ export interface SelectProps extends Omit<
   /** `SelectItem`과 `SelectSection`. 이 요소들을 바로 아래(또는 Fragment·배열 안)에 둔다. */
   children?: ReactNode;
 }
-
-// class는 문자열 그대로 적는다(_internal/constants/inputClass.ts 참고).
-// - 트리거: 입력창 모양(inputBaseClass: border-strong, focus-field, aria-invalid:border-danger, :disabled)에 Input과
-//   같은 size class. 글자와 chevron을 한 줄에 두고 chevron은 오른쪽 끝이다(`justify-between`, 사이 8px).
-// - 값 글자: 넘치면 말줄임(`truncate`). 고르지 않았을 때(placeholder)는 `text-muted`, 비활성이면 `text-disabled`.
-//   옵션 안의 아이콘(장식용)은 트리거에서도 16px이고 글자와 8px 떨어진다.
-// - chevron: 장식용 16px, `text-muted`(비활성이면 `text-disabled`).
-const triggerClass = "group inline-flex items-center justify-between gap-2 text-start";
-const valueClass =
-  "min-w-0 flex-1 truncate [&>svg]:me-2 [&>svg]:inline-block [&>svg]:size-4 [&>svg]:align-[-0.125em]";
-const placeholderClass = "text-muted group-disabled:text-disabled";
-const chevronClass = "shrink-0 text-muted group-disabled:text-disabled";
-
-/** 목록 상태. Select가 고른 값의 node key는 옵션의 `value`(문자열)다. */
-type SelectListState = SelectState<object>;
 
 /**
  * 값 하나를 고르는 입력. 트리거를 누르거나(마우스는 누르는 순간) Enter·Space·↓·↑로 목록을 열고, 화살표·Home/End·
@@ -224,97 +190,3 @@ export function Select({
     </>
   );
 }
-
-type SelectMenuProps = ReturnType<typeof useSelect<object>>["menuProps"];
-
-interface SelectPopoverProps {
-  readonly state: SelectListState;
-  readonly triggerRef: RefObject<HTMLButtonElement | null>;
-  readonly menuProps: SelectMenuProps;
-}
-
-/** 목록을 DOM에 둘지 정하고 portal한다. 닫혀도 퇴장 전환이 끝날 때까지 남긴다(ADR 0018). */
-function SelectPopover(props: SelectPopoverProps): ReactElement | null {
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const present = useOverlayPresence(props.state.isOpen, popoverRef);
-  if (!present) return null;
-  // 옵션에 포커스가 오므로 FocusScope로 감싸(focusManagement 기본값) 닫힐 때 트리거로 포커스를 돌려준다.
-  return (
-    <OverlayPortal isExiting={!props.state.isOpen}>
-      <SelectPopoverInner {...props} popoverRef={popoverRef} />
-    </OverlayPortal>
-  );
-}
-
-interface SelectPopoverInnerProps extends SelectPopoverProps {
-  readonly popoverRef: RefObject<HTMLDivElement | null>;
-}
-
-/**
- * 목록 표면(`listPopupClass`)과 그 안의 `role="listbox"`. 트리거 아래 시작 끝에 4px 떨어져 붙고(Menu와 같다),
- * 폭은 트리거보다 좁지 않다.
- */
-function SelectPopoverInner({
-  state,
-  triggerRef,
-  menuProps,
-  popoverRef,
-}: SelectPopoverInnerProps): ReactElement {
-  const listRef = useRef<HTMLDivElement>(null);
-  useOverlayTheme(triggerRef, popoverRef);
-  // 목록 폭이 트리거보다 좁지 않게 한다. 위치를 계산하기 전(위치 hook보다 먼저)에 붙인다(useOverlayTheme과 같다).
-  useLayoutEffect(() => {
-    const popover = popoverRef.current;
-    const width = triggerRef.current?.offsetWidth;
-    if (popover && width) popover.style.minWidth = `${width}px`;
-  }, [triggerRef, popoverRef]);
-  const { overlayProps } = usePopoverOverlay(
-    { triggerRef, popoverRef, placement: "bottom start", offset: 4 },
-    state,
-  );
-  const { listBoxProps } = useListBox(menuProps, state, listRef);
-  // Tab은 목록을 닫고 포커스를 트리거로 돌린다(Menu와 같다, _internal/hooks/useCloseOnTab.ts).
-  useCloseOnTab(popoverRef, state.close);
-
-  return (
-    <div
-      {...overlayProps}
-      ref={popoverRef}
-      data-open={state.isOpen ? "" : undefined}
-      className={listPopupClass}
-    >
-      {/* 스크린리더 사용자가 Esc 없이 닫을 수 있는 숨은 버튼(Popover와 같다). Tab 순서에는 없다. */}
-      <DismissButton onDismiss={state.close} />
-      <div {...listBoxProps} ref={listRef} className="outline-none">
-        <ListBoxNodes state={state} />
-      </div>
-      <DismissButton onDismiss={state.close} />
-    </div>
-  );
-}
-
-export interface SelectItemProps extends ListBoxOptionProps {}
-
-/**
- * Select의 옵션(`role="option"`). `Select`나 `SelectSection` 바로 안에 둔다. `value`가 고른 값이고 폼에 제출된다.
- * 내용(아이콘과 글자)은 고르면 트리거에도 보인다. 키보드 위치와 마우스를 올린 옵션은 highlight(primary subtle 배경,
- * primary 글자), 고른 옵션은 neutral subtle-active 배경과 끝의 체크 아이콘이다.
- * 상태는 `data-highlighted`, `data-selected`, `data-disabled`로 노출한다.
- */
-export function SelectItem(_props: SelectItemProps): null {
-  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(_internal/components/ListBoxNodes.tsx).
-  return null;
-}
-asCollectionComponent(SelectItem, valueItemCollectionNode);
-
-export interface SelectSectionProps extends ListBoxSectionProps {}
-
-/**
- * 옵션 묶음(`role="group"`). `heading`이 화면에 보이는 제목이자 묶음의 이름이고, 없으면 `aria-label`이 이름이다.
- * 앞뒤 다른 옵션·묶음과의 사이에 구분선이 그려진다.
- */
-export function SelectSection(_props: SelectSectionProps): null {
-  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(_internal/components/ListBoxNodes.tsx).
-  return null;
-}
-asCollectionComponent(SelectSection, sectionCollectionNode);

@@ -23,9 +23,9 @@ import {
   DialogTrigger,
   type DialogContentProps,
   type DialogProps,
-} from "./Dialog.tsx";
-import { Select, SelectItem } from "../Select/Select.tsx";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/Tooltip.tsx";
+} from "./index.ts";
+import { Select, SelectItem } from "../Select/index.ts";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -14,7 +14,7 @@ import {
   type TableHeaderCellProps,
   type TableProps,
   type TableRowProps,
-} from "./Table.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

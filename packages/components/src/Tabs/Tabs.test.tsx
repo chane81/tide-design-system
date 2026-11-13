@@ -18,7 +18,7 @@ import {
   type TabPanelProps,
   type TabProps,
   type TabsProps,
-} from "./Tabs.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
