@@ -1,4 +1,4 @@
-# Dokploy가 main을 받아 이 파일로 빌드한다. build context는 저장소 루트다: docker build -f apps/docs/Dockerfile .
+# Dokploy가 main을 받아 이 파일로 빌드한다(ADR 0020). build context는 저장소 루트다: docker build -f apps/docs/Dockerfile .
 # Node 25부터 corepack이 빠져 npm으로 pnpm을 설치한다.
 
 FROM node:26-slim AS build

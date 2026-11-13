@@ -58,3 +58,11 @@ Storybook 문서 앱(`@tide-tds/docs`, `apps/docs`)에 TDS(`@tide-tds/foundation
 - `apps/docs`만 바꾸고 changeset이 없으면 `check-changesets.ts`가 exit 1, empty changeset을 더하면 통과. `apps/smoke-next`만 바꾸면 changeset 없이 통과.
 - docs 0.1.0·changeset 없음 상태의 `changeset publish-plan --output`은 `plan: []`(→ select-mode `none`). TDS를 0.5.1로 올린 상태는 세 패키지 `kind: "publish"`.
 - `scripts/storybook-release.ts`: docs 0.0.0이면 `release=false`, 0.1.0(원격 tag 없음)이면 `release=true`. `git ls-remote --exit-code`는 있는 tag에 0, 없는 tag에 2.
+
+## 보충 (2026-11-14): workflow 동작 근거
+
+결정은 그대로다. 코드 주석에서 뺀 외부 동작 근거를 여기 남긴다(주석 정리 티켓 06).
+
+- **Version PR 제목 갱신**: changesets/action v2.1.2(`release.yml`의 `@v2`가 가리키는 커밋)는 열린 Version PR이 있으면 GraphQL `updatePullRequest`로 제목과 본문을 새 `pr-title` 값으로 바꾼다. 없으면 `pulls.create`로 만든다(`src/run.ts` `runVersion`). 그래서 changeset이 더 쌓여 묶음이 바뀌면 제목도 따라 바뀐다.
+- **changelog 링크용 token**: 같은 버전의 action은 `script`(`pnpm release:version`)를 돌릴 때 `github-token` 입력 값을 환경 변수 `GITHUB_TOKEN`으로 넘긴다(`src/run.ts`). `@changesets/changelog-github` 1.0.1이 쓰는 `@changesets/get-github-info` 1.0.1이 이 변수로 PR 링크와 작성자를 찾는다. 이 저장소에서는 값이 GitHub App token이다([근거 문서](../research/bot-pr-workflow-approval.md)).
+- **문서 배포가 빌드하는 것**: Dokploy 문서 앱은 이 저장소 `main` 브랜치, Dockerfile `apps/docs/Dockerfile`, context `.`로 설정했다(tide-v0-impl 티켓 11 Comments). Dokploy는 앱에 고른 브랜치를 받아 지정한 Dockerfile로 빌드한다(docs.dokploy.com 「GitHub」·「Build Type」, 2026-11-14 확인. 문서에 버전 표기 없음, 운영 버전은 티켓 44 기준 v0.31.1). 위 「mode가 `version`이면 … 배포하지 않는다」의 전제다.
