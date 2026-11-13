@@ -44,8 +44,15 @@ const config: StorybookConfig = {
       // components 원본이 쓰는 react-aria·react-stately(오버레이 hook, 티켓 25)를 처음부터 사전 번들한다. 실행 중에 발견하면
       // Vite가 다시 최적화하며 페이지를 새로 고쳐 story 테스트가 흔들린다. docs가 직접 의존하지 않으므로 중첩 문법을 쓴다
       // (Vite docs dep-optimization-options `optimizeDeps.include`).
+      // `@tide-tds/icons`는 workspace 링크라 기본으로는 사전 번들되지 않는다("linked packages not inside node_modules are
+      // not pre-bundled", 같은 문서). dev 서버는 트리셰이킹을 하지 않아 index.js가 아이콘 파일 2031개를 하나씩 요청하므로,
+      // 사전 번들해 한 파일로 받는다. icons dist를 다시 빌드했다면 `storybook dev --force`로 다시 번들한다.
       optimizeDeps: {
-        include: ["@tide-tds/components > react-aria", "@tide-tds/components > react-stately"],
+        include: [
+          "@tide-tds/icons",
+          "@tide-tds/components > react-aria",
+          "@tide-tds/components > react-stately",
+        ],
       },
       // components 원본을 직접 번들하므로 Rolldown이 원본의 "use client"마다 MODULE_LEVEL_DIRECTIVE 경고를 낸다.
       // Storybook은 RSC 경계가 없는 SPA라 이 지시어가 쓰이지 않고, 배포 패키지는 tsdown이 파일 단위로 내며 지시어를 남긴다.
