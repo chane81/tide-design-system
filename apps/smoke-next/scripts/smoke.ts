@@ -228,21 +228,21 @@ try {
   const componentsDist = join(consumerDir, "node_modules/@tide-design/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
     /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
-  // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(constants/pressableClass.js, libs/pressableState.js)은 이벤트를 DOM에 넘기지 않는다.
+  // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(_internal/constants/pressableClass.js, _internal/libs/pressableState.js)은 이벤트를 DOM에 넘기지 않는다.
   const clientFiles = ["Button/Button.js", "IconButton/IconButton.js"];
   // Badge·Card·Separator는 표시만 하는 서버 컴포넌트다(티켓 19).
   const serverFiles = [
     "Spinner/Spinner.js",
     "Link/Link.js",
-    "constants/pressableClass.js",
-    "libs/pressableState.js",
+    "_internal/constants/pressableClass.js",
+    "_internal/libs/pressableState.js",
     "Badge/Badge.js",
     "Card/Card.js",
     "Separator/Separator.js",
     // Alert는 onClose를 IconButton에 그대로 넘길 뿐 핸들러를 만들지 않는다. 공유 스타일 모듈도 서버용이다(티켓 20).
     "Alert/Alert.js",
-    "constants/alertClass.js",
-    "libs/alertStatusIcon.js",
+    "_internal/constants/alertClass.js",
+    "_internal/libs/alertStatusIcon.js",
     // Avatar는 hook·state·이벤트 없이 로드 실패 fallback을 CSS 층으로 처리한다(티켓 21).
     "Avatar/Avatar.js",
     // Skeleton·Progress는 표시만 하는 서버 컴포넌트다(티켓 22).
@@ -254,16 +254,18 @@ try {
     "Breadcrumb/Breadcrumb.js",
     "Pagination/Pagination.js",
     // 오버레이 공통 class 모듈은 문자열만 있고, 위치 props 정리는 순수 함수다(티켓 25).
-    "constants/overlayClass.js",
-    "libs/overlayPosition.js",
+    "_internal/constants/overlayClass.js",
+    "_internal/libs/overlayPosition.js",
     // 목록 공통 class·컬렉션 모듈은 문자열과 순수 함수만 있다(티켓 27).
-    "constants/listClass.js",
-    "libs/listCollection.js",
+    "_internal/constants/listClass.js",
+    "_internal/libs/listCollection.js",
     // class 합치기·render prop 병합도 순수 함수다.
-    "libs/cn.js",
-    "libs/renderElement.js",
-    "constants/choiceClass.js",
-    "constants/inputClass.js",
+    "_internal/libs/cn.js",
+    "_internal/libs/renderElement.js",
+    "_internal/constants/choiceClass.js",
+    "_internal/constants/inputClass.js",
+    // CheckboxGroup·RadioGroup 묶음 배치 class도 문자열만 있다(구조 티켓 05에서 승격).
+    "_internal/constants/choiceGroupClass.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -281,32 +283,35 @@ try {
   for (const file of [
     "Input/Input.js",
     "Textarea/Textarea.js",
-    "hooks/useFieldControl.js",
+    "_internal/hooks/useFieldControl.js",
     "Checkbox/Checkbox.js",
     "CheckboxGroup/CheckboxGroup.js",
     "Radio/Radio.js",
     "RadioGroup/RadioGroup.js",
-    "hooks/useChoiceGroup.js",
+    "_internal/hooks/useChoiceGroup.js",
     "Switch/Switch.js",
     // Popover와 오버레이 공통 hook·portal은 React Aria hooks·state를 쓰므로 client다(티켓 25).
     "Popover/Popover.js",
-    "components/OverlayPortal.js",
-    "hooks/useOverlayPresence.js",
-    "hooks/usePopoverOverlay.js",
-    "hooks/useOverlayTheme.js",
-    "hooks/useCloseOnTab.js",
+    "_internal/components/OverlayPortal.js",
+    "_internal/hooks/useOverlayPresence.js",
+    "_internal/hooks/usePopoverOverlay.js",
+    "_internal/hooks/useOverlayTheme.js",
+    "_internal/hooks/useCloseOnTab.js",
     // Tooltip도 React Aria hooks·state를 쓰므로 client다(티켓 26).
     "Tooltip/Tooltip.js",
     // Menu도 React Aria hooks·state를 쓰므로 client다(티켓 27).
     "Menu/Menu.js",
     // Select와 옵션 공통 모듈(ListBoxNodes)도 React Aria hooks·state를 쓰므로 client다(티켓 28).
     "Select/Select.js",
-    "components/ListBoxNodes.js",
+    "_internal/components/ListBoxNodes.js",
     // Combobox도 React Aria hooks·state를 쓰므로 client다(티켓 29).
     "Combobox/Combobox.js",
     // Dialog·AlertDialog도 React Aria hooks·state를 쓰므로 client다(티켓 30).
     "Dialog/Dialog.js",
     "AlertDialog/AlertDialog.js",
+    // 두 Component가 함께 쓰는 열림 상태와 그 context(구조 티켓 05에서 승격).
+    "_internal/components/DialogRoot.js",
+    "_internal/hooks/useDialogContext.js",
     // Tabs도 React Aria hooks·state를 쓰므로 client다(티켓 31).
     "Tabs/Tabs.js",
     // Accordion도 React Aria hooks·state를 쓰므로 client다(티켓 32).
