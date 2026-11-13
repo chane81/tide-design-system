@@ -38,7 +38,7 @@ Tide는 원칙(Principle), 파운데이션(Foundation), 컴포넌트(Component) 
 
 ## 시작하기
 
-Next.js App Router 기준입니다. 자세한 안내는 문서의 「시작하기」에 있습니다.
+Next.js App Router에서 Button 하나를 띄우기까지의 최소 단계입니다. 폰트 로드, Theme 전환, 브랜드 색 더하기는 문서 사이트의 [시작하기](https://tds.lakegreen.net/?path=/docs/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-%EC%84%A4%EC%B9%98--docs) 섹션에 있습니다.
 
 준비: React 19, Tailwind CSS 4.3 이상과 Tailwind 플러그인(`@tailwindcss/postcss` 또는 `@tailwindcss/turbopack`).
 
