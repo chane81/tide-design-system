@@ -187,7 +187,7 @@ describe("포커스 표시", () => {
     }
   });
 
-  test("오류 입력창도 포커스 중에는 focus-field가 이기고, 포커스가 빠지면 오류 border로 돌아온다", async () => {
+  test("오류 입력창은 포커스 중에 오류 색 2px로 두꺼워지고, 포커스가 빠지면 1px 오류 border로 돌아온다", async () => {
     await render(
       <div>
         <input
@@ -200,7 +200,6 @@ describe("포커스 표시", () => {
     );
     const input = page.getByRole("textbox", { name: "이메일" });
     const danger = rgb(color.red[600]);
-    const focus = rgb(color.blue[600]);
 
     if (!forcedColors()) expect(getComputedStyle(input.element()).borderTopColor).toBe(danger);
 
@@ -210,10 +209,10 @@ describe("포커스 표시", () => {
       expect(focused.boxShadow).toBe("none");
       expect(focused.outlineColor).not.toBe(transparent);
     } else {
-      // 빨강 border 안쪽에 파랑 inset이 겹쳐 두 줄로 보이지 않는다(tide-v0 티켓 20 구현 주의).
-      expect(focused.borderTopColor).toBe(focus);
-      expect(focused.borderLeftColor).toBe(focus);
-      expect(focused.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
+      // border와 inset이 같은 오류 색이라 빨강·파랑 두 색이 겹쳐 보이지 않는다(ADR 0026).
+      expect(focused.borderTopColor).toBe(danger);
+      expect(focused.borderLeftColor).toBe(danger);
+      expect(focused.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
       expect(focused.outlineStyle).toBe("none");
     }
 
@@ -223,5 +222,22 @@ describe("포커스 표시", () => {
       expect(blurred.borderTopColor).toBe(danger);
       expect(blurred.boxShadow).toBe("none");
     }
+  });
+
+  test("variant 없이 쓴 focus-field도 오류 입력창에서 border와 inset이 같은 오류 색이다", async () => {
+    // 문서의 포커스 표시 블록처럼 포커스 상태를 고정해서 보여 줄 때. 선택자 우선순위가 오류 border와 같아도 색이 섞이지 않는다.
+    await render(
+      <input
+        aria-label="고정"
+        aria-invalid="true"
+        readOnly
+        className="focus-field rounded-md border border-default aria-invalid:border-danger"
+      />,
+    );
+    if (forcedColors()) return;
+    const style = getComputedStyle(page.getByRole("textbox", { name: "고정" }).element());
+    const danger = rgb(color.red[600]);
+    expect(style.borderTopColor).toBe(danger);
+    expect(style.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
   });
 });

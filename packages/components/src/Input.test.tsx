@@ -277,7 +277,7 @@ describe("포커스 표시", () => {
     }
   });
 
-  test("오류 상태에서도 포커스 중에는 focus-field가 이기고, 오류 메시지는 계속 보인다", async () => {
+  test("오류 상태에서는 포커스 중에 오류 색 2px로 보이고, 오류 메시지는 계속 보인다", async () => {
     await render(
       <div data-theme="light">
         <Field label="이메일" error="이메일 형식이 아닙니다.">
@@ -289,7 +289,6 @@ describe("포커스 표시", () => {
     const input = page.getByRole("textbox", { name: "이메일" });
     const message = page.getByText("이메일 형식이 아닙니다.");
     const danger = resolve("var(--tide-border-danger)");
-    const focus = resolve("var(--tide-outline-focus)");
 
     if (!forcedColors()) expect(getComputedStyle(input.element()).borderTopColor).toBe(danger);
     await expect.element(message).toBeVisible();
@@ -303,10 +302,10 @@ describe("포커스 표시", () => {
       expect(focused.boxShadow).toBe("none");
       expect(focused.outlineColor).not.toBe(transparent);
     } else {
-      // 빨강 border 안쪽에 파랑 inset이 겹쳐 두 줄로 보이지 않는다.
-      expect(focused.borderTopColor).toBe(focus);
-      expect(focused.borderLeftColor).toBe(focus);
-      expect(focused.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
+      // border와 inset이 같은 오류 색이라 빨강·파랑이 겹쳐 보이지 않는다(ADR 0026).
+      expect(focused.borderTopColor).toBe(danger);
+      expect(focused.borderLeftColor).toBe(danger);
+      expect(focused.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
       expect(focused.outlineStyle).toBe("none");
     }
 
