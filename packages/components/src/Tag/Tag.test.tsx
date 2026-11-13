@@ -7,7 +7,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Tag, TagGroup, type TagGroupProps, type TagProps } from "./Tag.tsx";
+import { Tag, TagGroup, type TagGroupProps, type TagProps } from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
