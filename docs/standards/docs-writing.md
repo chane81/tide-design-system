@@ -1,6 +1,6 @@
 # 문서 작성 기준
 
-Storybook 문서(`apps/docs/src/**/*.mdx`)를 쓸 때 지킬 기준이다. 참고 사례는 [TDS Mobile 문서 리서치](../research/docs-writing-reference-tds.md)에 있다.
+Storybook 문서(`apps/docs/src/**/*.mdx`)를 쓸 때 지킬 기준이다. 참고 사례는 [문서 작성 참고 리서치](../research/docs-writing-reference.md)에 있다.
 
 ## 핵심 규칙
 

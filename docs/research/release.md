@@ -105,13 +105,15 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 레퍼런스 시스템이 쓰는 도구 (저장소 파일로 확인)
 
-| 저장소                                                   | 도구                                                                                                          |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| primer/react                                             | changesets(`linked: []`, 독립 버전)                                                                           |
-| daangn/seed-design                                       | changesets(일부 패키지 쌍만 `linked`)                                                                         |
-| tabler/tabler-icons                                      | changesets(`fixed: [["@tabler/icons*"]]`)                                                                     |
-| carbon-design-system/carbon, adobe/react-spectrum        | lerna(`lerna.json` 있음. carbon은 `"version": "independent"`)                                                 |
-| radix-ui/themes, lucide-icons/lucide, mantinedev/mantine | `.changeset`, `release-please-config.json`, `lerna.json` 모두 없음(자체 스크립트로 보임, **세부 확인 안 함**) |
+공개 저장소 규칙에 따라 디자인 시스템의 이름·링크·패키지 이름은 적지 않고 「시스템 A~I」로 적는다. 이 문서 안에서 같은 문자는 같은 시스템이다. 아이콘 라이브러리와 Tide가 평가한 도구는 이름을 그대로 둔다.
+
+| 저장소                                  | 도구                                                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 시스템 A                                | changesets(`linked: []`, 독립 버전)                                                                           |
+| 시스템 B                                | changesets(일부 패키지 쌍만 `linked`)                                                                         |
+| tabler/tabler-icons                     | changesets(`fixed: [["@tabler/icons*"]]`)                                                                     |
+| 시스템 C, 시스템 D                      | lerna(`lerna.json` 있음. 시스템 C는 `"version": "independent"`)                                               |
+| 시스템 E, lucide-icons/lucide, 시스템 F | `.changeset`, `release-please-config.json`, `lerna.json` 모두 없음(자체 스크립트로 보임, **세부 확인 안 함**) |
 
 ### 시사점
 
@@ -225,18 +227,18 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 레퍼런스 시스템의 초기 버전 (npm `time` 기록으로 확인)
 
-| 패키지                                 | 첫 안정판                                                                    | 0.x 기간                       | 1.0.0                          | 현재            |
-| -------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------ | ------------------------------ | --------------- |
-| `@radix-ui/themes`                     | 0.0.0 (2023-06-15)                                                           | 0.0.x 49개, 약 2개월           | 2023-08-08                     | 3.3.0           |
-| `@carbon/react`                        | 0.1.0 (2021-07-30)                                                           | 0.1~0.17, 27개, 약 8개월       | 2022-03-31(직전 `1.0.0-rc.0`)  | 1.120.0         |
-| `@seed-design/react`                   | 0.0.1 (2025-02-24)                                                           | 0.0.1~0.2.5, 54개, 약 7개월    | 2025-09-25                     | 3.2.0           |
-| `@mantine/core`                        | 0.1.0 (2021-01-07)                                                           | 0.1~0.9, 28개, 약 4개월        | 2021-05-03                     | 9.7.5           |
-| `@material/web`                        | 0.x 안정판 없음(`0.1.0-alpha.0` 2022-08)                                     | prerelease만                   | 2023-09-26(직전 `1.0.0-pre.*`) | 2.5.0           |
-| `react-aria-components`                | 0.0.x 4개(2018)                                                              | 이후 오래 `nightly` prerelease | 2023-12-20                     | 1.22.1          |
-| `@base-ui/react`                       | `1.0.0-rc.1`로 시작(이전 이름 `@base-ui-components/react`는 `1.0.0-alpha.*`) | 0.x 없음                       | 2025-12-11                     | 1.9.0           |
-| `@chakra-ui/react`, `@atlaskit/button` | 1.0.0으로 시작                                                               | 없음                           |                                | 3.38.0 / 25.7.1 |
-| `@primer/react`                        | 이전 이름 `@primer/components`가 10.0.0부터 기록됨                           | 확인 안 함                     |                                | 38.45.0         |
-| `lucide-react`                         | 0.11.0 (2020-12)                                                             | **0.x 634개, 5년 넘게**        | 2026-03-23                     | 1.70.0          |
+| 패키지                                         | 첫 안정판                                                                    | 0.x 기간                       | 1.0.0                          | 현재            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------ | ------------------------------ | --------------- |
+| 시스템 E 컴포넌트 패키지                       | 0.0.0 (2023-06-15)                                                           | 0.0.x 49개, 약 2개월           | 2023-08-08                     | 3.3.0           |
+| 시스템 C React 패키지                          | 0.1.0 (2021-07-30)                                                           | 0.1~0.17, 27개, 약 8개월       | 2022-03-31(직전 `1.0.0-rc.0`)  | 1.120.0         |
+| 시스템 B React 패키지                          | 0.0.1 (2025-02-24)                                                           | 0.0.1~0.2.5, 54개, 약 7개월    | 2025-09-25                     | 3.2.0           |
+| 시스템 F core 패키지                           | 0.1.0 (2021-01-07)                                                           | 0.1~0.9, 28개, 약 4개월        | 2021-05-03                     | 9.7.5           |
+| 시스템 G 웹 컴포넌트 패키지                    | 0.x 안정판 없음(`0.1.0-alpha.0` 2022-08)                                     | prerelease만                   | 2023-09-26(직전 `1.0.0-pre.*`) | 2.5.0           |
+| `react-aria-components`                        | 0.0.x 4개(2018)                                                              | 이후 오래 `nightly` prerelease | 2023-12-20                     | 1.22.1          |
+| `@base-ui/react`                               | `1.0.0-rc.1`로 시작(이전 이름 `@base-ui-components/react`는 `1.0.0-alpha.*`) | 0.x 없음                       | 2025-12-11                     | 1.9.0           |
+| 시스템 H 컴포넌트 패키지, 시스템 I 버튼 패키지 | 1.0.0으로 시작                                                               | 없음                           |                                | 3.38.0 / 25.7.1 |
+| 시스템 A React 패키지                          | 이전 이름의 패키지가 10.0.0부터 기록됨                                       | 확인 안 함                     |                                | 38.45.0         |
+| `lucide-react`                                 | 0.11.0 (2020-12)                                                             | **0.x 634개, 5년 넘게**        | 2026-03-23                     | 1.70.0          |
 
 0.x를 쓴 시스템도 대부분 수개월 안에 1.0.0으로 갔다. Lucide는 0.x로 오래 있으면서 minor를 매우 자주 올렸다.
 
@@ -261,22 +263,22 @@ pnpm 12.2.0부터 catalog 항목에 `workspace:` 범위를 넣을 수 있다(`'@
 
 ### 레퍼런스 시스템의 관례
 
-| 시스템       | 버전 묶음                                                            | 내부 의존 방식                                                                                                         |
-| ------------ | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Primer       | 독립(`linked: []`)                                                   | `@primer/react`가 `@primer/octicons-react`를 `dependencies` `^19.28.1`로, `@primer/primitives`를 `10.x \|\| 11.x`로 둠 |
-| Carbon       | 독립(lerna `independent`)                                            | `@carbon/react`가 `@carbon/icons-react`·`@carbon/styles`를 `dependencies` `^`로 둠                                     |
-| Atlassian    | 독립                                                                 | `@atlaskit/button`이 `@atlaskit/icon`·`@atlaskit/tokens`를 `dependencies` `^`로 둠                                     |
-| SEED         | 대부분 독립, 일부 쌍만 linked                                        | `@seed-design/react`가 `@seed-design/css`를 **peerDependencies** `^3.2.0`으로 둠                                       |
-| Mantine      | 모든 패키지가 같은 버전(9.7.5)                                       | `@mantine/core`가 `@mantine/hooks`를 **peer로 정확한 버전**(`9.7.5`) 고정                                              |
-| Tabler Icons | `fixed: [["@tabler/icons*"]]`                                        | 아이콘 패키지끼리 같은 버전                                                                                            |
-| Lucide       | 모든 패키지가 같은 버전(`lucide-react`, `lucide-static` 모두 1.70.0) |                                                                                                                        |
+| 시스템       | 버전 묶음                                                            | 내부 의존 방식                                                                                   |
+| ------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 시스템 A     | 독립(`linked: []`)                                                   | React 패키지가 아이콘 패키지를 `dependencies` `^19.28.1`로, Token 패키지를 `10.x \|\| 11.x`로 둠 |
+| 시스템 C     | 독립(lerna `independent`)                                            | React 패키지가 아이콘 React 패키지·스타일 패키지를 `dependencies` `^`로 둠                       |
+| 시스템 I     | 독립                                                                 | 버튼 패키지가 아이콘 패키지·Token 패키지를 `dependencies` `^`로 둠                               |
+| 시스템 B     | 대부분 독립, 일부 쌍만 linked                                        | React 패키지가 CSS 패키지를 **peerDependencies** `^3.2.0`으로 둠                                 |
+| 시스템 F     | 모든 패키지가 같은 버전(9.7.5)                                       | core 패키지가 hooks 패키지를 **peer로 정확한 버전**(`9.7.5`) 고정                                |
+| Tabler Icons | `fixed: [["@tabler/icons*"]]`                                        | 아이콘 패키지끼리 같은 버전                                                                      |
+| Lucide       | 모든 패키지가 같은 버전(`lucide-react`, `lucide-static` 모두 1.70.0) |                                                                                                  |
 
-components처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `dependencies` + `^` 범위가 가장 흔하다(Primer, Carbon, Atlassian). 스타일·Token 패키지는 dependency로 두는 곳(Carbon, Atlassian)과 peer로 두는 곳(SEED)이 나뉜다.
+components처럼 Component 패키지가 아이콘 패키지에 의존할 때는 `dependencies` + `^` 범위가 가장 흔하다(시스템 A, C, I). 스타일·Token 패키지는 dependency로 두는 곳(시스템 C, I)과 peer로 두는 곳(시스템 B)이 나뉜다.
 
 ### 기타 사실
 
 - **실험**: `workspace:*`는 정확한 버전(`0.1.0`)으로, `workspace:^`는 `^0.1.0`으로 배포된다. 정확한 버전으로 고정하면 사용자 앱에서 icons를 따로 설치한 경우 버전이 다르면 두 벌이 설치될 수 있다(일반적인 npm 동작. 실험하지 않음).
-- changesets 3에서 peer dependency 변경은 의존하는 패키지를 patch로 올린다(#2090). Primer는 `onlyUpdatePeerDependentsWhenOutOfRange: true` 실험 옵션을 쓴다.
+- changesets 3에서 peer dependency 변경은 의존하는 패키지를 patch로 올린다(#2090). 시스템 A는 `onlyUpdatePeerDependentsWhenOutOfRange: true` 실험 옵션을 쓴다.
 - pnpm 자체 방식의 `versioning.epics`는 lead 패키지의 major에 member들의 major 범위를 묶는 기능이다. Tide 규모에서 필요할지는 판단하지 않았다.
 
 ### 시사점
@@ -306,21 +308,21 @@ components처럼 Component 패키지가 아이콘 패키지에 의존할 때는 
 
 ### 레퍼런스 시스템의 dist-tag (2026-11-09 `npm view <pkg> dist-tags`)
 
-| 패키지                  | dist-tag                                                                            |
-| ----------------------- | ----------------------------------------------------------------------------------- |
-| `@primer/react`         | `latest` 38.45.0, `next` `38.46.0-rc.e10581db0`, `canary` `0.0.0-20261108050529`    |
-| `@carbon/react`         | `latest`, `next` `1.120.0-rc.0`, `v12-alpha` `2.0.0-alpha.5`                        |
-| `@radix-ui/themes`      | `latest` 3.3.0, `next` `3.2.0-rc.8`(latest보다 낮은 오래된 rc)                      |
-| `@mantine/core`         | `latest`, `next` `9.5.1-alpha.1`, `legacy` 7.17.8                                   |
-| `@seed-design/react`    | `latest`, `alpha` `0.0.0-alpha-…`, 이전 major 유지보수용 `react-v1.0`·`react-v2` 등 |
-| `react-aria-components` | `latest`, `nightly` `3.0.0-nightly-…`                                               |
-| `lucide-react`          | `latest` 1.70.0, `next` 1.3.0(오래됨), `beta`, `dev`                                |
+| 패키지                   | dist-tag                                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| 시스템 A React 패키지    | `latest` 38.45.0, `next` `38.46.0-rc.e10581db0`, `canary` `0.0.0-20261108050529`    |
+| 시스템 C React 패키지    | `latest`, `next` `1.120.0-rc.0`, `v12-alpha` `2.0.0-alpha.5`                        |
+| 시스템 E 컴포넌트 패키지 | `latest` 3.3.0, `next` `3.2.0-rc.8`(latest보다 낮은 오래된 rc)                      |
+| 시스템 F core 패키지     | `latest`, `next` `9.5.1-alpha.1`, `legacy` 7.17.8                                   |
+| 시스템 B React 패키지    | `latest`, `alpha` `0.0.0-alpha-…`, 이전 major 유지보수용 `react-v1.0`·`react-v2` 등 |
+| `react-aria-components`  | `latest`, `nightly` `3.0.0-nightly-…`                                               |
+| `lucide-react`           | `latest` 1.70.0, `next` 1.3.0(오래됨), `beta`, `dev`                                |
 
-Primer의 [release.yml](https://github.com/primer/react/blob/main/.github/workflows/release.yml)이 구체적인 예다. `id-token: write`(OIDC)를 쓰고, `changeset-release/main` 브랜치(버전 PR)에서는 `changeset version --snapshot` 후 버전을 `<다음버전>-rc.<sha>`로 고쳐 `--tag next`로 내고, 다른 브랜치에서는 가짜 patch changeset을 만들어 `--snapshot`으로 `--tag canary`를 낸다.
+시스템 A의 release workflow가 구체적인 예다. `id-token: write`(OIDC)를 쓰고, `changeset-release/main` 브랜치(버전 PR)에서는 `changeset version --snapshot` 후 버전을 `<다음버전>-rc.<sha>`로 고쳐 `--tag next`로 내고, 다른 브랜치에서는 가짜 patch changeset을 만들어 `--snapshot`으로 `--tag canary`를 낸다.
 
 ### 시사점
 
-- `next`, `canary` tag가 오래 방치되면(Radix, Lucide처럼) latest보다 낮은 버전을 가리킨다. tag를 정리할 주체가 필요하다. trusted publishing으로 dist-tag를 다루려면 설정에서 "Allow npm dist-tag"를 켜야 한다(3절).
+- `next`, `canary` tag가 오래 방치되면(시스템 E, Lucide처럼) latest보다 낮은 버전을 가리킨다. tag를 정리할 주체가 필요하다. trusted publishing으로 dist-tag를 다루려면 설정에서 "Allow npm dist-tag"를 켜야 한다(3절).
 - 0.x 기간에는 정식 버전 자체가 "불안정"이라는 뜻이므로, prerelease가 따로 필요한지부터 쟁점이 된다.
 
 ---
@@ -336,11 +338,11 @@ Primer의 [release.yml](https://github.com/primer/react/blob/main/.github/workfl
 
 ### 다른 아이콘 패키지
 
-| 패키지                                  | 이름 변경 처리                                                                                                                                                                                           | 근거                                                                                                             |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Tabler Icons 3.51.0                     | 저장소 루트 `aliases.json`(outline 63개, filled 3개)에 옛 이름 → 새 이름을 두고, React 패키지가 alias export를 냄(예: `IconPackage as IconBoxSeam`). changesets `fixed`로 모든 패키지를 같은 버전으로 냄 | [aliases.json](https://github.com/tabler/tabler-icons/blob/main/aliases.json), `@tabler/icons-react` 3.51.0 d.ts |
-| Heroicons                               | v2.0.0(major)에서 아이콘 세트를 새로 그리면서 이름을 대량으로 바꿈(`mail` → `envelope`, `search` → `magnifying-glass`). release note에 이름 대응표를 실음. alias는 두지 않음                             | [v2.0.0 release](https://github.com/tailwindlabs/heroicons/releases/tag/v2.0.0)                                  |
-| Phosphor, Primer Octicons, Carbon Icons | 이번 조사에서는 확인하지 않음                                                                                                                                                                            |                                                                                                                  |
+| 패키지                               | 이름 변경 처리                                                                                                                                                                                           | 근거                                                                                                             |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Tabler Icons 3.51.0                  | 저장소 루트 `aliases.json`(outline 63개, filled 3개)에 옛 이름 → 새 이름을 두고, React 패키지가 alias export를 냄(예: `IconPackage as IconBoxSeam`). changesets `fixed`로 모든 패키지를 같은 버전으로 냄 | [aliases.json](https://github.com/tabler/tabler-icons/blob/main/aliases.json), `@tabler/icons-react` 3.51.0 d.ts |
+| Heroicons                            | v2.0.0(major)에서 아이콘 세트를 새로 그리면서 이름을 대량으로 바꿈(`mail` → `envelope`, `search` → `magnifying-glass`). release note에 이름 대응표를 실음. alias는 두지 않음                             | [v2.0.0 release](https://github.com/tailwindlabs/heroicons/releases/tag/v2.0.0)                                  |
+| Phosphor, 시스템 A·C의 아이콘 패키지 | 이번 조사에서는 확인하지 않음                                                                                                                                                                            |                                                                                                                  |
 
 ### 시사점
 
@@ -358,5 +360,5 @@ Primer의 [release.yml](https://github.com/primer/react/blob/main/.github/workfl
 - `@semantic-release/npm`으로 publish할 때 `workspace:`·`catalog:`가 치환되는지(npm CLI를 쓰므로 치환되지 않을 것으로 보이나 실험하지 않음).
 - trusted publisher 설정이 "stage만 허용"일 때 changesets의 `changeset publish`가 실패하는 정확한 형태. 실제 publish 없이는 확인할 수 없다.
 - release-please가 `catalog:` 의존성을 어떻게 다루는지(관련 코드·이슈를 찾지 못함).
-- radix-ui/themes, lucide, mantine 저장소의 릴리스 스크립트 세부.
-- `@primer/react`의 0.x 이력(이전 이름 `@primer/components`부터 이어지는 기록).
+- 시스템 E, lucide, 시스템 F 저장소의 릴리스 스크립트 세부.
+- 시스템 A React 패키지의 0.x 이력(이전 이름 패키지부터 이어지는 기록).
