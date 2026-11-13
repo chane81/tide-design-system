@@ -1,5 +1,18 @@
 # @tide-tds/components
 
+## 0.11.2
+
+### 기능 추가와 수정 (patch)
+
+- [#58](https://github.com/chane81/tide-design-system/pull/58) [`a871bce`](https://github.com/chane81/tide-design-system/commit/a871bce14db131018dca0744fbc2c13721514a49) [@chane81](https://github.com/chane81) - 소스에서 `return` 앞에 빈 줄을 넣었다(lint 규칙 `padding-line-between-statements`). 빈 줄만 바뀌어 동작과 공개 API는 그대로다.
+
+- [#53](https://github.com/chane81/tide-design-system/pull/53) [`691d055`](https://github.com/chane81/tide-design-system/commit/691d055371d8e65c822741ad2744ef4a11543277) [@chane81](https://github.com/chane81) - 공개 Component를 Component마다 폴더 하나(`Button/Button.js` 등)로 옮기고, 여러 Component가 함께 쓰는 비공개 코드(`components`·`hooks`·`libs`·`constants`)를 `_internal/` 아래로 모았다. `dist` 안 파일 배치가 바뀌었지만 공개 import 경로(`@tide-design/components`, `@tide-design/components/styles.css`)와 export 이름, Component 동작은 그대로다.
+
+- [#57](https://github.com/chane81/tide-design-system/pull/57) [`2d69eac`](https://github.com/chane81/tide-design-system/commit/2d69eacdd07a6e78bc29a79f206ff6236ccec24f) [@chane81](https://github.com/chane81) - 여러 Component가 한 파일에 있던 곳(Menu, Dialog, Select, Combobox, Tabs, Accordion, Tooltip, Popover, Toast, Tag, Table, Breadcrumb, Pagination, Button)을 파일 하나에 Component 하나로 나눴다. 하위 Component는 `<C>/components/`, Context는 `<C>/hooks/`, class는 `<C>/constants/`로 갔다. `dist` 안 파일 배치가 바뀌었지만 공개 import 경로와 export 이름, Component 동작은 그대로다.
+- 의존성 업데이트 [[`a871bce`](https://github.com/chane81/tide-design-system/commit/a871bce14db131018dca0744fbc2c13721514a49)]:
+  - @tide-design/foundation@0.11.2
+  - @tide-design/icons@0.11.2
+
 ## 0.11.1
 
 ### 기능 추가와 수정 (patch)
