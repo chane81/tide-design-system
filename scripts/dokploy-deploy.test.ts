@@ -1,5 +1,4 @@
-// Dokploy 배포 대기 규칙(티켓 44). 배포 행 모양은 Dokploy v0.31.1 `deployment` 테이블과 같다
-// (scripts/dokploy-deploy.ts 머리 주석).
+// 배포 행 모양은 Dokploy v0.31.1 `deployment` 테이블과 같다(scripts/dokploy-deploy.ts).
 import { describe, expect, it } from "vitest";
 
 import {

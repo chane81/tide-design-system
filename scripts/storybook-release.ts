@@ -1,10 +1,5 @@
-// main의 Storybook(`@tide-design/docs`) 버전을 아직 릴리스하지 않았는지 본다(ADR 0020).
-//
-//   node scripts/storybook-release.ts   → 표준 출력에 `version=0.1.0`, `tag=@tide-design/docs@0.1.0`, `release=true|false`
-//
-// release.yml이 이 출력을 그대로 $GITHUB_OUTPUT에 붙인다. tag 유무는 원격(origin)에서 본다.
-// actions/checkout은 기본으로 tag를 받지 않으므로(fetch-depth 1) 로컬 tag 목록에 기대지 않는다.
-// `git ls-remote --exit-code`는 맞는 ref가 없으면 2로 끝난다(git-ls-remote 문서).
+// main의 Storybook 버전을 아직 릴리스하지 않았는지 `version=`·`tag=`·`release=` 줄로 찍는다(ADR 0020).
+// checkout은 tag를 받지 않아 원격에서 본다. `git ls-remote --exit-code`는 맞는 ref가 없으면 2로 끝난다.
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 

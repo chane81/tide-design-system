@@ -1,11 +1,5 @@
-// TDS 릴리스에 Storybook changeset이 없으면 Storybook을 TDS와 같은 단계로 올리는 changeset을 더한다(ADR 0021).
-//
-//   pnpm release:version   (= node scripts/storybook-follow.ts && changeset version && node scripts/changelog-ko.ts)
-//
-// 이 파일은 Version PR 브랜치에서 `changeset version`이 바로 소비하므로 main에 커밋되지 않는다.
-// 그래서 PR의 changeset 검사(`check-changesets.ts`, 섞인 changeset 금지)에는 걸리지 않는다.
-// 규칙은 scripts/release-scope.ts(`storybookFollowType`, `withStorybookFollow`)에 있고,
-// Version PR 제목(`version-pr-title.ts`)도 같은 규칙으로 미리 셈한다.
+// TDS 릴리스에 Storybook changeset이 없으면 Storybook을 같은 단계로 올리는 changeset을 더한다(ADR 0021).
+// 이 파일은 Version PR 브랜치에서 바로 소비되어 main에 커밋되지 않으므로 섞인 changeset 검사에 걸리지 않는다.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

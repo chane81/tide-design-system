@@ -1,19 +1,5 @@
-// Dokploy 문서 배포를 요청하고 끝날 때까지 기다리는 규칙(티켓 44). CLI는 scripts/deploy-docs.ts.
-//
-// `POST /api/application.deploy`는 배포 작업을 Dokploy 큐에 넣고 곧바로 응답한다. 실제 빌드는 큐 worker가
-// 이어서 하므로, 응답만 보고 성공으로 치면 사이트는 아직 옛 빌드다. 그래서 배포 목록을 폴링한다.
-//
-// 근거(Dokploy v0.31.1, 2026-11-12 확인):
-// - docs.dokploy.com API reference 「Deployment」: `GET /api/deployment.all?applicationId=...`(`x-api-key` 인증).
-//   reference에는 응답 본문 스키마가 비어 있어(`{}`) 필드는 Dokploy 저장소 소스(v0.31.1 tag)로 확인했다.
-//   - router `deployment.all`은 `findAllDeploymentsByApplicationId`의 결과(배열)를 그대로 돌려준다.
-//     REST 경로는 `@dokploy/trpc-openapi` handler라 procedure 출력이 그대로 JSON 본문이다.
-//   - 배포 행(`deployment` 테이블): `deploymentId`, `status`(enum `running`|`done`|`error`|`cancelled`),
-//     `createdAt`(ISO 문자열), `errorMessage`. 목록은 `createdAt` 내림차순이다.
-//   - 큐 worker의 `deployApplication`이 시작할 때 배포 행을 `running`으로 만들고, 끝나면 `done`, 실패하면 `error`로
-//     바꾼다. 취소하면 `cancelled`다. 그래서 요청 직후(큐 대기 중)에는 새 행이 아직 없을 수 있다.
-// - 애플리케이션의 `applicationStatus`(`idle`|`running`|`done`|`error`)는 쓰지 않는다. 요청 직후에는 이전 배포의
-//   `done`이 남아 있어 새 배포가 끝났는지 구분할 수 없다. 요청 전 배포 목록에 없던 새 행만 본다.
+// application.deploy는 큐에 넣고 바로 응답하므로, 배포 목록(deployment.all)을 폴링해 새 배포가 끝났는지 본다.
+// 응답 모양·status는 Dokploy v0.31.1 기준이다. applicationStatus는 이전 배포의 done이 남아 있어 쓰지 않는다.
 
 /** `deployment.all` 응답 한 항목 중 판정에 쓰는 필드. */
 export type Deployment = {
@@ -60,9 +46,8 @@ export function parseDeployments(body: unknown): Deployment[] {
 }
 
 /**
- * 요청 전 배포 목록(`before`)에 없던 배포 중 가장 최근 것으로 상태를 정한다.
- * 새 배포가 여럿이면(같은 때 다른 경로로도 배포함) 마지막 것이 사이트에 남으므로 그것을 본다.
- * 알 수 없는 status(null 포함)는 실패로 본다. 모르는 상태를 성공으로 치지 않는다.
+ * 요청 전 목록(`before`)에 없던 배포 중 가장 최근 것으로 상태를 정한다. 그것이 사이트에 남는다.
+ * 알 수 없는 status(null 포함)는 실패로 본다.
  */
 export function judgeDeployment(
   before: ReadonlySet<string>,

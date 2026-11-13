@@ -2,11 +2,10 @@ packages:
   - packages/*
   - apps/*
 
-# catalog 밖의 버전 지정을 막는다(pnpm catalogMode, tide-v0 티켓 16).
+# catalog 밖의 버전 지정을 막는다(pnpm catalogMode).
 catalogMode: strict
 
-# 배포된 지 하루(1440분)가 안 된 버전은 설치하지 않는다. 값을 명시하면 strict가 되어,
-# 범위 안에 하루가 지난 버전이 없을 때 새 버전으로 내려가지 않고 실패한다(pnpm 12 dependency-resolution 문서).
+# 배포된 지 하루(1440분)가 안 된 버전은 설치하지 않는다. 값을 명시하면 strict라 맞는 버전이 없으면 실패한다.
 minimumReleaseAge: 1440
 
 # 의존성 버전은 기본 catalog 하나로 관리한다. peer 범위와 내부 패키지는 넣지 않는다.

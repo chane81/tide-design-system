@@ -163,7 +163,7 @@ import { defineColorFamily } from "@tide-design/foundation/color-family";
 import { tailwindMergeConfig } from "@tide-design/foundation/tailwind-merge";
 import { PlusIcon, type IconProps } from "@tide-design/icons";
 
-// 앱 Role(brand)을 더한다(티켓 41). components가 다시 낸 interface를 augmentation한다.
+// 앱 Role(brand)을 더한다. components가 다시 낸 interface를 augmentation한다.
 declare module "@tide-design/components" {
   interface RoleRegistry {
     brand: true;
@@ -218,7 +218,7 @@ const cardProps: CardProps = { children: null, id: "card" };
 const separatorProps: SeparatorProps = { orientation: "vertical", decorative: true };
 // @ts-expect-error Separator orientation은 horizontal/vertical만 받는다.
 const diagonalSeparator: SeparatorProps = { orientation: "diagonal" };
-// Alert color는 Role만 받는다(앱 Role 포함, ADR 0016). role은 alert·status만, onClose는 인자 없는 콜백이다(티켓 20).
+// Alert color는 Role만(앱 Role 포함, ADR 0016), role은 alert·status만, onClose는 인자 없는 콜백이다.
 const alertProps: AlertProps = {
   color: "brand",
   title: "새 요금제",
@@ -230,13 +230,13 @@ const alertProps: AlertProps = {
 const blueAlert: AlertProps = { color: "blue" };
 // @ts-expect-error Alert role은 alert·status만 받는다.
 const buttonAlert: AlertProps = { role: "button" };
-// Avatar color는 색 계열 이름만 받는다(Role은 받지 않는다, 티켓 21). alt는 필수다.
+// Avatar color는 색 계열 이름만 받는다(Role은 받지 않는다). alt는 필수다.
 const avatarProps: AvatarProps = { alt: "홍길동", src: "/a.png", size: "xs", color: "cyan" };
 // @ts-expect-error Avatar color는 Role을 받지 않는다.
 const primaryAvatar: AvatarProps = { alt: "", color: "primary" };
 // @ts-expect-error Avatar는 alt가 필수다.
 const noAltAvatar: AvatarProps = { src: "/a.png" };
-// Skeleton size는 circle에만 있다. Progress는 value와 이름이 필수이고 color는 Role만 받는다(티켓 22).
+// Skeleton size는 circle에만 있다. Progress는 value와 이름이 필수이고 color는 Role만 받는다.
 const skeletonProps: SkeletonProps = { variant: "circle", size: "lg" };
 // @ts-expect-error Skeleton text는 size를 받지 않는다.
 const sizedTextSkeleton: SkeletonProps = { variant: "text", size: "md" };
@@ -245,7 +245,7 @@ const progressProps: ProgressProps = { value: 3, max: 10, color: "brand", "aria-
 const unnamedProgress: ProgressProps = { value: 3 };
 // @ts-expect-error Progress color는 색 계열 이름을 받지 않는다.
 const blueProgress: ProgressProps = { value: 3, "aria-label": "업로드", color: "blue" };
-// Table은 부분마다 요소 props를 받고 머리 칸 scope는 HTML 값만 받는다. 스타일 축은 없다(티켓 23).
+// Table은 부분마다 요소 props를 받고 머리 칸 scope는 HTML 값만 받는다. 스타일 축은 없다.
 const tableProps: TableProps = { "aria-label": "요금제", className: "w-auto" };
 const tableHeadProps: TableHeadProps = { className: "bg-neutral-subtle" };
 const tableBodyProps: TableBodyProps = { id: "rows" };
@@ -256,7 +256,7 @@ const tableCellProps: TableCellProps = { headers: "q1", className: "tabular-nums
 const wrongScope: TableHeaderCellProps = { scope: "column" };
 // @ts-expect-error Table에는 variant가 없다.
 const variantTable: TableProps = { variant: "striped" };
-// Breadcrumb·Pagination은 nav·li·a·span props를 받는다. 색·variant·size 축은 없다(티켓 24).
+// Breadcrumb·Pagination은 nav·li·a·span props를 받는다. 색·variant·size 축은 없다.
 const breadcrumbProps: BreadcrumbProps = { "aria-label": "문서 경로", className: "mb-4" };
 const breadcrumbItemProps: BreadcrumbItemProps = { className: "gap-2" };
 const breadcrumbLinkProps: BreadcrumbLinkProps = { href: "/docs" };

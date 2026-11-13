@@ -1,5 +1,4 @@
-# PR마다 lint, format, changeset 규칙, 그리고 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
-# 액션 버전: actions/checkout v7, pnpm/action-setup v6, actions/setup-node v7, actions/cache v6 (2026-11-10 확인)
+# PR마다 lint, format, changeset 규칙, 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
 name: CI
 
 on:
@@ -15,9 +14,8 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    # Playwright 공식 이미지(브라우저·시스템 의존성·폰트·git·zstd 포함, Dockerfile.noble v1.65.0 확인)에서 돌린다.
-    # 러너에서 `--with-deps`로 apt를 쓰면 Ubuntu 미러 장애 때 CI가 막힌다(docs/research/ci-apt-mirror-outage.md).
-    # 태그는 catalog의 playwright 버전과 맞춘다. `--user 1001`은 playwright.dev/docs/ci GitHub Actions 예시를 따른다.
+    # Playwright 공식 이미지에서 돌려 apt(Ubuntu 미러) 장애를 피한다(docs/research/ci-apt-mirror-outage.md).
+    # 태그는 catalog의 playwright 버전과 맞춘다.
     container:
       image: mcr.microsoft.com/playwright:v1.65.0-noble
       options: --user 1001
@@ -27,7 +25,7 @@ jobs:
           # turbo --affected가 base 브랜치와 비교하려면 전체 히스토리가 필요하다.
           fetch-depth: 0
 
-      # package.json의 packageManager(pnpm@12.18.0)를 읽는다.
+      # package.json의 packageManager 버전을 읽는다.
       - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v7
@@ -45,19 +43,15 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # browser·storybook project가 쓰는 Chromium headless shell. 이미지 태그와 버전이 같으면 이미 있어 아무것도 받지 않는다.
-      # 버전이 어긋나도 apt 없이 Playwright CDN에서 브라우저만 받는다(--with-deps 쓰지 않음).
+      # Chromium headless shell. 이미지와 버전이 같으면 받지 않고, 어긋나도 apt 없이 브라우저만 받는다.
       - run: pnpm --filter @tide-design/components exec playwright install --only-shell chromium
       - run: pnpm lint
       - run: pnpm format:check
-      # changeset 규칙: packages/*나 apps/docs(Storybook)를 바꿨으면 changeset 필수(그 밖의 문서·설정만이면 필요 없음,
-      # 릴리스가 필요 없으면 empty), 0.x 동안 major 금지, 아이콘 이름표 키가 빠지면 icons minor 필수,
-      # TDS 패키지와 @tide-design/docs를 한 changeset에 섞으면 실패(scripts/check-changesets.ts, ADR 0020).
-      # Version PR(changeset-release/*)은 changeset을 지우는 PR이라 건너뛴다(changesets.dev 「Automating Changesets」).
+      # changeset 규칙은 scripts/check-changesets.ts(ADR 0020). Version PR은 changeset을 지우는 PR이라 건너뛴다.
       - if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
         env:
           BASE_REF: ${{ github.base_ref }}
         run: node scripts/check-changesets.ts "origin/$BASE_REF"
-      # 루트 scripts/(릴리스·CI 스크립트) 단위 테스트. 패키지가 아니라 turbo 밖에서 돈다(vitest.config.ts).
+      # 루트 scripts/ 단위 테스트는 패키지가 아니라서 turbo 밖에서 돈다.
       - run: pnpm test:scripts
       - run: pnpm turbo run typecheck test build smoke --affected

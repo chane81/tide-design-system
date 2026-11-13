@@ -1,15 +1,5 @@
-// PR의 changeset 규칙을 검사한다(spec 릴리스 절 「CI 규칙」, CONTRIBUTING.md 「버전 규칙」).
-//
-//   node scripts/check-changesets.ts <base ref>   예: node scripts/check-changesets.ts origin/main
-//
-// 1. 버전 관리 대상(`packages/*` 배포 패키지와 Storybook `apps/docs`)을 바꿨는데 changeset이 없으면 실패한다.
-//    `changeset status --since <base>`가 판단한다(@changesets/cli 3.0.3: 바뀐 패키지가 있는데
-//    새 changeset이 없으면 exit 1. empty changeset도 changeset으로 센다. private 패키지는
-//    `privatePackages.version`이 켜져 있을 때만 세고(versionablePackages), `version` 필드가 없는 패키지는 세지 않는다
-//    (@changesets/should-skip-package 1.0.0). 그래서 apps/docs는 세고 apps/smoke-next·루트는 세지 않는다. ADR 0020).
-// 2. 배포 패키지가 0.x인 동안 `major` changeset은 실패한다(1.0.0으로 올라가 버린다). Storybook에도 같이 걸린다.
-// 3. 아이콘 이름표에서 키가 빠졌는데 `@tide-design/icons` minor changeset이 없으면 실패한다.
-// 4. 한 changeset 파일에 TDS 패키지와 `@tide-design/docs`가 함께 있으면 실패한다(scripts/release-scope.ts, ADR 0020).
+// PR의 changeset 규칙을 검사한다(CONTRIBUTING.md 「버전 규칙」, ADR 0020). 예: node scripts/check-changesets.ts origin/main
+// apps/docs는 privatePackages.version으로 세고, version 필드가 없는 smoke 앱·루트는 세지 않는다.
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
