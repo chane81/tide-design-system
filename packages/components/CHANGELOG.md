@@ -1,5 +1,17 @@
 # @tide-tds/components
 
+## 0.10.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#34](https://github.com/chane81/tide-design-system/pull/34) [`a02f2cf`](https://github.com/chane81/tide-design-system/commit/a02f2cf9ea442976cb3b345b8ead1e0a5001f2df) [@chane81](https://github.com/chane81) - 오류 입력창(`aria-invalid="true"`)의 포커스 표시를 오류 색으로 바꿨다(ADR 0026). 포커스 중에는 border와 inset 1px를 둘 다 `border-danger`로 그려 1px → 2px 빨강이 된다. 빨간 border 안쪽에 파란 포커스 inset이 겹쳐 보이던 문제(특히 `focus-field`를 variant 없이 쓸 때)가 없어진다. Input·Textarea·Select·Combobox가 함께 바뀐다.
+
+### 기능 추가와 수정 (patch)
+
+- 의존성 업데이트 [[`a02f2cf`](https://github.com/chane81/tide-design-system/commit/a02f2cf9ea442976cb3b345b8ead1e0a5001f2df)]:
+  - @tide-tds/foundation@0.10.0
+  - @tide-tds/icons@0.10.0
+
 ## 0.9.1
 
 ### 기능 추가와 수정 (patch)

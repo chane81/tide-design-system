@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.3.4
+
+### 수정 (patch)
+
+- [#34](https://github.com/chane81/tide-design-system/pull/34) [`c74eefd`](https://github.com/chane81/tide-design-system/commit/c74eefd91af40f786f7ea1fab6ecee864f7063f3) [@chane81](https://github.com/chane81) - 모양과 깊이·Input·Textarea·Select·Combobox·Field 문서를 오류 입력창의 포커스 표시(오류 색 2px)에 맞췄다.
+
 ## 0.3.3
 
 ### 수정 (patch)
