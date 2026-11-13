@@ -1,5 +1,4 @@
-// 이름표에서 키가 빠졌을 때 minor changeset을 요구하는 규칙(spec 테스트 표 ① icons).
-// 실제 이름표를 base로 두고 head를 바꿔 본다. changeset 모양은 `changeset status --output`(@changesets/cli 3.0.3)과 같다.
+// changeset 모양은 `changeset status --output`(@changesets/cli 3.0.3)과 같다.
 import { readFile } from "node:fs/promises";
 
 import { describe, expect, it } from "vitest";

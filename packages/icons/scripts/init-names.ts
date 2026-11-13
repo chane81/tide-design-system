@@ -1,5 +1,4 @@
-// 이름표를 처음 한 번 채운다(ADR 0007 「정정」). 이미 있으면 덮어쓰지 않고 실패한다.
-// 대상은 업스트림의 정식 이름(icon-nodes.json의 키)뿐이다. alias 이름의 SVG는 넣지 않는다.
+// 이름표를 처음 한 번 채운다. 업스트림 정식 이름(icon-nodes.json의 키)만 넣고 alias SVG는 넣지 않는다(ADR 0007).
 import { access, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
