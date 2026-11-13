@@ -29,13 +29,13 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - 공개 문서 사이트는 Storybook 하나로 함(MDX 사용)
 - Tailwind는 최신 안정 버전을 씀. className 충돌 처리는 Component 공통 API 규칙 티켓에서 다룸
 - **배포 목표**: npm scope는 `@tide-tds`. Next.js(App Router) 앱에서 `@tide-tds/<패키지>`로 import해 바로 쓸 수 있어야 함. 패키지는 `@tide-tds/foundation`, `@tide-tds/components`([ADR 0009](../../decisions/0009-single-components-package.md), ADR 0006을 대체), `@tide-tds/icons`([ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 세 패키지는 fixed 버전([ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
-- 리서치 대상: Material 3, IBM Carbon, Atlassian, GitHub Primer, Radix Colors/Themes, 당근 SEED Design
+- 리서치 대상: 널리 쓰이는 공개 디자인 시스템 여섯 곳(해외 다섯, 국내 하나). 공개 저장소 규칙에 따라 이름은 적지 않는다
 
 ## Decisions so far
 
 <!-- 닫힌 티켓마다 한 줄: [티켓 제목](issues/NN-slug.md): 답 요약 -->
 
-- [레퍼런스 디자인 시스템의 원칙 조사](issues/01-research-principles.md): 시스템마다 원칙은 3~6개. "A가 B보다 우선" 형식을 기본으로 쓰는 곳은 Atlassian뿐. 원칙과 ADR을 연결한 사례는 없음
+- [레퍼런스 디자인 시스템의 원칙 조사](issues/01-research-principles.md): 시스템마다 원칙은 3~6개. "A가 B보다 우선" 형식을 기본으로 쓰는 곳은 한 곳뿐. 원칙과 ADR을 연결한 사례는 없음
 - [컬러 시스템과 Token 구조 조사](issues/02-research-color-token.md): 스케일은 10~12단계. `#3183f5`의 흰색 대비는 3.69:1. 생성 알고리즘 결과가 원래 hex와 정확히 맞지 않으므로 앵커 단계는 원래 값으로 고정해야 함. 생성 방법 후보 5가지 정리
 - [Tailwind theme 노출과 자동완성 조사](issues/03-research-tailwind.md): Tailwind 4.3.5. `@theme`와 `--color-*: initial`로 기본 팔레트만 교체할 수 있음. node_modules는 `@source`로 등록해야 스캔됨. 커스텀 이름은 tailwind-merge에 직접 등록해야 함
 - [한글 타이포그래피 조사](issues/04-research-korean-typography.md): 11,172자 전체와 동적 subset을 공식 제공하는 폰트는 Pretendard와 Noto Sans KR뿐. 본문 행간 약 1.5, 자간 0
@@ -54,7 +54,7 @@ Tide v0를 `/to-spec`에 넘길 수 있는 상태. 원칙(Principle)은 최종 �
 - [npm scope @tide-tds 확보](issues/18-task-npm-scope.md): org `tide-tds`를 만들어 scope를 확보함(owner `charles-green`, 2FA 켜짐). 예비 org로 `tide-green`, `tide-factory`도 있음. `@tide`는 다른 사람이 쓰고 있어 쓸 수 없음
 - [Next.js 소비 흐름 end-to-end 검증](issues/19-prototype-nextjs-consumption.md): `preserveModules` 빌드에서 `"use client"`가 남음. 패키지 CSS 안의 `@source "./"`와 `exports` 경로 `@import`가 pnpm에서 동작하고, IntelliSense에도 뜸. d.ts는 TS 7 `tsc`로 만들 수 있음(`vite-plugin-dts`는 TS 6이 필요함). workspace symlink로 연결한 앱에만 `transpilePackages`가 필요함
 - [모노레포 패키지 구조와 빌드 결정](issues/16-grilling-monorepo-structure.md): 배포 패키지는 `@tide-tds/foundation`(Token, `tokens.css`, `tailwind.css`, tailwind-merge 설정)과 `@tide-tds/desktop`(desktop Target React Component, `styles.css`) 두 개이고, Storybook은 private `apps/docs`([ADR 0006](../../decisions/0006-foundation-and-target-packages.md)). TS 7.0.2 단독(Storybook은 `react-docgen` 기본값 고정). desktop은 Vite `preserveModules` + `tsc` d.ts, ESM 전용. react-aria는 dependencies, React·Tailwind는 peer. turbo 태스크는 build, typecheck, test, dev. catalog는 기본 하나에 `strict`
-- [radius·elevation·focus ring 형태 결정](issues/20-grilling-shape-radius-elevation-focus.md): radius는 Tailwind 기본값과 같은 4/6/8/12px/full이고 size와 짝짓지 않음(조작 요소는 모두 `md`). 그림자는 raised에서만 쓰는 sm/md/lg 3단계, 2레이어, dark에서도 그림. 포커스 표시는 입력창용 field, 목록 안 항목용 highlight(24번에서 추가)(테두리 색 + 2px, `:focus`)와 나머지용 ring(outline 2px, offset 2px, `:focus-visible`)으로 나눔(토스증권 참고). `focus-ring`, `focus-field` Utility class 제공. 그림자 숫자는 24번에서 확정(옅은 안). 21번에서 목록 안 항목 radius `sm`(중첩 규칙)과 light raised의 투명 border(forced-colors)를 보완함
+- [radius·elevation·focus ring 형태 결정](issues/20-grilling-shape-radius-elevation-focus.md): radius는 Tailwind 기본값과 같은 4/6/8/12px/full이고 size와 짝짓지 않음(조작 요소는 모두 `md`). 그림자는 raised에서만 쓰는 sm/md/lg 3단계, 2레이어, dark에서도 그림. 포커스 표시는 입력창용 field, 목록 안 항목용 highlight(24번에서 추가)(테두리 색 + 2px, `:focus`)와 나머지용 ring(outline 2px, offset 2px, `:focus-visible`)으로 나눔. `focus-ring`, `focus-field` Utility class 제공. 그림자 숫자는 24번에서 확정(옅은 안). 21번에서 목록 안 항목 radius `sm`(중첩 규칙)과 light raised의 투명 border(forced-colors)를 보완함
 - [motion Foundation 결정](issues/21-grilling-motion.md): jakub.kr 자료를 참고해 "자주 쓰는 UI일수록 덜 움직인다"를 기준으로 삼음. duration은 `fast` 150ms, `normal` 300ms 두 단계, easing은 `ease-out` 하나. Menu·Select 목록·Tooltip은 바로 나타나고 사라질 때만 fade. Popover·Toast·Dialog는 300ms로 나타나고 150ms로 약하게 사라짐. 목록 항목 hover는 바로 바뀜. Button은 누르면 0.96으로 축소(`static`으로 끔). 이동·확대·blur는 `motion-safe:`일 때만 쓰고, 줄이기를 원하면 opacity 전환으로 바꿈. Theme 전환 시 transition 끄기는 가이드로만 제공
 - [z-index 층 결정](issues/22-grilling-z-index.md): v0는 top-layer를 쓰지 않고 React Aria portal + z-index로 통일함. 쌓임 단계는 `sticky` 100 < `modal` 200 < `popover` 300 < `toast` 400 < `tooltip` 500(Dialog 안 Select 목록이 보이도록 popover가 modal 위). `z-modal`처럼 노출하고 공개 계약은 `--tide-z-*`. Component 내부 겹침은 `isolate` + `z-0`/`z-1`. WCAG 2.4.11은 `scroll-padding-top` 가이드와 Toast 위치로 대응
 - [아이콘 전략 결정](issues/23-grilling-icon-strategy.md): Lucide. `lucide-static`에서 React Component를 생성해 `@tide-tds/icons`로 배포하고 desktop 내부 아이콘도 여기서 가져옴(런타임 외부 의존성 0, [ADR 0007](../../decisions/0007-lucide-generated-icons-package.md)). 이름은 `PlusIcon`처럼 `Icon` 접미사(Tide `Menu`·`Table`과 충돌 방지). 기본 16px, 렌더 기준 선 두께 2px, `aria-label`이 없으면 장식용. size별 크기는 xs 14 ~ lg 20px(IconButton 16~24px). LICENSE는 ISC와 Feather MIT 고지를 통째로 포함

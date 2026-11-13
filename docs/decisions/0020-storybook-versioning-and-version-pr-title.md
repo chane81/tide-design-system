@@ -33,7 +33,7 @@ Storybook 문서 앱(`@tide-tds/docs`, `apps/docs`)에 TDS(`@tide-tds/foundation
 - **Version PR 2개(공식 기능만)**: changesets/action v2.1.2는 Version PR 브랜치를 `changeset-release/<base>`로 고정해 둘째 PR을 둘 수 없다([#575](https://github.com/changesets/action/issues/575) 미해결). select-mode도 묶음을 몰라 Storybook changeset이 남아 있으면 TDS publish가 막힌다.
 - **Version PR 2개(스크립트 보강, 근거 문서 (b-2))**: 릴리스 시점까지 나뉘지만 action이 하던 브랜치·PR·본문·서명 커밋을 다시 짜야 하고, Storybook이 npm보다 먼저 나가는 어긋남이 생긴다. 필요가 생기면 그때 간다. 이번에 만든 것(fixed 명시, 섞인 changeset 금지, 릴리스 감지)은 그대로 쓰인다.
 - **Storybook 버전 없이 TDS 버전별 스냅샷(근거 문서 (c))**: 문서 앱 자체의 변경 이력이 남지 않아 사용자가 원한 독립 버전이 아니다.
-- **docs를 config `ignore`에 넣기(chakra, radix)**: 버전이 없다.
+- **docs를 config `ignore`에 넣기(조사한 저장소 두 곳)**: 버전이 없다.
 - **`privatePackages.tag: true`로 changesets가 tag를 만들게 하기**: 위 git tag 항목의 이유로 하지 않는다.
 
 ## Consequences

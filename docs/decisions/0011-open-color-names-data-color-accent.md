@@ -36,7 +36,7 @@ Component의 `color`는 Role 6개만 받는 닫힌 값이 아니라 **색 이름
 
 ## 정정 (2026-11-10, 티켓 41)
 
-사용자가 Atlassian Design System의 색 Foundation을 보고 결정을 바꿨다. Atlassian은 Role을 버튼에 써서 동작의 뜻(primary, warning, danger)을 구분하고, accent 색은 뜻이 없어 서로 바꿔도 경험이 같은 색으로 둔다. 그래서 `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](0016-role-scoped-color-and-app-roles.md)).
+사용자가 한 디자인 시스템의 색 Foundation을 보고 결정을 바꿨다. 그 시스템은 Role을 버튼에 써서 동작의 뜻(primary, warning, danger)을 구분하고, accent 색은 뜻이 없어 서로 바꿔도 경험이 같은 색으로 둔다. 그래서 `color`가 받는 이름은 Component 종류가 정한다([ADR 0016](0016-role-scoped-color-and-app-roles.md)).
 
 - 행동·의미 Component(Button, IconButton, Link, Checkbox·Radio, Switch, Alert, Toast)의 `color`는 `Role`만 받는다. 색 계열 이름은 장식·분류 Component(Badge, Tag, Avatar)가 쓴다.
 - 「**타입**」 항목: `ColorRegistry`를 `RoleRegistry`(Tide Role 6개)와 `ColorFamilyRegistry`(Tide 색 계열 6개)로 나눈다. `Role = keyof RoleRegistry`, `ColorFamilyName = keyof ColorFamilyRegistry`, `Color = Role | ColorFamilyName`이다.

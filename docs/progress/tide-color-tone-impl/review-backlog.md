@@ -65,7 +65,7 @@
 
 ### 새 보류 항목
 
-- **외부 팔레트 값이 코드에 남아 있다.** `packages/foundation/test/fixtures/brand.ts`·`yellow.ts`와 `color-family.ts` JSDoc 예(`50: "#f5f3ff"` …)가 외부 팔레트 값과 같다. 04는 코드 동작을 바꾸지 않는 문서 티켓이라 문서(BrandColor.mdx) 예시만 Tide 예시 값으로 바꿨다. 픽스처·JSDoc을 바꿀지 정해야 한다(바꾸면 CLI 테스트 기대 출력도 바뀐다).
+- **외부 팔레트 값이 코드에 남아 있다.** `packages/foundation/test/fixtures/brand.ts`·`yellow.ts`와 `color-family.ts` JSDoc 예(50단계부터 11단계 값)가 외부 팔레트 값과 같다. 04는 코드 동작을 바꾸지 않는 문서 티켓이라 문서(BrandColor.mdx) 예시만 Tide 예시 값으로 바꿨다. 픽스처·JSDoc을 바꿀지 정해야 한다(바꾸면 CLI 테스트 기대 출력도 바뀐다).
   - → 티켓 49 처리(2026-11-13): 픽스처·JSDoc과 같은 값을 쓰던 Component 테스트·Storybook·smoke 예시를 Tide 방식 값으로 바꿨다. brand는 브랜드 색 문서 예시 스케일, yellow는 새로 계산했고 대비 미달·덮어쓰기 경로는 전과 같다. 과거 기록(티켓 13·16·17, 리서치 문서)의 인용은 남겼다([티켓 49](../tide-v0-impl/issues/49-tide-fixture-palette.md)).
 - **smoke 메시지 낡음**: `apps/smoke-next/scripts/smoke.ts`의 Table 검사 실패 메시지가 옛 class `hover:bg-neutral-subtle-hover`를 적는다(검사 조건은 `:where(tbody>`라 동작은 맞다).
 - **Badge JSDoc과 문서 문장**: Badge `variant` JSDoc은 「같은 화면 안에서는 한 가지로 맞춘다」인데, 문서는 「눈에 띄어야 하는 몇 개만 solid」(기존 문장)를 함께 적는다. faint 예시는 한 목록 안을 faint로 맞춰 충돌을 피했다. 규칙을 하나로 정리할지 정해야 한다.

@@ -10,7 +10,7 @@ CI publish는 npm trusted publishing(GitHub Actions OIDC)에서 **직접 publish
 
 ## 검토한 대안
 
-- **독립 버전(Primer, Carbon, Atlassian)**: 바뀐 패키지만 올라간다. 하지만 foundation이 minor(0.x breaking)를 내면 desktop은 patch만 올라가서, 앱이 버전 조합을 따져야 한다. 패키지가 3개뿐이고 단계마다 함께 나가므로 얻는 것이 적다.
+- **독립 버전(조사한 디자인 시스템 세 곳)**: 바뀐 패키지만 올라간다. 하지만 foundation이 minor(0.x breaking)를 내면 desktop은 patch만 올라가서, 앱이 버전 조합을 따져야 한다. 패키지가 3개뿐이고 단계마다 함께 나가므로 얻는 것이 적다.
 - **linked**: 바뀐 패키지끼리만 버전을 맞춘다. icons 버전이 따로 놀아 "같은 버전으로 설치"라는 안내가 성립하지 않는다.
 - **OIDC stage + 사람 승인**: 가장 안전하다. 하지만 1인 프로젝트에서 릴리스마다 2FA로 승인해야 하고, changesets 3은 아직 stage를 쓰지 못한다(이슈 #2025).
 - **2FA 우회 토큰을 secret에 저장**: 직접 publish 기능은 2027-01 제거가 목표라 곧 막힌다.

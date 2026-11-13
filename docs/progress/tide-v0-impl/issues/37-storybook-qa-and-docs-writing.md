@@ -5,11 +5,11 @@ Blocked by: 10 (문서: 시작하기·원칙·기준)
 
 ## What to build
 
-앱 개발자가 Storybook 문서에서 핵심을 먼저 읽는다. 각 페이지는 첫 줄 한 문장 요약, 할 일 중심 소제목, 표로 정리한 사실로 구성한다. 브라우저 점검으로 찾은 렌더·Theme·Props 표 문제를 고친다. 2026-11-10 사용자 요청("설명이 너무 장황하다", TDS Mobile 문서 참고).
+앱 개발자가 Storybook 문서에서 핵심을 먼저 읽는다. 각 페이지는 첫 줄 한 문장 요약, 할 일 중심 소제목, 표로 정리한 사실로 구성한다. 브라우저 점검으로 찾은 렌더·Theme·Props 표 문제를 고친다. 2026-11-10 사용자 요청("설명이 너무 장황하다", 짧은 공개 디자인 시스템 문서 한 곳 참고).
 
 ## 수용 기준
 
-- [x] TDS Mobile 문서 작성 패턴을 조사해 `docs/research/docs-writing-reference-tds.md`에 남긴다.
+- [x] 참고한 디자인 시스템 문서의 작성 패턴을 조사해 `docs/research/docs-writing-reference.md`에 남긴다.
 - [x] 문서 작성 기준 `docs/standards/docs-writing.md`를 만들고 `docs/agents/domain.md`에서 링크한다.
 - [x] MDX 12개에 작성 기준을 적용한다. 사실·코드·링크는 바꾸지 않는다.
 - [x] `remark-gfm`으로 MDX Markdown 표를 렌더한다.

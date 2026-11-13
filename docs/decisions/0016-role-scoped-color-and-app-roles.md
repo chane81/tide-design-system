@@ -33,7 +33,7 @@ Component의 `color`가 받는 이름은 Component 종류가 정한다.
 
 > 덧붙임(2026-11-11, [티켓 28](../progress/tide-v0-impl/issues/28-select.md)): Select는 값을 고르는 폼 입력 Component로 본다(Input·Textarea와 같은 쪽). 고른 값에 뜻(위험, 성공)을 색으로 싣지 않고, 상태는 정해진 Token(트리거 `border-strong`·오류 `border-danger`·`focus-field`, 목록은 Menu와 같은 raised 표면·highlight·`subtle-active`)이라 `color`를 두지 않는다(③). 오류 색은 `invalid`(Field `error`)가 정한다. 옵션에 색 표시가 필요하면 옵션 안에 Badge를 넣는다.
 
-이렇게 바꾼 이유는 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)이다. Atlassian은 「Color roles are applied to buttons to differentiate between primary, secondary, warning, or dangerous actions」라고 Role을 버튼에 쓰고, accent 색은 「colors that don't have any specific meaning … exchange one accent color for another, and the experience would remain unchanged」라고 뜻이 없는 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
+이렇게 바꾼 이유는 사용자가 본 한 디자인 시스템의 색 Foundation이다. 그 시스템은 Role을 버튼에 써서 primary·secondary·warning·danger 동작을 구분하고, accent 색은 특정한 뜻이 없어 서로 바꿔도 경험이 같은 색으로 둔다. 뜻이 있는 동작(저장, 삭제)에 뜻이 없는 색을 고를 수 있으면 같은 동작이 화면마다 다른 색이 되고(②), 고를 값도 Role 6개에서 12개 이상으로 늘어난다(③).
 
 - **등록 interface 두 개**: foundation이 `RoleRegistry`(Tide Role 6개)와 `ColorFamilyRegistry`(Tide 색 계열 6개)를 둔다. `Role = keyof RoleRegistry`, `ColorFamilyName = keyof ColorFamilyRegistry`, `Color = Role | ColorFamilyName`이다. ADR 0011의 `ColorRegistry`는 없앤다.
 - **Tide 안의 계산은 닫힌 타입을 쓴다**: Semantic Token 이름, 대비 쌍, `semantic` 객체 타입은 `TideRole`(Tide Role 6개)과 `ColorFamily`(Primitive 계열)를 쓴다. 앱 Role에는 Role Token(`bg-brand-solid`)이 생기지 않으므로 앱이 augmentation해도 이 타입은 넓어지지 않는다.

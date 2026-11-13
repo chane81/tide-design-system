@@ -28,7 +28,7 @@ Blocked by: 없음
 - trusted publishing은 2025-07 GA. 2026-09-03 이후 새 설정은 기본이 "stage만 허용"이고, 검증되지 않은 설정은 48시간 뒤 만료됨. 패키지가 먼저 있어야 설정할 수 있음. **저장소가 PRIVATE이라 지금은 provenance가 생성되지 않음.** changesets는 staged publishing을 아직 지원하지 않음(이슈 #2025)
 - 2FA 우회 토큰은 최대 90일이고 2026-07-31부터 계정·권한 변경에 못 씀. 직접 publish는 2027-01 제거가 목표(확정일 아님). org 접근 권한만 준 토큰으로는 org 패키지를 publish할 수 없음
 - SemVer는 0.x를 "무엇이든 바뀔 수 있음"으로만 정의함. "0.x minor = breaking"은 npm caret 범위(`^0.2.3` = `<0.3.0`)에서 나온 관례. changesets는 0.x에서 major를 주면 1.0.0으로 올림(실험). 레퍼런스는 대부분 몇 달 안에 1.0으로 갔고 Lucide만 5년 넘게 0.x
-- foundation에만 minor를 주면: 독립은 desktop 0.1.1, linked는 desktop 0.2.0, fixed는 셋 다 0.2.0(실험). Component 패키지는 아이콘 패키지를 `dependencies`에 `^`로 두는 것이 흔하고, Token 패키지는 dependency와 peer(SEED)로 나뉨
-- prerelease는 `--tag` 필수. 첫 publish에는 npm이 `latest`를 자동으로 붙임. Primer는 `next`(rc)와 `canary`(snapshot)를 OIDC로 냄
+- foundation에만 minor를 주면: 독립은 desktop 0.1.1, linked는 desktop 0.2.0, fixed는 셋 다 0.2.0(실험). Component 패키지는 아이콘 패키지를 `dependencies`에 `^`로 두는 것이 흔하고, Token 패키지는 dependency와 peer(한 곳)로 나뉨
+- prerelease는 `--tag` 필수. 첫 publish에는 npm이 `latest`를 자동으로 붙임. 조사한 디자인 시스템 한 곳은 `next`(rc)와 `canary`(snapshot)를 OIDC로 냄
 - Lucide·Tabler는 옛 이름을 alias export로 남기고 Lucide는 major에서만 지움. Heroicons는 v2 major에서 한꺼번에 바꿈. **`lucide-static` 1.70.0의 SVG 2,322개 중 293개는 alias이고 정식 아이콘은 2,029개**(메인이 tarball로 재확인). ADR 0007의 "2,322개"는 alias를 포함한 숫자
 - 확인 불가 항목은 문서의 「확인하지 못한 것」 절에 있음. 30번 쟁점: 배포 인증 방식(OIDC 직접/stage+승인/로컬 2FA), 저장소 공개 시점과 첫 publish, changesets 3과 pnpm 자체 릴리스 관리 중 선택, 0.x 정책과 fixed/linked/독립, 아이콘 alias 생성 여부

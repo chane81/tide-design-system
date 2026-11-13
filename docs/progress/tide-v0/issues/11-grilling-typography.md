@@ -61,7 +61,7 @@ Blocked by: 04, 10
 
 ### 그 밖의 규칙
 
-- **자간**: 모든 스타일이 0이다. `--letter-spacing` 보조 변수는 쓰지 않는다(klreq, KRDS, SEED 현행 토큰과 같음).
+- **자간**: 모든 스타일이 0이다. `--letter-spacing` 보조 변수는 쓰지 않는다(klreq와 국내 디자인 시스템 사례 현행 토큰과 같음).
 - **반응형**: v0는 고정 스케일이다. 바꿔야 하면 앱이 `md:text-heading-xl`처럼 직접 바꾼다.
 - **숫자 정렬**: 따로 Token을 두지 않고 Tailwind 기본 `tabular-nums`를 쓴다.
 - **덮어쓰기**: Tailwind 기본 `leading-*`와 `tracking-*`는 지우지 않는다. 드문 경우를 위한 확장 수단으로 남긴다(③ 단순함의 `className` 확장).
