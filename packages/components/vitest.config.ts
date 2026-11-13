@@ -13,8 +13,8 @@ import {
 } from "./test/commands.ts";
 
 // Vitest projects(vitest 5 docs/guide/projects.md, docs/config/browser/playwright.md).
-// - unit: Node에서 공개 함수(cn 등)를 본다.
-// - browser: 실제 Chromium에서 Component 동작을 본다. 두 번째 instance는 forced-colors와 reduced-motion을 켠다.
+// - unit: Node에서 순수 함수(cn 등)를 본다. 대상 옆 `src/**/*.test.ts`와 패키지 전체를 보는 `test/**/*.test.ts`.
+// - browser: 실제 Chromium에서 Component 동작(`src/`)과 패키지 CSS 전체(`test/foundation*.test.tsx`)를 본다. 두 번째 instance는 forced-colors와 reduced-motion을 켠다.
 //   instance의 provider 옵션은 부모와 병합되지 않고 덮어쓴다.
 export default defineConfig({
   test: {
@@ -24,7 +24,7 @@ export default defineConfig({
       {
         test: {
           name: "unit",
-          include: ["test/**/*.test.ts"],
+          include: ["src/**/*.test.ts", "test/**/*.test.ts"],
           environment: "node",
         },
       },
@@ -39,7 +39,7 @@ export default defineConfig({
         optimizeDeps: { include: ["next/link.js", "react-aria", "react-stately", "react-dom"] },
         test: {
           name: "browser",
-          include: ["src/**/*.test.tsx"],
+          include: ["src/**/*.test.tsx", "test/**/*.test.tsx"],
           setupFiles: ["./test/browser-setup.ts"],
           browser: {
             enabled: true,

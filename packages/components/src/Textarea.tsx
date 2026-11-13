@@ -4,9 +4,9 @@
 
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "./cn.ts";
-import { useFieldControl } from "./field-context.ts";
-import { inputBaseClass } from "./input-style.ts";
+import { cn } from "./libs/cn.ts";
+import { useFieldControl } from "./hooks/useFieldControl.ts";
+import { inputBaseClass } from "./constants/inputClass.ts";
 import type { Size } from "./types.ts";
 
 /** Textarea의 size. Input과 같이 `sm`/`md`/`lg`만 받는다. */

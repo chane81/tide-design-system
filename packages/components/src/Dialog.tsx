@@ -2,7 +2,7 @@
 // 화면 가운데에 뜨는 모달 Dialog(tide-v0-impl 티켓 30). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useOverlayTrigger, usePress, useModalOverlay, useDialog, useFocusManager, mergeProps,
 // mergeRefs), react-stately 3.51.0(useOverlayTriggerState). portal·DOM에서 빼는 시점·Theme은 오버레이 공통 부분
-// (overlay.tsx, overlay-style.ts, ADR 0018)을 쓴다. 접근성 동작은 WAI-ARIA APG Dialog(Modal)·Alert Dialog 패턴을 따른다.
+// (components/OverlayPortal.tsx, constants/overlayClass.ts, ADR 0018)을 쓴다. 접근성 동작은 WAI-ARIA APG Dialog(Modal)·Alert Dialog 패턴을 따른다.
 //
 // 구조:
 // - `Dialog`: 열림 상태만 갖는다(DOM 없음). `open`/`defaultOpen`/`onOpenChange(open)`. AlertDialog.tsx의 `AlertDialog`는
@@ -43,11 +43,17 @@ import {
 } from "react-aria";
 import { useOverlayTriggerState, type OverlayTriggerState } from "react-stately";
 
-import { cn } from "./cn.ts";
+import { cn } from "./libs/cn.ts";
 import { IconButton } from "./IconButton.tsx";
-import { OverlayPortal, useOverlayPresence, useOverlayTheme } from "./overlay.tsx";
-import { backdropMotionClass, dialogMotionClass, dialogSurfaceClass } from "./overlay-style.ts";
-import { renderElement } from "./render.ts";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import {
+  backdropMotionClass,
+  dialogMotionClass,
+  dialogSurfaceClass,
+} from "./constants/overlayClass.ts";
+import { renderElement } from "./libs/renderElement.ts";
 
 interface DialogContextValue {
   readonly state: OverlayTriggerState;
@@ -192,7 +198,7 @@ export interface DialogContentProps extends Omit<ComponentProps<"div">, "id" | "
   closeLabel?: string;
 }
 
-// class는 문자열 그대로 적는다(overlay-style.ts 참고).
+// class는 문자열 그대로 적는다(constants/overlayClass.ts 참고).
 // - 바깥 막: 화면 전체(fixed inset-0)를 bg-overlay로 덮고 쌓임은 z-modal(200)이다. 안의 Select·Menu 목록(z-popover 300)과
 //   Tooltip(z-tooltip 500)은 그 위에 뜬다. Dialog를 가운데 두고 화면 끝과 16px을 띄운다. 루트 isolate(spec 「오버레이」).
 // - 표면: raised + shadow-lg + radius xl + border-raised(dialogSurfaceClass), 여백 24px, 부분 사이 16px.

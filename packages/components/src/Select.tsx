@@ -1,8 +1,8 @@
 "use client";
 // 값 하나를 고르는 Select(tide-v0-impl 티켓 28). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useSelect, useButton, useListBox, HiddenSelect, DismissButton, mergeProps, mergeRefs),
-// react-stately 3.51.0(useSelectState). 위치·portal·motion은 오버레이 공통 부분(overlay.tsx, ADR 0018), 목록 class와
-// 옵션 모으기는 목록 공통 부분(list-style.ts, list-collection.ts, ADR 0019), 옵션·묶음 그리기는 listbox.tsx를 쓴다.
+// react-stately 3.51.0(useSelectState). 위치·portal·motion은 오버레이 공통 부분(components/OverlayPortal.tsx, ADR 0018), 목록 class와
+// 옵션 모으기는 목록 공통 부분(constants/listClass.ts, libs/listCollection.ts, ADR 0019), 옵션·묶음 그리기는 components/ListBoxNodes.tsx를 쓴다.
 //
 // 구조:
 // - `Select`: 루트 DOM은 트리거 `<button type="button">`이다(입력창 모양, Input과 같은 size). 그 옆에 폼 제출용 숨은
@@ -34,24 +34,26 @@ import {
 } from "react-aria";
 import { useSelectState, type SelectState } from "react-stately";
 
-import { cn } from "./cn.ts";
-import { FieldContext, useFieldControl } from "./field-context.ts";
-import { inputBaseClass, inputSizeClass, type InputSize } from "./input-style.ts";
+import { cn } from "./libs/cn.ts";
+import { FieldContext, useFieldControl } from "./hooks/useFieldControl.ts";
+import { inputBaseClass, inputSizeClass, type InputSize } from "./constants/inputClass.ts";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   sectionCollectionNode,
   valueItemCollectionNode,
-} from "./list-collection.ts";
-import { listPopupClass } from "./list-style.ts";
-import { ListBoxNodes, type ListBoxOptionProps, type ListBoxSectionProps } from "./listbox.tsx";
+} from "./libs/listCollection.ts";
+import { listPopupClass } from "./constants/listClass.ts";
 import {
-  OverlayPortal,
-  useCloseOnTab,
-  useOverlayPresence,
-  useOverlayTheme,
-  usePopoverOverlay,
-} from "./overlay.tsx";
+  ListBoxNodes,
+  type ListBoxOptionProps,
+  type ListBoxSectionProps,
+} from "./components/ListBoxNodes.tsx";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { useCloseOnTab } from "./hooks/useCloseOnTab.ts";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import { usePopoverOverlay } from "./hooks/usePopoverOverlay.ts";
 
 export interface SelectProps extends Omit<
   ComponentProps<"button">,
@@ -93,7 +95,7 @@ export interface SelectProps extends Omit<
   children?: ReactNode;
 }
 
-// class는 문자열 그대로 적는다(input-style.ts 참고).
+// class는 문자열 그대로 적는다(constants/inputClass.ts 참고).
 // - 트리거: 입력창 모양(inputBaseClass: border-strong, focus-field, aria-invalid:border-danger, :disabled)에 Input과
 //   같은 size class. 글자와 chevron을 한 줄에 두고 chevron은 오른쪽 끝이다(`justify-between`, 사이 8px).
 // - 값 글자: 넘치면 말줄임(`truncate`). 고르지 않았을 때(placeholder)는 `text-muted`, 비활성이면 `text-disabled`.
@@ -156,7 +158,7 @@ export function Select({
   // 컬렉션 key가 옵션 value(문자열)라 고른 값이 곧 key다(valueItemCollectionNode).
   const state = useSelectState<object>({
     // useSelectState의 children 타입은 React Stately 요소(Item·Section)지만, 같은 방식으로 getCollectionNode를 붙인
-    // Tide 옵션 요소를 넘긴다(list-collection.ts).
+    // Tide 옵션 요소를 넘긴다(libs/listCollection.ts).
     children: items as unknown as Parameters<typeof useSelectState<object>>[0]["children"],
     value,
     defaultValue,
@@ -267,7 +269,7 @@ function SelectPopoverInner({
     state,
   );
   const { listBoxProps } = useListBox(menuProps, state, listRef);
-  // Tab은 목록을 닫고 포커스를 트리거로 돌린다(Menu와 같다, overlay.tsx).
+  // Tab은 목록을 닫고 포커스를 트리거로 돌린다(Menu와 같다, hooks/useCloseOnTab.ts).
   useCloseOnTab(popoverRef, state.close);
 
   return (
@@ -296,7 +298,7 @@ export interface SelectItemProps extends ListBoxOptionProps {}
  * 상태는 `data-highlighted`, `data-selected`, `data-disabled`로 노출한다.
  */
 export function SelectItem(_props: SelectItemProps): null {
-  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(listbox.tsx).
+  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(components/ListBoxNodes.tsx).
   return null;
 }
 asCollectionComponent(SelectItem, valueItemCollectionNode);
@@ -308,7 +310,7 @@ export interface SelectSectionProps extends ListBoxSectionProps {}
  * 앞뒤 다른 옵션·묶음과의 사이에 구분선이 그려진다.
  */
 export function SelectSection(_props: SelectSectionProps): null {
-  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(listbox.tsx).
+  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(components/ListBoxNodes.tsx).
   return null;
 }
 asCollectionComponent(SelectSection, sectionCollectionNode);

@@ -8,7 +8,7 @@
 // - size: 높이·좌우 padding·텍스트 스타일(spec size 표). Input과 Select 트리거가 같은 값을 써서 같은 size면 높이가 같다.
 // - motion: 혼자 있는 조작 요소라 transition-colors(fast)다.
 
-import type { Size } from "./types.ts";
+import type { Size } from "../types.ts";
 
 /** 입력창의 공통 모양. size class 뒤에 넣는다. */
 export const inputBaseClass =

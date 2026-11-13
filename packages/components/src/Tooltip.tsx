@@ -32,16 +32,13 @@ import {
 } from "react-aria";
 import { useTooltipTriggerState, type TooltipTriggerState } from "react-stately";
 
-import { cn } from "./cn.ts";
-import {
-  OverlayPortal,
-  overlayPositionProps,
-  useOverlayPresence,
-  useOverlayTheme,
-  type OverlayPlacement,
-} from "./overlay.tsx";
-import { frequentMotionClass, overlaySurfaceClass } from "./overlay-style.ts";
-import { renderElement } from "./render.ts";
+import { cn } from "./libs/cn.ts";
+import { OverlayPortal } from "./components/OverlayPortal.tsx";
+import { overlayPositionProps, type OverlayPlacement } from "./libs/overlayPosition.ts";
+import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import { frequentMotionClass, overlaySurfaceClass } from "./constants/overlayClass.ts";
+import { renderElement } from "./libs/renderElement.ts";
 
 /** Tooltip 설명의 위치. 앞은 트리거의 어느 쪽, 뒤는 그 변에서 맞출 끝이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */
 export type TooltipPlacement = OverlayPlacement;
@@ -166,7 +163,7 @@ export interface TooltipContentProps extends Omit<ComponentProps<"div">, "id" | 
   offset?: number;
 }
 
-// class는 문자열 그대로 적는다(overlay-style.ts 참고).
+// class는 문자열 그대로 적는다(constants/overlayClass.ts 참고).
 // - 표면: Popover와 같은 raised + shadow-md + radius lg + border-raised(overlaySurfaceClass). 쌓임은 z-tooltip(500)이라
 //   Dialog(z-modal)·Popover(z-popover) 위에 그려진다.
 // - 크기: 안쪽 여백 세로 4px·가로 8px, 글자 body-sm(14px), 폭은 내용에 맞추되 15rem(max-w-60)을 넘지 않는다.

@@ -1,7 +1,7 @@
 "use client";
 // 같은 영역의 여러 패널을 바꾸는 Tabs(tide-v0-impl 티켓 31). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useTabList, useTab, mergeProps, mergeRefs), react-stately 3.51.0(useTabListState).
-// 탭은 목록 공통 부분(list-collection.ts, ADR 0019)으로 모은다. 탭의 `value`가 컬렉션 key다(`valueItemCollectionNode`).
+// 탭은 목록 공통 부분(libs/listCollection.ts, ADR 0019)으로 모은다. 탭의 `value`가 컬렉션 key다(`valueItemCollectionNode`).
 // 접근성 패턴은 WAI-ARIA APG Tabs(자동·수동 활성화, 화살표·Home/End, 세로 tablist)를 따른다.
 //
 // 구조:
@@ -33,13 +33,13 @@ import {
 import { mergeProps, mergeRefs, useTab, useTabList } from "react-aria";
 import { useTabListState, type TabListState } from "react-stately";
 
-import { cn } from "./cn.ts";
+import { cn } from "./libs/cn.ts";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "./list-collection.ts";
+} from "./libs/listCollection.ts";
 
 /** 탭 목록의 방향. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
 export type TabsOrientation = "horizontal" | "vertical";
@@ -207,7 +207,7 @@ export function TabList({ ref, className, children, ...props }: TabListProps): R
     (item) => isValidElement<{ value?: unknown }>(item) && item.props.value === context.value,
   );
   // useTabListState의 children 타입은 React Stately 요소(Item)지만, 같은 방식으로 getCollectionNode를 붙인
-  // Tide 탭 요소를 넘긴다(list-collection.ts).
+  // Tide 탭 요소를 넘긴다(libs/listCollection.ts).
   const state = useTabListState<object>({
     children: items as unknown as Parameters<typeof useTabListState<object>>[0]["children"],
     // null은 「제어하되 고른 것이 없음」이다(react-stately useControlledState). 타입은 Key만 적혀 있다.

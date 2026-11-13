@@ -228,19 +228,21 @@ try {
   const componentsDist = join(consumerDir, "node_modules/@tide-design/components/dist");
   const startsWithUseClient = async (file: string): Promise<boolean> =>
     /^["']use client["']/.test(await readFile(join(componentsDist, file), "utf8"));
-  // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(pressable.js)은 이벤트를 DOM에 넘기지 않는다.
+  // IconButton도 같은 이유로 client 경계다(티켓 14). Link와 공유 모듈(constants/pressableClass.js, libs/pressableState.js)은 이벤트를 DOM에 넘기지 않는다.
   const clientFiles = ["Button.js", "IconButton.js"];
   // Badge·Card·Separator는 표시만 하는 서버 컴포넌트다(티켓 19).
   const serverFiles = [
     "Spinner.js",
     "Link.js",
-    "pressable.js",
+    "constants/pressableClass.js",
+    "libs/pressableState.js",
     "Badge.js",
     "Card.js",
     "Separator.js",
     // Alert는 onClose를 IconButton에 그대로 넘길 뿐 핸들러를 만들지 않는다. 공유 스타일 모듈도 서버용이다(티켓 20).
     "Alert.js",
-    "alert-style.js",
+    "constants/alertClass.js",
+    "libs/alertStatusIcon.js",
     // Avatar는 hook·state·이벤트 없이 로드 실패 fallback을 CSS 층으로 처리한다(티켓 21).
     "Avatar.js",
     // Skeleton·Progress는 표시만 하는 서버 컴포넌트다(티켓 22).
@@ -251,11 +253,17 @@ try {
     // Breadcrumb·Pagination은 함수를 만들지 않고 Button·IconButton에 props만 넘기는 서버 컴포넌트다(티켓 24).
     "Breadcrumb.js",
     "Pagination.js",
-    // 오버레이 공통 class 모듈은 문자열만 있다(티켓 25).
-    "overlay-style.js",
+    // 오버레이 공통 class 모듈은 문자열만 있고, 위치 props 정리는 순수 함수다(티켓 25).
+    "constants/overlayClass.js",
+    "libs/overlayPosition.js",
     // 목록 공통 class·컬렉션 모듈은 문자열과 순수 함수만 있다(티켓 27).
-    "list-style.js",
-    "list-collection.js",
+    "constants/listClass.js",
+    "libs/listCollection.js",
+    // class 합치기·render prop 병합도 순수 함수다.
+    "libs/cn.js",
+    "libs/renderElement.js",
+    "constants/choiceClass.js",
+    "constants/inputClass.js",
   ];
   for (const file of clientFiles) {
     if (!(await startsWithUseClient(file))) {
@@ -273,23 +281,27 @@ try {
   for (const file of [
     "Input.js",
     "Textarea.js",
-    "field-context.js",
+    "hooks/useFieldControl.js",
     "Checkbox.js",
     "CheckboxGroup.js",
     "Radio.js",
     "RadioGroup.js",
-    "choice-group.js",
+    "hooks/useChoiceGroup.js",
     "Switch.js",
-    // Popover와 오버레이 공통 hook은 React Aria hooks·state를 쓰므로 client다(티켓 25).
+    // Popover와 오버레이 공통 hook·portal은 React Aria hooks·state를 쓰므로 client다(티켓 25).
     "Popover.js",
-    "overlay.js",
+    "components/OverlayPortal.js",
+    "hooks/useOverlayPresence.js",
+    "hooks/usePopoverOverlay.js",
+    "hooks/useOverlayTheme.js",
+    "hooks/useCloseOnTab.js",
     // Tooltip도 React Aria hooks·state를 쓰므로 client다(티켓 26).
     "Tooltip.js",
     // Menu도 React Aria hooks·state를 쓰므로 client다(티켓 27).
     "Menu.js",
-    // Select와 옵션 공통 모듈(listbox)도 React Aria hooks·state를 쓰므로 client다(티켓 28).
+    // Select와 옵션 공통 모듈(ListBoxNodes)도 React Aria hooks·state를 쓰므로 client다(티켓 28).
     "Select.js",
-    "listbox.js",
+    "components/ListBoxNodes.js",
     // Combobox도 React Aria hooks·state를 쓰므로 client다(티켓 29).
     "Combobox.js",
     // Dialog·AlertDialog도 React Aria hooks·state를 쓰므로 client다(티켓 30).
