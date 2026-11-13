@@ -12,7 +12,7 @@ import { render } from "vitest-browser-react";
 import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion.ts";
 
 import { IconButton } from "../IconButton/IconButton.tsx";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover/Popover.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover/index.ts";
 import {
   Tooltip,
   TooltipContent,
@@ -20,7 +20,7 @@ import {
   type TooltipContentProps,
   type TooltipProps,
   type TooltipTriggerProps,
-} from "./Tooltip.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
