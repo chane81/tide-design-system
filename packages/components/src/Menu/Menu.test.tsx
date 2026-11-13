@@ -22,7 +22,7 @@ import {
   type MenuContentProps,
   type MenuItemProps,
   type MenuProps,
-} from "./Menu.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

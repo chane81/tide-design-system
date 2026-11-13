@@ -1,9 +1,11 @@
-export { Menu, MenuContent, MenuItem, MenuSection, MenuTrigger } from "./Menu.tsx";
-export type {
-  MenuContentProps,
-  MenuItemProps,
-  MenuPlacement,
-  MenuProps,
-  MenuSectionProps,
-  MenuTriggerProps,
-} from "./Menu.tsx";
+export { Menu } from "./Menu.tsx";
+export type { MenuProps } from "./Menu.tsx";
+export { MenuTrigger } from "./components/MenuTrigger.tsx";
+export type { MenuTriggerProps } from "./components/MenuTrigger.tsx";
+export { MenuContent } from "./components/MenuContent.tsx";
+export type { MenuContentProps } from "./components/MenuContent.tsx";
+export { MenuItem } from "./components/MenuItem.tsx";
+export type { MenuItemProps } from "./components/MenuItem.tsx";
+export { MenuSection } from "./components/MenuSection.tsx";
+export type { MenuSectionProps } from "./components/MenuSection.tsx";
+export type { MenuPlacement } from "./types.ts";
