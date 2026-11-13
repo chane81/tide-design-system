@@ -5,6 +5,7 @@
 - 테크 스택: vite, vitest, storybook, pnpm, typescript, oxlint, oxfmt
 - 한 번에 만들지 않는다. 리서치, 진행상황, 결정은 모두 `docs/` 아래 분류별 폴더에 md로 남긴다(구조는 `docs/agents/domain.md` 참고).
 - 문서와 주석은 한글로 작성한다.
+- 파일·폴더 배치는 `.claude/rules/monorepo-structure.md`를 따른다(콜로케이션, 폴더 이름 `components`·`hooks`·`libs`·`constants`).
 
 ## Agent skills
 
