@@ -1,14 +1,10 @@
-// Primitive 스케일 값 검사(tide-color-tone-impl 티켓 01, ADR 0022 §4·§5).
-// 기대 값은 Token 원본에서 만들지 않고 결정 표(tide-color-tone 티켓 02 「스케일 값」, 05 Answer)를 그대로 적는다.
-// 600 단계는 tide-v0-impl 티켓 47(solid 덜 진하게: OKLCH L +0.03, 채도 ×0.85·상한 0.12, 색상 유지)의 값이다.
-// 그래서 원본 값이 결정과 한 글자라도 다르면 여기서 실패한다.
+// 기대 값은 Token 원본에서 만들지 않고 결정 표(ADR 0022)를 그대로 적어, 원본 값이 결정과 다르면 실패하게 한다.
 import { describe, expect, it } from "vitest";
 
 import { color, type ColorFamily, type ColorStep } from "./color";
 
 const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 
-// 계열별 11단계 hex. 400·500과 gray는 바꾸지 않은 값이다(amber 400만 #ca9734로 바뀜). 600은 티켓 47에서 모든 계열이 바뀌었다.
 const expected: Record<ColorFamily, readonly string[]> = {
   blue: [
     "#eff4fc",

@@ -1,6 +1,4 @@
-// 대비 쌍 검사. Token 원본을 직접 import한다(ADR 0003).
-// 기준은 WCAG 2.x 대비비 하나다. 하한은 세 등급이다(ADR 0023): 정지 상태 글자 4.5:1,
-// hover·누름 같은 일시 상태 글자와 solid 위 글자 4:1, UI 경계·포커스·thumb 3:1.
+// Token 원본을 직접 import한다(ADR 0003). 하한 등급은 ADR 0023이다.
 import { describe, expect, it } from "vitest";
 
 import { color, contrastPairs, type ThemeName } from "../src/index";
@@ -19,7 +17,6 @@ describe("contrastRatio", () => {
     expect(contrastRatio("#ffffff", "#000000")).toBeCloseTo(21, 5);
     expect(contrastRatio("#000000", "#ffffff")).toBeCloseTo(21, 5);
     expect(contrastRatio("#777777", "#777777")).toBe(1);
-    // blue 단계별 흰색 대비(500은 tide-v0 티켓 08, 600은 ADR 0022 값)
     expect(contrastRatio(color.blue[500], color.white)).toBeCloseTo(3.69, 2);
     expect(contrastRatio(color.blue[600], color.white)).toBeCloseTo(4.36, 2);
   });
@@ -55,7 +52,7 @@ describe("대비 쌍", () => {
     for (const pair of translucent) {
       expect(["bg-canvas", "bg-raised"], pair.background).toContain(pair.surface);
     }
-    // raised 위에는 text-default만 둔다(Role 색 글자는 dark 누름에서 4:1에도 못 미친다, 티켓 03·46).
+    // Role 색 글자는 dark 누름에서 4:1에도 못 미쳐 raised 위에는 text-default만 둔다.
     expect(
       translucent.filter((pair) => pair.surface === "bg-raised").map((pair) => pair.foreground),
     ).toEqual(["text-default", "text-default"]);
@@ -100,7 +97,7 @@ describe("대비 쌍", () => {
         (pair) => pair.foreground.startsWith("border-") && pair.background.endsWith("-subtle"),
       ),
     ).toEqual([]);
-    // Switch 꺼짐 누름 thumb(text-accent × subtle-active)은 글자가 아닌 UI 요소라 3:1로 등록한다(티켓 46).
+    // Switch 꺼짐 누름 thumb(text-accent × subtle-active)은 글자가 아닌 UI 요소라 3:1이다.
     const thumb = contrastPairs.filter(
       (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-subtle-active"),
     );

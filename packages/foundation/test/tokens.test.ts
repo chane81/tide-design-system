@@ -1,6 +1,4 @@
-// 빌드한 tokens.css(Tailwind 없이 쓰는 사용자의 공개 계약)를 검사한다.
-// 기대 목록은 Token 원본에서 만들지 않고 spec 「`@tide-design/foundation`」 컬러 항목을 그대로 적는다.
-// 그래서 원본에서 Token이 빠지거나 이름이 바뀌면(breaking change) 여기서 실패한다.
+// 기대 목록은 Token 원본에서 만들지 않고 spec을 그대로 적어, Token이 빠지거나 이름이 바뀌면 실패하게 한다.
 import { readFile } from "node:fs/promises";
 
 import { beforeAll, describe, expect, it } from "vitest";
@@ -130,7 +128,7 @@ const motionVars = [
   ...zIndices.map(([name]) => `--tide-z-${name}`),
 ];
 
-// 색 계열 변수 묶음과 accent 슬롯(tide-v0-impl 티켓 40, ADR 0011, ADR 0022 §2). [슬롯, light 값, dark 값]
+// 색 계열 변수 묶음과 accent 슬롯(ADR 0022 §2). [슬롯, light 값, dark 값]
 // 값: 숫자는 그 계열 단계, 문자열은 Primitive, [단계, 덮는 색, 비율]은 덮기, ["mix", a, b]는 반씩 섞기다.
 type SlotSpec =
   | number
@@ -462,7 +460,7 @@ describe("tokens.css", () => {
         expect(lightResolved.get(`--tide-${name}`), name).toBe(ref(lightValue));
         expect(darkResolved.get(`--tide-${name}`), name).toBe(ref(darkValue));
       }
-      // raised 표면 경계: light는 투명(키워드), dark는 gray-800(2026-11-10 사용자 결정)
+      // raised 표면 경계: light는 투명(키워드), dark는 gray-800
       expect(lightResolved.get("--tide-border-raised")).toBe("transparent");
       expect(darkResolved.get("--tide-border-raised")).toBe(ref("gray-800"));
     });

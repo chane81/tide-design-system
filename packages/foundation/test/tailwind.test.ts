@@ -1,6 +1,4 @@
-// 빌드한 CSS를 실제 Tailwind로 컴파일해 공개 표면(만들어지는 class)을 확인한다.
-// 컴파일 API: @tailwindcss/node 4.3.5의 compile(css, { base, onDependency }).build(candidates).
-// 공식 문서에는 없는 API라 설치 버전의 타입 선언(dist/index.d.ts)으로 확인했다.
+// @tailwindcss/node 4.3.5의 compile()은 공식 문서에 없는 API다. 버전을 올리면 타입 선언을 다시 본다.
 import { fileURLToPath } from "node:url";
 
 import { compile } from "@tailwindcss/node";
@@ -67,7 +65,7 @@ const meaninglessClasses = [
   "border-neutral",
   "bg-shadow-color",
   "shadow-shadow-color",
-  // 계열 Utility class는 노출하지 않는다. accent는 강도를 생략하지 않고, 속성마다 정한 이름만 생긴다(티켓 40).
+  // 계열 Utility class는 노출하지 않는다. accent는 강도를 생략하지 않고, 속성마다 정한 이름만 생긴다.
   "bg-blue-solid",
   "bg-gray-subtle",
   "text-blue-text",
@@ -79,7 +77,7 @@ const meaninglessClasses = [
   "outline-accent",
 ];
 
-// accent Utility class(티켓 40). [class, CSS 속성, 변수]
+// accent Utility class. [class, CSS 속성, 변수]
 const accentClasses: [string, string, string][] = [
   ...["solid", "solid-hover", "solid-active", "subtle", "subtle-hover", "subtle-active"].map(
     (slot) =>

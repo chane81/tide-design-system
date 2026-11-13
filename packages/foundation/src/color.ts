@@ -1,12 +1,4 @@
-// Primitive 색. 정본은 hex다(tide-v0 티켓 08·09, spec 「`@tide-design/foundation`」 컬러).
-// 초안은 OKLCH L 계단(티켓 08의 A)으로 만들었고, 손으로 조정해도 된다. 조정하면 대비 쌍 검사가 다시 보장한다.
-// 지금 값은 ADR 0022(docs/decisions/0022-pastel-intensity-and-overlay-states.md)를 따른다. 50~300·950은 계열마다 손으로
-// 맞춘 값이고(파스텔 바탕·테두리·글자), solid 쪽(600~900)은 채도 상한을 둔 값이다. amber의 연한 단계(50~400)는 노랑 쪽이다.
-// 600(solid 바탕)은 tide-v0-impl 티켓 47에서 덜 진하게 바꿨다. 이전 600에서 OKLCH L +0.03, 채도 ×0.85(상한 0.12), 색상 유지.
-// 흰 글자 대비는 4.18~4.62로 solid 위 글자 하한 4:1(ADR 0023)을 넘는다.
-// 계열 이름은 용도가 아니라 색상으로 짓는다. 어느 Role이 어느 계열을 쓰는지는 semantic.ts의 roleFamily에 있다.
-// purple·mint는 Role이 없는 장식 계열이다(ADR 0022 §5). 장식·분류 Component(Badge, Tag, Avatar)만 쓴다.
-// 계열을 더하면 계열 변수 묶음, `[data-color]` 규칙, 대비 쌍, 색 계열 이름 타입(ColorFamilyRegistry)이 함께 따라온다(티켓 40, 41).
+// 정본은 hex다. 손으로 조정해도 되고 대비 쌍 검사가 다시 보장한다(값의 근거는 ADR 0022).
 // blue-500은 Tide의 앵커 `#3183f5`이고 바꾸지 않는다.
 export const color = {
   white: "#ffffff",
@@ -134,7 +126,7 @@ export type PrimitiveColorName =
 
 /**
  * Primitive 이름을 정본 hex로 바꾼다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function primitiveHex(name: PrimitiveColorName): string {
   if (name === "white" || name === "black") return color[name];
