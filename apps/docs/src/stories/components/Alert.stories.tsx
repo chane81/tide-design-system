@@ -118,6 +118,7 @@ export const RichContent: Story = {
 
 function DismissibleExample() {
   const [open, setOpen] = useState(true);
+
   return open ? (
     <Alert
       color="primary"
@@ -143,6 +144,7 @@ export const Dismissible: Story = {
 
 function LiveRegionExample() {
   const [result, setResult] = useState<"idle" | "saved" | "failed">("idle");
+
   return (
     <div className="flex max-w-lg flex-col gap-3">
       <div className="flex gap-2">

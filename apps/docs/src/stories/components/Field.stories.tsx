@@ -72,6 +72,7 @@ export const Validation: Story = {
   render: function Validation(): ReactElement {
     const [value, setValue] = useState("tide");
     const error = value.includes("@") ? undefined : "이메일 형식이 아닙니다. @를 넣어 주세요.";
+
     return (
       <Field label="이메일" error={error}>
         <Input type="email" value={value} onChange={(event) => setValue(event.target.value)} />

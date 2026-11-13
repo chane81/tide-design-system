@@ -157,6 +157,7 @@ function mix(a: string, b: string, amount: number): string {
   const channels = (hex: string): number[] =>
     [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
   const to = channels(b);
+
   return `#${channels(a)
     .map((value, index) =>
       Math.round(value * (1 - amount) + to[index]! * amount)
@@ -190,6 +191,7 @@ function declarations(css: string, selector: string): Map<string, string> {
   const start = css.indexOf(`${selector} {`);
   if (start === -1) throw new Error(`블록이 없다: ${selector}`);
   const body = css.slice(css.indexOf("{", start) + 1, css.indexOf("}", start));
+
   return new Map(
     [...body.matchAll(/(--[\w-]+|color-scheme):\s*([^;]+);/g)].map((match) => [
       match[1]!,
@@ -202,8 +204,10 @@ function declarations(css: string, selector: string): Map<string, string> {
 function resolveAliases(block: Map<string, string>): Map<string, string> {
   const resolve = (value: string): string => {
     const target = /^var\((--tide-[\w-]+)\)$/.exec(value)?.[1];
+
     return target && block.has(target) ? resolve(block.get(target)!) : value;
   };
+
   return new Map([...block].map(([name, value]) => [name, resolve(value)]));
 }
 
@@ -277,6 +281,7 @@ describe("tokens.css", () => {
       if (typeof spec === "number" || typeof spec === "string") return ref(family, spec);
       if (spec[0] === "mix")
         return mix(primitive(family, spec[1]), primitive(family, spec[2]), 0.5);
+
       return mix(primitive(family, spec[0]), primitive(family, spec[1]), spec[2]);
     };
 

@@ -33,6 +33,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -311,6 +312,7 @@ describe("제어와 비제어", () => {
   test("상태를 가진 부모가 value를 바꾸면 트리거와 폼 값이 따라간다. null이면 비운다", async () => {
     function Controlled(): ReactElement {
       const [value, setValue] = useState<string | null>("apple");
+
       return (
         <div>
           <Fruits value={value} onValueChange={setValue} />
@@ -536,6 +538,7 @@ describe("모양", () => {
     const style = getComputedStyle(trigger());
     if (forcedColors()) {
       expect(style.outlineColor).not.toBe(transparent);
+
       return;
     }
     const danger = resolve("borderTopColor", "var(--tide-border-danger)");
@@ -597,6 +600,7 @@ describe("모양", () => {
     expect(highlighted()).toEqual(["Grape"]);
     if (forcedColors()) {
       expect(getComputedStyle(byTestId("grape")).outlineColor).not.toBe(transparent);
+
       return;
     }
     expect(getComputedStyle(banana).backgroundColor).toBe(

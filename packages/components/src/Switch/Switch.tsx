@@ -118,6 +118,7 @@ export function Switch({
     "aria-describedby": ariaDescribedBy,
     "aria-invalid": ariaInvalid,
   });
+
   return (
     <label
       // 색은 항상 붙인다(기본 primary). 바깥 data-color를 물려받지 않게 한다(ADR 0011).

@@ -42,5 +42,6 @@ export function overlayPositionProps(
 ): DOMAttributes<Element> & { style: CSSProperties; "data-placement": PlacementAxis } {
   const { zIndex: _zIndex, ...style } = props.style ?? {};
   const fallback = requested.split(" ")[0] as PlacementAxis;
+
   return { ...props, style, "data-placement": isAxis(placement) ? placement : fallback };
 }

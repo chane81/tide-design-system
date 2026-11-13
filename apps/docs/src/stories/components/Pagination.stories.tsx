@@ -38,6 +38,7 @@ function pageRange(current: number, total: number): (number | null)[] {
   const pages = [1, current - 1, current, current + 1, total]
     .filter((value) => value >= 1 && value <= total)
     .filter((value, index, list) => list.indexOf(value) === index);
+
   return pages.flatMap((value, index) =>
     index > 0 && value - (pages[index - 1] ?? 0) > 1 ? [null, value] : [value],
   );
@@ -87,6 +88,7 @@ export const WithState: Story = {
   render: function Render() {
     const total = 5;
     const [current, setCurrent] = useState(2);
+
     return (
       <Pagination aria-label="댓글 페이지">
         <PaginationItem>

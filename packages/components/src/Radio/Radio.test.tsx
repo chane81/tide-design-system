@@ -27,6 +27,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).color;
   probe.remove();
+
   return resolved;
 }
 
@@ -120,6 +121,7 @@ describe("선택", () => {
   test("제어: value와 onValueChange로 앱이 값을 정한다", async () => {
     function Controlled(): ReactElement {
       const [value, setValue] = useState("a");
+
       return (
         <>
           <RadioGroup aria-label="옵션" value={value} onValueChange={setValue}>
@@ -383,6 +385,7 @@ describe("모양", () => {
       await wait();
       const value = getComputedStyle(page.getByRole("radio", { name }).element()).backgroundColor;
       await commands.mouseUp();
+
       return value;
     };
     const checked = await pressed("normal", "일반");
@@ -390,6 +393,7 @@ describe("모양", () => {
     const unchecked = await pressed("fast", "빠른");
     if (forcedColors()) {
       expect([checked, unchecked]).toEqual([resolve("Highlight"), resolve("Canvas")]);
+
       return;
     }
     expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));

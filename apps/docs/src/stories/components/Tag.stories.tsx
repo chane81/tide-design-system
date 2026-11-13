@@ -62,6 +62,7 @@ function RemovableTags({
   readonly removeLabel?: string;
 }): ReactElement {
   const [tags, setTags] = useState(items);
+
   return (
     <div className="flex flex-col items-start gap-3">
       <TagGroup
@@ -150,6 +151,7 @@ const permissionNames: Record<string, string> = {
 /** 권한 태그. 관리자 권한은 지울 수 없게 비활성으로 둔다. */
 function PermissionTags(): ReactElement {
   const [tags, setTags] = useState(["admin", "editor", "viewer"]);
+
   return (
     <TagGroup
       aria-label="권한"

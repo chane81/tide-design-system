@@ -36,6 +36,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -103,6 +104,7 @@ async function tabToInput(): Promise<void> {
 /** 가상 포커스가 가리키는 옵션. 입력의 aria-activedescendant로 찾는다. */
 const activeOption = (): HTMLElement | null => {
   const id = input().getAttribute("aria-activedescendant");
+
   return id ? document.getElementById(id) : null;
 };
 
@@ -519,6 +521,7 @@ describe("제어와 비제어", () => {
   test("value를 주면 onValueChange로만 바뀌고, 부모가 바꾸면 입력 글자가 따라간다", async () => {
     function Controlled(): ReactElement {
       const [value, setValue] = useState<string | null>("apple");
+
       return (
         <div>
           <Fruits value={value} onValueChange={setValue} />
@@ -804,6 +807,7 @@ describe("모양", () => {
     await expect.poll(highlighted).toEqual(["배"]);
     if (forcedColors()) {
       expect(getComputedStyle(byTestId("pear")).outlineColor).not.toBe(transparent);
+
       return;
     }
     expect(getComputedStyle(banana).backgroundColor).toBe(

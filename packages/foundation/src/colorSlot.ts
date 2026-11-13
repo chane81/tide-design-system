@@ -132,6 +132,7 @@ export function resolveSlotSteps(
         (current, override) => ({ ...current, ...override?.[slot] }),
         slotRule[slot],
       );
+
       return [slot, steps];
     }),
   ) as Record<ColorSlot, SlotRule>;
@@ -162,10 +163,12 @@ export function mixHex(a: string, b: string, amount: number): string {
   const channels = (hex: string): number[] => {
     const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
     if (!match) throw new Error(`불투명한 6자리 hex가 아니다: ${hex}`);
+
     return match.slice(1).map((channel) => Number.parseInt(channel, 16));
   };
   const from = channels(a);
   const to = channels(b);
+
   return `#${from
     .map((value, index) =>
       Math.round(value * (1 - amount) + to[index]! * amount)
@@ -185,6 +188,7 @@ export function slotValueHex(value: SlotValue, stepHex: (step: ColorStep) => str
     typeof color === "number" ? stepHex(color) : primitiveHex(color);
   if (typeof value !== "object") return ref(value);
   if ("mix" in value) return mixHex(ref(value.mix[0]), ref(value.mix[1]), 0.5);
+
   return mixHex(stepHex(value.step), primitiveHex(value.overlay), value.amount);
 }
 

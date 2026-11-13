@@ -12,5 +12,6 @@ export function DocsAnchor(props: DocsAnchorProps): ReactElement {
   if (/^https?:\/\//.test(props.href)) {
     return <AnchorMdx {...props} target="_blank" />;
   }
+
   return <AnchorMdx {...props} />;
 }

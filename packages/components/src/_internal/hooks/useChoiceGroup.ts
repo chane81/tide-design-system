@@ -67,6 +67,7 @@ export function useChoiceGroup(props: ChoiceGroupInput): ChoiceGroupConnection {
   const invalid = props.invalid ?? field?.invalid ?? false;
   const disabled = props.disabled ?? field?.disabled ?? false;
   const required = props.required ?? field?.required ?? false;
+
   return {
     rootProps: {
       id: props.id ?? field?.controlId,

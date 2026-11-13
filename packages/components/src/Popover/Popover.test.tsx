@@ -45,6 +45,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -212,6 +213,7 @@ describe("제어와 비제어", () => {
   test("상태를 가진 부모가 트리거 누름으로 열고 닫는다", async () => {
     function Controlled(): ReactElement {
       const [open, setOpen] = useState(false);
+
       return (
         <>
           <output data-testid="state">{open ? "열림" : "닫힘"}</output>
@@ -447,6 +449,7 @@ describe("등장과 퇴장 motion", () => {
       expect(style.transitionProperty).toBe("opacity, display");
       expect(running.has("filter")).toBe(false);
       expect(running.has("translate")).toBe(false);
+
       return;
     }
     expect(style.transitionProperty).toBe("opacity, filter, translate, display");

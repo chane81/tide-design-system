@@ -109,6 +109,7 @@ function isSlotValue(value: unknown): value is SlotValue {
       record.mix.every(isColorRef)
     );
   }
+
   return (
     Object.keys(record).length === 3 &&
     steps.includes(record.step as ColorStep) &&
@@ -169,6 +170,7 @@ export function defineColorFamily<const Name extends string>(
       }
     }
   }
+
   return {
     name,
     scale: Object.fromEntries(steps.map((step) => [step, scale[step].toLowerCase()])) as ColorScale,
@@ -187,6 +189,7 @@ export function colorFamilySlotHex(
 ): Record<ThemeName, Record<ColorSlot, string>> {
   const resolved = slotSteps(family);
   const hex = (value: SlotValue): string => slotValueHex(value, (step) => family.scale[step]);
+
   return {
     light: Object.fromEntries(
       colorSlots.map((slot) => [slot, hex(resolved[slot].light)]),
@@ -212,6 +215,7 @@ export function colorFamilyCss(families: readonly ColorFamilyDefinition[]): stri
     families.flatMap((family) =>
       familyThemeDeclarations(family.name, slotSteps(family), theme, (step) => family.scale[step]),
     );
+
   return [
     ":root {",
     ...families.flatMap((family) =>

@@ -38,6 +38,7 @@ function rank(keywords: readonly string[], joined: string): number {
   if (name.startsWith(joined)) return 1;
   if (name.includes(joined)) return 2;
   if (tagList.some((tag) => tag.replace(/[\s-]/g, "") === joined)) return 3;
+
   return 4;
 }
 
@@ -54,6 +55,7 @@ export function searchIcons(index: readonly IconEntry[], query: string): IconEnt
     .filter(Boolean);
   if (terms.length === 0) return [...index];
   const joined = terms.join("");
+
   return index
     .filter(
       ({ keywords }) =>

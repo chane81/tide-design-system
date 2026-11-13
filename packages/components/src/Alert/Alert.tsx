@@ -63,6 +63,7 @@ export function Alert({
   ...props
 }: AlertProps): ReactElement {
   const StatusIcon = alertStatusIcon(color);
+
   return (
     <div
       {...props}

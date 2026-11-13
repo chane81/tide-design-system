@@ -57,6 +57,7 @@ export function useFieldControl(props: FieldControlInput): FieldControlProps {
   const invalid = props.invalid ?? field?.invalid ?? false;
   const describedBy =
     [field?.describedBy, props["aria-describedby"]].filter(Boolean).join(" ") || undefined;
+
   return {
     id: props.id ?? field?.controlId,
     "aria-describedby": describedBy,

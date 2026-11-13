@@ -28,6 +28,7 @@ function resolve(value: string, theme = "light"): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 

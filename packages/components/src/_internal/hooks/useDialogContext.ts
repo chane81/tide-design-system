@@ -27,5 +27,6 @@ export const DialogContext: Context<DialogContextValue | null> =
 export function useDialogContext(part: string): DialogContextValue {
   const context = use(DialogContext);
   if (!context) throw new Error(`${part}는 Dialog나 AlertDialog 안에 둔다.`);
+
   return context;
 }

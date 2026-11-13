@@ -141,5 +141,6 @@ export function primitiveHex(name: PrimitiveColorName): string {
   const index = name.lastIndexOf("-");
   const family = name.slice(0, index) as ColorFamily;
   const step = Number(name.slice(index + 1)) as ColorStep;
+
   return color[family][step];
 }

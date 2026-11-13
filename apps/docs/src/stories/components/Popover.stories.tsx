@@ -116,6 +116,7 @@ export const WithForm: Story = {
   render: function WithForm() {
     const [name, setName] = useState("디자인 리뷰");
     const [open, setOpen] = useState(false);
+
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger render={<Button variant="outline" />}>이름: {name}</PopoverTrigger>

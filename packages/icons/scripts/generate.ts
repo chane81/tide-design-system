@@ -55,6 +55,7 @@ function parseSvg(svgName: string, source: string): Shape[] {
       attributes.push([name, value]);
     }
     shapes.push({ tag, attributes });
+
     return "";
   });
   if (rest.trim() !== "") {
@@ -63,11 +64,13 @@ function parseSvg(svgName: string, source: string): Shape[] {
   if (shapes.length === 0) {
     throw new Error(`${svgName}.svg: 도형이 없다.`);
   }
+
   return shapes;
 }
 
 function shapeJsx({ tag, attributes }: Shape): string {
   const attrs = attributes.map(([name, value]) => `${name}=${JSON.stringify(value)}`).join(" ");
+
   // 렌더된 선 두께를 크기와 무관하게 유지한다. vector-effect는 상속되지 않아 도형마다 붙인다.
   return `      <${tag} ${attrs} vectorEffect="non-scaling-stroke" />`;
 }

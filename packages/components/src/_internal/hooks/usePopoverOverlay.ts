@@ -41,5 +41,6 @@ export function usePopoverOverlay(
     { triggerRef, popoverRef, placement, offset, isNonModal: nonModal },
     state,
   );
+
   return { overlayProps: overlayPositionProps(popoverProps, actual, placement) };
 }

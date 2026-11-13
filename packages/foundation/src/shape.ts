@@ -81,6 +81,7 @@ export function shadowCss(name: ShadowName): string {
     .map((layer) => {
       const lengths = [layer.x, layer.y, layer.blur, ...(layer.spread === 0 ? [] : [layer.spread])];
       const color = `color-mix(in srgb, var(--tide-shadow-color) ${layer.mix}%, transparent)`;
+
       return `${lengths.map(length).join(" ")} ${color}`;
     })
     .join(", ");

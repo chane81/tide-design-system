@@ -33,6 +33,7 @@ if (!base) {
 
 function git(...args: string[]): { ok: boolean; stdout: string } {
   const result = spawnSync("git", args, { encoding: "utf8" });
+
   return { ok: result.status === 0, stdout: result.stdout };
 }
 
@@ -65,6 +66,7 @@ const zeroMajor = PUBLISHED.some((dir) => {
   const { version } = JSON.parse(readFileSync(`packages/${dir}/package.json`, "utf8")) as {
     version: string;
   };
+
   return version.startsWith("0.");
 });
 if (zeroMajor) {

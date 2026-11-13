@@ -44,6 +44,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -227,6 +228,7 @@ describe("열고 닫기와 포커스 복귀", () => {
   test("트리거 없이 open으로 열면 닫힌 뒤 포커스가 열기 전 요소로 돌아간다", async () => {
     function Controlled(): ReactElement {
       const [open, setOpen] = useState(false);
+
       return (
         <>
           <button type="button" onClick={() => setOpen(true)}>
@@ -543,6 +545,7 @@ describe("등장과 퇴장 motion", () => {
       // 움직임 줄이기: 확대 없이 opacity만 바뀐다.
       expect(style.transitionProperty).toBe("opacity");
       expect(running.has("scale")).toBe(false);
+
       return;
     }
     expect(style.transitionProperty).toBe("opacity, scale");

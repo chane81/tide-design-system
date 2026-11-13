@@ -111,6 +111,7 @@ export const Disabled: Story = {
 /** 제어: 펼친 값을 앱 상태로 갖고, 밖의 버튼으로도 바꾼다. */
 function ControlledExample(): ReactElement {
   const [value, setValue] = useState<string[]>([]);
+
   return (
     <div className="flex max-w-lg flex-col gap-4">
       <Accordion multiple value={value} onValueChange={setValue}>

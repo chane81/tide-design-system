@@ -46,6 +46,7 @@ async function open(canvasElement: HTMLElement, name: string): Promise<void> {
     const id = trigger.getAttribute("aria-describedby");
     const element = id ? canvasElement.ownerDocument.getElementById(id) : null;
     if (!element) throw new Error(`${name}의 설명이 아직 없다`);
+
     return element;
   });
   await expect(tooltip).toHaveAttribute("role", "tooltip");

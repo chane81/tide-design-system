@@ -30,6 +30,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 
@@ -191,6 +192,7 @@ describe("색", () => {
       document.body.append(div);
       const resolved = getComputedStyle(div).borderTopColor;
       div.remove();
+
       return resolved;
     };
     const style = getComputedStyle(badge(role));
@@ -221,6 +223,7 @@ describe("색", () => {
       document.body.append(div);
       const resolved = getComputedStyle(div).borderTopColor;
       div.remove();
+
       return resolved;
     };
     expect(getComputedStyle(element).backgroundColor).toBe(probe(`var(--tide-bg-${role}-solid)`));

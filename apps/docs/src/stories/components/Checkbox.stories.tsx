@@ -79,6 +79,7 @@ function SelectAllExample(): ReactElement {
   const [items, setItems] = useState([true, false, false]);
   const all = items.every(Boolean);
   const some = items.some(Boolean);
+
   return (
     <div className="flex flex-col gap-2">
       <Checkbox

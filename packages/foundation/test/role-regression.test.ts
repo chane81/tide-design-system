@@ -23,6 +23,7 @@ describe("Role 회귀", () => {
     const results = contrastPairs.map((pair) => {
       const ratios = themes.map((theme) => contrastPairRatio(pair, theme).toFixed(4));
       const surface = pair.surface ? ` (${pair.surface} 위)` : "";
+
       return `${pair.foreground} / ${pair.background}${surface} ≥ ${pair.minRatio}: ${ratios.join(" / ")}`;
     });
     expect(results).toMatchSnapshot();

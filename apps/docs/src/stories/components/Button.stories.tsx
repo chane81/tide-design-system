@@ -185,6 +185,7 @@ export const OtherIcon: Story = {
 
 function LoadingDemo(props: { children?: string }): ReactElement {
   const [loading, setLoading] = useState(false);
+
   return (
     <Button
       {...props}

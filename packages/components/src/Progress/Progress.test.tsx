@@ -24,6 +24,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 

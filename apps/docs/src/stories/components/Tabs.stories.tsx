@@ -148,6 +148,7 @@ export const Manual: Story = {
 /** 제어: 고른 값을 앱 상태로 갖고, 패널 밖 버튼으로도 바꾼다. */
 function ControlledExample(): ReactElement {
   const [value, setValue] = useState("overview");
+
   return (
     <div className="flex flex-col gap-4">
       <Tabs value={value} onValueChange={setValue}>

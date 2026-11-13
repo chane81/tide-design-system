@@ -39,6 +39,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -212,6 +213,7 @@ describe("제어와 연결", () => {
   test("상태를 가진 부모가 hover로 열고 닫는다", async () => {
     function Controlled(): ReactElement {
       const [open, setOpen] = useState(false);
+
       return (
         <>
           <output data-testid="state">{open ? "열림" : "닫힘"}</output>

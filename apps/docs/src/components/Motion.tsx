@@ -21,8 +21,10 @@ function usePrefersReducedMotion(): boolean {
     setReduced(query.matches);
     const onChange = (): void => setReduced(query.matches);
     query.addEventListener("change", onChange);
+
     return () => query.removeEventListener("change", onChange);
   }, []);
+
   return reduced;
 }
 
@@ -30,6 +32,7 @@ function usePrefersReducedMotion(): boolean {
 function bezierPoints(value: string): [number, number, number, number] {
   const numbers = /cubic-bezier\(([^)]+)\)/.exec(value)?.[1]?.split(",").map(Number) ?? [];
   const [x1 = 0, y1 = 0, x2 = 1, y2 = 1] = numbers;
+
   return [x1, y1, x2, y2];
 }
 
@@ -39,6 +42,7 @@ function EasingCurve({ value }: { value: string }): ReactElement {
   const [x1, y1, x2, y2] = bezierPoints(value);
   // SVG는 y가 아래로 커지므로 뒤집는다.
   const point = (x: number, y: number): string => `${x * size} ${size - y * size}`;
+
   return (
     <svg
       width={size}

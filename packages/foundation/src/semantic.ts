@@ -105,6 +105,7 @@ export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticC
     slotPrimitive(family, ref) as PrimitiveColorName;
   if (typeof value !== "object") return name(value);
   if ("mix" in value) return { base: name(value.mix[0]), mix: name(value.mix[1]), amount: 0.5 };
+
   return { base: name(value.step), mix: value.overlay, amount: value.amount };
 }
 
@@ -232,6 +233,7 @@ const backgroundSlots = colorSlots.filter(
 /** 그 슬롯을 공통 Token과 나눠 쓰지 않는 Role */
 function ownRoles(slot: ColorSlot): TideRole[] {
   const shared = roleSharedSlots as { [Name in TideRole]?: Partial<Record<ColorSlot, string>> };
+
   return roles.filter((role) => !Object.hasOwn(shared[role] ?? {}, slot));
 }
 
@@ -242,6 +244,7 @@ function roleSlotColor(role: TideRole, slot: ColorSlot): ThemedColor {
     (familyOverrides as { [Family in ColorFamily]?: SlotOverrides })[family],
     (roleOverrides as { [Name in TideRole]?: SlotOverrides })[role],
   )[slot];
+
   return {
     light: slotColorValue(family, steps.light),
     dark: slotColorValue(family, steps.dark),
@@ -399,6 +402,7 @@ export function colorValueHex(value: SemanticColorValue): string {
   const alpha = Math.round(value.alpha * 255)
     .toString(16)
     .padStart(2, "0");
+
   return `${primitiveHex(value.primitive)}${alpha}`;
 }
 
@@ -409,5 +413,6 @@ export function colorValueHex(value: SemanticColorValue): string {
 export function semanticHex(name: SemanticColorName, theme: ThemeName): string {
   const entry = semanticEntries().find((candidate) => candidate.className === name);
   if (!entry) throw new Error(`Semantic Token이 아니다: ${name}`);
+
   return colorValueHex(entry.value[theme]);
 }

@@ -23,6 +23,7 @@ export function StackingTiers(): ReactElement {
       <div aria-hidden="true" className="relative isolate h-56 w-72 shrink-0">
         {[...names].reverse().map((name, index) => {
           const step = names.length - 1 - index;
+
           return (
             <div
               key={name}

@@ -36,6 +36,7 @@ async function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -231,6 +232,7 @@ describe("press 축소", () => {
     await new Promise((resolve) => setTimeout(resolve, 250));
     const scale = getComputedStyle(page.getByTestId("target").element()).scale;
     await commands.mouseUp();
+
     return scale;
   }
 

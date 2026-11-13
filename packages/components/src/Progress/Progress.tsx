@@ -69,6 +69,7 @@ const barClass =
 /** 0 이상 max 이하로 자른다. max가 0 이하이거나 숫자가 아니면 0으로 본다. */
 function clamp(value: number, max: number): number {
   if (!Number.isFinite(value) || !Number.isFinite(max) || max <= 0) return 0;
+
   return Math.min(Math.max(value, 0), max);
 }
 
@@ -87,6 +88,7 @@ export function Progress({
   const safeMax = Number.isFinite(max) && max > 0 ? max : 100;
   const now = clamp(value, safeMax);
   const percent = (now / safeMax) * 100;
+
   return (
     <div
       {...props}

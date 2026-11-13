@@ -43,6 +43,7 @@ function Tile({ tile, prefix }: { tile: ColorTile; prefix: string | null }): Rea
 function Samples({ group }: { group: ColorTileGroup }): ReactElement | null {
   const { role, family } = group;
   if (role === null || family === null) return null;
+
   return (
     <div className="mt-3 flex flex-wrap items-center gap-3 rounded-md border border-default p-3">
       <span className="text-label-sm text-muted">쓰임</span>
@@ -89,6 +90,7 @@ function Samples({ group }: { group: ColorTileGroup }): ReactElement | null {
 
 function ScaleCard({ group }: { group: ColorTileGroup }): ReactElement {
   const headingId = `color-scale-${group.id}`;
+
   return (
     <Card render={<section aria-labelledby={headingId} />}>
       <h3 id={headingId} className="mb-3 text-body-md">

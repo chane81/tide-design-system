@@ -36,6 +36,7 @@ interface DemoProps {
 /** 버튼을 누르면 Toast를 띄우는 예시. 큐는 이 예시 안에서만 쓴다. */
 function Demo({ buttons, maxVisible }: DemoProps): ReactElement {
   const [queue] = useState(() => new ToastQueue({ maxVisible }));
+
   return (
     <div className="flex flex-wrap gap-3">
       {buttons.map(({ label, toasts }) => (

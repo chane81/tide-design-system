@@ -16,6 +16,7 @@ function cli(...args: string[]): { status: number | null; stdout: string; stderr
     cwd: packageDir,
     encoding: "utf8",
   });
+
   return { status: result.status, stdout: result.stdout, stderr: result.stderr };
 }
 

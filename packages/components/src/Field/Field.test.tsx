@@ -149,6 +149,7 @@ describe("설명과 오류", () => {
   test("오류를 고치면 aria-invalid와 오류 메시지가 사라진다", async () => {
     function EmailField(): ReactElement {
       const [value, setValue] = useState("");
+
       return (
         <Field label="이메일" error={value.includes("@") ? undefined : "@를 넣어 주세요."}>
           <Input value={value} onChange={(event) => setValue(event.target.value)} />

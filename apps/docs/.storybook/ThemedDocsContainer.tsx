@@ -16,6 +16,7 @@ export function ThemedDocsContainer({
   context,
 }: PropsWithChildren<DocsContainerProps>): ReactElement {
   const theme = useSyncExternalStore(subscribeTheme, getTheme, getTheme);
+
   return (
     <DocsContainer context={context} theme={theme === "dark" ? themes.dark : themes.light}>
       {children}

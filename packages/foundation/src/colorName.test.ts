@@ -115,12 +115,14 @@ describe("테스트 전용 계열을 더하면", () => {
     vi.doMock("./color.ts", async (importOriginal) => {
       const original = await importOriginal<typeof import("./color.ts")>();
       const color = { ...original.color, pink };
+
       return {
         ...original,
         color,
         primitiveHex: (name: string): string => {
           if (name === "white" || name === "black") return color[name];
           const index = name.lastIndexOf("-");
+
           return (color as unknown as Record<string, Record<string, string>>)[
             name.slice(0, index)
           ]![name.slice(index + 1)]!;
@@ -129,6 +131,7 @@ describe("테스트 전용 계열을 더하면", () => {
     });
     const internal = await import("./internal.ts");
     vi.doUnmock("./color.ts");
+
     return internal;
   }
 

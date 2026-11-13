@@ -40,6 +40,7 @@ function Preview({ pair, theme }: { pair: ContrastPair; theme: ThemeName }): Rea
       </span>
     );
   }
+
   // UI 요소(경계·포커스·thumb)는 글자가 아니라 선으로 보여 준다.
   return (
     <span
@@ -82,6 +83,7 @@ export function ContrastPairs({ theme }: { theme: ThemeName }): ReactElement {
         <tbody>
           {contrastPairs.map((pair) => {
             const ratio = contrastPairRatio(pair, theme);
+
             return (
               <tr
                 key={`${pair.foreground}/${pair.background}/${pair.surface ?? ""}`}

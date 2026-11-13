@@ -236,6 +236,7 @@ export function checkColorContrast(
         ? opaqueSemanticHex(rule.background as SemanticColorName, theme, rule.surface)
         : slotHex[theme][rule.background as ColorSlot];
       const ratio = contrastRatio(slotHex[theme][rule.foreground], background);
+
       return { ...rule, theme, ratio, pass: ratio >= rule.minRatio };
     }),
   );
@@ -254,6 +255,7 @@ export function opaqueSemanticHex(
   if (hex.length === 7) return hex;
   if (!surface) throw new Error(`반투명 Token은 아래 표면이 있어야 검사할 수 있다: ${name}`);
   const alpha = Number.parseInt(hex.slice(7), 16) / 255;
+
   return mixHex(opaqueSemanticHex(surface, theme), hex.slice(0, 7), alpha);
 }
 
@@ -274,8 +276,10 @@ function relativeLuminance(hex: string): number {
   if (!match) throw new Error(`불투명한 6자리 hex가 아니다: ${hex}`);
   const [r, g, b] = match.slice(1).map((channel) => {
     const value = Number.parseInt(channel, 16) / 255;
+
     return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
   }) as [number, number, number];
+
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
@@ -287,5 +291,6 @@ function relativeLuminance(hex: string): number {
 export function contrastRatio(foreground: string, background: string): number {
   const a = relativeLuminance(foreground);
   const b = relativeLuminance(background);
+
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }

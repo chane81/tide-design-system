@@ -22,6 +22,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 
@@ -118,6 +119,7 @@ describe("입력", () => {
   test("제어: value와 onChange로 값을 앱이 정한다", async () => {
     function Upper(): ReactElement {
       const [value, setValue] = useState("");
+
       return (
         <div>
           <Textarea
