@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.4.1
+
+### 수정 (patch)
+
+- TDS 0.11.1 반영. 문서 사이트가 새 TDS 버전의 Component·Token으로 다시 배포된다.
+
 ## 0.4.0
 
 ### 추가와 개편 (minor)
