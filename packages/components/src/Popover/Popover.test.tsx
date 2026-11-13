@@ -25,7 +25,7 @@ import {
   type PopoverContentProps,
   type PopoverProps,
   type PopoverTriggerProps,
-} from "./Popover.tsx";
+} from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
