@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 450" width="920" height="450" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif">
+  <!-- light가 기본, 보는 환경이 dark면 아래 media query로 바뀐다. 색은 Tide 색 계열 값이다 -->
+  <style>
+    .bg { fill: #f5f5f6; }
+    .title { fill: #28292c; }
+    .t1 { fill: #3f4247; }
+    .t2 { fill: #5b6068; }
+    .note { fill: #2b5fa8; }
+    .ln { fill: none; stroke: #82878e; }
+    .box { fill: #ffffff; stroke: #82878e; }
+    .dash { fill: none; stroke: #82878e; }
+    .group { fill: none; stroke: #4e7aba; }
+    .group-t { fill: #2b5fa8; }
+    .purple { fill: #f0e9ff; stroke: #c4b5e4; } .purple-1 { fill: #412963; } .purple-2 { fill: #6b4e99; }
+    .mint { fill: #d7f4f1; stroke: #91cbc6; } .mint-1 { fill: #11403e; } .mint-2 { fill: #116e6a; }
+    .blue { fill: #e3eefd; stroke: #a7c0e3; } .blue-1 { fill: #113465; } .blue-2 { fill: #2b5fa8; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1a1a1a; }
+      .title { fill: #f0f0f0; }
+      .t1 { fill: #e8e8e8; }
+      .t2 { fill: #9a9a9a; }
+      .note { fill: #65a1f9; }
+      .ln { stroke: #8a8a8a; }
+      .box { fill: #3a3a3a; stroke: #9a9a9a; }
+      .dash { stroke: #777777; }
+      .group { stroke: #65a1f9; }
+      .group-t { fill: #a7c0e3; }
+      .purple { fill: #412963; stroke: #c4b5e4; } .purple-1 { fill: #f0e9ff; } .purple-2 { fill: #c4b5e4; }
+      .mint { fill: #11403e; stroke: #91cbc6; } .mint-1 { fill: #d7f4f1; } .mint-2 { fill: #91cbc6; }
+      .blue { fill: #113465; stroke: #65a1f9; } .blue-1 { fill: #e3eefd; } .blue-2 { fill: #a7c0e3; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="ln" d="M0,0 L10,5 L0,10" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="920" height="450" rx="16"/>
+
+  <text class="title" x="460" y="40" font-size="18" font-weight="700" text-anchor="middle">패키지 셋 — 앱은 components와 icons를 설치한다</text>
+
+  <!-- 앱 -->
+  <rect class="box" x="30" y="100" width="150" height="80" rx="10"/>
+  <text class="t1" x="105" y="136" font-size="18" font-weight="700" text-anchor="middle">앱</text>
+  <text class="t2" x="105" y="158" font-size="12" text-anchor="middle">Next.js 등</text>
+
+  <!-- 같은 버전 묶음 -->
+  <rect class="group" x="240" y="62" width="430" height="300" rx="14" stroke-dasharray="6 5"/>
+  <text class="group-t" x="260" y="84" font-size="14" font-weight="700">TDS — 언제나 같은 버전으로 함께 릴리스</text>
+
+  <!-- components -->
+  <rect class="blue" x="270" y="102" width="370" height="76" rx="10"/>
+  <text class="blue-1" x="455" y="135" font-size="17" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">@tide-tds/components</text>
+  <text class="blue-2" x="455" y="158" font-size="12" text-anchor="middle">React Component + 앱이 불러오는 styles.css</text>
+
+  <!-- icons -->
+  <rect class="purple" x="270" y="262" width="175" height="76" rx="10"/>
+  <text class="purple-1" x="357" y="295" font-size="14" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">@tide-tds/icons</text>
+  <text class="purple-2" x="357" y="318" font-size="12" text-anchor="middle">아이콘 Component</text>
+
+  <!-- foundation -->
+  <rect class="mint" x="465" y="262" width="175" height="76" rx="10"/>
+  <text class="mint-1" x="552" y="295" font-size="13" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">@tide-tds/foundation</text>
+  <text class="mint-2" x="552" y="318" font-size="12" text-anchor="middle">Token · CSS · tide-color CLI</text>
+
+  <!-- Tailwind -->
+  <rect class="dash" x="720" y="262" width="170" height="76" rx="10" stroke-dasharray="4 4"/>
+  <text class="t1" x="805" y="295" font-size="15" font-weight="700" text-anchor="middle">Tailwind CSS 4</text>
+  <text class="t2" x="805" y="318" font-size="12" text-anchor="middle">앱이 설치 (peer)</text>
+
+  <!-- 화살표 -->
+  <line class="ln" x1="180" y1="140" x2="268" y2="140" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="357" y1="178" x2="357" y2="260" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="552" y1="178" x2="552" y2="260" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line class="ln" x1="640" y1="300" x2="718" y2="300" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <text class="t2" x="679" y="290" font-size="11" text-anchor="middle">theme 연결</text>
+  <!-- 앱 → icons 직접 -->
+  <path class="ln" d="M105,180 V392 H357 V340" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="t2" x="120" y="384" font-size="12">앱도 직접 설치 (pnpm은 전이 의존성을 import하지 못하게 막는다)</text>
+
+  <!-- 하단 설명 -->
+  <text class="note" x="460" y="428" font-size="14" font-weight="700" text-anchor="middle">foundation은 components와 함께 설치된다 — 앱이 따로 설치하지 않아도 된다</text>
+</svg>
