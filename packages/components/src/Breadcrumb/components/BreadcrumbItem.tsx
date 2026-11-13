@@ -1,8 +1,8 @@
 import { ChevronRightIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { itemClass, separatorClass } from "../constants/breadcrumbClass.ts";
+import { cn } from "../../_internal/libs/cn";
+import { itemClass, separatorClass } from "../constants/breadcrumbClass";
 
 export interface BreadcrumbItemProps extends ComponentProps<"li"> {}
 

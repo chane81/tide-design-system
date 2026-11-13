@@ -10,17 +10,17 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion.ts";
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion";
 
-import { Button } from "../Button/Button.tsx";
-import { Dialog, DialogContent, DialogTitle } from "../Dialog/index.ts";
+import { Button } from "../Button/Button";
+import { Dialog, DialogContent, DialogTitle } from "../Dialog/index";
 import {
   ToastQueue,
   ToastRegion,
   type ToastOptions,
   type ToastQueueOptions,
   type ToastRegionProps,
-} from "./index.ts";
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

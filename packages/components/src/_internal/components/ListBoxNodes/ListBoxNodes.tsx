@@ -12,9 +12,9 @@
 import type { ReactNode } from "react";
 import type { ListState } from "react-stately";
 
-import { listSeparatorClass } from "../../constants/listClass.ts";
-import { ListBoxOptionView } from "./components/ListBoxOptionView.tsx";
-import { ListBoxSectionView } from "./components/ListBoxSectionView.tsx";
+import { listSeparatorClass } from "../../constants/listClass";
+import { ListBoxOptionView } from "./components/ListBoxOptionView";
+import { ListBoxSectionView } from "./components/ListBoxSectionView";
 
 interface ListBoxNodesProps {
   readonly state: ListState<object>;

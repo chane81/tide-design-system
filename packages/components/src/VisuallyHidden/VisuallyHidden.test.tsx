@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { VisuallyHidden } from "./VisuallyHidden.tsx";
+import { VisuallyHidden } from "./VisuallyHidden";
 
 test("화면에는 보이지 않지만 접근 가능한 이름이 된다", async () => {
   await render(

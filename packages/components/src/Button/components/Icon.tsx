@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from "react";
 
-import { iconSizeClass } from "../constants/buttonClass.ts";
-import type { ButtonSize } from "../types.ts";
+import { iconSizeClass } from "../constants/buttonClass";
+import type { ButtonSize } from "../types";
 
 export function Icon({ size, children }: { size: ButtonSize; children: ReactNode }): ReactElement {
   return (

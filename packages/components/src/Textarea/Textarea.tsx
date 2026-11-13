@@ -4,10 +4,10 @@
 
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import { inputBaseClass } from "../_internal/constants/inputClass.ts";
-import type { Size } from "../types.ts";
+import { cn } from "../_internal/libs/cn";
+import { useFieldControl } from "../_internal/hooks/useFieldControl";
+import { inputBaseClass } from "../_internal/constants/inputClass";
+import type { Size } from "../types";
 
 /** Textarea의 size. Input과 같이 `sm`/`md`/`lg`만 받는다. */
 type TextareaSize = Extract<Size, "sm" | "md" | "lg">;

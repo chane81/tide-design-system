@@ -4,16 +4,16 @@ import { useMemo, type ReactElement, type RefObject } from "react";
 import { mergeProps, mergeRefs, useMenu } from "react-aria";
 import { useTreeState } from "react-stately";
 
-import { listPopupClass, listSeparatorClass } from "../../_internal/constants/listClass.ts";
-import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab.ts";
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay.ts";
-import { cn } from "../../_internal/libs/cn.ts";
-import { resolveCollectionChildren } from "../../_internal/libs/listCollection.ts";
-import type { MenuContextValue } from "../hooks/useMenuContext.ts";
-import type { MenuContentProps } from "./MenuContent.tsx";
-import { MenuItemView } from "./MenuItemView.tsx";
-import { MenuSectionView } from "./MenuSectionView.tsx";
+import { listPopupClass, listSeparatorClass } from "../../_internal/constants/listClass";
+import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
+import { cn } from "../../_internal/libs/cn";
+import { resolveCollectionChildren } from "../../_internal/libs/listCollection";
+import type { MenuContextValue } from "../hooks/useMenuContext";
+import type { MenuContentProps } from "./MenuContent";
+import { MenuItemView } from "./MenuItemView";
+import { MenuSectionView } from "./MenuSectionView";
 
 export interface MenuContentInnerProps extends MenuContentProps {
   readonly context: MenuContextValue;

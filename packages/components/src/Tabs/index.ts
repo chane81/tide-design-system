@@ -1,9 +1,9 @@
-export { Tabs } from "./Tabs.tsx";
-export type { TabsProps } from "./Tabs.tsx";
-export { TabList } from "./components/TabList.tsx";
-export type { TabListProps } from "./components/TabList.tsx";
-export { Tab } from "./components/Tab.tsx";
-export type { TabProps } from "./components/Tab.tsx";
-export { TabPanel } from "./components/TabPanel.tsx";
-export type { TabPanelProps } from "./components/TabPanel.tsx";
-export type { TabsActivationMode, TabsOrientation } from "./types.ts";
+export { Tabs } from "./Tabs";
+export type { TabsProps } from "./Tabs";
+export { TabList } from "./components/TabList";
+export type { TabListProps } from "./components/TabList";
+export { Tab } from "./components/Tab";
+export type { TabProps } from "./components/Tab";
+export { TabPanel } from "./components/TabPanel";
+export type { TabPanelProps } from "./components/TabPanel";
+export type { TabsActivationMode, TabsOrientation } from "./types";

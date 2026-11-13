@@ -10,8 +10,8 @@ import {
 // 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
 import { mergeProps, mergeRefs, usePress } from "react-aria";
 
-import { useDialogContext } from "../../_internal/hooks/useDialogContext.ts";
-import { renderElement } from "../../_internal/libs/renderElement.ts";
+import { useDialogContext } from "../../_internal/hooks/useDialogContext";
+import { renderElement } from "../../_internal/libs/renderElement";
 
 export interface DialogTriggerProps extends ComponentProps<"button"> {
   /**

@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Separator, type SeparatorProps } from "./Separator.tsx";
+import { Separator, type SeparatorProps } from "./Separator";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { cn } from "./cn.ts";
+import { cn } from "./cn";
 
 describe("cn", () => {
   it("뒤에 온 사용자 class가 같은 속성의 Tide class를 이긴다", () => {

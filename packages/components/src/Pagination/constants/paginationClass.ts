@@ -1,4 +1,4 @@
-import type { ButtonProps } from "../../Button/Button.tsx";
+import type { ButtonProps } from "../../Button/Button";
 
 /** 페이지 번호·이전/다음 항목의 고정 size. 둘 다 32×32px다(24×24 이상). */
 export const itemSize = "sm" satisfies ButtonProps["size"];

@@ -1,5 +1,5 @@
-import { alertLayoutClass } from "../../_internal/constants/alertClass.ts";
-import { overlaySurfaceClass, popoverMotionClass } from "../../_internal/constants/overlayClass.ts";
+import { alertLayoutClass } from "../../_internal/constants/alertClass";
+import { overlaySurfaceClass, popoverMotionClass } from "../../_internal/constants/overlayClass";
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // - 영역: 화면 아래 끝쪽(LTR이면 오른쪽)에서 16px 떨어져 고정한다. 폭은 화면 폭 − 32px, 최대 24rem(max-w-96)이다.

@@ -1,11 +1,11 @@
 "use client";
 import { useRef, type ComponentProps, type ReactElement } from "react";
 
-import { OverlayPortal } from "../../_internal/components/OverlayPortal.tsx";
-import { useDialogContext } from "../../_internal/hooks/useDialogContext.ts";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import type { DialogSize } from "../types.ts";
-import { DialogContentInner } from "./DialogContentInner.tsx";
+import { OverlayPortal } from "../../_internal/components/OverlayPortal";
+import { useDialogContext } from "../../_internal/hooks/useDialogContext";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import type { DialogSize } from "../types";
+import { DialogContentInner } from "./DialogContentInner";
 
 export interface DialogContentProps extends Omit<ComponentProps<"div">, "id" | "role"> {
   /** 최대 폭. 기본값은 `md`(32rem)다. 화면이 좁으면 화면 폭 − 32px까지 줄어든다. */

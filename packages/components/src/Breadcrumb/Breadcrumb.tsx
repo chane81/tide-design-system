@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { listClass } from "./constants/breadcrumbClass.ts";
+import { listClass } from "./constants/breadcrumbClass";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 //

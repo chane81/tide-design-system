@@ -5,7 +5,7 @@ import {
   asCollectionComponent,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "../../_internal/libs/listCollection.ts";
+} from "../../_internal/libs/listCollection";
 
 export interface TabProps
   extends

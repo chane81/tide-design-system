@@ -1,2 +1,2 @@
-export { RepoMarkdown } from "./RepoMarkdown.tsx";
-export type { RepoMarkdownProps } from "./RepoMarkdown.tsx";
+export { RepoMarkdown } from "./RepoMarkdown";
+export type { RepoMarkdownProps } from "./RepoMarkdown";

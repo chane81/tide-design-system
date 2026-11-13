@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Card, type CardProps } from "./Card.tsx";
+import { Card, type CardProps } from "./Card";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

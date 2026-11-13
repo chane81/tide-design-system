@@ -3,12 +3,12 @@ import { useMemo, type ReactElement, type RefObject } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { DismissButton, mergeProps, mergeRefs, useDialog } from "react-aria";
 
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay.ts";
-import { cn } from "../../_internal/libs/cn.ts";
-import { contentClass } from "../constants/popoverClass.ts";
-import type { PopoverContextValue } from "../hooks/usePopoverContext.ts";
-import type { PopoverContentProps } from "./PopoverContent.tsx";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
+import { cn } from "../../_internal/libs/cn";
+import { contentClass } from "../constants/popoverClass";
+import type { PopoverContextValue } from "../hooks/usePopoverContext";
+import type { PopoverContentProps } from "./PopoverContent";
 
 export interface PopoverContentInnerProps extends PopoverContentProps {
   readonly context: PopoverContextValue;

@@ -4,10 +4,10 @@ import { useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs, useButton } from "react-aria";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { chevronClass, triggerClass } from "../constants/accordionClass.ts";
-import { useAccordionItemContext } from "../hooks/useAccordionItemContext.ts";
-import type { AccordionHeadingLevel } from "../types.ts";
+import { cn } from "../../_internal/libs/cn";
+import { chevronClass, triggerClass } from "../constants/accordionClass";
+import { useAccordionItemContext } from "../hooks/useAccordionItemContext";
+import type { AccordionHeadingLevel } from "../types";
 
 export interface AccordionTriggerProps extends Omit<
   ComponentProps<"button">,

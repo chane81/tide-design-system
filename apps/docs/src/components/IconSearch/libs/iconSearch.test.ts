@@ -1,7 +1,7 @@
 import * as icons from "@tide-design/icons";
 import { describe, expect, it } from "vitest";
 
-import { buildIconIndex, iconIndex, importStatement, searchIcons } from "./iconSearch.ts";
+import { buildIconIndex, iconIndex, importStatement, searchIcons } from "./iconSearch";
 
 const index = buildIconIndex(
   { HouseIcon: "house", ArrowDownIcon: "arrow-down", ArrowUpIcon: "arrow-up", XIcon: "x" },

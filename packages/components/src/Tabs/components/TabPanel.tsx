@@ -1,9 +1,9 @@
 "use client";
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { tabPanelClass } from "../constants/tabsClass.ts";
-import { useTabsContext } from "../hooks/useTabsContext.ts";
+import { cn } from "../../_internal/libs/cn";
+import { tabPanelClass } from "../constants/tabsClass";
+import { useTabsContext } from "../hooks/useTabsContext";
 
 export interface TabPanelProps extends Omit<ComponentProps<"div">, "id" | "role"> {
   /** 이어지는 `Tab`의 값. 그 탭을 고른 동안만 렌더한다. */

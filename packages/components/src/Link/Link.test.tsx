@@ -1,15 +1,12 @@
 // Link 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 14).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서도 밑줄과 포커스 ring이 남는지 본다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
-import NextLink from "next/link.js";
+import Next from "next/link.js";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Link, type LinkProps } from "./Link.tsx";
-
-// nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
-const Next = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+import { Link, type LinkProps } from "./Link";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-design/foundation" {

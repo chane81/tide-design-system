@@ -1,7 +1,7 @@
 import type { TextStyleName } from "@tide-design/foundation";
 import type { HTMLAttributes, ReactElement, Ref } from "react";
 
-import { renderElement } from "../_internal/libs/renderElement.ts";
+import { renderElement } from "../_internal/libs/renderElement";
 
 /** heading·display 텍스트 스타일. 항상 `<h*>`로 렌더되고 `level`을 받는다. */
 type HeadingVariant = Extract<TextStyleName, `display-${string}` | `heading-${string}`>;

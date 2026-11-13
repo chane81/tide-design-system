@@ -1,5 +1,5 @@
-import { color, type ColorStep } from "./color.ts";
-import { colorFamilyNames, isRole, roleNames, roleSlotToken } from "./colorName.ts";
+import { color, type ColorStep } from "./color";
+import { colorFamilyNames, isRole, roleNames, roleSlotToken } from "./colorName";
 import {
   colorSlots,
   familySlotSteps,
@@ -8,7 +8,7 @@ import {
   slotValueHex,
   type ColorSlot,
   type SlotRule,
-} from "./colorSlot.ts";
+} from "./colorSlot";
 import {
   roleFamily,
   semanticEntries,
@@ -16,7 +16,7 @@ import {
   type SemanticColorName,
   type SemanticNamespace,
   type ThemeName,
-} from "./semantic.ts";
+} from "./semantic";
 
 // 색 계열 변수 묶음과 `[data-color]` 규칙의 CSS 조각(tide-v0-impl 티켓 40, ADR 0011).
 // 빌드 스크립트(tokens.css)와 tide-color CLI(앱 브랜드 계열 CSS)가 같은 함수로 만든다.

@@ -2,8 +2,8 @@ import {
   backdropMotionClass,
   dialogMotionClass,
   dialogSurfaceClass,
-} from "../../_internal/constants/overlayClass.ts";
-import type { DialogSize } from "../types.ts";
+} from "../../_internal/constants/overlayClass";
+import type { DialogSize } from "../types";
 
 // class는 문자열 그대로 적는다(_internal/constants/overlayClass.ts 참고).
 // - 바깥 막: 화면 전체(fixed inset-0)를 bg-overlay로 덮고 쌓임은 z-modal(200)이다. 안의 Select·Menu 목록(z-popover 300)과

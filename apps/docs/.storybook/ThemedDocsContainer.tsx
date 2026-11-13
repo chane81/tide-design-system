@@ -3,7 +3,7 @@ import type { PropsWithChildren, ReactElement } from "react";
 import { useSyncExternalStore } from "react";
 import { themes } from "storybook/theming";
 
-import { getTheme, subscribeTheme } from "./theme.ts";
+import { getTheme, subscribeTheme } from "./theme";
 
 /**
  * Docs 페이지의 Storybook 글·표·코드 색을 툴바 Theme에 맞춘다.

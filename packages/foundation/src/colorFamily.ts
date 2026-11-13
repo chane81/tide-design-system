@@ -5,9 +5,9 @@
  * CSS는 Tide 계열과 같은 매핑 규칙으로 light·dark 계열 변수와 `[data-color="<이름>"]` 규칙을 담는다.
  * @packageDocumentation
  */
-import { color, type ColorStep } from "./color.ts";
-import { tideColorNames } from "./colorName.ts";
-import { dataColorRule, familyThemeDeclarations, primitiveVar } from "./colorCss.ts";
+import { color, type ColorStep } from "./color";
+import { tideColorNames } from "./colorName";
+import { dataColorRule, familyThemeDeclarations, primitiveVar } from "./colorCss";
 import {
   colorSlots,
   resolveSlotSteps,
@@ -18,9 +18,9 @@ import {
   type SlotRule,
   type SlotStep,
   type SlotValue,
-} from "./colorSlot.ts";
-import { checkColorContrast, type ColorContrastResult } from "./contrast.ts";
-import type { ThemeName } from "./semantic.ts";
+} from "./colorSlot";
+import { checkColorContrast, type ColorContrastResult } from "./contrast";
+import type { ThemeName } from "./semantic";
 
 export type {
   ColorSlot,
@@ -31,8 +31,8 @@ export type {
   SlotRule,
   SlotStep,
   SlotValue,
-} from "./colorSlot.ts";
-export type { ColorContrastResult, ColorContrastRule } from "./contrast.ts";
+} from "./colorSlot";
+export type { ColorContrastResult, ColorContrastRule } from "./contrast";
 
 /** 50~950의 11단계 스케일. 값은 `#rrggbb` hex다. */
 export type ColorScale = Readonly<Record<ColorStep, string>>;

@@ -1,6 +1,6 @@
 import { ToastQueue as StatelyToastQueue } from "react-stately";
 
-import type { ToastContent, ToastOptions, ToastQueueOptions } from "../types.ts";
+import type { ToastContent, ToastOptions, ToastQueueOptions } from "../types";
 
 /** 자동으로 닫히는 Toast가 보이는 가장 짧은 시간(ms). React Aria 문서가 권하는 최소값과 같다. */
 const minTimeout = 5000;

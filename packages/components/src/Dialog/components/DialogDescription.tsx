@@ -1,9 +1,9 @@
 "use client";
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { useDialogPartsContext } from "../hooks/useDialogPartsContext.ts";
-import { usePartId } from "../hooks/usePartId.ts";
+import { cn } from "../../_internal/libs/cn";
+import { useDialogPartsContext } from "../hooks/useDialogPartsContext";
+import { usePartId } from "../hooks/usePartId";
 
 export type DialogDescriptionProps = ComponentProps<"p">;
 

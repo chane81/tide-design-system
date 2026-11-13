@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Progress, type ProgressProps } from "./Progress.tsx";
+import { Progress, type ProgressProps } from "./Progress";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-design/foundation" {

@@ -15,7 +15,7 @@ import {
   colorFamilyCss,
   defineColorFamily,
   type ColorFamilyDefinition,
-} from "./colorFamily.ts";
+} from "./colorFamily";
 
 const usage = "사용법: tide-color build <색 계열 파일(.ts, .js)> > <출력 CSS>";
 

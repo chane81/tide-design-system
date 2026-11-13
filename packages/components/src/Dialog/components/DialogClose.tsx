@@ -1,8 +1,8 @@
 "use client";
 import { createElement, type ComponentProps, type MouseEvent, type ReactElement } from "react";
 
-import { useDialogContext } from "../../_internal/hooks/useDialogContext.ts";
-import { renderElement } from "../../_internal/libs/renderElement.ts";
+import { useDialogContext } from "../../_internal/hooks/useDialogContext";
+import { renderElement } from "../../_internal/libs/renderElement";
 
 export interface DialogCloseProps extends ComponentProps<"button"> {
   /**

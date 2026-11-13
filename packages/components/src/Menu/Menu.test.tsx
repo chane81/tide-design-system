@@ -9,10 +9,10 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion.ts";
+import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion";
 
-import { Button } from "../Button/Button.tsx";
-import { listItemClass } from "../_internal/constants/listClass.ts";
+import { Button } from "../Button/Button";
+import { listItemClass } from "../_internal/constants/listClass";
 import {
   Menu,
   MenuContent,
@@ -22,7 +22,7 @@ import {
   type MenuContentProps,
   type MenuItemProps,
   type MenuProps,
-} from "./index.ts";
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

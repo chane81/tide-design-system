@@ -3,8 +3,8 @@
 // 스냅숏은 티켓 40 구현 전 main(fb22761)에서 만들었다. 값을 의도적으로 바꿀 때만 `vitest -u`로 갱신한다.
 import { describe, expect, it } from "vitest";
 
-import { contrastPairs, type ThemeName } from "../src/index.ts";
-import { contrastPairRatio, semanticEntries, semanticHex } from "../src/internal.ts";
+import { contrastPairs, type ThemeName } from "../src/index";
+import { contrastPairRatio, semanticEntries, semanticHex } from "../src/internal";
 
 const themes: ThemeName[] = ["light", "dark"];
 

@@ -4,16 +4,13 @@ import { useEffect, useMemo, useRef, useState, type ReactElement, type RefObject
 // 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
 import { mergeProps, mergeRefs, useDialog, useFocusManager, useModalOverlay } from "react-aria";
 
-import type { DialogContextValue } from "../../_internal/hooks/useDialogContext.ts";
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { cn } from "../../_internal/libs/cn.ts";
-import { IconButton } from "../../IconButton/IconButton.tsx";
-import { backdropClass, contentClass, sizeClass } from "../constants/dialogClass.ts";
-import {
-  DialogPartsContext,
-  type DialogPartsContextValue,
-} from "../hooks/useDialogPartsContext.ts";
-import type { DialogContentProps } from "./DialogContent.tsx";
+import type { DialogContextValue } from "../../_internal/hooks/useDialogContext";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { cn } from "../../_internal/libs/cn";
+import { IconButton } from "../../IconButton/IconButton";
+import { backdropClass, contentClass, sizeClass } from "../constants/dialogClass";
+import { DialogPartsContext, type DialogPartsContextValue } from "../hooks/useDialogPartsContext";
+import type { DialogContentProps } from "./DialogContent";
 
 export interface DialogContentInnerProps extends DialogContentProps {
   readonly context: DialogContextValue;

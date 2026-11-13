@@ -5,7 +5,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Spinner, type SpinnerProps } from "./Spinner.tsx";
+import { Spinner, type SpinnerProps } from "./Spinner";
 
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;

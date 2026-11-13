@@ -3,14 +3,14 @@
 // hover·누름 같은 일시 상태 글자와 solid 위 글자 4:1, UI 경계·포커스·thumb 3:1.
 import { describe, expect, it } from "vitest";
 
-import { color, contrastPairs, type ThemeName } from "../src/index.ts";
+import { color, contrastPairs, type ThemeName } from "../src/index";
 import {
   contrastExclusions,
   contrastPairRatio,
   contrastRatio,
   semanticEntries,
   semanticHex,
-} from "../src/internal.ts";
+} from "../src/internal";
 
 const themes: ThemeName[] = ["light", "dark"];
 

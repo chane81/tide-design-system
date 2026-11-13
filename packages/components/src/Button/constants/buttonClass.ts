@@ -1,4 +1,4 @@
-import type { ButtonSize } from "../types.ts";
+import type { ButtonSize } from "../types";
 
 // 채움 방식 맵, 누름 축소, 상태 처리는 IconButton과 함께 쓰는 `_internal/constants/pressableClass.ts`·`_internal/libs/pressableState.ts`에 있다(티켓 14).
 

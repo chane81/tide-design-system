@@ -4,13 +4,9 @@
 
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import {
-  inputBaseClass,
-  inputSizeClass,
-  type InputSize,
-} from "../_internal/constants/inputClass.ts";
+import { cn } from "../_internal/libs/cn";
+import { useFieldControl } from "../_internal/hooks/useFieldControl";
+import { inputBaseClass, inputSizeClass, type InputSize } from "../_internal/constants/inputClass";
 
 export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
   /** 높이 `sm` 32px, `md` 40px, `lg` 48px. 같은 size의 Button과 높이가 같다. 기본값은 `md`다. */

@@ -4,11 +4,11 @@ import { useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode
 import { mergeProps, mergeRefs, useTagGroup } from "react-aria";
 import { useListState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { resolveCollectionChildren } from "../../_internal/libs/listCollection.ts";
-import { tagGroupClass } from "../constants/tagClass.ts";
-import { TagGroupContext, type TagGroupContextValue } from "../hooks/useTagGroupContext.ts";
-import { TagView } from "./TagView.tsx";
+import { cn } from "../../_internal/libs/cn";
+import { resolveCollectionChildren } from "../../_internal/libs/listCollection";
+import { tagGroupClass } from "../constants/tagClass";
+import { TagGroupContext, type TagGroupContextValue } from "../hooks/useTagGroupContext";
+import { TagView } from "./TagView";
 
 type TagGroupNameProps =
   | {

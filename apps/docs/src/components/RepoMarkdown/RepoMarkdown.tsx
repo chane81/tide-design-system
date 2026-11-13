@@ -1,8 +1,8 @@
 import { CodeOrSourceMdx, HeadersMdx, Markdown } from "@storybook/addon-docs/blocks";
 import type { ReactElement } from "react";
 
-import { DocsAnchor } from "../DocsAnchor.tsx";
-import { githubSlug, REPO_URL, rewriteRepoLinks } from "./libs/links.ts";
+import { DocsAnchor } from "../DocsAnchor";
+import { githubSlug, REPO_URL, rewriteRepoLinks } from "./libs/links";
 
 export interface RepoMarkdownProps {
   /** 원문 문자열. MDX에서 `?raw`로 import한 값이다. */

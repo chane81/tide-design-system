@@ -3,8 +3,8 @@ import { createElement, useMemo, type ComponentProps, type ReactElement } from "
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs } from "react-aria";
 
-import { renderElement } from "../../_internal/libs/renderElement.ts";
-import { useTooltipContext } from "../hooks/useTooltipContext.ts";
+import { renderElement } from "../../_internal/libs/renderElement";
+import { useTooltipContext } from "../hooks/useTooltipContext";
 
 export interface TooltipTriggerProps extends ComponentProps<"button"> {
   /**

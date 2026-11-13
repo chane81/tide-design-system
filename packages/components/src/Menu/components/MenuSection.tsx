@@ -5,7 +5,7 @@ import {
   asCollectionComponent,
   sectionCollectionNode,
   type CollectionSectionProps,
-} from "../../_internal/libs/listCollection.ts";
+} from "../../_internal/libs/listCollection";
 
 export interface MenuSectionProps extends CollectionSectionProps {
   /** 묶음 감싸개(`<div role="presentation">`)에 붙는 class */

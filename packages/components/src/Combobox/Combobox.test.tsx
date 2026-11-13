@@ -11,13 +11,13 @@ import { describe, expect, test, vi } from "vitest";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, styleSnapshot } from "../../test/motion.ts";
+import { captureExit, styleSnapshot } from "../../test/motion";
 
-import { Button } from "../Button/Button.tsx";
-import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./index.ts";
-import { Field } from "../Field/Field.tsx";
-import { Input } from "../Input/Input.tsx";
-import { Select, SelectItem } from "../Select/index.ts";
+import { Button } from "../Button/Button";
+import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./index";
+import { Field } from "../Field/Field";
+import { Input } from "../Input/Input";
+import { Select, SelectItem } from "../Select/index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

@@ -1,4 +1,4 @@
-import { overlaySurfaceClass, popoverMotionClass } from "../../_internal/constants/overlayClass.ts";
+import { overlaySurfaceClass, popoverMotionClass } from "../../_internal/constants/overlayClass";
 
 // class는 문자열 그대로 적는다(_internal/constants/overlayClass.ts 참고).
 // - 표면: raised + shadow-md + radius lg + border-raised(overlaySurfaceClass). 쌓임은 z-popover(300)다.

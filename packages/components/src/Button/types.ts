@@ -1,4 +1,4 @@
-import type { FillVariant, Size } from "../types.ts";
+import type { FillVariant, Size } from "../types";
 
 /** Button의 채움 방식. 4개를 모두 받는다. */
 export type ButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;

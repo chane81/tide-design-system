@@ -1,1 +1,1 @@
-export { IconSearch } from "./IconSearch.tsx";
+export { IconSearch } from "./IconSearch";

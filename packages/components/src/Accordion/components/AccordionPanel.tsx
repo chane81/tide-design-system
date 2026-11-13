@@ -3,9 +3,9 @@ import { useMemo, type ComponentProps, type ReactElement } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs } from "react-aria";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { panelClass } from "../constants/accordionClass.ts";
-import { useAccordionItemContext } from "../hooks/useAccordionItemContext.ts";
+import { cn } from "../../_internal/libs/cn";
+import { panelClass } from "../constants/accordionClass";
+import { useAccordionItemContext } from "../hooks/useAccordionItemContext";
 
 export interface AccordionPanelProps extends Omit<
   ComponentProps<"div">,

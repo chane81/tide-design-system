@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { headerCellClass } from "../constants/tableClass.ts";
+import { cn } from "../../_internal/libs/cn";
+import { headerCellClass } from "../constants/tableClass";
 
 export interface TableHeaderCellProps extends ComponentProps<"th"> {
   /**

@@ -1,8 +1,8 @@
-export { Breadcrumb } from "./Breadcrumb.tsx";
-export type { BreadcrumbProps } from "./Breadcrumb.tsx";
-export { BreadcrumbItem } from "./components/BreadcrumbItem.tsx";
-export type { BreadcrumbItemProps } from "./components/BreadcrumbItem.tsx";
-export { BreadcrumbLink } from "./components/BreadcrumbLink.tsx";
-export type { BreadcrumbLinkProps } from "./components/BreadcrumbLink.tsx";
-export { BreadcrumbCurrent } from "./components/BreadcrumbCurrent.tsx";
-export type { BreadcrumbCurrentProps } from "./components/BreadcrumbCurrent.tsx";
+export { Breadcrumb } from "./Breadcrumb";
+export type { BreadcrumbProps } from "./Breadcrumb";
+export { BreadcrumbItem } from "./components/BreadcrumbItem";
+export type { BreadcrumbItemProps } from "./components/BreadcrumbItem";
+export { BreadcrumbLink } from "./components/BreadcrumbLink";
+export type { BreadcrumbLinkProps } from "./components/BreadcrumbLink";
+export { BreadcrumbCurrent } from "./components/BreadcrumbCurrent";
+export type { BreadcrumbCurrentProps } from "./components/BreadcrumbCurrent";

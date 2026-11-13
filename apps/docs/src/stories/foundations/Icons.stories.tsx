@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CircleCheckIcon, PlusIcon, SearchIcon, TrashIcon, XIcon } from "@tide-design/icons";
 
-import { IconSearch } from "../../components/IconSearch/index.ts";
+import { IconSearch } from "../../components/IconSearch/index";
 
 // 아이콘 페이지(Foundation/아이콘)의 예시. MDX에서 Canvas로 보여 준다.
 // 버튼 모양은 예시용 기본 버튼이다(Button Component는 티켓 13).

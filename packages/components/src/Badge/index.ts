@@ -1,2 +1,2 @@
-export { Badge } from "./Badge.tsx";
-export type { BadgeProps } from "./Badge.tsx";
+export { Badge } from "./Badge";
+export type { BadgeProps } from "./Badge";

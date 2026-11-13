@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Badge, type BadgeProps } from "./Badge.tsx";
+import { Badge, type BadgeProps } from "./Badge";
 
 // 앱 Role(brand)과 앱 장식 계열(leaf)을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-design/foundation" {

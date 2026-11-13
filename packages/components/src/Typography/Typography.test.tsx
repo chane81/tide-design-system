@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Typography, type TypographyProps } from "./Typography.tsx";
+import { Typography, type TypographyProps } from "./Typography";
 
 // 기본 요소(spec 「Component 33개와 구현 순서」 Typography). [variant, 요소, heading 단계]
 const defaults: [NonNullable<TypographyProps["variant"]>, string, number | undefined][] = [

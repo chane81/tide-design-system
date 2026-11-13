@@ -15,9 +15,9 @@ import {
   openControl,
   styleSnapshot,
   transitions,
-} from "../../test/motion.ts";
+} from "../../test/motion";
 
-import { Button } from "../Button/Button.tsx";
+import { Button } from "../Button/Button";
 import {
   Popover,
   PopoverContent,
@@ -25,7 +25,7 @@ import {
   type PopoverContentProps,
   type PopoverProps,
   type PopoverTriggerProps,
-} from "./index.ts";
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

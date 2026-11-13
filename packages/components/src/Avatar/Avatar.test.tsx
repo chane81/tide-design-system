@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { commands, page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Avatar, type AvatarProps } from "./Avatar.tsx";
+import { Avatar, type AvatarProps } from "./Avatar";
 
 // 앱 장식 계열(leaf)을 색 계열 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-design/foundation" {

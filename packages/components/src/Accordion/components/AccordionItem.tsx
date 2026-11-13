@@ -11,13 +11,13 @@ import {
 import { useDisclosure } from "react-aria";
 import { useDisclosureState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { itemClass } from "../constants/accordionClass.ts";
-import { AccordionContext } from "../hooks/useAccordionContext.ts";
+import { cn } from "../../_internal/libs/cn";
+import { itemClass } from "../constants/accordionClass";
+import { AccordionContext } from "../hooks/useAccordionContext";
 import {
   AccordionItemContext,
   type AccordionItemContextValue,
-} from "../hooks/useAccordionItemContext.ts";
+} from "../hooks/useAccordionItemContext";
 
 export interface AccordionItemProps extends Omit<ComponentProps<"div">, "value"> {
   /** 항목을 가리키는 값. `Accordion`의 `value`·`defaultValue` 목록에 이 값을 넣으면 펼친다. */

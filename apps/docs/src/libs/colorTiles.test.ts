@@ -2,7 +2,7 @@ import { color, type ColorStep } from "@tide-design/foundation";
 import { colorFamilyNames, contrastRatio } from "@tide-design/foundation/internal";
 import { describe, expect, it } from "vitest";
 
-import { colorTileGroups, formatChroma, oklchChroma, tileTextColor } from "./colorTiles.ts";
+import { colorTileGroups, formatChroma, oklchChroma, tileTextColor } from "./colorTiles";
 
 const allTiles = colorTileGroups.flatMap((group) => group.tiles);
 

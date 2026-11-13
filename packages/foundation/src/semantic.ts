@@ -1,4 +1,4 @@
-import { primitiveHex, type ColorFamily, type PrimitiveColorName } from "./color.ts";
+import { primitiveHex, type ColorFamily, type PrimitiveColorName } from "./color";
 import {
   colorSlots,
   familyOverrides,
@@ -11,7 +11,7 @@ import {
   type SlotColorRef,
   type SlotOverrides,
   type SlotValue,
-} from "./colorSlot.ts";
+} from "./colorSlot";
 
 /** Theme 이름 */
 export type ThemeName = "light" | "dark";

@@ -10,8 +10,8 @@ import {
   pressableDisabledClass,
   pressableInteractionClass,
   pressableScaleClass,
-} from "../constants/pressableClass.ts";
-import type { FillVariant, Role } from "../../types.ts";
+} from "../constants/pressableClass";
+import type { FillVariant, Role } from "../../types";
 
 /** `pressableState`의 인자. Component가 받은 props 중 상태와 관련된 것만 넘긴다. */
 export interface PressableOptions {

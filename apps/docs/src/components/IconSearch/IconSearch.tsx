@@ -2,7 +2,7 @@ import * as icons from "@tide-design/icons";
 import type { IconProps } from "@tide-design/icons";
 import { type ReactElement, useDeferredValue, useId, useState } from "react";
 
-import { iconIndex, importStatement, searchIcons } from "./libs/iconSearch.ts";
+import { iconIndex, importStatement, searchIcons } from "./libs/iconSearch";
 
 // 아이콘 페이지의 검색 블록(문서 앱 전용, 배포하지 않음).
 // 가상화 없이 결과를 모두 그린다(tide-v0 티켓 26). 검색어는 useDeferredValue로 늦춰 입력이 막히지 않게 한다.

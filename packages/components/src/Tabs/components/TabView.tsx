@@ -4,11 +4,11 @@ import { useMemo, useRef, type ReactElement } from "react";
 import { mergeProps, mergeRefs, useTab } from "react-aria";
 import type { TabListState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { tabBaseClass, tabOrientationClass } from "../constants/tabsClass.ts";
-import type { TabsContextValue } from "../hooks/useTabsContext.ts";
-import type { CollectionNode } from "../types.ts";
-import type { TabProps } from "./Tab.tsx";
+import { cn } from "../../_internal/libs/cn";
+import { tabBaseClass, tabOrientationClass } from "../constants/tabsClass";
+import type { TabsContextValue } from "../hooks/useTabsContext";
+import type { CollectionNode } from "../types";
+import type { TabProps } from "./Tab";
 
 export interface TabViewProps {
   readonly node: CollectionNode;

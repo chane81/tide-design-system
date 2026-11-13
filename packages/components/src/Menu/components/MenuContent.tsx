@@ -1,11 +1,11 @@
 "use client";
 import { useRef, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
-import { OverlayPortal } from "../../_internal/components/OverlayPortal.tsx";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import { useMenuContext } from "../hooks/useMenuContext.ts";
-import type { MenuPlacement } from "../types.ts";
-import { MenuContentInner } from "./MenuContentInner.tsx";
+import { OverlayPortal } from "../../_internal/components/OverlayPortal";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import { useMenuContext } from "../hooks/useMenuContext";
+import type { MenuPlacement } from "../types";
+import { MenuContentInner } from "./MenuContentInner";
 
 export interface MenuContentProps extends Omit<ComponentProps<"div">, "id" | "role"> {
   /** 트리거 기준 위치. 기본값은 `bottom start`(아래, 시작 끝 맞춤)다. 공간이 모자라면 반대쪽으로 뒤집힌다. */

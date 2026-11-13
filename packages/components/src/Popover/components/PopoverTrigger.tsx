@@ -9,8 +9,8 @@ import {
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs, usePress } from "react-aria";
 
-import { renderElement } from "../../_internal/libs/renderElement.ts";
-import { usePopoverContext } from "../hooks/usePopoverContext.ts";
+import { renderElement } from "../../_internal/libs/renderElement";
+import { usePopoverContext } from "../hooks/usePopoverContext";
 
 export interface PopoverTriggerProps extends ComponentProps<"button"> {
   /**

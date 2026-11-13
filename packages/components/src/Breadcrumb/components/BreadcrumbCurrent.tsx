@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { currentClass } from "../constants/breadcrumbClass.ts";
+import { cn } from "../../_internal/libs/cn";
+import { currentClass } from "../constants/breadcrumbClass";
 
 export interface BreadcrumbCurrentProps extends ComponentProps<"span"> {}
 

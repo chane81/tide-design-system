@@ -5,9 +5,9 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Field } from "./Field.tsx";
-import { Input } from "../Input/Input.tsx";
-import { Textarea } from "../Textarea/Textarea.tsx";
+import { Field } from "./Field";
+import { Input } from "../Input/Input";
+import { Textarea } from "../Textarea/Textarea";
 
 describe("label 연결", () => {
   test("label이 입력창의 이름이 되고, label을 누르면 입력창에 포커스가 간다", async () => {

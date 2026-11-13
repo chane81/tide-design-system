@@ -1,7 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import type { QueuedToast } from "react-stately";
 
-import type { Role } from "../types.ts";
+import type { Role } from "../types";
 
 /** Toast의 액션 버튼 */
 export interface ToastAction {

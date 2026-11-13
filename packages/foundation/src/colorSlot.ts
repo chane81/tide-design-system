@@ -1,9 +1,4 @@
-import {
-  primitiveHex,
-  type ColorFamily,
-  type ColorStep,
-  type PrimitiveColorName,
-} from "./color.ts";
+import { primitiveHex, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color";
 
 // 색 계열 하나가 Theme마다 내는 변수 묶음의 자리(슬롯)와 매핑 규칙(tide-v0-impl 티켓 40, ADR 0011, ADR 0022).
 // 규칙은 이 파일 한 곳에 둔다. Tide 계열, Role, 앱 브랜드 계열(defineColorFamily)이 모두 이 규칙을 따른다.

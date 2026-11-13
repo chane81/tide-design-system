@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { colorFamilyNames, contrastRatio } from "@tide-design/foundation/internal";
 import { expect, within } from "storybook/test";
 
-import { ColorNameContrast, ColorNames, ColorSlotRules } from "../../components/ColorNames.tsx";
-import { ColorScale } from "../../components/ColorScale.tsx";
-import { colorTileGroups } from "../../libs/colorTiles.ts";
-import { ContrastExclusions, ContrastPairs } from "../../components/ContrastPairs.tsx";
+import { ColorNameContrast, ColorNames, ColorSlotRules } from "../../components/ColorNames";
+import { ColorScale } from "../../components/ColorScale";
+import { colorTileGroups } from "../../libs/colorTiles";
+import { ContrastExclusions, ContrastPairs } from "../../components/ContrastPairs";
 
 // 컬러 Foundation 문서의 Token 블록. MDX에서 Canvas로 보여 주고, storybook project가 렌더·a11y를 검사한다.
 const meta = {

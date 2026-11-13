@@ -7,7 +7,7 @@
 
 import { createContext, use, type Context } from "react";
 
-import { FieldContext } from "./useFieldControl.ts";
+import { FieldContext } from "./useFieldControl";
 
 /** 묶음이 안쪽 항목에 넘기는 공통 상태 */
 export interface ChoiceGroupState {
