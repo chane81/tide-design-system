@@ -1,5 +1,13 @@
 # @tide-tds/icons
 
+## 0.11.3
+
+### 기능 추가와 수정 (patch)
+
+- [#65](https://github.com/chane81/tide-design-system/pull/65) [`f6849f8`](https://github.com/chane81/tide-design-system/commit/f6849f8688cc4fd073b73c3806c0ea37d3190cfc) [@chane81](https://github.com/chane81) - 공개 타입·Token의 JSDoc을 1~2줄로 다듬었다. 동작과 공개 API는 그대로다.
+
+- [#59](https://github.com/chane81/tide-design-system/pull/59) [`1cba8b7`](https://github.com/chane81/tide-design-system/commit/1cba8b746955c959f62103b6f72e16ab17112349) [@chane81](https://github.com/chane81) - 소스의 상대 import에서 확장자(`.ts`/`.tsx`)를 뺐다(tsconfig `moduleResolution: "bundler"`). 배포 결과물(JS·d.ts)은 변경 전과 같아 동작과 공개 API는 그대로다.
+
 ## 0.11.2
 
 ### 기능 추가와 수정 (patch)

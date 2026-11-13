@@ -1,5 +1,18 @@
 # @tide-tds/components
 
+## 0.11.3
+
+### 기능 추가와 수정 (patch)
+
+- [#62](https://github.com/chane81/tide-design-system/pull/62) [`d1a99ea`](https://github.com/chane81/tide-design-system/commit/d1a99eae3025dde0c43252ac39f9a726e77bd7f6) [@chane81](https://github.com/chane81) - 내부 모듈·테스트 helper·패키지 설정의 주석을 주석 규칙에 맞게 줄였다. 공개 타입 JSDoc(`Size`·`FillVariant`)이 짧아졌고 동작과 공개 API는 그대로다.
+
+- [#64](https://github.com/chane81/tide-design-system/pull/64) [`edba424`](https://github.com/chane81/tide-design-system/commit/edba424aab08a4a5789c042179445e7de4d3a544) [@chane81](https://github.com/chane81) - 공개 Component의 주석과 props JSDoc을 짧게 다듬었다. d.ts의 설명 문구만 바뀌고 동작과 공개 API는 그대로다.
+
+- [#59](https://github.com/chane81/tide-design-system/pull/59) [`1cba8b7`](https://github.com/chane81/tide-design-system/commit/1cba8b746955c959f62103b6f72e16ab17112349) [@chane81](https://github.com/chane81) - 소스의 상대 import에서 확장자(`.ts`/`.tsx`)를 뺐다(tsconfig `moduleResolution: "bundler"`). 배포 결과물(JS·d.ts)은 변경 전과 같아 동작과 공개 API는 그대로다.
+- 의존성 업데이트 [[`f6849f8`](https://github.com/chane81/tide-design-system/commit/f6849f8688cc4fd073b73c3806c0ea37d3190cfc), [`1cba8b7`](https://github.com/chane81/tide-design-system/commit/1cba8b746955c959f62103b6f72e16ab17112349)]:
+  - @tide-design/foundation@0.11.3
+  - @tide-design/icons@0.11.3
+
 ## 0.11.2
 
 ### 기능 추가와 수정 (patch)
