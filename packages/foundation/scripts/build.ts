@@ -1,4 +1,5 @@
-// Token 원본(src)에서 CSS와 tailwind-merge 설정을 만든다(ADR 0003).
+// tsdown이 만든 dist의 Token에서 CSS와 tailwind-merge 설정을 만든다(ADR 0003).
+// 원본(src)은 확장자 없는 import(bundler 해석)라 Node가 바로 실행할 수 없어 dist를 import한다.
 // Node 26의 type stripping으로 바로 실행한다: `node scripts/build.ts`
 import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -20,7 +21,7 @@ import {
   type SemanticNamespace,
   type ShadowName,
   type ThemeName,
-} from "../src/index.ts";
+} from "../dist/index.js";
 import {
   accentDefaultDeclarations,
   accentUtilities,
@@ -34,7 +35,7 @@ import {
   shadowCss,
   tideColorNames,
   tideFamilyThemeDeclarations,
-} from "../src/internal.ts";
+} from "../dist/internal.js";
 
 const distDir = fileURLToPath(new URL("../dist/", import.meta.url));
 const header =

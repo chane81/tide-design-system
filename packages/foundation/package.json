@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "tsdown && node scripts/build.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json",
     "test": "vitest run"
   },
   "devDependencies": {

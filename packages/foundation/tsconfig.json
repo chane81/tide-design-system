@@ -1,5 +1,6 @@
 {
-  // 타입 검사용: src와 테스트·스크립트·설정 파일을 함께 본다.
+  // 타입 검사용: src와 테스트·설정 파일을 함께 본다.
+  // Node가 직접 실행하는 scripts와 CLI 픽스처(test/fixtures)는 tsconfig.scripts.json이 본다.
   // 배포 출력(d.ts)에 필요한 isolatedDeclarations는 tsconfig.build.json이 src에만 적용한다.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -7,5 +8,6 @@
     "declaration": false,
     "isolatedDeclarations": false
   },
-  "include": ["src", "scripts", "test", "tsdown.config.ts", "vitest.config.ts"]
+  "include": ["src", "test", "tsdown.config.ts", "vitest.config.ts"],
+  "exclude": ["test/fixtures"]
 }
