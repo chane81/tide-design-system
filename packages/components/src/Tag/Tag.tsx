@@ -1,7 +1,7 @@
 "use client";
 // 지울 수 있는 라벨 묶음 Tag(tide-v0-impl 티켓 33). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useTagGroup, useTag, mergeProps, mergeRefs), react-stately 3.51.0(useListState).
-// 태그는 목록 공통 부분(libs/listCollection.ts, ADR 0019)으로 모은다. 태그의 `value`가 컬렉션 key다(`valueItemCollectionNode`).
+// 태그는 목록 공통 부분(_internal/libs/listCollection.ts, ADR 0019)으로 모은다. 태그의 `value`가 컬렉션 key다(`valueItemCollectionNode`).
 //
 // 구조(react-aria 3.53.1 useTagGroup·useTag 설치본 소스로 확인):
 // - `TagGroup`: `role="grid"`(태그가 없으면 `group`). 안의 `Tag`를 컬렉션으로 모아 `useListState`·`useTagGroup`에 넘긴다.
@@ -28,14 +28,14 @@ import {
 import { mergeProps, mergeRefs, useTag, useTagGroup } from "react-aria";
 import { useListState, type ListState } from "react-stately";
 
-import { cn } from "../libs/cn.ts";
+import { cn } from "../_internal/libs/cn.ts";
 import { IconButton } from "../IconButton/IconButton.tsx";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "../libs/listCollection.ts";
+} from "../_internal/libs/listCollection.ts";
 import type { ColorFamilyName } from "../types.ts";
 
 interface TagGroupContextValue {
@@ -124,7 +124,7 @@ export function TagGroup({
   const groupRef = useRef<HTMLDivElement>(null);
   const items = useMemo(() => resolveCollectionChildren(children), [children]);
   // useListState의 children 타입은 React Stately 요소(Item)지만, 같은 방식으로 getCollectionNode를 붙인
-  // Tide 태그 요소를 넘긴다(libs/listCollection.ts). 선택은 쓰지 않는다(selectionMode 기본 none).
+  // Tide 태그 요소를 넘긴다(_internal/libs/listCollection.ts). 선택은 쓰지 않는다(selectionMode 기본 none).
   const state = useListState<object>({
     children: items as unknown as Parameters<typeof useListState<object>>[0]["children"],
   });

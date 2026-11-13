@@ -10,9 +10,9 @@ import {
   alertLayoutClass,
   alertSurfaceClass,
   alertTitleClass,
-} from "../constants/alertClass.ts";
-import { alertStatusIcon } from "../libs/alertStatusIcon.ts";
-import { cn } from "../libs/cn.ts";
+} from "../_internal/constants/alertClass.ts";
+import { alertStatusIcon } from "../_internal/libs/alertStatusIcon.ts";
+import { cn } from "../_internal/libs/cn.ts";
 import { IconButton } from "../IconButton/IconButton.tsx";
 import type { Role } from "../types.ts";
 

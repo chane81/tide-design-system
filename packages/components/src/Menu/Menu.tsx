@@ -2,7 +2,7 @@
 // 트리거에 동작 목록을 띄우는 Menu(tide-v0-impl 티켓 27). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
 // 근거 버전: react-aria 3.53.1(useMenuTrigger, useMenu, useMenuItem, useMenuSection, usePress, mergeProps, mergeRefs),
 // react-stately 3.51.0(useMenuTriggerState, useTreeState). 위치·portal·motion은 오버레이 공통 부분(ADR 0018),
-// 목록·항목 class와 항목 모으기는 목록 공통 부분(constants/listClass.ts, libs/listCollection.ts, ADR 0019)을 쓴다.
+// 목록·항목 class와 항목 모으기는 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, ADR 0019)을 쓴다.
 //
 // 구조:
 // - `Menu`: 열림 상태만 갖는다(DOM 없음). `open`/`defaultOpen`/`onOpenChange(open)`.
@@ -44,7 +44,7 @@ import {
   type TreeState,
 } from "react-stately";
 
-import { cn } from "../libs/cn.ts";
+import { cn } from "../_internal/libs/cn.ts";
 import {
   asCollectionComponent,
   itemCollectionNode,
@@ -52,20 +52,20 @@ import {
   sectionCollectionNode,
   type CollectionItemProps,
   type CollectionSectionProps,
-} from "../libs/listCollection.ts";
+} from "../_internal/libs/listCollection.ts";
 import {
   listHeadingClass,
   listItemClass,
   listPopupClass,
   listSeparatorClass,
-} from "../constants/listClass.ts";
-import { OverlayPortal } from "../components/OverlayPortal.tsx";
-import { useCloseOnTab } from "../hooks/useCloseOnTab.ts";
-import { useOverlayPresence } from "../hooks/useOverlayPresence.ts";
-import { useOverlayTheme } from "../hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../hooks/usePopoverOverlay.ts";
-import type { OverlayPlacement } from "../libs/overlayPosition.ts";
-import { renderElement } from "../libs/renderElement.ts";
+} from "../_internal/constants/listClass.ts";
+import { OverlayPortal } from "../_internal/components/OverlayPortal.tsx";
+import { useCloseOnTab } from "../_internal/hooks/useCloseOnTab.ts";
+import { useOverlayPresence } from "../_internal/hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "../_internal/hooks/useOverlayTheme.ts";
+import { usePopoverOverlay } from "../_internal/hooks/usePopoverOverlay.ts";
+import type { OverlayPlacement } from "../_internal/libs/overlayPosition.ts";
+import { renderElement } from "../_internal/libs/renderElement.ts";
 
 /** Menu 목록의 위치. 앞은 트리거의 어느 쪽, 뒤는 그 변에서 맞출 끝이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */
 export type MenuPlacement = OverlayPlacement;
@@ -225,7 +225,7 @@ function MenuContentInner({
   const { overlayProps } = usePopoverOverlay({ triggerRef, popoverRef, placement, offset }, state);
   const items = useMemo(() => resolveCollectionChildren(children), [children]);
   // useTreeState의 children 타입은 React Stately 요소(Item·Section)지만, 같은 방식으로 getCollectionNode를 붙인
-  // Tide 항목 요소를 넘긴다(libs/listCollection.ts).
+  // Tide 항목 요소를 넘긴다(_internal/libs/listCollection.ts).
   const tree = useTreeState<object>({
     children: items as unknown as Parameters<typeof useTreeState<object>>[0]["children"],
   });

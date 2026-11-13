@@ -1,4 +1,4 @@
-export { cn } from "./libs/cn.ts";
+export { cn } from "./_internal/libs/cn.ts";
 export { VisuallyHidden, type VisuallyHiddenProps } from "./VisuallyHidden/index.ts";
 export { Typography, type TypographyProps } from "./Typography/index.ts";
 export { Spinner, type SpinnerProps } from "./Spinner/index.ts";

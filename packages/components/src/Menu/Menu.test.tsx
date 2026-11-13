@@ -12,7 +12,7 @@ import { render } from "vitest-browser-react";
 import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion.ts";
 
 import { Button } from "../Button/Button.tsx";
-import { listItemClass } from "../constants/listClass.ts";
+import { listItemClass } from "../_internal/constants/listClass.ts";
 import {
   Menu,
   MenuContent,

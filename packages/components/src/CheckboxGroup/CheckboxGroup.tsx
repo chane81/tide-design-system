@@ -8,9 +8,9 @@ import {
   CheckboxGroupContext,
   useChoiceGroup,
   type ChoiceGroupState,
-} from "../hooks/useChoiceGroup.ts";
-import { cn } from "../libs/cn.ts";
-import { FieldContext } from "../hooks/useFieldControl.ts";
+} from "../_internal/hooks/useChoiceGroup.ts";
+import { cn } from "../_internal/libs/cn.ts";
+import { FieldContext } from "../_internal/hooks/useFieldControl.ts";
 
 /** 항목을 쌓는 방향 */
 export type ChoiceOrientation = "vertical" | "horizontal";

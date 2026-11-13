@@ -4,9 +4,9 @@
 
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { pressableBaseClass } from "../constants/pressableClass.ts";
-import { pressableState } from "../libs/pressableState.ts";
-import { renderElement } from "../libs/renderElement.ts";
+import { pressableBaseClass } from "../_internal/constants/pressableClass.ts";
+import { pressableState } from "../_internal/libs/pressableState.ts";
+import { renderElement } from "../_internal/libs/renderElement.ts";
 import { Spinner } from "../Spinner/Spinner.tsx";
 import type { FillVariant, Role, Size } from "../types.ts";
 
@@ -51,7 +51,7 @@ export interface IconButtonProps extends Omit<
 }
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
-// 채움 방식 맵, 누름 축소, 상태 처리는 Button과 함께 쓰는 `constants/pressableClass.ts`·`libs/pressableState.ts`에 있다.
+// 채움 방식 맵, 누름 축소, 상태 처리는 Button과 함께 쓰는 `_internal/constants/pressableClass.ts`·`_internal/libs/pressableState.ts`에 있다.
 
 /** 정사각형 크기(spec size 표의 높이). padding은 없고 아이콘을 가운데 둔다. 24×24px 밑으로 내려가지 않는다. */
 const sizeClass: Record<IconButtonSize, string> = {

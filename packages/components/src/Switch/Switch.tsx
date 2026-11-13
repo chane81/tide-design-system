@@ -9,8 +9,8 @@
 
 import type { ComponentProps, CSSProperties, ReactElement, ReactNode } from "react";
 
-import { cn } from "../libs/cn.ts";
-import { useFieldControl } from "../hooks/useFieldControl.ts";
+import { cn } from "../_internal/libs/cn.ts";
+import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
 import type { Role, Size } from "../types.ts";
 
 /** Switch의 size. `xs`는 track이 너무 작아 받지 않는다. */
@@ -67,7 +67,7 @@ const thumbSizeClass: Record<SwitchSize, string> = {
 // track: 꺼짐은 투명 배경에 border-strong 경계(표면 층 위 3:1), 켜짐은 accent solid 배경에 border-accent 경계(표면 층 위 3:1).
 // 켜짐·비활성은 :enabled/:disabled로 나눠 CSS 순서에 기대지 않는다.
 // hover·누름은 루트 label(이름 붙인 group/switch)에서 반응한다. 바깥 요소의 group hover에는 반응하지 않는다. label을 눌러도 토글되기 때문이다. 활성(:enabled)일 때만 붙는다.
-// Checkbox·Radio(constants/choiceClass.ts)와 같은 규칙이다. hover는 켜짐 solid-hover·꺼짐 subtle, 누름은 한 단계 진한 -active 슬롯이다.
+// Checkbox·Radio(_internal/constants/choiceClass.ts)와 같은 규칙이다. hover는 켜짐 solid-hover·꺼짐 subtle, 누름은 한 단계 진한 -active 슬롯이다.
 // - 켜짐: solid-hover / solid-active(Button solid와 같은 규칙). thumb on-solid와 4:1(solid 위, ADR 0023) 대비 쌍이 등록되어 있다.
 // - 꺼짐: accent subtle / subtle-active 배경. thumb은 text-accent가 된다. thumb은 글자가 아닌 UI 요소라 기준은 3:1이다.
 //   hover(subtle)는 등록된 대비 쌍(text × 같은 색 subtle 4.5:1, neutral은 text-default × neutral subtle) 안에 있다.

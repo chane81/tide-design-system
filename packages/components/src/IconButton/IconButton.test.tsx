@@ -1,7 +1,7 @@
 // IconButton 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 14).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
 // press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
-// 채움 방식·색 맵과 상태 처리는 Button과 같은 모듈(constants/pressableClass.ts, libs/pressableState.ts)이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
+// 채움 방식·색 맵과 상태 처리는 Button과 같은 모듈(_internal/constants/pressableClass.ts, _internal/libs/pressableState.ts)이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import NextLink from "next/link.js";
 import type { ReactNode } from "react";
