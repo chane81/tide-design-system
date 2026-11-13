@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.3.5
+
+### 수정 (patch)
+
+- [#38](https://github.com/chane81/tide-design-system/pull/38) [`ef25a8c`](https://github.com/chane81/tide-design-system/commit/ef25a8c1fbbe73d49870f9ce060578ef03312982) [@chane81](https://github.com/chane81) - 「모양과 깊이」의 `focus-field` 예시가 실제 입력창과 같이 2px 포커스 색으로 보이게 고쳤습니다. 예시의 `border-default`가 포커스 색 border를 덮어 바깥 회색 1px만 남던 문제입니다.
+
 ## 0.3.4
 
 ### 수정 (patch)
