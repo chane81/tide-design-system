@@ -34,8 +34,7 @@ export function TabList({ ref, className, children, ...props }: TabListProps): R
   const known = items.some(
     (item) => isValidElement<{ value?: unknown }>(item) && item.props.value === context.value,
   );
-  // useTabListState의 children 타입은 React Stately 요소(Item)지만, 같은 방식으로 getCollectionNode를 붙인
-  // Tide 탭 요소를 넘긴다(_internal/libs/listCollection.ts).
+  // 타입은 React Stately Item이지만, getCollectionNode를 같은 방식으로 붙인 Tide 탭을 넘긴다(ADR 0019).
   const state = useTabListState<object>({
     children: items as unknown as Parameters<typeof useTabListState<object>>[0]["children"],
     // null은 「제어하되 고른 것이 없음」이다(react-stately useControlledState). 타입은 Key만 적혀 있다.

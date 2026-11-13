@@ -1,5 +1,3 @@
-// Card의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 19).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서는 경계가 시스템 색으로 남는지 본다.
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";

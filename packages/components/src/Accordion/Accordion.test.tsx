@@ -1,6 +1,3 @@
-// Accordion 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 32).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 chevron이 글자색(시스템 색)을 따르는지와
-// chevron 회전이 전환 없이 바로 바뀌는지를 본다.
 import { useState, type ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -72,7 +69,6 @@ describe("역할과 연결", () => {
     const trigger = page.getByRole("button", { name: "배송" });
     await expect.element(trigger).toHaveAttribute("aria-expanded", "true");
     await expect.element(trigger).toHaveAttribute("type", "button");
-    // 제목 요소 안에는 버튼만 있다(APG).
     const heading = page.getByRole("heading", { level: 3, name: "배송" }).element();
     expect(heading.children).toHaveLength(1);
     expect(heading.firstElementChild).toBe(trigger.element());
@@ -83,7 +79,6 @@ describe("역할과 연결", () => {
     expect(trigger.element().getAttribute("aria-controls")).toBe(panel.element().id);
     expect(panel.element().getAttribute("aria-labelledby")).toBe(trigger.element().id);
 
-    // 접힌 항목: aria-expanded false, 패널은 숨고 높이가 없다.
     expect(expanded("refund")).toBe("false");
     expect(byTestId("refund").getAttribute("aria-controls")).toBe(byTestId("panel-refund").id);
     await expect.element(page.getByTestId("panel-refund")).not.toBeVisible();
@@ -125,14 +120,12 @@ describe("펼치고 접기", () => {
     expect(byTestId("panel-shipping")).toHaveAttribute("data-open", "");
     await expect.element(page.getByRole("region", { name: "배송" })).toBeVisible();
 
-    // 다른 항목을 펼치면 펼쳐 있던 항목이 접힌다.
     await userEvent.click(page.getByTestId("refund"));
     expect(expanded("refund")).toBe("true");
     expect(expanded("shipping")).toBe("false");
     expect(byTestId("item-shipping")).not.toHaveAttribute("data-open");
     await expect.element(page.getByTestId("panel-shipping")).not.toBeVisible();
 
-    // 펼친 항목을 다시 누르면 접힌다(모두 접을 수 있다).
     await userEvent.click(page.getByTestId("refund"));
     expect(expanded("refund")).toBe("false");
   });
@@ -157,7 +150,6 @@ describe("펼치고 접기", () => {
     expect(expanded("shipping")).toBe("false");
     await userEvent.keyboard(" ");
     expect(expanded("shipping")).toBe("true");
-    // 펼친 패널 안의 조작 요소도 Tab 순서에 있다. 접힌 패널 안은 건너뛴다.
     await userEvent.tab();
     await expect.element(page.getByTestId("refund")).toHaveFocus();
     await userEvent.keyboard(" ");
@@ -165,7 +157,6 @@ describe("펼치고 접기", () => {
     expect(expanded("shipping")).toBe("false");
     await userEvent.tab();
     await expect.element(page.getByRole("textbox", { name: "주문 번호" })).toHaveFocus();
-    // 비활성 트리거는 Tab 순서 밖이다.
     await userEvent.tab();
     expect(document.activeElement).not.toBe(byTestId("archive"));
   });
@@ -302,7 +293,6 @@ describe("모양과 포커스 표시", () => {
     expect(panel.paddingLeft).toBe("16px");
     expect(panel.paddingBottom).toBe("16px");
     expect(panel.fontSize).toBe("16px");
-    // 접힌 패널은 여백도 0이라 자리를 차지하지 않는다.
     expect(getComputedStyle(byTestId("panel-refund")).paddingBottom).toBe("0px");
   });
 
@@ -311,12 +301,10 @@ describe("모양과 포커스 표시", () => {
     const chevron = byTestId("shipping").querySelector("svg") as SVGElement;
     expect(chevron).toHaveAttribute("aria-hidden", "true");
     expect(getComputedStyle(chevron).width).toBe("16px");
-    // 글자와 chevron 사이 12px, chevron은 끝에 붙는다.
     expect(getComputedStyle(byTestId("shipping")).columnGap).toBe("12px");
     const triggerRect = byTestId("shipping").getBoundingClientRect();
     expect(triggerRect.right - chevron.getBoundingClientRect().right).toBeCloseTo(16, 0);
     if (forcedColors()) {
-      // 고대비 모드에서는 chevron이 글자색(시스템 색)을 그대로 따라 보인다.
       expect(getComputedStyle(chevron).color).toBe(getComputedStyle(byTestId("shipping")).color);
       expect(getComputedStyle(chevron).color).not.toBe(transparent);
 
@@ -334,9 +322,7 @@ describe("모양과 포커스 표시", () => {
       resolve("backgroundColor", "var(--tide-bg-hover)"),
     );
     expect(getComputedStyle(byTestId("shipping")).transitionDuration).toBe("0s");
-    // hover 배경 위 chevron은 text-default다(neutral subtle 위 글자 대비 쌍).
     expect(getComputedStyle(chevron).color).toBe(resolve("color", "var(--tide-text-default)"));
-    // 비활성 트리거는 hover 배경이 없고 chevron도 흐린 채다.
     await userEvent.hover(page.getByTestId("archive"), { force: true });
     expect(getComputedStyle(byTestId("archive")).backgroundColor).toBe(transparent);
     expect(getComputedStyle(byTestId("archive").querySelector("svg") as SVGElement).color).toBe(
@@ -350,12 +336,10 @@ describe("chevron motion", () => {
     await render(<Example />);
     const chevron = (): SVGElement => byTestId("shipping").querySelector("svg") as SVGElement;
     expect(getComputedStyle(chevron()).rotate).toBe("none");
-    // 패널에는 전환이 없다(펼치면 바로 보인다).
     expect(getComputedStyle(byTestId("panel-shipping")).transitionDuration).toBe("0s");
     if (reducedMotion()) {
       expect(getComputedStyle(chevron()).transitionDuration).toBe("0s");
       await userEvent.click(page.getByTestId("shipping"));
-      // 움직임 줄이기: 바로 돈 상태다.
       expect(chevron().getAnimations()).toHaveLength(0);
       expect(getComputedStyle(chevron()).rotate).toBe("180deg");
 
@@ -363,7 +347,7 @@ describe("chevron motion", () => {
     }
     expect(getComputedStyle(chevron()).transitionProperty).toBe("rotate");
     expect(getComputedStyle(chevron()).transitionDuration).toBe("0.15s");
-    // 펼친 순간에 도는 전환을 붙잡는다. click 명령이 돌아온 뒤에 읽으면 부하에 따라 전환이 끝나 있다(test/motion.ts).
+    // click이 돌아온 뒤 읽으면 부하에 따라 전환이 끝나 있어, 펼친 순간에 붙잡는다.
     const expanded = captureWhen(
       () => byTestId("shipping").getAttribute("aria-expanded") === "true",
       () =>
@@ -374,7 +358,6 @@ describe("chevron motion", () => {
     await userEvent.click(page.getByTestId("shipping"));
     const animations = await expanded;
     expect(animations).toEqual(["rotate"]);
-    // 패널은 이미 보인다.
     await expect.element(page.getByRole("region", { name: "배송" })).toBeVisible();
     await wait(250);
     expect(getComputedStyle(chevron()).rotate).toBe("180deg");

@@ -11,7 +11,7 @@ export interface TabPanelProps extends Omit<ComponentProps<"div">, "id" | "role"
 }
 
 /**
- * 탭 하나의 내용(`role="tabpanel"`). 같은 `value`의 탭을 고른 동안만 렌더하고, 그 탭이 이름이 된다(`aria-labelledby`).
+ * 탭 하나의 내용(`role="tabpanel"`). 같은 `value`의 탭을 고른 동안만 렌더하고, 그 탭이 이름이 된다.
  * 탭 다음 Tab 순서에 들어간다(`tabIndex` 기본 `0`). 첫 내용이 조작 요소면 `tabIndex={-1}`로 뺄 수 있다.
  */
 export function TabPanel({

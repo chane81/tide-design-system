@@ -13,19 +13,15 @@ export interface AccordionTriggerProps extends Omit<
   ComponentProps<"button">,
   "type" | "id" | "disabled" | "aria-expanded" | "aria-controls"
 > {
-  /**
-   * 트리거를 감싸는 제목 요소의 단계(`<h1>`~`<h6>`). 기본값은 `3`이다.
-   * 페이지 제목 구조에 맞춘다(WAI-ARIA APG Accordion).
-   */
+  /** 트리거를 감싸는 제목 요소의 단계(`<h1>`~`<h6>`). 기본값 `3`. 페이지 제목 구조에 맞춘다. */
   level?: AccordionHeadingLevel;
   /** 항목 제목. 제목 요소 안에는 버튼만 둔다(APG). */
   children?: ReactNode;
 }
 
 /**
- * 항목 제목 버튼. 제목 요소(`level`, 기본 `<h3>`) 안의 `<button type="button">`이고 끝에 장식용 chevron이 있다.
- * `ref`·`className`·나머지 props는 버튼에 간다. 펼침 상태는 `aria-expanded`와 `data-open`, 비활성은 `:disabled`다.
- * Enter·Space·누름으로 펼치고 접는다.
+ * 항목 제목 버튼. 제목 요소(`level`, 기본 `<h3>`) 안의 `<button>`이고 끝에 장식용 chevron이 있다.
+ * `ref`·`className`·나머지 props는 버튼에 간다. 펼침 상태는 `aria-expanded`와 `data-open`이다.
  */
 export function AccordionTrigger({
   level = 3,

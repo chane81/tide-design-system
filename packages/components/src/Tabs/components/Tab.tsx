@@ -17,8 +17,7 @@ export interface TabProps
 
 /**
  * 탭 하나(`role="tab"`). `TabList` 바로 안에 두고, 같은 `value`의 `TabPanel`과 이어진다.
- * 고른 탭은 `data-selected`와 `aria-selected="true"`이고 primary 글자와 아래(세로면 끝쪽) 막대로 보인다.
- * `disabled`면 네이티브 `disabled`라 고를 수 없고 키보드 이동도 건너뛴다.
+ * 고른 탭은 `data-selected`·`aria-selected="true"`다. `disabled`면 고를 수 없고 키보드 이동도 건너뛴다.
  */
 export function Tab(_props: TabProps): null {
   // 렌더하지 않는다. TabList가 컬렉션으로 모아 TabView로 그린다.

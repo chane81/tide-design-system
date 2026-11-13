@@ -1,6 +1,5 @@
 "use client";
-// 여러 줄 입력창. 네이티브 `<textarea>`이고 React Aria hook을 쓰지 않는다(ADR 0004).
-// Field 안에서는 context로 id·aria-describedby·aria-invalid를 받으므로 client Component다.
+// Field context로 id·aria-describedby·aria-invalid를 받으므로 client Component다.
 
 import type { ComponentProps, ReactElement } from "react";
 
@@ -15,16 +14,11 @@ type TextareaSize = Extract<Size, "sm" | "md" | "lg">;
 export interface TextareaProps extends ComponentProps<"textarea"> {
   /** 글자 크기와 padding. 글자 크기는 같은 size의 Input과 같다(14/14/16px). 기본값은 `md`다. */
   size?: TextareaSize;
-  /**
-   * 오류 상태. `aria-invalid="true"`와 `data-invalid`가 붙고 경계가 danger 색이 된다.
-   * Field 안에서는 Field의 값을 따르고, 여기에 준 값이 이긴다.
-   */
+  /** 오류 상태. `aria-invalid="true"`와 `data-invalid`가 붙는다. Field 값보다 여기 준 값이 이긴다. */
   invalid?: boolean;
 }
 
-// 여러 줄을 읽기 좋게 body 텍스트 스타일(보통 굵기, 넉넉한 행간)을 쓴다. 글자 크기는 Input과 같다.
-// 한 줄일 때 글자 위아래 여백이 같은 size의 Input과 같도록 세로 padding을 정했다(border 1px 포함 6/9/13px).
-/** 좌우·세로 padding, 텍스트 스타일 */
+// 세로 padding은 한 줄일 때 글자 위아래 여백이 같은 size의 Input과 같도록 정했다(border 포함 6/9/13px).
 const sizeClass: Record<TextareaSize, string> = {
   sm: "px-2.5 py-1.25 text-body-sm",
   md: "px-3 py-2 text-body-sm",

@@ -1,20 +1,6 @@
 "use client";
-// 같은 영역의 여러 패널을 바꾸는 Tabs(tide-v0-impl 티켓 31). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
-// 근거 버전: react-aria 3.53.1(useTabList, useTab, mergeProps, mergeRefs), react-stately 3.51.0(useTabListState).
-// 탭은 목록 공통 부분(_internal/libs/listCollection.ts, ADR 0019)으로 모은다. 탭의 `value`가 컬렉션 key다(`valueItemCollectionNode`).
-// 접근성 패턴은 WAI-ARIA APG Tabs(자동·수동 활성화, 화살표·Home/End, 세로 tablist)를 따른다.
-//
-// 구조:
-// - `Tabs`: 루트 `<div>`. 고른 값(`value`/`defaultValue`/`onValueChange`), 방향(`orientation`), 활성화 방식
-//   (`activationMode`)을 갖고 탭과 패널을 잇는 id를 만든다.
-// - `TabList`: `role="tablist"`. 안의 `Tab`을 컬렉션으로 모아 `useTabListState`·`useTabList`에 넘긴다. 화살표·Home/End·
-//   글자(타입어헤드)로 탭을 옮기고 비활성 탭은 건너뛴다. 방향키는 React Aria locale 방향(RTL이면 반대)을 따른다.
-// - `Tab`: `<button type="button" role="tab">`. 렌더하지 않는 표시 요소이고 `TabList`가 node로 그린다.
-// - `TabPanel`: `role="tabpanel"`. 고른 값과 `value`가 같을 때만 렌더한다.
-//
-// id 연결: useTab은 탭 id를 `useTabList` 안에서 만든 id(상태 객체에 묶인 WeakMap 값)로 짓는다. 패널은 TabList 밖에 있어
-// 그 상태 객체를 받을 수 없으므로(useTabPanel은 같은 상태 객체를 요구한다), 루트가 만든 id로 탭 id·`aria-controls`와
-// 패널 id·`aria-labelledby`를 덮어쓴다. React Aria는 탭 id를 키보드 이동에 쓰지 않는다(`data-key`로 찾는다).
+// 패널은 TabList 밖이라 useTabPanel에 같은 상태 객체를 줄 수 없다. 루트가 만든 id로 탭·패널 id와 연결 속성을
+// 덮어쓴다. React Aria는 키보드 이동에 탭 id가 아니라 `data-key`를 쓴다.
 
 import {
   useCallback,
@@ -47,17 +33,11 @@ type TabsValueProps =
     };
 
 interface TabsBaseProps extends Omit<ComponentProps<"div">, "defaultValue" | "onChange"> {
-  /**
-   * 고른 탭이 바뀌려 할 때 새 값으로 부른다. 이미 고른 탭을 다시 눌러도 부르지 않는다.
-   * 준 값과 같은 탭이 없으면 첫 활성 탭을 고르며 부른다.
-   */
+  /** 고른 탭이 바뀌려 할 때 부른다. 같은 탭을 다시 누르면 부르지 않고, 준 값의 탭이 없으면 첫 활성 탭으로 부른다. */
   onValueChange?: (value: string) => void;
   /** 탭 목록의 방향. 기본값은 `horizontal`이다. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
   orientation?: TabsOrientation;
-  /**
-   * 키보드로 탭을 옮겼을 때 바로 고를지(`automatic`, 기본값), Enter·Space로 고를지(`manual`)다.
-   * 패널을 그리는 데 시간이 걸리면(데이터를 불러오는 패널) `manual`을 쓴다(WAI-ARIA APG).
-   */
+  /** 키보드로 옮기면 바로 고를지(`automatic`, 기본값), Enter·Space로 고를지(`manual`). 패널이 느리면 `manual`. */
   activationMode?: TabsActivationMode;
   /** `TabList` 하나와 `TabPanel`들 */
   children?: ReactNode;
