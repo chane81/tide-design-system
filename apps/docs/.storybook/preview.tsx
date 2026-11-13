@@ -5,7 +5,7 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events";
 import { addons, useEffect } from "storybook/preview-api";
 
-import { DocsAnchor } from "../src/docs-blocks/DocsAnchor.tsx";
+import { DocsAnchor } from "../src/components/DocsAnchor.tsx";
 import { applyTheme, DEFAULT_THEME, THEMES, toTheme } from "./theme.ts";
 import { ThemedDocsContainer } from "./ThemedDocsContainer.tsx";
 
