@@ -11,9 +11,12 @@ import {
 } from "../_internal/hooks/useChoiceGroup.ts";
 import { cn } from "../_internal/libs/cn.ts";
 import { FieldContext } from "../_internal/hooks/useFieldControl.ts";
+import {
+  orientationClass,
+  type ChoiceOrientation,
+} from "../_internal/constants/choiceGroupClass.ts";
 
-/** 항목을 쌓는 방향 */
-export type ChoiceOrientation = "vertical" | "horizontal";
+export type { ChoiceOrientation } from "../_internal/constants/choiceGroupClass.ts";
 
 export interface CheckboxGroupProps extends ComponentProps<"div"> {
   /** 항목을 세로(`vertical`)로 쌓거나 가로(`horizontal`)로 늘어놓는다. 기본값은 `vertical`이다. */
@@ -26,12 +29,6 @@ export interface CheckboxGroupProps extends ComponentProps<"div"> {
   /** 안의 Checkbox를 모두 비활성으로 만든다. Field 안에서는 Field의 값을 따른다. */
   disabled?: boolean;
 }
-
-/** 방향별 배치. 가로는 줄이 넘치면 다음 줄로 간다. */
-export const orientationClass: Record<ChoiceOrientation, string> = {
-  vertical: "flex flex-col gap-2",
-  horizontal: "flex flex-row flex-wrap gap-x-6 gap-y-2",
-};
 
 /**
  * Checkbox 여러 개를 하나의 이름으로 묶는다. `<Field label group>` 안에 두면 label이 묶음의 이름, 설명·오류가

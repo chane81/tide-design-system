@@ -28,7 +28,6 @@ import {
   type ComponentProps,
   type MouseEvent,
   type ReactElement,
-  type ReactNode,
   type RefObject,
 } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
@@ -38,10 +37,8 @@ import {
   useDialog,
   useFocusManager,
   useModalOverlay,
-  useOverlayTrigger,
   usePress,
 } from "react-aria";
-import { useOverlayTriggerState, type OverlayTriggerState } from "react-stately";
 
 import { cn } from "../_internal/libs/cn.ts";
 import { IconButton } from "../IconButton/IconButton.tsx";
@@ -54,28 +51,10 @@ import {
   dialogSurfaceClass,
 } from "../_internal/constants/overlayClass.ts";
 import { renderElement } from "../_internal/libs/renderElement.ts";
+import { DialogRoot, type DialogProps } from "../_internal/components/DialogRoot.tsx";
+import { useDialogContext, type DialogContextValue } from "../_internal/hooks/useDialogContext.ts";
 
-interface DialogContextValue {
-  readonly state: OverlayTriggerState;
-  readonly triggerRef: RefObject<HTMLElement | null>;
-  /** useOverlayTrigger가 만든 트리거 props(onPress 포함) */
-  readonly triggerProps: ReturnType<typeof useOverlayTrigger>["triggerProps"];
-  /** 내용 요소 id. 트리거의 aria-controls가 가리킨다. */
-  readonly contentId: string | undefined;
-  /** 놓인 트리거의 id. 트리거가 없으면(열림을 제어만 하는 경우) `null`이다. */
-  readonly triggerId: string | null;
-  readonly setTriggerId: (id: string | null) => void;
-  /** AlertDialog면 `true`. 역할이 alertdialog가 되고 바깥 막 누름으로 닫히지 않으며 닫기 버튼이 없다. */
-  readonly alert: boolean;
-}
-
-const DialogContext = createContext<DialogContextValue | null>(null);
-
-function useDialogContext(part: string): DialogContextValue {
-  const context = use(DialogContext);
-  if (!context) throw new Error(`${part}는 Dialog나 AlertDialog 안에 둔다.`);
-  return context;
-}
+export type { DialogProps } from "../_internal/components/DialogRoot.tsx";
 
 /** 열린 내용 안의 제목·설명 id를 dialog 요소에 잇는다. */
 interface DialogPartsContextValue {
@@ -90,44 +69,6 @@ function useDialogPartsContext(part: string): DialogPartsContextValue {
   const context = use(DialogPartsContext);
   if (!context) throw new Error(`${part}는 DialogContent 안에 둔다.`);
   return context;
-}
-
-export interface DialogProps {
-  /** 열림 상태(제어). 주면 `onOpenChange`로 바꾼다. */
-  open?: boolean;
-  /** 처음 열림 상태(비제어). 기본값은 `false`다. */
-  defaultOpen?: boolean;
-  /** 열림 상태가 바뀌려 할 때 새 값으로 부른다. */
-  onOpenChange?: (open: boolean) => void;
-  /** `DialogTrigger`와 `DialogContent` */
-  children: ReactNode;
-}
-
-/** Dialog·AlertDialog가 같이 쓰는 열림 상태. 공개 API가 아니다(AlertDialog.tsx가 쓴다). */
-export function DialogRoot({
-  open,
-  defaultOpen,
-  onOpenChange,
-  alert,
-  children,
-}: DialogProps & { readonly alert: boolean }): ReactElement {
-  const state = useOverlayTriggerState({ isOpen: open, defaultOpen, onOpenChange });
-  const triggerRef = useRef<HTMLElement>(null);
-  const { triggerProps, overlayProps } = useOverlayTrigger({ type: "dialog" }, state, triggerRef);
-  const [triggerId, setTriggerId] = useState<string | null>(null);
-  const value = useMemo<DialogContextValue>(
-    () => ({
-      state,
-      triggerRef,
-      triggerProps,
-      contentId: overlayProps.id,
-      triggerId,
-      setTriggerId,
-      alert,
-    }),
-    [state, triggerProps, overlayProps.id, triggerId, alert],
-  );
-  return <DialogContext value={value}>{children}</DialogContext>;
 }
 
 /**

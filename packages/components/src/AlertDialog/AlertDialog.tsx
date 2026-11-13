@@ -1,5 +1,5 @@
 "use client";
-// 위험한 동작을 확인받는 AlertDialog(tide-v0-impl 티켓 30). Dialog 위의 얇은 변형이다(Dialog.tsx).
+// 위험한 동작을 확인받는 AlertDialog(tide-v0-impl 티켓 30). Dialog 위의 얇은 변형이다(Dialog/Dialog.tsx, 열림 상태는 _internal/components/DialogRoot.tsx).
 // 근거: WAI-ARIA APG Alert and Message Dialogs 패턴, react-aria 3.53.1 `useDialog`의 `role: "alertdialog"`.
 //
 // Dialog와 다른 점은 셋이고 나머지(트리거, 바깥 inert, 스크롤 잠금, 포커스 가두기·복귀, Esc 닫기, motion)는 같다.
@@ -11,7 +11,7 @@
 
 import type { ReactElement } from "react";
 
-import { DialogRoot, type DialogProps } from "../Dialog/Dialog.tsx";
+import { DialogRoot, type DialogProps } from "../_internal/components/DialogRoot.tsx";
 
 export type AlertDialogProps = DialogProps;
 

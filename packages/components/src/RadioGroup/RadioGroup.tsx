@@ -5,7 +5,10 @@
 
 import { useId, type ComponentProps, type ReactElement } from "react";
 
-import { orientationClass, type ChoiceOrientation } from "../CheckboxGroup/CheckboxGroup.tsx";
+import {
+  orientationClass,
+  type ChoiceOrientation,
+} from "../_internal/constants/choiceGroupClass.ts";
 import {
   RadioGroupContext,
   useChoiceGroup,
