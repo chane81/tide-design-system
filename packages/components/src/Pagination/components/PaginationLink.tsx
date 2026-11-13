@@ -1,8 +1,8 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { Button, type ButtonProps } from "../../Button/Button.tsx";
-import { cn } from "../../_internal/libs/cn.ts";
-import { itemSize, linkClass } from "../constants/paginationClass.ts";
+import { Button, type ButtonProps } from "../../Button/Button";
+import { cn } from "../../_internal/libs/cn";
+import { itemSize, linkClass } from "../constants/paginationClass";
 
 export interface PaginationLinkProps extends Omit<ComponentProps<"a">, "color"> {
   /** 현재 페이지인지. `aria-current="page"`를 붙이고 subtle 채움으로 보인다. 기본값은 `false`다. */

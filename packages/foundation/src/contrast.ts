@@ -1,5 +1,5 @@
-import { mixHex, type ColorSlot } from "./colorSlot.ts";
-import { semanticHex, type SemanticColorName, type ThemeName, type TideRole } from "./semantic.ts";
+import { mixHex, type ColorSlot } from "./colorSlot";
+import { semanticHex, type SemanticColorName, type ThemeName, type TideRole } from "./semantic";
 
 /**
  * 대비 하한 세 등급(ADR 0023).

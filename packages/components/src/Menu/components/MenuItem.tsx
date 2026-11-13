@@ -5,7 +5,7 @@ import {
   asCollectionComponent,
   itemCollectionNode,
   type CollectionItemProps,
-} from "../../_internal/libs/listCollection.ts";
+} from "../../_internal/libs/listCollection";
 
 export interface MenuItemProps
   extends Omit<ComponentProps<"div">, "role" | "children">, CollectionItemProps {

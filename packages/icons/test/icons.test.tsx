@@ -5,8 +5,8 @@ import { readFile } from "node:fs/promises";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import * as icons from "../src/index.ts";
-import { CheckIcon, ChevronDownIcon, HouseIcon, PlusIcon, XIcon } from "../src/index.ts";
+import * as icons from "../src/index";
+import { CheckIcon, ChevronDownIcon, HouseIcon, PlusIcon, XIcon } from "../src/index";
 
 const table = JSON.parse(
   await readFile(new URL("../icon-names.json", import.meta.url), "utf8"),

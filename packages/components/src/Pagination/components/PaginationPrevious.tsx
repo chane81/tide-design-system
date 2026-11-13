@@ -1,9 +1,9 @@
 import { ChevronLeftIcon } from "@tide-design/icons";
 import type { ReactElement } from "react";
 
-import { IconButton } from "../../IconButton/IconButton.tsx";
-import { itemSize } from "../constants/paginationClass.ts";
-import type { PaginationArrowProps } from "../types.ts";
+import { IconButton } from "../../IconButton/IconButton";
+import { itemSize } from "../constants/paginationClass";
+import type { PaginationArrowProps } from "../types";
 
 export interface PaginationPreviousProps extends PaginationArrowProps {}
 

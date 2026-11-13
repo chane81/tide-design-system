@@ -5,18 +5,18 @@ import { use, useMemo, useRef, type ReactElement } from "react";
 import { mergeProps, mergeRefs, useTag } from "react-aria";
 import type { ListState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { IconButton } from "../../IconButton/IconButton.tsx";
+import { cn } from "../../_internal/libs/cn";
+import { IconButton } from "../../IconButton/IconButton";
 import {
   removeClass,
   removeInteractionClass,
   tagCellClass,
   tagClass,
   tagLabelClass,
-} from "../constants/tagClass.ts";
-import { TagGroupContext } from "../hooks/useTagGroupContext.ts";
-import type { TagProps } from "../Tag.tsx";
-import type { CollectionNode } from "../types.ts";
+} from "../constants/tagClass";
+import { TagGroupContext } from "../hooks/useTagGroupContext";
+import type { TagProps } from "../Tag";
+import type { CollectionNode } from "../types";
 
 export interface TagViewProps {
   readonly node: CollectionNode;

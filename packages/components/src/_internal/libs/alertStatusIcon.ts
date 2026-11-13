@@ -12,7 +12,7 @@ import {
 } from "@tide-design/icons";
 import type { ReactElement } from "react";
 
-import type { Role } from "../../types.ts";
+import type { Role } from "../../types";
 
 type IconComponent = (props: IconProps) => ReactElement;
 

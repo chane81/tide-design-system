@@ -1,10 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import type { ListState } from "react-stately";
 
-import type {
-  CollectionSectionProps,
-  CollectionValueItemProps,
-} from "../../libs/listCollection.ts";
+import type { CollectionSectionProps, CollectionValueItemProps } from "../../libs/listCollection";
 
 /** 목록 상태 컬렉션의 node */
 export type ListNode = ListState<object>["collection"] extends Iterable<infer N> ? N : never;

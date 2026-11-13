@@ -3,8 +3,8 @@
 // 반올림 허용: 없다(±0). sRGB 채널마다 반올림한 hex가 표와 한 글자도 다르지 않아야 한다.
 import { describe, expect, it } from "vitest";
 
-import { type ThemeName } from "../src/index.ts";
-import { mixHex, semanticHex } from "../src/internal.ts";
+import { type ThemeName } from "../src/index";
+import { mixHex, semanticHex } from "../src/internal";
 
 // [Role, 계열, subtle-hover, subtle-active, solid-hover, solid-active] (light)
 // solid-hover·solid-active는 tide-v0-impl 티켓 47에서 600이 바뀌어 다시 계산한 값이다(600 + black 14% / 20%).

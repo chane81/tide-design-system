@@ -20,8 +20,8 @@ import {
   asCollectionComponent,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "../_internal/libs/listCollection.ts";
-import type { ColorFamilyName } from "../types.ts";
+} from "../_internal/libs/listCollection";
+import type { ColorFamilyName } from "../types";
 
 export interface TagProps
   extends

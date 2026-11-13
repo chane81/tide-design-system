@@ -18,7 +18,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { CheckboxGroupContext } from "../_internal/hooks/useChoiceGroup.ts";
+import { CheckboxGroupContext } from "../_internal/hooks/useChoiceGroup";
 import {
   choiceAreaClass,
   choiceInputClass,
@@ -26,10 +26,10 @@ import {
   choiceRootClass,
   choiceTextClass,
   type ChoiceSize,
-} from "../_internal/constants/choiceClass.ts";
-import { cn } from "../_internal/libs/cn.ts";
-import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import type { Role } from "../types.ts";
+} from "../_internal/constants/choiceClass";
+import { cn } from "../_internal/libs/cn";
+import { useFieldControl } from "../_internal/hooks/useFieldControl";
+import type { Role } from "../types";
 
 export interface CheckboxProps extends Omit<
   ComponentProps<"input">,

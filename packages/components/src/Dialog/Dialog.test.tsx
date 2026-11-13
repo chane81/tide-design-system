@@ -9,10 +9,10 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion.ts";
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion";
 
-import { AlertDialog } from "../AlertDialog/AlertDialog.tsx";
-import { Button } from "../Button/Button.tsx";
+import { AlertDialog } from "../AlertDialog/AlertDialog";
+import { Button } from "../Button/Button";
 import {
   Dialog,
   DialogClose,
@@ -23,9 +23,9 @@ import {
   DialogTrigger,
   type DialogContentProps,
   type DialogProps,
-} from "./index.ts";
-import { Select, SelectItem } from "../Select/index.ts";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/index.ts";
+} from "./index";
+import { Select, SelectItem } from "../Select/index";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;

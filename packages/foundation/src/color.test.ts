@@ -4,7 +4,7 @@
 // 그래서 원본 값이 결정과 한 글자라도 다르면 여기서 실패한다.
 import { describe, expect, it } from "vitest";
 
-import { color, type ColorFamily, type ColorStep } from "./color.ts";
+import { color, type ColorFamily, type ColorStep } from "./color";
 
 const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 

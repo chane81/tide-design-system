@@ -1,9 +1,9 @@
 "use client";
-import type { ListBoxOptionProps } from "../../_internal/components/ListBoxNodes/types.ts";
+import type { ListBoxOptionProps } from "../../_internal/components/ListBoxNodes/types";
 import {
   asCollectionComponent,
   valueItemCollectionNode,
-} from "../../_internal/libs/listCollection.ts";
+} from "../../_internal/libs/listCollection";
 
 export interface ComboboxItemProps extends ListBoxOptionProps {}
 

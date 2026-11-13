@@ -1,2 +1,2 @@
-export { Skeleton } from "./Skeleton.tsx";
-export type { SkeletonProps } from "./Skeleton.tsx";
+export { Skeleton } from "./Skeleton";
+export type { SkeletonProps } from "./Skeleton";

@@ -4,11 +4,11 @@ import { useMemo, useRef, type ReactElement } from "react";
 import { mergeProps, mergeRefs, useToastRegion } from "react-aria";
 import type { ToastState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { regionClass } from "../constants/toastClass.ts";
-import type { ToastRegionProps } from "../Toast.tsx";
-import type { Entry, ToastContent } from "../types.ts";
-import { ToastItem } from "./ToastItem.tsx";
+import { cn } from "../../_internal/libs/cn";
+import { regionClass } from "../constants/toastClass";
+import type { ToastRegionProps } from "../Toast";
+import type { Entry, ToastContent } from "../types";
+import { ToastItem } from "./ToastItem";
 
 export interface RegionProps extends Omit<ToastRegionProps, "queue"> {
   readonly state: ToastState<ToastContent>;

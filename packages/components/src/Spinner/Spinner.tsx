@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import type { Size } from "../types.ts";
+import { cn } from "../_internal/libs/cn";
+import type { Size } from "../types";
 
 /** Spinner의 size. 공통 size 4개를 모두 받는다. */
 type SpinnerSize = Extract<Size, "xs" | "sm" | "md" | "lg">;

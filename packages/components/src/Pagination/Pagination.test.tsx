@@ -1,7 +1,7 @@
 // Pagination 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 24).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 포커스 ring·크기·disabled를 본다.
 // 페이지 번호는 Button, 이전/다음은 IconButton이라 채움 방식·누름 반응 전체는 Button.test.tsx·IconButton.test.tsx가 본다.
-import NextLink from "next/link.js";
+import Next from "next/link.js";
 import type { ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -18,10 +18,7 @@ import {
   type PaginationNextProps,
   type PaginationPreviousProps,
   type PaginationProps,
-} from "./index.ts";
-
-// nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
-const Next = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

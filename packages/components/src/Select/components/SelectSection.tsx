@@ -1,9 +1,6 @@
 "use client";
-import type { ListBoxSectionProps } from "../../_internal/components/ListBoxNodes/types.ts";
-import {
-  asCollectionComponent,
-  sectionCollectionNode,
-} from "../../_internal/libs/listCollection.ts";
+import type { ListBoxSectionProps } from "../../_internal/components/ListBoxNodes/types";
+import { asCollectionComponent, sectionCollectionNode } from "../../_internal/libs/listCollection";
 
 export interface SelectSectionProps extends ListBoxSectionProps {}
 

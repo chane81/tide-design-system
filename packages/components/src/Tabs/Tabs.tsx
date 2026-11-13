@@ -26,10 +26,10 @@ import {
   type ReactNode,
 } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { tabsOrientationClass } from "./constants/tabsClass.ts";
-import { TabsContext, type TabsContextValue } from "./hooks/useTabsContext.ts";
-import type { TabsActivationMode, TabsOrientation } from "./types.ts";
+import { cn } from "../_internal/libs/cn";
+import { tabsOrientationClass } from "./constants/tabsClass";
+import { TabsContext, type TabsContextValue } from "./hooks/useTabsContext";
+import type { TabsActivationMode, TabsOrientation } from "./types";
 
 /** id에 쓸 수 없는 공백을 뺀다(React Aria 탭 id와 같은 규칙). */
 const idPart = (value: string): string => value.replace(/\s+/g, "");

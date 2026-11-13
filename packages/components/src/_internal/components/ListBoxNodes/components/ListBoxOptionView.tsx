@@ -3,9 +3,9 @@ import { CheckIcon } from "@tide-design/icons";
 import { useMemo, useRef, type ReactElement } from "react";
 import { mergeProps, mergeRefs, useOption } from "react-aria";
 
-import { listItemClass } from "../../../constants/listClass.ts";
-import { cn } from "../../../libs/cn.ts";
-import type { ListBoxOptionProps, ViewProps } from "../types.ts";
+import { listItemClass } from "../../../constants/listClass";
+import { cn } from "../../../libs/cn";
+import type { ListBoxOptionProps, ViewProps } from "../types";
 
 /**
  * 고른 옵션 끝의 체크 아이콘. 장식용이다(선택은 `aria-selected`가 알린다). 배경(subtle-active)이 지워지는 고대비

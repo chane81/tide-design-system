@@ -7,7 +7,7 @@ import type { RefObject } from "react";
 import { usePopover } from "react-aria";
 import type { OverlayTriggerState } from "react-stately";
 
-import { overlayPositionProps, type OverlayPlacement } from "../libs/overlayPosition.ts";
+import { overlayPositionProps, type OverlayPlacement } from "../libs/overlayPosition";
 
 /** `usePopoverOverlay`의 인자 */
 export interface PopoverOverlayOptions {

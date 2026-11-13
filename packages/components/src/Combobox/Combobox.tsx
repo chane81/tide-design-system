@@ -26,21 +26,17 @@ import {
 import { mergeProps, mergeRefs, useButton, useComboBox, useFilter } from "react-aria";
 import { useComboBoxState } from "react-stately";
 
-import {
-  inputBaseClass,
-  inputSizeClass,
-  type InputSize,
-} from "../_internal/constants/inputClass.ts";
-import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import { cn } from "../_internal/libs/cn.ts";
-import { resolveCollectionChildren } from "../_internal/libs/listCollection.ts";
-import { ComboboxPopover } from "./components/ComboboxPopover.tsx";
+import { inputBaseClass, inputSizeClass, type InputSize } from "../_internal/constants/inputClass";
+import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl";
+import { cn } from "../_internal/libs/cn";
+import { resolveCollectionChildren } from "../_internal/libs/listCollection";
+import { ComboboxPopover } from "./components/ComboboxPopover";
 import {
   buttonClass,
   buttonSizeClass,
   inputEndClass,
   wrapperClass,
-} from "./constants/comboboxClass.ts";
+} from "./constants/comboboxClass";
 
 export interface ComboboxProps extends Omit<
   ComponentProps<"input">,

@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Skeleton, type SkeletonProps } from "./Skeleton.tsx";
+import { Skeleton, type SkeletonProps } from "./Skeleton";
 
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;

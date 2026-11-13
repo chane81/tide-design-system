@@ -4,7 +4,7 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
-import { maxWorkers } from "../../vitest.workers.ts";
+import { maxWorkers } from "../../vitest.workers";
 
 // unit project: 문서 앱의 순수 함수(원문 링크 변환 등)를 Node에서 검사한다.
 // storybook project: 모든 story를 실제 Chromium에서 렌더하고 a11y(axe) 검사를 돌린다.

@@ -3,10 +3,10 @@ import { useMemo, useRef, type ReactElement } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs, useMenuItem } from "react-aria";
 
-import { listItemClass } from "../../_internal/constants/listClass.ts";
-import { cn } from "../../_internal/libs/cn.ts";
-import type { ViewProps } from "../types.ts";
-import type { MenuItemProps } from "./MenuItem.tsx";
+import { listItemClass } from "../../_internal/constants/listClass";
+import { cn } from "../../_internal/libs/cn";
+import type { ViewProps } from "../types";
+import type { MenuItemProps } from "./MenuItem";
 
 /** 항목 하나를 그린다. node.props는 앱이 MenuItem에 준 props(와 컬렉션이 더한 isDisabled)다. */
 export function MenuItemView({ node, tree }: ViewProps): ReactElement {

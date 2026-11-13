@@ -1,7 +1,7 @@
 // 루트는 Token 객체와 그 타입만 낸다(spec 「`@tide-design/foundation`」 공개 표면).
 // 대비 계산 같은 도우미는 앱 개발자용이 아니라서 `./internal.ts`(`@tide-design/foundation/internal`)에 둔다.
-export { color, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color.ts";
-export type { ColorSlot } from "./colorSlot.ts";
+export { color, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color";
+export type { ColorSlot } from "./colorSlot";
 export {
   semantic,
   semanticPrefix,
@@ -18,13 +18,13 @@ export {
   type ThemeName,
   type ThemedColor,
   type TideRole,
-} from "./semantic.ts";
+} from "./semantic";
 export {
   contrastPairs,
   type ContrastExclusion,
   type ContrastMinRatio,
   type ContrastPair,
-} from "./contrast.ts";
+} from "./contrast";
 export {
   fontFamily,
   fontSize,
@@ -35,7 +35,7 @@ export {
   type FontWeightName,
   type TextStyleName,
   type TextStyleValue,
-} from "./typography.ts";
+} from "./typography";
 export {
   focusRing,
   radius,
@@ -43,6 +43,6 @@ export {
   type RadiusName,
   type ShadowLayer,
   type ShadowName,
-} from "./shape.ts";
-export { duration, easing, type DurationName, type EasingName } from "./motion.ts";
-export { zIndex, type ZIndexName } from "./stacking.ts";
+} from "./shape";
+export { duration, easing, type DurationName, type EasingName } from "./motion";
+export { zIndex, type ZIndexName } from "./stacking";

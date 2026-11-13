@@ -21,9 +21,9 @@
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { useDisclosureGroupState } from "react-stately";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { accordionClass } from "./constants/accordionClass.ts";
-import { AccordionContext } from "./hooks/useAccordionContext.ts";
+import { cn } from "../_internal/libs/cn";
+import { accordionClass } from "./constants/accordionClass";
+import { AccordionContext } from "./hooks/useAccordionContext";
 
 export interface AccordionProps extends Omit<ComponentProps<"div">, "defaultValue" | "onChange"> {
   /**

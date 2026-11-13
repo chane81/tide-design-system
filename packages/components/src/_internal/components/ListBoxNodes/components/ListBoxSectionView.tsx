@@ -2,9 +2,9 @@
 import type { ReactElement } from "react";
 import { useListBoxSection } from "react-aria";
 
-import { listHeadingClass } from "../../../constants/listClass.ts";
-import type { ListBoxSectionProps, ViewProps } from "../types.ts";
-import { ListBoxOptionView } from "./ListBoxOptionView.tsx";
+import { listHeadingClass } from "../../../constants/listClass";
+import type { ListBoxSectionProps, ViewProps } from "../types";
+import { ListBoxOptionView } from "./ListBoxOptionView";
 
 /** 묶음 하나를 그린다. 제목은 보조기술에서 숨기고(`presentation`) 묶음의 이름으로만 쓴다(useListBoxSection). */
 export function ListBoxSectionView({ node, state }: ViewProps): ReactElement {

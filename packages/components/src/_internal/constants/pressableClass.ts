@@ -2,7 +2,7 @@
 // 채움 방식별 색·hover·누름·비활성 class와 모양의 공통 부분, 누름 축소를 둔다. 상태에 따라 고르는 일은
 // libs/pressableState.ts가 한다. 이 파일은 class 문자열만 있으므로 "use client"가 없다.
 
-import type { FillVariant } from "../../types.ts";
+import type { FillVariant } from "../../types";
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
 // 모든 variant에 border 1px를 둔다. 색이 없는 variant는 투명 border라 forced-colors에서 경계로 보인다.

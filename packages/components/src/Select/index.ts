@@ -1,6 +1,6 @@
-export { Select } from "./Select.tsx";
-export type { SelectProps } from "./Select.tsx";
-export { SelectItem } from "./components/SelectItem.tsx";
-export type { SelectItemProps } from "./components/SelectItem.tsx";
-export { SelectSection } from "./components/SelectSection.tsx";
-export type { SelectSectionProps } from "./components/SelectSection.tsx";
+export { Select } from "./Select";
+export type { SelectProps } from "./Select";
+export { SelectItem } from "./components/SelectItem";
+export type { SelectItemProps } from "./components/SelectItem";
+export { SelectSection } from "./components/SelectSection";
+export type { SelectSectionProps } from "./components/SelectSection";

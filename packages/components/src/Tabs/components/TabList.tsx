@@ -11,11 +11,11 @@ import {
 import { mergeProps, mergeRefs, useTabList } from "react-aria";
 import { useTabListState } from "react-stately";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { resolveCollectionChildren } from "../../_internal/libs/listCollection.ts";
-import { tabListOrientationClass } from "../constants/tabsClass.ts";
-import { useTabsContext } from "../hooks/useTabsContext.ts";
-import { TabView } from "./TabView.tsx";
+import { cn } from "../../_internal/libs/cn";
+import { resolveCollectionChildren } from "../../_internal/libs/listCollection";
+import { tabListOrientationClass } from "../constants/tabsClass";
+import { useTabsContext } from "../hooks/useTabsContext";
+import { TabView } from "./TabView";
 
 export interface TabListProps extends Omit<ComponentProps<"div">, "role" | "children"> {
   /** `Tab`. 바로 아래(또는 Fragment·배열 안)에 둔다. */

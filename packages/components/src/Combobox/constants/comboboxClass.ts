@@ -1,4 +1,4 @@
-import type { InputSize } from "../../_internal/constants/inputClass.ts";
+import type { InputSize } from "../../_internal/constants/inputClass";
 
 // class는 문자열 그대로 적는다(_internal/constants/inputClass.ts 참고).
 // - 감싸개: 입력과 chevron 버튼을 한 줄에 둔다. 버튼은 음수 margin으로 입력의 끝 안쪽에 겹친다. 그래서 사용자 className으로

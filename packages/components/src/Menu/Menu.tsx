@@ -18,7 +18,7 @@ import { useId, useMemo, useRef, useState, type ReactElement, type ReactNode } f
 import { useMenuTrigger } from "react-aria";
 import { useMenuTriggerState } from "react-stately";
 
-import { MenuContext, type MenuContextValue } from "./hooks/useMenuContext.ts";
+import { MenuContext, type MenuContextValue } from "./hooks/useMenuContext";
 
 export interface MenuProps {
   /** 열림 상태(제어). 주면 `onOpenChange`로 바꾼다. */

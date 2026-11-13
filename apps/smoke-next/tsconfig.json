@@ -2,6 +2,9 @@
   // workspace 안에서는 smoke 스크립트만 검사한다. template은 smoke 실행 때 workspace 밖에서 검사한다.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // smoke 스크립트는 Node가 직접 실행하므로 Node ESM 규칙(nodenext)으로 본다.
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "types": ["node"],
     "declaration": false,
     "isolatedDeclarations": false

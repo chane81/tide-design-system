@@ -1,0 +1,15 @@
+{
+  // Node가 직접 실행하는 scripts/ 타입 검사용. Node ESM 규칙(nodenext)으로 보고, scripts끼리의 `.ts` import를 허용한다.
+  // 패키지 원본(src)은 bundler 해석이라 Node가 바로 실행할 수 없으므로 scripts는 빌드된 dist를 import한다.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["node"],
+    "declaration": false,
+    "isolatedDeclarations": false
+  },
+  "include": ["scripts"]
+}

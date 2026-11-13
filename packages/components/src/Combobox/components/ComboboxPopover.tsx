@@ -4,9 +4,9 @@ import type { ReactElement, ReactNode, RefObject } from "react";
 import type { useComboBox } from "react-aria";
 import type { ComboBoxState } from "react-stately";
 
-import { OverlayPortal } from "../../_internal/components/OverlayPortal.tsx";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import { ComboboxPopoverInner } from "./ComboboxPopoverInner.tsx";
+import { OverlayPortal } from "../../_internal/components/OverlayPortal";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import { ComboboxPopoverInner } from "./ComboboxPopoverInner";
 
 /** 목록 상태. Combobox가 고른 값의 node key는 옵션의 `value`(문자열)다. */
 type ComboboxListState = ComboBoxState<object>;

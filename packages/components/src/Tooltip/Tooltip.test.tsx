@@ -9,10 +9,10 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion.ts";
+import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion";
 
-import { IconButton } from "../IconButton/IconButton.tsx";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover/index.ts";
+import { IconButton } from "../IconButton/IconButton";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover/index";
 import {
   Tooltip,
   TooltipContent,
@@ -20,7 +20,7 @@ import {
   type TooltipContentProps,
   type TooltipProps,
   type TooltipTriggerProps,
-} from "./index.ts";
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

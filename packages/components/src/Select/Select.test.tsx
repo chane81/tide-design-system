@@ -9,12 +9,12 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, styleSnapshot } from "../../test/motion.ts";
+import { captureExit, styleSnapshot } from "../../test/motion";
 
-import { Button } from "../Button/Button.tsx";
-import { Field } from "../Field/Field.tsx";
-import { Input } from "../Input/Input.tsx";
-import { Select, SelectItem, SelectSection, type SelectProps } from "./index.ts";
+import { Button } from "../Button/Button";
+import { Field } from "../Field/Field";
+import { Input } from "../Input/Input";
+import { Select, SelectItem, SelectSection, type SelectProps } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

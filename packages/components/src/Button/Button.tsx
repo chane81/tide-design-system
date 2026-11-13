@@ -4,15 +4,15 @@
 
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { pressableBaseClass } from "../_internal/constants/pressableClass.ts";
-import { pressableState } from "../_internal/libs/pressableState.ts";
-import { renderElement } from "../_internal/libs/renderElement.ts";
-import { Spinner } from "../Spinner/Spinner.tsx";
-import type { Role } from "../types.ts";
-import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden.tsx";
-import { Icon } from "./components/Icon.tsx";
-import { sizeClass } from "./constants/buttonClass.ts";
-import type { ButtonSize, ButtonVariant } from "./types.ts";
+import { pressableBaseClass } from "../_internal/constants/pressableClass";
+import { pressableState } from "../_internal/libs/pressableState";
+import { renderElement } from "../_internal/libs/renderElement";
+import { Spinner } from "../Spinner/Spinner";
+import type { Role } from "../types";
+import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
+import { Icon } from "./components/Icon";
+import { sizeClass } from "./constants/buttonClass";
+import type { ButtonSize, ButtonVariant } from "./types";
 
 export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   /** 채움 방식. 기본값은 `solid`다. */

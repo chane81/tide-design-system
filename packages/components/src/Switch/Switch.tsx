@@ -9,9 +9,9 @@
 
 import type { ComponentProps, CSSProperties, ReactElement, ReactNode } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import type { Role, Size } from "../types.ts";
+import { cn } from "../_internal/libs/cn";
+import { useFieldControl } from "../_internal/hooks/useFieldControl";
+import type { Role, Size } from "../types";
 
 /** Switch의 size. `xs`는 track이 너무 작아 받지 않는다. */
 type SwitchSize = Extract<Size, "sm" | "md" | "lg">;

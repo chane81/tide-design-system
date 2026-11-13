@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { renderElement } from "../../_internal/libs/renderElement.ts";
-import { linkClass } from "../constants/breadcrumbClass.ts";
+import { renderElement } from "../../_internal/libs/renderElement";
+import { linkClass } from "../constants/breadcrumbClass";
 
 export interface BreadcrumbLinkProps extends Omit<ComponentProps<"a">, "color"> {
   /**

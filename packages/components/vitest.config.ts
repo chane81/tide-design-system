@@ -2,7 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
-import { maxWorkers } from "../../vitest.workers.ts";
+import { maxWorkers } from "../../vitest.workers";
 
 import {
   mouseDownAtCorner,
@@ -10,7 +10,7 @@ import {
   mouseLeavePage,
   mouseUp,
   screenshotTestId,
-} from "./test/commands.ts";
+} from "./test/commands";
 
 // Vitest projects(vitest 5 docs/guide/projects.md, docs/config/browser/playwright.md).
 // - unit: Node에서 순수 함수(cn 등)를 본다. 대상 옆 `src/**/*.test.ts`와 패키지 전체를 보는 `test/**/*.test.ts`.

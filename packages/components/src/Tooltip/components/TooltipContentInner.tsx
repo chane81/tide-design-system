@@ -3,12 +3,12 @@ import { useMemo, type ReactElement, type RefObject } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { mergeProps, mergeRefs, useOverlayPosition, useTooltip } from "react-aria";
 
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { cn } from "../../_internal/libs/cn.ts";
-import { overlayPositionProps } from "../../_internal/libs/overlayPosition.ts";
-import { contentClass } from "../constants/tooltipClass.ts";
-import type { TooltipContextValue } from "../hooks/useTooltipContext.ts";
-import type { TooltipContentProps } from "./TooltipContent.tsx";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { cn } from "../../_internal/libs/cn";
+import { overlayPositionProps } from "../../_internal/libs/overlayPosition";
+import { contentClass } from "../constants/tooltipClass";
+import type { TooltipContextValue } from "../hooks/useTooltipContext";
+import type { TooltipContentProps } from "./TooltipContent";
 
 export interface TooltipContentInnerProps extends TooltipContentProps {
   readonly context: TooltipContextValue;

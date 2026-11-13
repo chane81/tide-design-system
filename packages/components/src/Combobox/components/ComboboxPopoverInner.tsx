@@ -3,12 +3,12 @@ import { useLayoutEffect, type ReactElement } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { useListBox } from "react-aria";
 
-import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes.tsx";
-import { listPopupClass } from "../../_internal/constants/listClass.ts";
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay.ts";
-import { emptyClass } from "../constants/comboboxClass.ts";
-import type { ComboboxPopoverProps } from "./ComboboxPopover.tsx";
+import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes";
+import { listPopupClass } from "../../_internal/constants/listClass";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
+import { emptyClass } from "../constants/comboboxClass";
+import type { ComboboxPopoverProps } from "./ComboboxPopover";
 
 /**
  * 목록 표면(`listPopupClass`)과 그 안의 `role="listbox"`. 입력 아래 시작 끝에 4px 떨어져 붙고(Select와 같다),

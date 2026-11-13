@@ -8,15 +8,12 @@ import {
   CheckboxGroupContext,
   useChoiceGroup,
   type ChoiceGroupState,
-} from "../_internal/hooks/useChoiceGroup.ts";
-import { cn } from "../_internal/libs/cn.ts";
-import { FieldContext } from "../_internal/hooks/useFieldControl.ts";
-import {
-  orientationClass,
-  type ChoiceOrientation,
-} from "../_internal/constants/choiceGroupClass.ts";
+} from "../_internal/hooks/useChoiceGroup";
+import { cn } from "../_internal/libs/cn";
+import { FieldContext } from "../_internal/hooks/useFieldControl";
+import { orientationClass, type ChoiceOrientation } from "../_internal/constants/choiceGroupClass";
 
-export type { ChoiceOrientation } from "../_internal/constants/choiceGroupClass.ts";
+export type { ChoiceOrientation } from "../_internal/constants/choiceGroupClass";
 
 export interface CheckboxGroupProps extends ComponentProps<"div"> {
   /** 항목을 세로(`vertical`)로 쌓거나 가로(`horizontal`)로 늘어놓는다. 기본값은 `vertical`이다. */

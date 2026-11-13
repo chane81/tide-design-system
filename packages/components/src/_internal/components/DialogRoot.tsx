@@ -8,7 +8,7 @@ import { useMemo, useRef, useState, type ReactElement, type ReactNode } from "re
 import { useOverlayTrigger } from "react-aria";
 import { useOverlayTriggerState } from "react-stately";
 
-import { DialogContext, type DialogContextValue } from "../hooks/useDialogContext.ts";
+import { DialogContext, type DialogContextValue } from "../hooks/useDialogContext";
 
 export interface DialogProps {
   /** 열림 상태(제어). 주면 `onOpenChange`로 바꾼다. */

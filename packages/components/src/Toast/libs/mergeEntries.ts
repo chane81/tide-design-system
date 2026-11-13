@@ -1,6 +1,6 @@
 import type { QueuedToast } from "react-stately";
 
-import type { Entry, ToastContent } from "../types.ts";
+import type { Entry, ToastContent } from "../types";
 
 /** 보이는 Toast 목록에 퇴장 중인 Toast를 원래 자리에 끼워 넣는다. */
 export function mergeEntries(

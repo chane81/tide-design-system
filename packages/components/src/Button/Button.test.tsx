@@ -3,17 +3,13 @@
 // press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
 import { color } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
-import NextLink from "next/link.js";
+import Link from "next/link.js";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Button, type ButtonProps } from "./Button.tsx";
-
-// nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
-// 두 경우 모두 Link Component를 꺼낸다.
-const Link = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+import { Button, type ButtonProps } from "./Button";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 // 테스트 안에서는 interface를 선언한 foundation을 넓힌다. 앱이 `@tide-design/components`를 넓히는 경우는 smoke가 본다.

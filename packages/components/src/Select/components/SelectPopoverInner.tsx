@@ -3,12 +3,12 @@ import { useLayoutEffect, useRef, type ReactElement, type RefObject } from "reac
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { DismissButton, useListBox } from "react-aria";
 
-import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes.tsx";
-import { listPopupClass } from "../../_internal/constants/listClass.ts";
-import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab.ts";
-import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay.ts";
-import type { SelectPopoverProps } from "./SelectPopover.tsx";
+import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes";
+import { listPopupClass } from "../../_internal/constants/listClass";
+import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab";
+import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
+import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
+import type { SelectPopoverProps } from "./SelectPopover";
 
 export interface SelectPopoverInnerProps extends SelectPopoverProps {
   readonly popoverRef: RefObject<HTMLDivElement | null>;

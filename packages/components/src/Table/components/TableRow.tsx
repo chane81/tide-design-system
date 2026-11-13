@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../../_internal/libs/cn.ts";
-import { rowClass } from "../constants/tableClass.ts";
+import { cn } from "../../_internal/libs/cn";
+import { rowClass } from "../constants/tableClass";
 
 export interface TableRowProps extends ComponentProps<"tr"> {}
 

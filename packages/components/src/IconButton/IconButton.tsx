@@ -4,11 +4,11 @@
 
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { pressableBaseClass } from "../_internal/constants/pressableClass.ts";
-import { pressableState } from "../_internal/libs/pressableState.ts";
-import { renderElement } from "../_internal/libs/renderElement.ts";
-import { Spinner } from "../Spinner/Spinner.tsx";
-import type { FillVariant, Role, Size } from "../types.ts";
+import { pressableBaseClass } from "../_internal/constants/pressableClass";
+import { pressableState } from "../_internal/libs/pressableState";
+import { renderElement } from "../_internal/libs/renderElement";
+import { Spinner } from "../Spinner/Spinner";
+import type { FillVariant, Role, Size } from "../types";
 
 /** IconButton의 채움 방식. Button과 같은 4개를 받는다. */
 type IconButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;

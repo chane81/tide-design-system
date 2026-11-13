@@ -26,11 +26,11 @@
 import { useCallback, useState, type ComponentProps, type ReactElement } from "react";
 import { useToastQueue } from "react-stately";
 
-import { OverlayPortal } from "../_internal/components/OverlayPortal.tsx";
-import { Region } from "./components/Region.tsx";
-import { mergeEntries } from "./libs/mergeEntries.ts";
-import { queueOf, type ToastQueue } from "./libs/toastQueue.ts";
-import type { Entry } from "./types.ts";
+import { OverlayPortal } from "../_internal/components/OverlayPortal";
+import { Region } from "./components/Region";
+import { mergeEntries } from "./libs/mergeEntries";
+import { queueOf, type ToastQueue } from "./libs/toastQueue";
+import type { Entry } from "./types";
 
 export interface ToastRegionProps extends Omit<ComponentProps<"div">, "children" | "role"> {
   /** 그릴 큐(`new ToastQueue()`) */

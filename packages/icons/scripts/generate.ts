@@ -79,7 +79,7 @@ function componentSource(tideName: string, shapes: Shape[]): string {
   return `// 생성 파일(scripts/generate.ts). 고치지 말고 이름표(icon-names.json)를 고친다.
 import type { ReactElement } from "react";
 
-import { IconBase, type IconProps } from "../IconBase.tsx";
+import { IconBase, type IconProps } from "../IconBase";
 
 export function ${tideName}(props: IconProps): ReactElement {
   return (
@@ -130,7 +130,7 @@ for (const tideName of tideNames) {
 await writeFile(
   join(outDir, "index.ts"),
   `// 생성 파일(scripts/generate.ts). 고치지 말고 이름표(icon-names.json)를 고친다.\n${tideNames
-    .map((name) => `export { ${name} } from "./${fileName(name)}.tsx";`)
+    .map((name) => `export { ${name} } from "./${fileName(name)}";`)
     .join("\n")}\n`,
 );
 

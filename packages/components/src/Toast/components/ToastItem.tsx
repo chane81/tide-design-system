@@ -11,13 +11,13 @@ import {
   alertDescriptionClass,
   alertIconClass,
   alertTitleClass,
-} from "../../_internal/constants/alertClass.ts";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import { alertStatusIcon } from "../../_internal/libs/alertStatusIcon.ts";
-import { Button } from "../../Button/Button.tsx";
-import { IconButton } from "../../IconButton/IconButton.tsx";
-import { toastClass } from "../constants/toastClass.ts";
-import type { ToastContent } from "../types.ts";
+} from "../../_internal/constants/alertClass";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import { alertStatusIcon } from "../../_internal/libs/alertStatusIcon";
+import { Button } from "../../Button/Button";
+import { IconButton } from "../../IconButton/IconButton";
+import { toastClass } from "../constants/toastClass";
+import type { ToastContent } from "../types";
 
 export interface ToastItemProps {
   readonly toast: QueuedToast<ToastContent>;

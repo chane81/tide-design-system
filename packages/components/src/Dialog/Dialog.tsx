@@ -16,9 +16,9 @@
 
 import type { ReactElement } from "react";
 
-import { DialogRoot, type DialogProps } from "../_internal/components/DialogRoot.tsx";
+import { DialogRoot, type DialogProps } from "../_internal/components/DialogRoot";
 
-export type { DialogProps } from "../_internal/components/DialogRoot.tsx";
+export type { DialogProps } from "../_internal/components/DialogRoot";
 
 /**
  * 트리거와 내용을 잇는 열림 상태. DOM 요소를 만들지 않는다.

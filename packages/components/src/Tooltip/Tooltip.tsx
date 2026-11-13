@@ -16,7 +16,7 @@ import { useMemo, useRef, type ReactElement, type ReactNode } from "react";
 import { useTooltipTrigger } from "react-aria";
 import { useTooltipTriggerState } from "react-stately";
 
-import { TooltipContext, type TooltipContextValue } from "./hooks/useTooltipContext.ts";
+import { TooltipContext, type TooltipContextValue } from "./hooks/useTooltipContext";
 
 export interface TooltipProps {
   /** 열림 상태(제어). 주면 `onOpenChange`로 바꾼다. */

@@ -1,2 +1,2 @@
-export { Alert } from "./Alert.tsx";
-export type { AlertProps } from "./Alert.tsx";
+export { Alert } from "./Alert";
+export type { AlertProps } from "./Alert";

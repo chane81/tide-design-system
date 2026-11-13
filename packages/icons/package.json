@@ -22,7 +22,7 @@
   "scripts": {
     "generate": "node scripts/generate.ts",
     "build": "tsdown",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json",
     "test": "vitest run"
   },
   "devDependencies": {

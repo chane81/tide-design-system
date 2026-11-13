@@ -24,21 +24,12 @@ import {
 import { HiddenSelect, mergeProps, mergeRefs, useButton, useSelect } from "react-aria";
 import { useSelectState } from "react-stately";
 
-import {
-  inputBaseClass,
-  inputSizeClass,
-  type InputSize,
-} from "../_internal/constants/inputClass.ts";
-import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import { cn } from "../_internal/libs/cn.ts";
-import { resolveCollectionChildren } from "../_internal/libs/listCollection.ts";
-import { SelectPopover } from "./components/SelectPopover.tsx";
-import {
-  chevronClass,
-  placeholderClass,
-  triggerClass,
-  valueClass,
-} from "./constants/selectClass.ts";
+import { inputBaseClass, inputSizeClass, type InputSize } from "../_internal/constants/inputClass";
+import { FieldContext, useFieldControl } from "../_internal/hooks/useFieldControl";
+import { cn } from "../_internal/libs/cn";
+import { resolveCollectionChildren } from "../_internal/libs/listCollection";
+import { SelectPopover } from "./components/SelectPopover";
+import { chevronClass, placeholderClass, triggerClass, valueClass } from "./constants/selectClass";
 
 export interface SelectProps extends Omit<
   ComponentProps<"button">,

@@ -1,2 +1,2 @@
-export { Typography } from "./Typography.tsx";
-export type { TypographyProps } from "./Typography.tsx";
+export { Typography } from "./Typography";
+export type { TypographyProps } from "./Typography";

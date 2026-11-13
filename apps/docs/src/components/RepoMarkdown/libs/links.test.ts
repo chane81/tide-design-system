@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, test } from "vitest";
 
-import { githubSlug, rewriteRepoLinks, STORYBOOK_DOCS, toStorybookHref } from "./links.ts";
+import { githubSlug, rewriteRepoLinks, STORYBOOK_DOCS, toStorybookHref } from "./links";
 
 const repoRoot = join(import.meta.dirname, "../../../../../..");
 

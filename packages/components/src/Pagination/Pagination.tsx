@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { listClass } from "./constants/paginationClass.ts";
+import { listClass } from "./constants/paginationClass";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 누르는 항목은 Button·IconButton(client 경계)에 맡기고, 이 파일은 함수를 만들지 않고 props만 넘긴다.

@@ -1,11 +1,11 @@
 "use client";
 import { useRef, type ComponentProps, type ReactElement } from "react";
 
-import { OverlayPortal } from "../../_internal/components/OverlayPortal.tsx";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import { usePopoverContext } from "../hooks/usePopoverContext.ts";
-import type { PopoverPlacement } from "../types.ts";
-import { PopoverContentInner } from "./PopoverContentInner.tsx";
+import { OverlayPortal } from "../../_internal/components/OverlayPortal";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import { usePopoverContext } from "../hooks/usePopoverContext";
+import type { PopoverPlacement } from "../types";
+import { PopoverContentInner } from "./PopoverContentInner";
 
 export interface PopoverContentProps extends Omit<ComponentProps<"div">, "id" | "role"> {
   /** 트리거 기준 위치. 기본값은 `bottom`(아래, 가운데 맞춤)이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */

@@ -1,6 +1,6 @@
 // Breadcrumb 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 24).
 // 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 밑줄·구분자 숨김·포커스 ring을 본다.
-import NextLink from "next/link.js";
+import Next from "next/link.js";
 import type { ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -14,10 +14,7 @@ import {
   type BreadcrumbItemProps,
   type BreadcrumbLinkProps,
   type BreadcrumbProps,
-} from "./index.ts";
-
-// nodenext 타입 해석은 CJS인 next/link를 module.exports({ default })로 보지만, Vite는 default를 바로 준다.
-const Next = ("default" in NextLink ? NextLink.default : NextLink) as typeof NextLink.default;
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

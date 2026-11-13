@@ -6,8 +6,8 @@
 import { CircleExclamationPointIcon } from "@tide-design/icons";
 import { useId, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
-import { FieldContext, type FieldContextValue } from "../_internal/hooks/useFieldControl.ts";
+import { cn } from "../_internal/libs/cn";
+import { FieldContext, type FieldContextValue } from "../_internal/hooks/useFieldControl";
 
 export interface FieldProps extends ComponentProps<"div"> {
   /** 입력창의 이름이 되는 label. 화면에 보인다. */

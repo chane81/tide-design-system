@@ -7,7 +7,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureWhen } from "../../test/motion.ts";
+import { captureWhen } from "../../test/motion";
 
 import {
   Tab,
@@ -18,7 +18,7 @@ import {
   type TabPanelProps,
   type TabProps,
   type TabsProps,
-} from "./index.ts";
+} from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

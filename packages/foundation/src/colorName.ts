@@ -1,5 +1,5 @@
-import { color, type ColorFamily } from "./color.ts";
-import { colorSlots, familySlotSteps, type ColorSlot } from "./colorSlot.ts";
+import { color, type ColorFamily } from "./color";
+import { colorSlots, familySlotSteps, type ColorSlot } from "./colorSlot";
 import {
   colorValueHex,
   roleFamily,
@@ -10,7 +10,7 @@ import {
   type ThemedColor,
   type ThemeName,
   type TideRole,
-} from "./semantic.ts";
+} from "./semantic";
 
 // 색 이름(Color)마다 슬롯이 무엇을 가리키는지 계산한다(tide-v0-impl 티켓 40, ADR 0011).
 // Role은 Semantic Token을, Tide 색 계열은 계열 규칙으로 고른 Primitive를 가리킨다.

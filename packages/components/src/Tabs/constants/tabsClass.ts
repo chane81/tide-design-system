@@ -1,4 +1,4 @@
-import type { TabsOrientation } from "../types.ts";
+import type { TabsOrientation } from "../types";
 
 // 루트 class(ADR 0005 손으로 쓴 map). 탭 목록과 패널 사이는 가로 16px, 세로 24px다.
 export const tabsOrientationClass: Record<TabsOrientation, string> = {

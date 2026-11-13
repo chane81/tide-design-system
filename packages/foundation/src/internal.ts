@@ -4,7 +4,7 @@
  * @internal 앱 개발자용 공개 계약이 아니다. 문서에 싣지 않고, 예고 없이 바뀌거나 사라질 수 있다.
  * @packageDocumentation
  */
-export { primitiveHex } from "./color.ts";
+export { primitiveHex } from "./color";
 export {
   colorSlots,
   familyOverrides,
@@ -22,7 +22,7 @@ export {
   type SlotRule,
   type SlotStep,
   type SlotValue,
-} from "./colorSlot.ts";
+} from "./colorSlot";
 export {
   colorValueHex,
   roleFamily,
@@ -31,7 +31,7 @@ export {
   semanticEntries,
   semanticHex,
   shadowColor,
-} from "./semantic.ts";
+} from "./semantic";
 export {
   colorFamilyNames,
   colorSlotHex,
@@ -41,7 +41,7 @@ export {
   roleSlotToken,
   tideColorNames,
   type TideColor,
-} from "./colorName.ts";
+} from "./colorName";
 export {
   accentDefaultDeclarations,
   accentUtilities,
@@ -54,7 +54,7 @@ export {
   semanticVar,
   tideFamilyThemeDeclarations,
   type AccentUtility,
-} from "./colorCss.ts";
+} from "./colorCss";
 export {
   checkColorContrast,
   colorContrastRules,
@@ -64,6 +64,6 @@ export {
   opaqueSemanticHex,
   type ColorContrastResult,
   type ColorContrastRule,
-} from "./contrast.ts";
-export { fontFamilyCss } from "./typography.ts";
-export { shadowCss } from "./shape.ts";
+} from "./contrast";
+export { fontFamilyCss } from "./typography";
+export { shadowCss } from "./shape";

@@ -7,7 +7,7 @@ import {
   type RefCallback,
 } from "react";
 
-import { cn } from "./cn.ts";
+import { cn } from "./cn";
 
 // `render` prop 병합 유틸(ADR 0005). 루트가 DOM 요소 하나인 Component가 함께 쓴다.
 // 넘겨받은 요소에 Component의 props를 얹는다. 규칙:

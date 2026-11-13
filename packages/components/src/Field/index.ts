@@ -1,2 +1,2 @@
-export { Field } from "./Field.tsx";
-export type { FieldProps } from "./Field.tsx";
+export { Field } from "./Field";
+export type { FieldProps } from "./Field";

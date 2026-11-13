@@ -1,7 +1,7 @@
 "use client";
 import { createContext, use } from "react";
 
-import type { TabsActivationMode, TabsOrientation } from "../types.ts";
+import type { TabsActivationMode, TabsOrientation } from "../types";
 
 export interface TabsContextValue {
   readonly value: string;

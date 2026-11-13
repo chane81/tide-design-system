@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "../_internal/libs/cn.ts";
+import { cn } from "../_internal/libs/cn";
 
 export type VisuallyHiddenProps = ComponentProps<"span">;
 

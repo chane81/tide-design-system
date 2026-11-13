@@ -1,11 +1,11 @@
 "use client";
 import { useRef, type ComponentProps, type ReactElement } from "react";
 
-import { OverlayPortal } from "../../_internal/components/OverlayPortal.tsx";
-import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence.ts";
-import { useTooltipContext } from "../hooks/useTooltipContext.ts";
-import type { TooltipPlacement } from "../types.ts";
-import { TooltipContentInner } from "./TooltipContentInner.tsx";
+import { OverlayPortal } from "../../_internal/components/OverlayPortal";
+import { useOverlayPresence } from "../../_internal/hooks/useOverlayPresence";
+import { useTooltipContext } from "../hooks/useTooltipContext";
+import type { TooltipPlacement } from "../types";
+import { TooltipContentInner } from "./TooltipContentInner";
 
 export interface TooltipContentProps extends Omit<ComponentProps<"div">, "id" | "role"> {
   /** 트리거 기준 위치. 기본값은 `top`(위, 가운데 맞춤)이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */

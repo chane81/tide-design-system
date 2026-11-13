@@ -5,9 +5,9 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events";
 import { addons, useEffect } from "storybook/preview-api";
 
-import { DocsAnchor } from "../src/components/DocsAnchor.tsx";
-import { applyTheme, DEFAULT_THEME, THEMES, toTheme } from "./theme.ts";
-import { ThemedDocsContainer } from "./ThemedDocsContainer.tsx";
+import { DocsAnchor } from "../src/components/DocsAnchor";
+import { applyTheme, DEFAULT_THEME, THEMES, toTheme } from "./theme";
+import { ThemedDocsContainer } from "./ThemedDocsContainer";
 
 // addon-themes 툴바(storybook 10.6.6 DecoratorHelpers): 툴바에 Theme 목록을 등록하고 story마다 global을 읽는다.
 // story parameters의 `themes.themeOverride`가 있으면 그것을 먼저 쓴다.

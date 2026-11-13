@@ -17,7 +17,7 @@ import { useId, useMemo, useRef, useState, type ReactElement, type ReactNode } f
 import { useOverlayTrigger } from "react-aria";
 import { useOverlayTriggerState } from "react-stately";
 
-import { PopoverContext, type PopoverContextValue } from "./hooks/usePopoverContext.ts";
+import { PopoverContext, type PopoverContextValue } from "./hooks/usePopoverContext";
 
 export interface PopoverProps {
   /** 열림 상태(제어). 주면 `onOpenChange`로 바꾼다. */

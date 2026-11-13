@@ -1,2 +1,2 @@
-export { IconButton } from "./IconButton.tsx";
-export type { IconButtonProps } from "./IconButton.tsx";
+export { IconButton } from "./IconButton";
+export type { IconButtonProps } from "./IconButton";
