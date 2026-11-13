@@ -11,6 +11,7 @@
 | [03](issues/03-components-internal-tests.md) | `packages/components/src/_internal`, `test/`, 패키지 설정   | 코드 스타일 02 |
 | [04](issues/04-docs-app.md)                  | `apps/docs` (`.storybook` 포함)                             | 코드 스타일 02 |
 | [05](issues/05-smoke-scripts-root.md)        | `apps/smoke-next`, 루트 `scripts/`, 루트 설정 파일          | 코드 스타일 02 |
+| [06](issues/06-follow-ups.md)                | 후속: MDX·testing.md·릴리스 근거 기록, stories 예시         | 01~05          |
 
 구조 이행([project-structure](../project-structure/README.md)) 06과 코드 스타일([code-style](../code-style/README.md)) 01·02가 머지된 뒤 시작한다. 그 전에 하면 파일 이동과 충돌한다. 다섯 티켓은 서로 다른 파일만 건드리므로 worktree별로 동시에 진행할 수 있다.
 
