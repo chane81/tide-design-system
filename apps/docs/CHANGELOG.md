@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.3.3
+
+### 수정 (patch)
+
+- [#33](https://github.com/chane81/tide-design-system/pull/33) [`83df8f4`](https://github.com/chane81/tide-design-system/commit/83df8f42d65c7e6d9f7dffea83d162d9c7a3bee5) [@chane81](https://github.com/chane81) - Button·IconButton 예시의 앱 브랜드 색을 브랜드 색 문서 예시 스케일과 같은 값으로 바꿨다.
+
 ## 0.3.2
 
 ### 수정 (patch)

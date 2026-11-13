@@ -1,5 +1,13 @@
 # @tide-tds/components
 
+## 0.9.1
+
+### 기능 추가와 수정 (patch)
+
+- 의존성 업데이트 [[`115a8e6`](https://github.com/chane81/tide-design-system/commit/115a8e63748d6979a971b4fb5d7197fc56936b70)]:
+  - @tide-tds/foundation@0.9.1
+  - @tide-tds/icons@0.9.1
+
 ## 0.9.0
 
 ### 호환되지 않는 변경 (minor)
