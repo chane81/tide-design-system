@@ -1,5 +1,4 @@
-// 앱 브랜드 색 계열(tide-v0-impl 티켓 40): defineColorFamily 검증과 tide-color CLI(빌드한 bin)를 확인한다.
-// CLI는 앱처럼 `node dist/cli.js build <파일>`로 실행한다. 픽스처는 패키지 이름으로 color-family를 import한다.
+// CLI는 앱처럼 빌드한 `dist/cli.js`로 실행하고, 픽스처는 패키지 이름으로 color-family를 import한다.
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 

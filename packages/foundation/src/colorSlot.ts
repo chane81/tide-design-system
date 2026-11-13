@@ -1,8 +1,6 @@
 import { primitiveHex, type ColorFamily, type ColorStep, type PrimitiveColorName } from "./color";
 
-// 색 계열 하나가 Theme마다 내는 변수 묶음의 자리(슬롯)와 매핑 규칙(tide-v0-impl 티켓 40, ADR 0011, ADR 0022).
-// 규칙은 이 파일 한 곳에 둔다. Tide 계열, Role, 앱 브랜드 계열(defineColorFamily)이 모두 이 규칙을 따른다.
-// 값은 ADR 0022 §2 표와 같다(tide-color-tone 티켓 02·04 결정).
+// 슬롯 규칙은 이 파일 한 곳에 둔다. Tide 계열, Role, 앱 브랜드 계열이 모두 따른다(ADR 0011).
 
 /**
  * 색 계열 변수 묶음의 슬롯. CSS에서는 `--tide-<색 이름>-<슬롯>`과 `--tide-accent-<슬롯>`으로 나간다.
@@ -64,16 +62,9 @@ export type SlotOverrides = {
   readonly [Slot in ColorSlot]?: Partial<SlotRule>;
 };
 
-// ADR 0022 §2 표:
-// - solid: 600. hover / active는 600 + black 14% / 20%(두 Theme 같음)
-// - subtle: light 100, dark 950. hover / active는 light 100 + gray-950 4% / 8%, dark 950 + white 6% / 10%
-// - faint: light 50, dark gray-950과 950을 반씩 섞기. hover·active·전용 글자·테두리가 없다.
-// - text(바탕 없이 쓰는 색 글자): light 700, dark 300. border(outline·선택 표시): light 600, dark 400
-// - subtle-border(파스텔 테두리, 꾸밈): light 200, dark 800. on-subtle(subtle·faint 위 글자): light 950, dark 100
-// - on-solid: 흰색
 /**
- * 슬롯 매핑 규칙.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * 슬롯 매핑 규칙(ADR 0022 §2 표).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const slotRule = {
   solid: { light: 600, dark: 600 },
@@ -104,11 +95,10 @@ export const slotRule = {
 
 slotRule satisfies Record<ColorSlot, SlotRule>;
 
-// Tide 계열마다 덮어쓸 값. 지금은 없다. 예: 노란 계열을 더해 흰 글자 대비가 모자라면 on-solid를 진한 단계로 덮어쓴다.
-// 덮어쓴 값도 대비 쌍 검사(contrast.ts의 colorContrastRules)를 통과해야 한다.
+// 덮어쓴 값도 colorContrastRules 대비 검사를 통과해야 한다.
 /**
  * Tide 계열별 덮어쓸 값.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const familyOverrides = {} as const;
 
@@ -116,7 +106,7 @@ familyOverrides satisfies { readonly [Family in ColorFamily]?: SlotOverrides };
 
 /**
  * 규칙에 덮어쓸 값을 얹은 슬롯별 값.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function resolveSlotSteps(
   ...overrides: (SlotOverrides | undefined)[]
@@ -135,7 +125,7 @@ export function resolveSlotSteps(
 
 /**
  * 슬롯 단계를 Primitive 이름으로 바꾼다. 예: (`blue`, 600) → `blue-600`, (`blue`, `white`) → `white`
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function slotPrimitive(family: string, step: SlotColorRef): string {
   return typeof step === "number" ? `${family}-${step}` : step;
@@ -143,7 +133,7 @@ export function slotPrimitive(family: string, step: SlotColorRef): string {
 
 /**
  * 슬롯 값이 단계 하나인지(덮기·섞기가 아닌지) 확인한다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function isSlotStep(value: SlotValue): value is SlotStep {
   return typeof value !== "object";
@@ -152,7 +142,7 @@ export function isSlotStep(value: SlotValue): value is SlotStep {
 /**
  * 두 색을 섞은 값(`#rrggbb`). sRGB 채널마다 `a × (1 − amount) + b × amount`를 반올림한다.
  * 불투명한 색을 그 위에 `amount`만큼 덮은 값(브라우저의 알파 합성)과 같다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function mixHex(a: string, b: string, amount: number): string {
   const channels = (hex: string): number[] => {
@@ -176,7 +166,7 @@ export function mixHex(a: string, b: string, amount: number): string {
 /**
  * 슬롯 값의 hex. 덮기·섞기는 여기서 계산한다(빌드 시 hex로 넣는다. 런타임 `color-mix()`를 쓰지 않는다).
  * @param stepHex 계열 단계의 hex. Tide 계열은 `color`, 앱 계열은 그 스케일이다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function slotValueHex(value: SlotValue, stepHex: (step: ColorStep) => string): string {
   const ref = (color: SlotColorRef): string =>
@@ -189,7 +179,7 @@ export function slotValueHex(value: SlotValue, stepHex: (step: ColorStep) => str
 
 /**
  * Tide 계열 하나의 슬롯별 값(규칙 + 그 계열의 덮어쓸 값).
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function familySlotSteps(family: ColorFamily): Record<ColorSlot, SlotRule> {
   return resolveSlotSteps((familyOverrides as { [Family in ColorFamily]?: SlotOverrides })[family]);

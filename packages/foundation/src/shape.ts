@@ -1,16 +1,4 @@
-// 모양·깊이·포커스 Token(tide-v0 티켓 20·24, spec 「`@tide-design/foundation`」 radius·Elevation·포커스 표시).
-// - radius는 5단계만 둔다. 값은 Tailwind 기본값과 같고 나머지 기본 단계는 지운다.
-// - 그림자는 raised 표면 층에서만 쓴다. 단계마다 2레이어이고 두 레이어 모두 `--tide-shadow-color`를 color-mix로 낮춘다.
-// - 포커스 표시 ring의 두께와 offset을 Token으로 둔다. 색은 Semantic `outline-focus`다.
-
-/**
- * radius 5단계. `rounded-<이름>` class와 공개 계약 `--tide-rounded-<이름>`이 쓴다.
- * - sm: 작은 표시 요소, 목록 안 항목
- * - md: 조작 요소(모든 size)
- * - lg: 담는 요소(Card, Alert, Popover, 목록, Toast, Accordion)
- * - xl: Dialog류
- * - full: 원·알약형
- */
+/** radius 5단계. `rounded-<이름>` class와 공개 계약 `--tide-rounded-<이름>`이 쓴다. */
 export const radius = {
   sm: "0.25rem",
   md: "0.375rem",
@@ -32,11 +20,8 @@ export interface ShadowLayer {
 }
 
 /**
- * Elevation 3단계. 각 단계는 [가까운 레이어, 먼 레이어]다. 값은 spec 표를 그대로 옮겼다.
+ * Elevation 3단계. 각 단계는 [가까운 레이어, 먼 레이어]다.
  * `shadow-<이름>` class와 공개 계약 `--tide-shadow-<이름>`이 쓴다. Theme에 따라 `--tide-shadow-color`만 바뀐다.
- * - sm: Switch thumb
- * - md: Popover, 목록, Tooltip, Toast
- * - lg: Dialog류
  */
 export const shadow = {
   sm: [
@@ -53,7 +38,7 @@ export const shadow = {
   ],
 } as const;
 
-// isolatedDeclarations(oxc d.ts)가 `as const satisfies`를 추론하지 못해서 검사는 따로 둔다(typography.ts와 같다).
+// isolatedDeclarations(oxc d.ts)가 `as const satisfies`를 추론하지 못해서 검사는 따로 둔다.
 shadow satisfies Record<string, readonly [ShadowLayer, ShadowLayer]>;
 
 /** Elevation 단계 이름 */
@@ -72,9 +57,8 @@ export const focusRing = {
 const length = (px: number): string => (px === 0 ? "0" : `${px}px`);
 
 /**
- * Elevation 단계를 CSS `box-shadow` 값으로 만든다. 두 레이어 모두
- * `color-mix(in srgb, var(--tide-shadow-color) N%, transparent)`로 색을 낮춘다(100%도 같은 형태로 쓴다).
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * Elevation 단계를 CSS `box-shadow` 값으로 만든다. 두 레이어 모두 `color-mix()`로 `--tide-shadow-color`를 낮춘다.
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function shadowCss(name: ShadowName): string {
   return shadow[name]

@@ -1,7 +1,4 @@
-// 색 이름(Color)과 색 계열(tide-v0-impl 티켓 40).
-// 1. Tide 색 이름마다 대비 쌍 규칙을 light·dark에서 검사한다.
-// 2. 테스트 전용 계열(pink)을 Primitive에 더하면 계열 변수, [data-color] 규칙, 대비 쌍이 따라오는지 본다.
-// 3. RoleRegistry·ColorFamilyRegistry 타입과 module augmentation(타입 검사는 `tsc --noEmit`이 이 파일도 본다).
+// 타입 단언은 `tsc --noEmit`이 이 파일도 검사해서 확인된다.
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
 import type {
@@ -23,9 +20,8 @@ import {
   tideColorNames,
 } from "./internal";
 
-// 앱이 Role과 장식용 계열을 더하는 것과 같은 augmentation. re-export한 모듈(index)을 대상으로 해도 원래 interface에
-// 합쳐진다(TypeScript 7.0.2에서 확인, 티켓 40·41 Comments). 이 augmentation은 foundation 타입 검사 전체에 걸린다.
-// 그래서 Tide 안의 계산(Semantic Token 이름)이 앱 Role로 넓어지지 않는지도 함께 본다.
+// re-export한 모듈(index)을 대상으로 해도 원래 interface에 합쳐진다(TypeScript 7.0.2).
+// 이 augmentation은 foundation 타입 검사 전체에 걸려서 Tide 계산이 앱 Role로 넓어지지 않는지도 본다.
 declare module "./index" {
   interface RoleRegistry {
     "test-brand": true;

@@ -1,13 +1,10 @@
-// 덮기·섞기 계산 값 검사(tide-color-tone-impl 티켓 02, ADR 0022 §2).
-// 기대 값은 Token 원본에서 만들지 않고 결정 표(tide-color-tone 티켓 02 「계산된 호버·클릭 값」)를 그대로 적는다.
-// 반올림 허용: 없다(±0). sRGB 채널마다 반올림한 hex가 표와 한 글자도 다르지 않아야 한다.
+// 기대 값은 Token 원본에서 만들지 않고 결정 표(ADR 0022)를 그대로 적는다. 반올림 오차도 허용하지 않는다.
 import { describe, expect, it } from "vitest";
 
 import { type ThemeName } from "../src/index";
 import { mixHex, semanticHex } from "../src/internal";
 
 // [Role, 계열, subtle-hover, subtle-active, solid-hover, solid-active] (light)
-// solid-hover·solid-active는 tide-v0-impl 티켓 47에서 600이 바뀌어 다시 계산한 값이다(600 + black 14% / 20%).
 const decided = [
   ["primary", "blue", "#dce6f5", "#d4deec", "#4369a0", "#3e6295"],
   ["success", "green", "#d4edd8", "#cde5d1", "#397749", "#356e44"],

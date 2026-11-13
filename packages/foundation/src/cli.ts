@@ -1,11 +1,5 @@
 #!/usr/bin/env node
-// tide-color CLI(tide-v0-impl 티켓 40). 앱 브랜드 색 계열 파일에서 CSS를 만들고 대비를 검사한다.
-//
-//   tide-color build brand.ts > brand.css
-//
-// - 파일의 default export는 defineColorFamily 결과 하나나 그 배열이다. .ts는 Node의 type stripping으로 읽는다.
-// - 대비 쌍 규칙(Tide Role과 같은 규칙)을 light·dark에서 검사한다. 미달이 하나라도 있으면 CSS를 내지 않고 exit 1이다.
-// - CSS는 stdout으로, 검사 요약과 오류는 stderr로 낸다. 사용법이 틀리면 exit 2다.
+// 색 계열 .ts 파일은 Node의 type stripping으로 읽는다. CSS만 stdout으로 내고 나머지 출력은 stderr로 보낸다.
 import { resolve } from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";

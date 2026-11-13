@@ -1,5 +1,3 @@
-// 공개 표면(`src/index.ts`가 내보내는 것)을 Node에서 확인한다. 아이콘은 서버 렌더한 마크업으로 본다.
-// renderToStaticMarkup(reactNode): react-dom 19.3.1 `react-dom/server`(react.dev reference, context7).
 import { readFile } from "node:fs/promises";
 
 import { renderToStaticMarkup } from "react-dom/server";

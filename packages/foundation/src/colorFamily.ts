@@ -1,8 +1,5 @@
 /**
- * `@tide-design/foundation/color-family`: 앱이 자기 브랜드 색 계열을 더하는 API.
- *
- * 앱은 `defineColorFamily`로 11단계 스케일을 정의하고, `tide-color build <파일>`로 CSS를 만든다.
- * CSS는 Tide 계열과 같은 매핑 규칙으로 light·dark 계열 변수와 `[data-color="<이름>"]` 규칙을 담는다.
+ * `@tide-design/foundation/color-family`: 앱 브랜드 색 계열을 `defineColorFamily`로 정의하고 `tide-color build <파일>`로 CSS를 만든다.
  * @packageDocumentation
  */
 import { color, type ColorStep } from "./color";

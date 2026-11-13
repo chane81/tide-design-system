@@ -1,14 +1,8 @@
-// 타이포그래피 Token(tide-v0 티켓 11, spec 「`@tide-design/foundation`」 타이포그래피).
-// - font-family는 sans와 mono 두 개다. 웹폰트와 @font-face는 넣지 않는다(웹폰트는 앱이 로드한다).
-// - 크기와 행간은 rem이다. 루트 font-size를 바꾸지 않으므로 브라우저 글자 크기를 키우면 함께 커진다(WCAG 1.4.4).
-// - 자간은 모든 스타일이 0이라서 letter-spacing 하위 변수를 두지 않는다.
+// 크기와 행간은 rem이고 루트 font-size를 바꾸지 않아 브라우저 글자 크기를 따른다(WCAG 1.4.4).
 
-/**
- * font-family 스택. 공개 계약은 `--tide-font-<이름>`이고 `font-<이름>` class와 기본 글꼴이 쓴다.
- * - sans: Pretendard README의 「어디서든 동일한 환경」 스택. 가변판 이름(`Pretendard Variable`)을 맨 앞에 둔다.
- * - mono: 시스템 고정폭 글꼴만 쓴다(tailwindcss 4.3.5 기본 `--font-mono`와 같은 순서).
- */
+/** font-family 스택. `font-<이름>` class와 공개 계약 `--tide-font-<이름>`이 쓴다. 웹폰트는 앱이 로드한다. */
 export const fontFamily = {
+  // Pretendard README의 「어디서든 동일한 환경」 스택. 가변판 이름을 맨 앞에 둔다.
   sans: [
     "Pretendard Variable",
     "Pretendard",
@@ -26,6 +20,7 @@ export const fontFamily = {
     "Segoe UI Symbol",
     "sans-serif",
   ],
+  // tailwindcss 4.3.5 기본 `--font-mono`와 같은 순서
   mono: [
     "ui-monospace",
     "SFMono-Regular",
@@ -41,10 +36,7 @@ export const fontFamily = {
 /** font-family Token 이름 */
 export type FontFamilyName = keyof typeof fontFamily;
 
-/**
- * Primitive 크기. 키는 px, 값은 rem이다. class로 노출하지 않고 공개 계약 `--tide-font-size-<px>`만 둔다.
- * 텍스트 스타일이 이 값을 참조한다.
- */
+/** Primitive 크기(키 px, 값 rem). class로 노출하지 않고 공개 계약 `--tide-font-size-<px>`만 둔다. */
 export const fontSize = {
   12: "0.75rem",
   14: "0.875rem",
@@ -86,7 +78,6 @@ export interface TextStyleValue {
 /**
  * 텍스트 스타일 14개. `text-<이름>` class 하나가 크기, 행간, 굵기를 함께 정한다.
  * 공개 계약은 `--tide-text-<이름>`과 그 `--line-height`, `--font-weight` 하위 변수다.
- * 값은 spec 표를 그대로 옮겼다(크기/행간 px → rem).
  */
 export const textStyle = {
   "display-lg": { fontSize: 56, lineHeight: "4rem", fontWeight: "bold" },
@@ -105,15 +96,15 @@ export const textStyle = {
   caption: { fontSize: 12, lineHeight: "1rem", fontWeight: "normal" },
 } as const;
 
-// isolatedDeclarations(oxc d.ts)가 `as const satisfies`를 추론하지 못해서 검사는 따로 둔다(semantic.ts의 roleFamily와 같다).
+// isolatedDeclarations(oxc d.ts)가 `as const satisfies`를 추론하지 못해서 검사는 따로 둔다.
 textStyle satisfies Record<string, TextStyleValue>;
 
 /** 텍스트 스타일 이름. Typography의 `variant` 값이다. */
 export type TextStyleName = keyof typeof textStyle;
 
 /**
- * font-family 스택을 CSS 값으로 만든다. 영문과 하이픈만으로 된 이름은 그대로 두고, 나머지(공백이 있는 이름)는 따옴표로 감싼다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * font-family 스택을 CSS 값으로 만든다. 공백 등이 있는 이름은 따옴표로 감싼다.
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function fontFamilyCss(name: FontFamilyName): string {
   return fontFamily[name]

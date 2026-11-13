@@ -31,8 +31,7 @@ export interface AlphaColor {
 export type SemanticColorValue = PrimitiveColorName | AlphaColor | MixedColor | "transparent";
 
 /**
- * 두 Primitive를 섞은 불투명한 색(ADR 0022의 덮기·섞기). `base` 위에 `mix`를 `amount`만큼 덮은 값이다.
- * 빌드할 때 hex(`#rrggbb`)로 계산해 CSS에 넣는다. 예: blue-100 + gray-950 4%
+ * 두 Primitive를 섞은 불투명한 색. `base` 위에 `mix`를 `amount`만큼 덮은 값이고, 빌드할 때 `#rrggbb`로 계산한다.
  */
 export interface MixedColor {
   readonly base: PrimitiveColorName;
@@ -48,14 +47,13 @@ export interface ThemedColor {
 }
 
 /**
- * Tide가 정한 Role 6개. 앱이 `RoleRegistry`에 더한 Role은 들어 있지 않다.
- * Tide 안의 계산(Semantic Token 이름, 대비 쌍)은 이 타입을 쓴다. 앱 Role에는 Role Token이 생기지 않기 때문이다.
+ * Tide가 정한 Role 6개. 앱이 `RoleRegistry`에 더한 Role은 들지 않는다(앱 Role에는 Role Token이 없다).
  */
 export type TideRole = "neutral" | "primary" | "success" | "warning" | "danger" | "info";
 
 /**
  * Role이 참조하는 Primitive 계열.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleFamily = {
   neutral: "gray",
@@ -68,14 +66,10 @@ export const roleFamily = {
 
 roleFamily satisfies Record<TideRole, ColorFamily>;
 
-// Role은 「색 계열 + 덮어쓸 값」의 별칭이다(tide-v0-impl 티켓 40, ADR 0011).
-// neutral은 gray와 다른 색이다(2026-11-10 사용자 결정). gray는 일반 계열 규칙을 따른다.
-// - dark subtle 3단계: 900 / 800 / 700(gray 규칙의 950은 dark canvas와 같은 색이다)
-// - text, border, on-subtle: 역할 Token을 두지 않고 text-default, border-strong, text-default를 쓴다(roleSharedSlots)
-// - 새 슬롯 faint, subtle-border는 계열 규칙 그대로다(ADR 0022). gray 스케일은 바꾸지 않는다.
+// neutral dark subtle은 gray 규칙의 950이 dark canvas와 같은 색이라 900/800/700으로 덮는다(ADR 0011).
 /**
  * Role별로 계열 규칙에서 덮어쓸 값.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleOverrides = {
   neutral: {
@@ -89,16 +83,15 @@ roleOverrides satisfies { readonly [Name in TideRole]?: SlotOverrides };
 
 /**
  * 역할 Token 대신 공통 Semantic Token을 쓰는 Role 슬롯. on-solid는 모든 Role이 `text-on-solid`를 쓴다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const roleSharedSlots = {
   neutral: { text: "text-default", border: "border-strong", "on-subtle": "text-default" },
 } as const;
 
 /**
- * 계열 슬롯 값을 Semantic 값으로 바꾼다. 단계는 Primitive 이름, 덮기·섞기는 `MixedColor`다.
- * 예: (`blue`, 600) → `blue-600`, (`blue`, 100 + gray-950 4%) → `{ base: "blue-100", mix: "gray-950", amount: 0.04 }`
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * 계열 슬롯 값을 Semantic 값으로 바꾼다. 단계는 Primitive 이름(`blue-600`), 덮기·섞기는 `MixedColor`다.
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticColorValue {
   const name = (ref: SlotColorRef): PrimitiveColorName =>
@@ -109,14 +102,10 @@ export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticC
   return { base: name(value.step), mix: value.overlay, amount: value.amount };
 }
 
-// 색 이름 등록은 둘로 나뉜다(tide-v0-impl 티켓 41, ADR 0016).
-// - RoleRegistry: 뜻이 있는 색. 행동·의미 Component(Button, IconButton, Link 등)의 `color`가 받는다.
-// - ColorFamilyRegistry: 뜻이 없는 색 계열. 장식·분류 Component(Badge, Tag, Avatar 등)가 쓴다.
-// 둘 다 augmentation 대상이라 type이 아니라 interface여야 한다. 같은 이름을 양쪽에 등록해도 된다.
+// 두 Registry는 module augmentation 대상이라 type이 아니라 interface여야 한다(ADR 0016).
 
 /**
- * Role 목록. Tide Role 6개가 들어 있고, 앱은 module augmentation으로 자기 Role(예: `brand`)을 더한다.
- * 앱 Role의 색은 `@tide-design/foundation/color-family`의 `defineColorFamily`와 `tide-color build`로 만든다.
+ * Role 목록(Tide Role 6개). 앱은 module augmentation으로 자기 Role을 더하고, 색은 `tide-color build`로 만든다.
  *
  * ```ts
  * declare module "@tide-design/components" {
@@ -128,15 +117,11 @@ export function slotColorValue(family: ColorFamily, value: SlotValue): SemanticC
  */
 export interface RoleRegistry extends Record<TideRole, true> {}
 
-/**
- * Role. 뜻이 있는 색이다. 행동·의미 Component의 `color`로 고르고, `data-color` 속성으로 accent 슬롯에 꽂는다.
- * Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role이다.
- */
+/** Role(Tide Role + 앱이 `RoleRegistry`에 더한 Role). 뜻이 있는 색이라 행동·의미 Component의 `color`가 받는다. */
 export type Role = keyof RoleRegistry;
 
 /**
- * 색 계열 목록. Tide 색 계열 8개(장식 계열 purple·mint 포함)가 들어 있고, 앱은 module augmentation으로 장식용 계열을 더한다.
- * Tide가 Primitive 계열을 더하면 이 목록도 함께 넓어진다.
+ * 색 계열 목록(Tide 색 계열 8개). 앱은 module augmentation으로 장식용 계열을 더한다.
  *
  * ```ts
  * declare module "@tide-design/components" {
@@ -148,17 +133,13 @@ export type Role = keyof RoleRegistry;
  */
 export interface ColorFamilyRegistry extends Record<ColorFamily, true> {}
 
-/**
- * 색 계열 이름. 뜻이 없는 색이라 장식·분류 Component가 쓴다.
- * Tide 색 계열(`ColorFamily`)과 앱이 `ColorFamilyRegistry`에 더한 계열이다.
- */
+/** 색 계열 이름(Tide 계열 + 앱이 `ColorFamilyRegistry`에 더한 계열). 뜻이 없는 색이라 장식·분류 Component가 쓴다. */
 export type ColorFamilyName = keyof ColorFamilyRegistry;
 
 /** 색 이름(Color). `data-color` 속성이 받는 모든 이름이다(Role과 색 계열). */
 export type Color = Role | ColorFamilyName;
 
-// 타입 수준에서 Role 슬롯이 가리키는 Primitive를 계산한다. 런타임 계산(roleSlotColor)과 같은 규칙이다.
-// 그래서 `semantic.background["primary-solid"].light`의 타입이 `"blue-600"` 그대로 남는다.
+// roleSlotColor와 같은 규칙을 타입으로 계산해 Token 타입이 `"blue-600"` 같은 리터럴로 남게 한다.
 type Lookup<Table, K1, K2, K3, Fallback> = K1 extends keyof Table
   ? K2 extends keyof Table[K1]
     ? K3 extends keyof Table[K1][K2]
@@ -205,8 +186,6 @@ type RoleBackgroundTokens = {
     ? RoleSlotColor<Name, Slot>
     : never;
 };
-// text namespace: text-<role>, text-<role>-on-subtle
-// border namespace: border-<role>, border-<role>-subtle(슬롯 subtle-border)
 type RoleTextTokens = {
   readonly [Name in OwnRole<"text">]: RoleSlotColor<Name, "text">;
 } & {
@@ -251,12 +230,10 @@ function roleSlotColor(role: TideRole, slot: ColorSlot): ThemedColor {
   };
 }
 
-// Semantic 색. Tailwind 속성별 namespace로 노출한다(ADR 0003).
-// 키는 Utility class에서 접두사(bg-, text- 등)를 뺀 이름이다. 공개 계약은 `--tide-<Utility class 이름>`이다.
-// 공통 Token은 아래에 직접 적고, Role Token은 Role 별칭 규칙(roleSlotColor)으로 만든다.
-// Token을 더하면 contrast.ts에 대비 쌍이나 제외 사유를 함께 등록한다. 등록하지 않으면 테스트가 실패한다.
+// 키는 Utility class에서 접두사를 뺀 이름이고, 공개 계약은 `--tide-<Utility class 이름>`이다(ADR 0003).
+// Token을 더하면 contrast.ts에 대비 쌍이나 제외 사유를 함께 등록한다. 빠지면 테스트가 실패한다.
 const commonBackground = {
-  // 표면 층. surface는 canvas와 같은 색이고 border로 구분한다. dark raised는 밝기로 높이를 나타낸다.
+  // surface는 canvas와 같은 색이고 border로 구분한다. dark raised는 밝기로 높이를 나타낸다.
   canvas: { light: "white", dark: "gray-950" },
   surface: { light: "white", dark: "gray-950" },
   raised: { light: "white", dark: "gray-900" },
@@ -265,7 +242,7 @@ const commonBackground = {
     light: { primitive: "gray-950", alpha: 0.5 },
     dark: { primitive: "gray-950", alpha: 0.7 },
   },
-  // 무채색 호버·클릭(ADR 0022 §3). 색이 없는 바탕(Button outline·ghost, 목록 항목)을 덮는다. 놓인 표면 위에 합성된다.
+  // 색 없는 바탕을 덮는 무채색 호버·클릭. 놓인 표면 위에 합성된다(ADR 0022).
   hover: {
     light: { primitive: "gray-950", alpha: 0.04 },
     dark: { primitive: "white", alpha: 0.06 },
@@ -278,7 +255,7 @@ const commonBackground = {
 
 const commonText = {
   default: { light: "gray-900", dark: "gray-50" },
-  // light는 gray-700이다. gray-600이 solid용으로 밝아져(티켓 47) 흰 표면 위 4.5:1에 못 미친다(4.34).
+  // light gray-600은 흰 표면 위 4.34:1로 4.5:1에 못 미쳐 gray-700을 쓴다(ADR 0022).
   muted: { light: "gray-700", dark: "gray-300" },
   disabled: { light: "gray-400", dark: "gray-600" },
   // solid 배경 위 글자. 모든 Role이 같이 쓴다.
@@ -290,8 +267,8 @@ const commonBorder = {
   default: { light: "gray-200", dark: "gray-800" },
   // 입력창 등 UI 식별용 경계. 3:1
   strong: { light: "gray-500", dark: "gray-400" },
-  // raised 표면 경계. light는 그림자가 경계를 맡고 투명 border는 forced-colors에서 시스템 색으로 그려진다.
-  // dark는 그림자가 잘 보이지 않아 border가 경계를 맡는다(tide-v0 티켓 20, 2026-11-10 사용자 결정). 장식용이라 대비 검사에서 제외한다.
+  // light 투명 border는 forced-colors에서 경계로 그려지고, dark는 그림자가 약해 border가 경계를 맡는다.
+  // 장식용이라 대비 검사에서 제외한다.
   raised: { light: "transparent", dark: "gray-800" },
 } as const;
 
@@ -357,10 +334,9 @@ export type SemanticColorName = {
 }[SemanticNamespace];
 
 // shadow 색은 Utility class로 노출하지 않는다. 공개 계약은 `--tide-shadow-color` 하나다.
-// alpha는 tide-v0 티켓 24(그림자·포커스 표시 시각 비교)에서 light 8%, dark 30%로 정했다.
 /**
  * Theme별 shadow 색. CSS에서는 `--tide-shadow-color`로 쓴다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export const shadowColor = {
   light: { primitive: "gray-950", alpha: 0.08 },
@@ -371,7 +347,7 @@ shadowColor satisfies ThemedColor;
 
 /**
  * 모든 Semantic Token(namespace, Utility class 이름, Theme별 값).
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function semanticEntries(): {
   readonly namespace: SemanticNamespace;
@@ -390,9 +366,8 @@ export function semanticEntries(): {
 }
 
 /**
- * 값을 hex로 바꾼다. alpha가 있으면 8자리 hex(`#rrggbbaa`)다. `transparent`는 `#00000000`이다.
- * 덮기·섞기(`MixedColor`)는 계산한 6자리 hex다.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * 값을 hex로 바꾼다. alpha가 있으면 `#rrggbbaa`, `transparent`는 `#00000000`, `MixedColor`는 계산한 `#rrggbb`다.
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function colorValueHex(value: SemanticColorValue): string {
   if (value === "transparent") return "#00000000";
@@ -408,7 +383,7 @@ export function colorValueHex(value: SemanticColorValue): string {
 
 /**
  * Semantic Token이 Theme에서 가리키는 hex.
- * @internal `@tide-design/foundation/internal` 전용. 앱 개발자용 공개 계약이 아니다(문서 앱·빌드 스크립트·테스트용).
+ * @internal `@tide-design/foundation/internal` 전용(문서 앱·빌드 스크립트·테스트용).
  */
 export function semanticHex(name: SemanticColorName, theme: ThemeName): string {
   const entry = semanticEntries().find((candidate) => candidate.className === name);

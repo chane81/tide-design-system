@@ -1,8 +1,5 @@
-// 이름표(icon-names.json)의 줄마다 아이콘 Component를 만든다(ADR 0007 「정정」).
-// - 원본 SVG가 없으면 실패한다. 업스트림이 파일 이름을 바꾸면 이름표의 원본 쪽만 고친다.
-// - 이름표에 없는 원본 SVG는 목록만 출력한다. 넣을지는 사람이 정한다.
-// - 업스트림 alias는 만들지 않는다. 이름표에 있는 이름만 export한다.
-// - 결과(src/generated/, LICENSE)는 커밋하지 않는다. LICENSE는 Tide MIT 고지 → 업스트림 고지 순서다.
+// 이름표에 있는 이름만 만든다. 이름표에 없는 원본 SVG는 목록만 출력하고 넣을지는 사람이 정한다(ADR 0007).
+// 결과(src/generated/, LICENSE)는 커밋하지 않는다.
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -107,11 +104,8 @@ if (missing.length > 0) {
   );
 }
 
-/**
- * 생성 파일 이름. `LetterSIcon`과 `LettersIcon`처럼 대소문자만 다른 이름이 있어서
- * 대소문자를 구분하지 않는 파일 시스템(macOS 기본값)에서 겹치지 않게 kebab-case로 짓는다
- * (`letter-s-icon`, `letters-icon`). 대문자 앞에 `-`를 넣으므로 서로 다른 이름은 서로 다른 파일이 된다.
- */
+// `LetterSIcon`·`LettersIcon`처럼 대소문자만 다른 이름이 대소문자를 구분하지 않는 파일 시스템에서
+// 겹치지 않게 kebab-case로 짓는다.
 function fileName(tideName: string): string {
   return tideName.replace(/[A-Z]/g, (letter, index: number) =>
     index === 0 ? letter.toLowerCase() : `-${letter.toLowerCase()}`,
@@ -134,8 +128,7 @@ await writeFile(
     .join("\n")}\n`,
 );
 
-// 패키지 LICENSE: Tide MIT 고지(저장소 루트 LICENSE, 2026-11-10 사용자 결정) 다음에
-// 업스트림 LICENSE(ISC 전문 + Feather 유래 아이콘 목록과 MIT 전문)를 그대로 붙인다(ADR 0007).
+// 업스트림 LICENSE는 저작권 고지라 전문을 그대로 붙인다(ADR 0007).
 const tideLicense = await readFile(join(packageDir, "../../LICENSE"), "utf8");
 const upstreamLicense = await readFile(join(upstreamDir, "LICENSE"), "utf8");
 await writeFile(
