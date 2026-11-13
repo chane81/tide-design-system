@@ -98,6 +98,8 @@ export function Shadows(): ReactElement {
 }
 
 /** 포커스 표시 ring과 field. 포커스 상태를 고정해서 보여 준다(focus-ring, focus-field를 variant 없이 씀). */
+// focus-field 예시에는 border 색 class를 붙이지 않는다. variant 없이 쓰면 우선순위가 같아 CSS에서 뒤에 오는
+// border-default가 이겨, 바깥 회색 1px + 안쪽 포커스 색 1px로 실제(2px 포커스 색)와 다르게 보였다.
 export function FocusIndicators(): ReactElement {
   return (
     <div className="flex">
@@ -118,7 +120,7 @@ export function FocusIndicators(): ReactElement {
                 tabIndex={-1}
                 readOnly
                 value="입력값"
-                className="focus-field rounded-md border border-default bg-canvas px-3 py-2"
+                className="focus-field rounded-md border bg-canvas px-3 py-2"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -128,7 +130,7 @@ export function FocusIndicators(): ReactElement {
                 readOnly
                 value="입력값"
                 aria-invalid="true"
-                className="focus-field rounded-md border border-default bg-canvas px-3 py-2 aria-invalid:border-danger"
+                className="focus-field rounded-md border bg-canvas px-3 py-2"
               />
             </label>
           </div>
