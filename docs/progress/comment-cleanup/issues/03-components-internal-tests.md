@@ -26,5 +26,5 @@ Blocked by: 코드 스타일 02 ([code-style/issues/02](../../code-style/issues/
 - `test/` flaky 대응: `browser-setup.ts`·`motion.ts`는 `docs/agents/testing.md`의 「마우스 잔류」·「전환 중 값 읽기」를 가리키는 1줄로 줄였다.
 - 공개 export: `cn` JSDoc은 이미 2줄이라 그대로, `types.ts`의 `Size`·`FillVariant`는 1줄로 다듬었다. changeset은 `@tide-design/components` patch.
 - 판단 보류(ADR·티켓에 없어 코드에 1줄로 남김) 1건:
-  1. `test/browser-setup.ts`: `beforeEach`가 vitest-browser-react cleanup보다 먼저 돌아 앞 테스트 DOM에 pointerleave가 생기지만 그 DOM은 곧 지워진다는 설명. `docs/agents/testing.md` 「마우스 잔류」로 옮길지 정한다.
+  1. `test/browser-setup.ts`: `beforeEach`가 vitest-browser-react cleanup보다 먼저 돌아 앞 테스트 DOM에 pointerleave가 생기지만 그 DOM은 곧 지워진다는 설명. `docs/agents/testing.md` 「마우스 잔류」로 옮길지 정한다. **06에서 반영**(`docs/agents/testing.md` 「마우스 잔류」. 코드 주석은 문서를 가리키는 1줄만 남김).
 - 검증: `pnpm build`, `typecheck`, `test`, `lint`, `format:check`, `smoke` 통과. 주석·빈 줄을 뺀 코드 줄을 origin/main과 비교해 33개 파일 모두 같음을 확인했다.

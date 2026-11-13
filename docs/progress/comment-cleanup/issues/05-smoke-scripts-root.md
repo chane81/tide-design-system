@@ -26,6 +26,6 @@ Blocked by: 코드 스타일 02 ([code-style/issues/02](../../code-style/issues/
   - `smoke.ts`의 "use client" 목록에서 같은 이유(React Aria hooks·state)를 반복하던 주석을 한 줄로 합쳤다.
   - 코드·설정 줄은 바뀌지 않았다(`git diff`에서 주석 밖의 변경 없음). 배포 패키지·Storybook 밖이라 changeset은 필요 없다.
 - **보류(결정 근거인데 ADR·티켓에 없어 여기로 옮김, 3건)**: 코드에서는 지웠다. 문서로 옮길지 판단이 필요하다.
-  1. `vitest.workers.ts` 로컬 worker 수 실측(10코어, 2026-11-13, components·docs 브라우저 테스트 동시 실행): 제한 없음 평균 59%·p90 81%·1분 15초, 30% 평균 37%·p90 72%, 20% 평균 25%·p90 60%·1분 34초, 1개 평균 13%·p90 38%·2분 58초. 시작할 때 Vite 변환과 첫 렌더로 잠깐 더 튈 수 있다. 퍼센트는 `os.availableParallelism()` 기준(vitest 5.1.0 `maxWorkers`). `docs/agents/testing.md`에는 결론(20%, CPU 약 60%)만 있다.
+  1. `vitest.workers.ts` 로컬 worker 수 실측(10코어, 2026-11-13, components·docs 브라우저 테스트 동시 실행): 제한 없음 평균 59%·p90 81%·1분 15초, 30% 평균 37%·p90 72%, 20% 평균 25%·p90 60%·1분 34초, 1개 평균 13%·p90 38%·2분 58초. 시작할 때 Vite 변환과 첫 렌더로 잠깐 더 튈 수 있다. 퍼센트는 `os.availableParallelism()` 기준(vitest 5.1.0 `maxWorkers`). `docs/agents/testing.md`에는 결론(20%, CPU 약 60%)만 있다. **06에서 반영**(`docs/agents/testing.md` 「로컬 동시 실행 수」 실측 표).
   2. `release.yml` version job: `actions/create-github-app-token` v3.3.0은 `client-id`(`app-id`는 deprecated)·`private-key` 입력, `token` output이고 job이 끝나면 token을 폐기한다.
   3. `release.yml` version job: changesets/action v2.1.2가 `GITHUB_TOKEN`을 환경 변수로 넘겨 changelog-github가 PR 링크와 작성자를 찾고, 열린 Version PR이 있으면 제목도 새 값으로 바꾼다(`src/run.ts` `updatePullRequest`).

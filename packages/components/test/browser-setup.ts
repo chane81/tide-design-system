@@ -8,7 +8,6 @@ import "./browser.css";
 (globalThis as { process?: unknown }).process ??= { env: { NODE_ENV: "test" } };
 
 // 앞 테스트의 마우스 위치가 남아 hover 오버레이가 열리지 않게 뺀다(docs/agents/testing.md 「마우스 잔류」).
-// vitest-browser-react cleanup보다 먼저 돌아 앞 테스트 DOM에 pointerleave가 생기지만, 그 DOM은 곧 지워진다.
 beforeEach(async () => {
   await commands.mouseLeavePage();
 });
