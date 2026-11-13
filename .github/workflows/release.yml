@@ -1,18 +1,6 @@
-# main에 push될 때마다 changesets 상태를 보고 Version PR을 만들거나, Version PR이 머지된 뒤라면
-# 전체 검사 → npm publish(trusted publishing, OIDC) → GitHub Release 하나 → 문서 배포를 잇는다.
-# (spec 릴리스 절, ADR 0008, changesets.dev 「Automating Changesets」 Trusted Publishing 예시 구조)
-#
-# - 액션 버전: actions/checkout v7, pnpm/action-setup v6, actions/setup-node v7(ci.yml과 같음),
-#   changesets/action v2.1.2(Changesets v3 전용, 하위 액션 select-mode·version·pack·publish). 2026-11-10 확인.
-# - npm trusted publisher 설정의 workflow 파일 이름은 이 파일(`release.yml`)이다. 이름을 바꾸면 npm 설정도 바꾼다.
-# - `id-token: write`는 publish job에만 준다. 다른 job은 필요한 권한만 받는다.
-# - publish job은 저장소 변수 NPM_TRUSTED_PUBLISHING이 'true'일 때만 돈다. 첫 publish(0.1.0)는 사람이 로컬에서
-#   2FA로 하고(티켓 12), trusted publisher를 설정하는 릴리스(티켓 18)부터 켠다.
-# - workflow_dispatch로 실행하면 문서 배포만 다시 한다(문서 배포가 실패했을 때, 첫 문서 배포).
-# - Storybook(`@tide-design/docs`)은 독립 버전을 갖는다(ADR 0020). Version PR은 하나이고 제목만 들어간 묶음에 따라
-#   「[TDS] Release x」「[Storybook] Release y」「둘 다」로 정한다. Storybook만 오른 Version PR을 머지하면
-#   select-mode가 none이라(npm에 낼 버전 없음) pack·publish는 돌지 않고, storybook job이 tag 없는 docs 버전을 찾아
-#   문서를 배포하고 tag `@tide-design/docs@<버전>`을 만든다. Storybook용 GitHub Release는 만들지 않는다.
+# main push마다 Version PR을 만들거나, 머지된 뒤면 검사 → npm publish(OIDC) → GitHub Release → 문서 배포를 잇는다(ADR 0008·0020·0021).
+# npm trusted publisher 설정의 workflow 파일 이름이 이 파일이다. 이름을 바꾸면 npm 설정도 바꾼다.
+# workflow_dispatch로 실행하면 문서 배포만 다시 한다.
 name: Release
 
 on:
@@ -24,10 +12,7 @@ on:
 # 기본 권한을 비우고 job마다 필요한 것만 준다.
 permissions: {}
 
-# 같은 브랜치의 릴리스가 겹치지 않게 한다. 진행 중인 publish를 끊지 않도록 취소하지 않는다.
-# queue 기본값(single)은 pending을 하나만 두고 새 실행이 오면 기존 pending을 취소한다.
-# Version PR 머지 실행(publish)이 뒤이은 기능 PR 머지 실행에 밀려 취소되면 publish가 빠지므로,
-# queue: max로 모든 실행을 순서대로 돌린다(GitHub Docs 「Control the concurrency of workflows and jobs」, 2026-11-10 확인).
+# 진행 중인 publish를 끊지 않는다. queue 기본값은 기존 pending을 취소해 publish 실행이 빠질 수 있어 max로 둔다.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -52,8 +37,7 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
-      # changeset이 있으면 version, 없고 registry에 없는 버전이 있으면 publish, 둘 다 아니면 none.
-      # empty changeset만 있으면 none이다(changesets/action v2.1.2 src/select-mode).
+      # changeset이 있으면 version, registry에 없는 버전이 있으면 publish, 아니면 none(empty changeset만 있어도 none).
       - id: select-mode
         uses: changesets/action/select-mode@v2
 
@@ -76,23 +60,14 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
-      # Version PR 제목을 미리 계산한다. 액션의 pr-title은 버전 자리 표시자가 없다
-      # (changesets/action v2.1.2 version/action.yml, src/run.ts). `changeset status --output` JSON의
-      # releases[].newVersion(@changesets/cli 3.0.3)을 묶음별로 읽어 scripts/version-pr-title.ts가 제목을 만든다.
-      # TDS 세 패키지는 fixed라 버전이 하나다. Storybook은 자기 버전이다(ADR 0020).
-      # TDS 릴리스에 Storybook changeset이 없으면 release:version이 Storybook도 같은 단계로 올리는 changeset을
-      # 더하므로(scripts/storybook-follow.ts, ADR 0021) 제목 계산도 그 bump를 미리 반영한다.
+      # 액션의 pr-title에는 버전 자리 표시자가 없어 제목을 미리 계산한다(scripts/version-pr-title.ts, ADR 0020·0021).
       - id: next
         run: |
           pnpm changeset status --output="$RUNNER_TEMP/changeset-status.json"
           title=$(node scripts/version-pr-title.ts "$RUNNER_TEMP/changeset-status.json")
           echo "title=$title" >> "$GITHUB_OUTPUT"
-      # changeset version 뒤에 CHANGELOG의 고정 영어 문구를 한글로 바꾼다(scripts/changelog-ko.ts).
-      # 액션이 GITHUB_TOKEN을 환경 변수로 넘겨서 changelog-github가 PR 링크와 작성자를 찾는다.
-      # 열린 Version PR이 있으면 액션이 제목도 새 값으로 바꾼다(src/run.ts updatePullRequest).
-      # Version PR을 GitHub App(tide-release-bot) 신원으로 만든다. 기본 GITHUB_TOKEN(github-actions[bot])이 만든 PR은
-      # 2026-06부터 CI를 돌리려면 사람 승인이 필요하다(docs/research/bot-pr-workflow-approval.md).
-      # actions/create-github-app-token v3.3.0: client-id(app-id는 deprecated)·private-key 입력, token output, 잡이 끝나면 token 폐기.
+      # changeset version 뒤 CHANGELOG의 고정 영어 문구를 한글로 바꾼다(scripts/changelog-ko.ts).
+      # GitHub App 신원으로 Version PR을 만든다. GITHUB_TOKEN이 만든 PR은 CI에 사람 승인이 필요하다(docs/research/bot-pr-workflow-approval.md).
       - id: app-token
         uses: actions/create-github-app-token@v3
         with:
@@ -108,10 +83,7 @@ jobs:
           script: pnpm release:version
           commit-message: "chore: 릴리스 버전 올리기"
           pr-title: ${{ steps.next.outputs.title }}
-      # Version PR에 main에 push한 사람(github.actor)을 assignee로, `release` 라벨을 더한다. 이미 있으면 그대로다.
-      # PR의 assignee·라벨은 Issues API로 바꾸고, pull-requests: write 권한으로 된다
-      # (GitHub REST 「Add assignees to an issue」「Add labels to an issue」). `release` 라벨은 저장소에 미리 있다.
-      # 액션의 pr-number output은 만든 PR과 갱신한 PR 모두에 나온다(version/action.yml).
+      # Version PR에 push한 사람을 assignee로, `release` 라벨을 더한다. PR의 assignee·라벨은 Issues API로 바꾼다.
       - if: steps.version.outputs.pr-number != ''
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -121,7 +93,7 @@ jobs:
           gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/assignees" -f "assignees[]=$ACTOR" --silent
           gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels" -f "labels[]=release" --silent
 
-  # Version PR이 머지된 뒤: 전체 검사를 다시 돌리고 tarball을 만든다(spec Testing Decisions 「CI」).
+  # Version PR이 머지된 뒤: 전체 검사를 다시 돌리고 tarball을 만든다.
   pack:
     needs: select-mode
     if: needs.select-mode.outputs.mode == 'publish'
@@ -173,10 +145,8 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
-      # pack job의 tarball을 `changeset publish --from-pack-dir`로 올린다. 실제 업로드는
-      # `pnpm publish <tarball> --access public --tag latest`이고, pnpm 12가 OIDC 토큰을 받아 인증하고
-      # 공개 저장소의 공개 패키지에 provenance를 붙인다(pnpm publish 문서 --provenance).
-      # tag는 패키지마다(`@tide-design/foundation@0.2.0` …) 만들고, GitHub Release는 아래 job에서 하나로 만든다.
+      # pack job의 tarball을 올린다. pnpm이 OIDC 토큰으로 인증하고 provenance를 붙인다.
+      # tag는 패키지마다 만들고, GitHub Release는 아래 job에서 하나로 만든다.
       - id: publish
         uses: changesets/action/publish@v2
         with:
@@ -212,10 +182,7 @@ jobs:
           --title "v$VERSION"
           --notes-file "$RUNNER_TEMP/release-notes.md"
 
-  # main의 Storybook 버전에 tag(`@tide-design/docs@<버전>`)가 아직 없으면 release=true(scripts/storybook-release.ts).
-  # 시작값 0.0.0은 릴리스하지 않는다. changesets의 privatePackages.tag는 끄고(published-packages에 docs가 섞이지 않게,
-  # 근거 문서 2.1·3.3절) tag는 아래 storybook-tag job이 직접 만든다. 수동 실행에서도 돌아, 배포가 실패해 tag가
-  # 없는 버전은 workflow_dispatch로 다시 배포하면 tag까지 만든다.
+  # main의 Storybook 버전에 tag가 없으면 release=true(scripts/storybook-release.ts). tag는 storybook-tag job이 만든다(ADR 0020).
   storybook:
     runs-on: ubuntu-latest
     permissions:
@@ -235,14 +202,8 @@ jobs:
       - id: detect
         run: node scripts/storybook-release.ts >> "$GITHUB_OUTPUT"
 
-  # Dokploy에 문서 배포를 요청하고 배포가 끝날 때까지 기다린다. Dokploy는 main을 받아 apps/docs/Dockerfile로 빌드한다(Autodeploy는 꺼 둔다).
-  # 배포하는 때:
-  # - TDS가 실제로 publish되었을 때(Storybook이 같이 올랐든 아니든 한 번).
-  # - Storybook만 릴리스될 때(mode가 none). mode가 publish면 위 조건대로 TDS publish 뒤에 한 번만 배포한다.
-  #   mode가 version이면(main에 아직 릴리스하지 않은 changeset이 있음) 배포하지 않는다. docs는 workspace:*로
-  #   main의 TDS 소스를 쓰므로, npm에 아직 없는 Component가 문서에 먼저 나가지 않게 한다.
-  # - 수동 실행.
-  # 이 job이 실패해도 npm 릴리스는 되돌리지 않는다. 실패하면 workflow_dispatch로 다시 돌린다.
+  # Dokploy 문서 배포를 요청하고 끝날 때까지 기다린다. TDS publish, Storybook만 릴리스(mode none), 수동 실행 때 배포한다.
+  # mode가 version이면 npm에 없는 Component가 먼저 나가지 않게 배포하지 않는다. 실패해도 npm 릴리스는 되돌리지 않는다.
   docs:
     needs: [select-mode, publish, storybook]
     if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.publish.outputs.published == 'true' || (needs.storybook.outputs.release == 'true' && needs.select-mode.outputs.mode == 'none')) }}
@@ -260,20 +221,14 @@ jobs:
         with:
           node-version-file: .node-version
           package-manager-cache: false
-      # Dokploy API: POST /api/application.deploy, `x-api-key` 헤더, 본문 { applicationId }
-      # (docs.dokploy.com API 「Authentication」, 「Application」 reference). 배포는 Dokploy 큐에서 이어지므로
-      # 요청만으로는 끝난 게 아니다. scripts/deploy-docs.ts가 요청 뒤 GET /api/deployment.all로 새 배포의 status를
-      # 폴링해 `done`이면 성공, `error`·`cancelled`·15분 타임아웃이면 실패한다(근거는 scripts/dokploy-deploy.ts, 티켓 44).
-      # 실패하면 storybook-tag가 만들어지지 않아 다음 실행에서 다시 배포한다. API 키는 환경 변수로만 넘기고 출력하지 않는다.
+      # 요청 뒤 새 배포의 status를 폴링해 성공·실패를 정한다(scripts/dokploy-deploy.ts). API 키는 환경 변수로만 넘기고 출력하지 않는다.
       - env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
           DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
           DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
         run: node scripts/deploy-docs.ts
 
-  # Storybook 릴리스의 git tag를 문서 배포가 성공한 뒤에 만든다. 배포가 실패하면 tag가 없어 다음 실행
-  # (mode가 none인 push나 workflow_dispatch)에서 다시 배포하고 tag를 만든다. tag는 changesets 모노레포 형식 `<name>@<version>`이다
-  # (@changesets/cli 3.0.3 buildGitTag). GitHub REST 「Create a reference」로 lightweight tag를 GITHUB_SHA에 만든다.
+  # Storybook tag는 문서 배포가 성공한 뒤에 만든다. 실패하면 tag가 없어 다음 실행에서 다시 배포한다.
   storybook-tag:
     needs: [storybook, docs]
     if: ${{ !cancelled() && needs.docs.result == 'success' && needs.storybook.outputs.release == 'true' }}
