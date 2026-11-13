@@ -109,3 +109,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ② 명확함: [ADR 0024 조작 요소 글자 크기를 맞춘다: `sm` 14px, Switch 라벨 body, 목록 항목 14px](../decisions/0024-control-text-sizes.md)
 - ② 명확함, ① 접근성: [ADR 0025 Button outline·ghost의 호버·누름을 같은 색 파스텔로 채운다](../decisions/0025-tinted-outline-ghost-states.md)
 - ④ 발견할 수 있음, ③ 단순함: [ADR 0028 파일은 쓰는 곳 가까이 두고, 폴더 이름은 네 개로 고정한다](../decisions/0028-colocation-monorepo-structure.md)
+- ④ 발견할 수 있음, ③ 단순함: [ADR 0029 components 패키지의 공개 Component는 모두 폴더로 둔다](../decisions/0029-components-always-folders.md)

@@ -73,7 +73,7 @@ Badge의 글자 대비를 검사하는 테스트가 대비 계산을 쓴다. 지
 ## 6. 의존 방향은 apps → components → {foundation, icons}
 
 ```ts
-// ✅ packages/components/src/Alert.tsx
+// ✅ packages/components/src/Alert/Alert.tsx
 import { XIcon } from "@tide-design/icons";
 import type { TideRole } from "@tide-design/foundation";
 
@@ -86,26 +86,26 @@ import { color } from "@tide-design/foundation"; // icons ↔ foundation (서로
 // ❌ packages/components/src/libs/cn.ts
 import { colorTiles } from "../../../../apps/docs/src/libs/colorTiles.ts"; // packages → apps
 
-// ❌ packages/components/src/Badge.tsx
+// ❌ packages/components/src/Badge/Badge.tsx
 import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 docs·빌드 스크립트 전용
 ```
 
-## 7. 파일 하나에서 폴더로
+## 7. 공개 Component는 처음부터 폴더
 
-Select에 전용 hook이 생겼다.
+새 공개 Component `Rating`을 만든다. 테스트를 아직 쓰지 않았다.
 
 ```
-전: src/Select.tsx, src/Select.test.tsx
-후: src/Select/index.ts
-    src/Select/Select.tsx
-    src/Select/Select.test.tsx
-    src/Select/hooks/useSelectValue.ts
+❌ src/Rating.tsx
+✅ src/Rating/index.ts
+   src/Rating/Rating.tsx
+   src/Rating/Rating.test.tsx   # 생기면 여기
 ```
 
-- `src/index.ts`의 `export { Select } from "./Select.tsx"`는 `"./Select/index.ts"`로 바꾼다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
-- ❌ `src/Select/index.tsx`에 본문을 쓴다.
-- ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 자리를 갖는다. 둘이 함께 쓰는 코드는 `src/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
-- ✅ `TableRow`·`TableCell`은 `Table.tsx`(또는 `Table/components/`)에 둔다. Table 없이 쓰지 않는다.
+- `src/index.ts`는 `export { Rating, type RatingProps } from "./Rating/index.ts"`로 폴더의 `index.ts`를 가리킨다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
+- ❌ `src/Rating/index.tsx`에 본문을 쓴다.
+- ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 폴더를 갖는다. 둘이 함께 쓰는 코드는 `src/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
+- ✅ `TableRow`·`TableCell`은 `Table/Table.tsx`(또는 `Table/components/`)에 두고 `Table/index.ts`가 함께 재수출한다. Table 없이 쓰지 않는다.
+- 내부 Component는 다르다: `src/components/OverlayPortal.tsx`는 테스트·전용 조각이 없으면 파일 하나로 둔다.
 
 ## 8. 이름
 
