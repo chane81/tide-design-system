@@ -1,5 +1,14 @@
 # @tide-tds/components
 
+## 0.11.1
+
+### 기능 추가와 수정 (patch)
+
+- [#50](https://github.com/chane81/tide-design-system/pull/50) [`160561b`](https://github.com/chane81/tide-design-system/commit/160561bc76a6da30d6cbab74d7921ca2d5af85b0) [@chane81](https://github.com/chane81) - 내부 모듈을 `components`·`hooks`·`libs`·`constants` 폴더로 나눠 옮겼다. `dist` 안 내부 파일 배치와 이름이 바뀌었지만 공개 import 경로(`@tide-design/components`, `@tide-design/components/styles.css`)와 export 이름, Component 동작은 그대로다.
+- 의존성 업데이트 [[`cc3b73a`](https://github.com/chane81/tide-design-system/commit/cc3b73a108c88f1713ccab84a61236fcdd951ed1)]:
+  - @tide-design/foundation@0.11.1
+  - @tide-design/icons@0.11.1
+
 ## 0.11.0
 
 ### 호환되지 않는 변경 (minor)
