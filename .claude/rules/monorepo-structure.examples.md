@@ -15,11 +15,12 @@ paths:
 
 ```
 ❌ packages/components/src/utils/cn.ts
+❌ packages/components/src/libs/cn.ts           # components 패키지 공용 코드는 _internal 아래
 ❌ packages/components/src/styles/overlay.ts
 ❌ apps/docs/src/docs-blocks/ColorScale.tsx
 
-✅ packages/components/src/libs/cn.ts
-✅ packages/components/src/constants/overlayClass.ts
+✅ packages/components/src/_internal/libs/cn.ts
+✅ packages/components/src/_internal/constants/overlayClass.ts
 ✅ apps/docs/src/components/ColorScale.tsx
 ```
 
@@ -41,21 +42,21 @@ Select의 값 동기화 hook `useSelectValue`가 처음에는 Select만 쓴다.
 
 ```
 ① Select만 씀             packages/components/src/Select/hooks/useSelectValue.ts
-② Combobox도 씀           packages/components/src/hooks/useSelectValue.ts
+② Combobox도 씀           packages/components/src/_internal/hooks/useSelectValue.ts
 ```
 
 - ❌ "Combobox도 언젠가 쓸 테니" 처음부터 ②에 두지 않는다.
-- Alert와 Toast가 함께 쓰는 class는 둘의 공통 부모인 `src/constants/alertClass.ts`다. `Alert/constants/`에 두고 Toast가 그 경로를 import하지 않는다.
+- Alert와 Toast가 함께 쓰는 class는 둘의 공통 부모인 `src/_internal/constants/alertClass.ts`다. `Alert/constants/`에 두고 Toast가 그 경로를 import하지 않는다.
 - Combobox가 더는 쓰지 않으면 ①로 내린다.
 
 ## 4. 패키지마다 들어가는 조건이 다르다
 
-| 코드                       | 쓰는 곳                 | 위치                                  | 이유                                          |
-| -------------------------- | ----------------------- | ------------------------------------- | --------------------------------------------- |
-| `contrastRatio`            | components 테스트, docs | `packages/foundation/src/contrast.ts` | React 없이 설명된다                           |
-| `cn` (tailwind-merge 래퍼) | components              | `packages/components/src/libs/cn.ts`  | foundation의 설정을 쓰는 React 패키지 쪽 함수 |
-| `IconBase`                 | 생성된 아이콘 전부      | `packages/icons/src/IconBase.tsx`     | 아이콘의 것                                   |
-| 색 타일 계산 `colorTiles`  | docs만                  | `apps/docs/src/libs/colorTiles.ts`    | 앱 개발자용 API가 아니다                      |
+| 코드                       | 쓰는 곳                 | 위치                                           | 이유                                          |
+| -------------------------- | ----------------------- | ---------------------------------------------- | --------------------------------------------- |
+| `contrastRatio`            | components 테스트, docs | `packages/foundation/src/contrast.ts`          | React 없이 설명된다                           |
+| `cn` (tailwind-merge 래퍼) | components              | `packages/components/src/_internal/libs/cn.ts` | foundation의 설정을 쓰는 React 패키지 쪽 함수 |
+| `IconBase`                 | 생성된 아이콘 전부      | `packages/icons/src/IconBase.tsx`              | 아이콘의 것                                   |
+| 색 타일 계산 `colorTiles`  | docs만                  | `apps/docs/src/libs/colorTiles.ts`             | 앱 개발자용 API가 아니다                      |
 
 - ❌ "문서에도 쓰이니 공통 같아서" `colorTiles`를 foundation에 올리지 않는다. 앱 개발자가 쓸 이유가 생길 때 올린다.
 
@@ -83,8 +84,8 @@ import { cn } from "@tide-design/components"; // foundation → components (역�
 // ❌ packages/icons/src/IconBase.tsx
 import { color } from "@tide-design/foundation"; // icons ↔ foundation (서로 독립)
 
-// ❌ packages/components/src/libs/cn.ts
-import { colorTiles } from "../../../../apps/docs/src/libs/colorTiles.ts"; // packages → apps
+// ❌ packages/components/src/_internal/libs/cn.ts
+import { colorTiles } from "../../../../../apps/docs/src/libs/colorTiles.ts"; // packages → apps
 
 // ❌ packages/components/src/Badge/Badge.tsx
 import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 docs·빌드 스크립트 전용
@@ -103,16 +104,16 @@ import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 
 
 - `src/index.ts`는 `export { Rating, type RatingProps } from "./Rating/index.ts"`로 폴더의 `index.ts`를 가리킨다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
 - ❌ `src/Rating/index.tsx`에 본문을 쓴다.
-- ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 폴더를 갖는다. 둘이 함께 쓰는 코드는 `src/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
+- ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 폴더를 갖는다. 둘이 함께 쓰는 코드는 `src/_internal/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
 - ✅ `TableRow`·`TableCell`은 `Table/Table.tsx`(또는 `Table/components/`)에 두고 `Table/index.ts`가 함께 재수출한다. Table 없이 쓰지 않는다.
-- 내부 Component는 다르다: `src/components/OverlayPortal.tsx`는 테스트·전용 조각이 없으면 파일 하나로 둔다.
+- 내부 Component는 다르다: `src/_internal/components/OverlayPortal.tsx`는 테스트·전용 조각이 없으면 파일 하나로 둔다.
 
 ## 8. 이름
 
 ```
-❌ src/hooks/field-context.ts      ✅ src/hooks/useFieldControl.ts
-❌ src/libs/render.ts              ✅ src/libs/renderElement.ts
-❌ src/constants/overlay-style.ts  ✅ src/constants/overlayClass.ts
+❌ _internal/hooks/field-context.ts      ✅ _internal/hooks/useFieldControl.ts
+❌ _internal/libs/render.ts              ✅ _internal/libs/renderElement.ts
+❌ _internal/constants/overlay-style.ts  ✅ _internal/constants/overlayClass.ts
 ❌ foundation/src/color-family.ts  ✅ foundation/src/colorFamily.ts
 ```
 
@@ -139,10 +140,10 @@ subpath 이름은 그대로 둔다.
 
 ```ts
 // ✅ packages/components/src/Select/Select.tsx
-import { useFieldControl } from "../hooks/useFieldControl.ts";
+import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
 import { useSelectValue } from "./hooks/useSelectValue.ts";
 
-// ❌ packages/components/src/hooks/index.ts
+// ❌ packages/components/src/_internal/hooks/index.ts
 export * from "./useFieldControl.ts";
 
 // ❌ packages/components/src/index.ts

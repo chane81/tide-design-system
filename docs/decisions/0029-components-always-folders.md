@@ -8,7 +8,7 @@
 
 - `packages/components`의 공개 Component는 처음부터 `<C>/index.ts` + `<C>/<C>.tsx` + `<C>/<C>.test.tsx` 폴더로 둔다. 테스트가 아직 없어도 폴더로 둔다.
 - 하위 Component(`TableRow` 등)는 대표 폴더 안에 두고, 대표 폴더의 `index.ts`가 함께 재수출한다.
-- 내부 Component(`src/components/`)와 문서 앱 블록은 ADR 0028의 규칙(단순하면 파일 하나, 조각이 생기면 폴더)을 그대로 따른다.
+- 내부 Component(`src/components/`, [ADR 0030](0030-components-internal-folder.md) 이후 `src/_internal/components/`)와 문서 앱 블록은 ADR 0028의 규칙(단순하면 파일 하나, 조각이 생기면 폴더)을 그대로 따른다.
 
 ## 고려한 대안
 

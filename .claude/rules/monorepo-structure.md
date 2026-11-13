@@ -3,7 +3,7 @@
 Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들거나 옮길 때, 패키지·앱을 추가할 때 따른다.
 
 - 규칙 번호별 ✅/❌ 예시: `monorepo-structure.examples.md`. 배치가 애매하면 같은 번호 예시부터 본다.
-- 결정 배경: [ADR 0028](../../docs/decisions/0028-colocation-monorepo-structure.md), 공개 Component 폴더화는 [ADR 0029](../../docs/decisions/0029-components-always-folders.md)
+- 결정 배경: [ADR 0028](../../docs/decisions/0028-colocation-monorepo-structure.md), 공개 Component 폴더화는 [ADR 0029](../../docs/decisions/0029-components-always-folders.md), `_internal/`은 [ADR 0030](../../docs/decisions/0030-components-internal-folder.md)
 
 ## 골격
 
@@ -15,7 +15,7 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
 │   └── components/src/        # React Component
 │       ├── index.ts           # 공개 API
 │       ├── Button/            # 공개 Component는 모두 폴더(본문 + 테스트 + index.ts)
-│       └── {components,hooks,libs,constants}/   # 여러 Component가 함께 쓰는 내부 코드
+│       └── _internal/{components,hooks,libs,constants}/   # 여러 Component가 함께 쓰는 비공개 코드
 ├── apps/
 │   ├── docs/src/              # Storybook 문서 사이트
 │   │   ├── stories/<section>/ # 사이드바 섹션별 MDX·stories
@@ -38,7 +38,9 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
    - `utils`·`helpers`·`common`·`shared`·`style`·`blocks`가 떠오르면 이 넷 중 하나를 고른다. 한 파일에 상수와 함수가 섞이면 나눈다.
    - 타입만 모은 파일은 폴더 대신 `types.ts`로 둔다.
 2. **쓰는 곳 가장 가까이 둔다.**
-3. **쓰는 곳이 실제로 늘면 가장 가까운 공통 부모로 승격한다.** Component 폴더 안 `<C>/{hooks,…}` → 패키지 `src/{hooks,…}` → 다른 패키지(4번 조건을 만족할 때만).
+3. **쓰는 곳이 실제로 늘면 가장 가까운 공통 부모로 승격한다.** Component 폴더 안 `<C>/{hooks,…}` → 패키지 공용 위치 → 다른 패키지(4번 조건을 만족할 때만).
+   - 패키지 공용 위치: `packages/components`는 `src/_internal/{components,hooks,libs,constants}`, 그 밖의 패키지·앱은 `src/{components,hooks,libs,constants}`.
+   - `_internal/`은 공개 Component 폴더와 섞이지 않게 모은 비공개 코드 자리다. `src/index.ts`에서 재수출하지 않는다(`cn`처럼 공개해야 하면 진입점이 이름을 골라 재수출한다).
    - "언젠가 다른 Component도 쓸 테니" 처음부터 올리지 않는다.
    - 쓰는 곳이 하나로 줄면 다시 그 Component 폴더로 내린다.
 4. **패키지마다 들어가는 조건이 다르다.**
@@ -72,7 +74,7 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
    ```
    - 공개 Component 하나가 폴더 하나다. `CheckboxGroup`처럼 따로 공개되는 Component는 자기 폴더를 갖는다.
    - `TableRow`처럼 대표 Component와 늘 함께 쓰는 하위 Component는 대표 Component 본문 파일이나 `<C>/components/`에 둔다. 대표 폴더의 `index.ts`가 함께 재수출한다.
-   - 그 밖의 Component(패키지 내부 `src/components/`, 문서 앱 블록)는 단순하면 `PascalCase.tsx` 파일 하나로 두고, 전용 `components`·`hooks`·`libs`·`constants`, `types.ts`, 테스트 중 하나라도 생기면 폴더로 바꾼다.
+   - 그 밖의 Component(`src/_internal/components/`, 문서 앱 블록)는 단순하면 `PascalCase.tsx` 파일 하나로 두고, 전용 `components`·`hooks`·`libs`·`constants`, `types.ts`, 테스트 중 하나라도 생기면 폴더로 바꾼다.
 8. **이름**
    - Component: `PascalCase.tsx`. hook: `useXxx.ts`.
    - 그 밖의 소스 파일(`libs`·`constants`·foundation 모듈·문서 앱 lib): `camelCase.ts`. 대표 export나 주제 이름을 쓴다(`cn.ts`, `renderElement.ts`, `overlayClass.ts`, `colorFamily.ts`).
@@ -88,7 +90,7 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
 ## import와 진입점
 
 - **경로:** 패키지·앱 안은 상대경로에 확장자까지 적는다(`./cn.ts`, `../hooks/useFieldControl.ts`). 빌드가 `.js`로 바꾼다(`rewriteRelativeImportExtensions`). 별칭(`@/`)은 두지 않는다.
-- **내부 배럴 없음:** `components/`·`hooks/`·`libs/`·`constants/`에는 `index.ts`를 두지 않고 파일 경로로 import한다. Component 폴더의 `index.ts`는 대표 Component와 그 Props 타입(하위 Component가 있으면 그것까지)만 재수출한다.
+- **내부 배럴 없음:** `_internal/`과 `components/`·`hooks/`·`libs/`·`constants/`에는 `index.ts`를 두지 않고 파일 경로로 import한다. Component 폴더의 `index.ts`는 대표 Component와 그 Props 타입(하위 Component가 있으면 그것까지)만 재수출한다.
   ```ts
   export { Select } from "./Select.tsx";
   export type { SelectProps } from "./Select.tsx";
