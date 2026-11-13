@@ -1,10 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon, EllipsisIcon } from "@tide-design/icons";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { Button, type ButtonProps } from "./Button.tsx";
-import { cn } from "./libs/cn.ts";
-import { IconButton, type IconButtonProps } from "./IconButton.tsx";
-import { VisuallyHidden } from "./VisuallyHidden.tsx";
+import { Button, type ButtonProps } from "../Button/Button.tsx";
+import { cn } from "../libs/cn.ts";
+import { IconButton, type IconButtonProps } from "../IconButton/IconButton.tsx";
+import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden.tsx";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 누르는 항목은 Button·IconButton(client 경계)에 맡기고, 이 파일은 함수를 만들지 않고 props만 넘긴다.

@@ -10,11 +10,11 @@ import {
   alertLayoutClass,
   alertSurfaceClass,
   alertTitleClass,
-} from "./constants/alertClass.ts";
-import { alertStatusIcon } from "./libs/alertStatusIcon.ts";
-import { cn } from "./libs/cn.ts";
-import { IconButton } from "./IconButton.tsx";
-import type { Role } from "./types.ts";
+} from "../constants/alertClass.ts";
+import { alertStatusIcon } from "../libs/alertStatusIcon.ts";
+import { cn } from "../libs/cn.ts";
+import { IconButton } from "../IconButton/IconButton.tsx";
+import type { Role } from "../types.ts";
 
 // 이 파일은 hook·state를 쓰지 않고 이벤트 핸들러를 만들지도 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 닫기는 제어형이다. 받은 `onClose`를 IconButton(client)에 그대로 넘기고, Alert를 화면에서 빼는 일은 앱이 한다.

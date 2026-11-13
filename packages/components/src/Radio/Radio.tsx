@@ -16,7 +16,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { RadioGroupContext } from "./hooks/useChoiceGroup.ts";
+import { RadioGroupContext } from "../hooks/useChoiceGroup.ts";
 import {
   choiceAreaClass,
   choiceInputClass,
@@ -24,10 +24,10 @@ import {
   choiceRootClass,
   choiceTextClass,
   type ChoiceSize,
-} from "./constants/choiceClass.ts";
-import { cn } from "./libs/cn.ts";
-import { useFieldControl } from "./hooks/useFieldControl.ts";
-import type { Role } from "./types.ts";
+} from "../constants/choiceClass.ts";
+import { cn } from "../libs/cn.ts";
+import { useFieldControl } from "../hooks/useFieldControl.ts";
+import type { Role } from "../types.ts";
 
 export interface RadioProps extends Omit<
   ComponentProps<"input">,

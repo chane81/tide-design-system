@@ -37,14 +37,14 @@ import {
 } from "react-aria";
 import { useOverlayTriggerState, type OverlayTriggerState } from "react-stately";
 
-import { cn } from "./libs/cn.ts";
-import { OverlayPortal } from "./components/OverlayPortal.tsx";
-import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
-import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
-import { usePopoverOverlay } from "./hooks/usePopoverOverlay.ts";
-import type { OverlayPlacement } from "./libs/overlayPosition.ts";
-import { overlaySurfaceClass, popoverMotionClass } from "./constants/overlayClass.ts";
-import { renderElement } from "./libs/renderElement.ts";
+import { cn } from "../libs/cn.ts";
+import { OverlayPortal } from "../components/OverlayPortal.tsx";
+import { useOverlayPresence } from "../hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "../hooks/useOverlayTheme.ts";
+import { usePopoverOverlay } from "../hooks/usePopoverOverlay.ts";
+import type { OverlayPlacement } from "../libs/overlayPosition.ts";
+import { overlaySurfaceClass, popoverMotionClass } from "../constants/overlayClass.ts";
+import { renderElement } from "../libs/renderElement.ts";
 
 /** Popover 내용의 위치. 앞은 트리거의 어느 쪽, 뒤는 그 변에서 맞출 끝이다. 공간이 모자라면 반대쪽으로 뒤집힌다. */
 export type PopoverPlacement = OverlayPlacement;

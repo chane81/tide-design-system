@@ -11,7 +11,7 @@
 
 import type { ReactElement } from "react";
 
-import { DialogRoot, type DialogProps } from "./Dialog.tsx";
+import { DialogRoot, type DialogProps } from "../Dialog/Dialog.tsx";
 
 export type AlertDialogProps = DialogProps;
 

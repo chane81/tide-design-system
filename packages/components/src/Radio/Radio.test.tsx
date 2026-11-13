@@ -6,9 +6,9 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { Field } from "./Field.tsx";
+import { Field } from "../Field/Field.tsx";
 import { Radio, type RadioProps } from "./Radio.tsx";
-import { RadioGroup } from "./RadioGroup.tsx";
+import { RadioGroup } from "../RadioGroup/RadioGroup.tsx";
 
 // 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
 declare module "@tide-design/foundation" {

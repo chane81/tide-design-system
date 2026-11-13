@@ -28,15 +28,15 @@ import {
 import { mergeProps, mergeRefs, useTag, useTagGroup } from "react-aria";
 import { useListState, type ListState } from "react-stately";
 
-import { cn } from "./libs/cn.ts";
-import { IconButton } from "./IconButton.tsx";
+import { cn } from "../libs/cn.ts";
+import { IconButton } from "../IconButton/IconButton.tsx";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "./libs/listCollection.ts";
-import type { ColorFamilyName } from "./types.ts";
+} from "../libs/listCollection.ts";
+import type { ColorFamilyName } from "../types.ts";
 
 interface TagGroupContextValue {
   readonly onRemove: ((value: string) => void) | undefined;

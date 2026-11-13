@@ -10,10 +10,10 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, captureWhen, styleSnapshot, transitions } from "../test/motion.ts";
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion.ts";
 
-import { Button } from "./Button.tsx";
-import { Dialog, DialogContent, DialogTitle } from "./Dialog.tsx";
+import { Button } from "../Button/Button.tsx";
+import { Dialog, DialogContent, DialogTitle } from "../Dialog/Dialog.tsx";
 import {
   ToastQueue,
   ToastRegion,

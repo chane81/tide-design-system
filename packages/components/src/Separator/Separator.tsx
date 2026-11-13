@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { cn } from "./libs/cn.ts";
+import { cn } from "../libs/cn.ts";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 네이티브 `<hr>`이고 React Aria `useSeparator`를 쓰지 않는다(ADR 0004). `<hr>`은 암묵 역할이 separator(가로)라

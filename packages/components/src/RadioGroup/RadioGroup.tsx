@@ -5,10 +5,14 @@
 
 import { useId, type ComponentProps, type ReactElement } from "react";
 
-import { orientationClass, type ChoiceOrientation } from "./CheckboxGroup.tsx";
-import { RadioGroupContext, useChoiceGroup, type RadioGroupState } from "./hooks/useChoiceGroup.ts";
-import { cn } from "./libs/cn.ts";
-import { FieldContext } from "./hooks/useFieldControl.ts";
+import { orientationClass, type ChoiceOrientation } from "../CheckboxGroup/CheckboxGroup.tsx";
+import {
+  RadioGroupContext,
+  useChoiceGroup,
+  type RadioGroupState,
+} from "../hooks/useChoiceGroup.ts";
+import { cn } from "../libs/cn.ts";
+import { FieldContext } from "../hooks/useFieldControl.ts";
 
 export interface RadioGroupProps extends Omit<ComponentProps<"div">, "defaultValue"> {
   /** 안의 Radio가 함께 쓰는 `name`. form에 이 이름으로 제출된다. 주지 않으면 자동으로 만든다. */

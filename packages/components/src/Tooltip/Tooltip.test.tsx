@@ -9,10 +9,10 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, openControl, styleSnapshot, transitions } from "../test/motion.ts";
+import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion.ts";
 
-import { IconButton } from "./IconButton.tsx";
-import { Popover, PopoverContent, PopoverTrigger } from "./Popover.tsx";
+import { IconButton } from "../IconButton/IconButton.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover/Popover.tsx";
 import {
   Tooltip,
   TooltipContent,

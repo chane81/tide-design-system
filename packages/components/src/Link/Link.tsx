@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactElement } from "react";
 
-import { renderElement } from "./libs/renderElement.ts";
-import type { Role } from "./types.ts";
+import { renderElement } from "../libs/renderElement.ts";
+import type { Role } from "../types.ts";
 
 // 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서 쓸 수 있다.
 // 사용자가 준 onClick 등은 그대로 넘기기만 한다(서버 컴포넌트에서는 Next 규칙대로 함수를 넘길 수 없다).

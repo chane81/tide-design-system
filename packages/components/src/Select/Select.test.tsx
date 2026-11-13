@@ -9,11 +9,11 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, styleSnapshot } from "../test/motion.ts";
+import { captureExit, styleSnapshot } from "../../test/motion.ts";
 
-import { Button } from "./Button.tsx";
-import { Field } from "./Field.tsx";
-import { Input } from "./Input.tsx";
+import { Button } from "../Button/Button.tsx";
+import { Field } from "../Field/Field.tsx";
+import { Input } from "../Input/Input.tsx";
 import { Select, SelectItem, SelectSection, type SelectProps } from "./Select.tsx";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;

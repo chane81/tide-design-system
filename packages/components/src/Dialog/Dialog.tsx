@@ -43,17 +43,17 @@ import {
 } from "react-aria";
 import { useOverlayTriggerState, type OverlayTriggerState } from "react-stately";
 
-import { cn } from "./libs/cn.ts";
-import { IconButton } from "./IconButton.tsx";
-import { OverlayPortal } from "./components/OverlayPortal.tsx";
-import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
-import { useOverlayTheme } from "./hooks/useOverlayTheme.ts";
+import { cn } from "../libs/cn.ts";
+import { IconButton } from "../IconButton/IconButton.tsx";
+import { OverlayPortal } from "../components/OverlayPortal.tsx";
+import { useOverlayPresence } from "../hooks/useOverlayPresence.ts";
+import { useOverlayTheme } from "../hooks/useOverlayTheme.ts";
 import {
   backdropMotionClass,
   dialogMotionClass,
   dialogSurfaceClass,
-} from "./constants/overlayClass.ts";
-import { renderElement } from "./libs/renderElement.ts";
+} from "../constants/overlayClass.ts";
+import { renderElement } from "../libs/renderElement.ts";
 
 interface DialogContextValue {
   readonly state: OverlayTriggerState;

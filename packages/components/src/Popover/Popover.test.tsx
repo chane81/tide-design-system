@@ -15,9 +15,9 @@ import {
   openControl,
   styleSnapshot,
   transitions,
-} from "../test/motion.ts";
+} from "../../test/motion.ts";
 
-import { Button } from "./Button.tsx";
+import { Button } from "../Button/Button.tsx";
 import {
   Popover,
   PopoverContent,

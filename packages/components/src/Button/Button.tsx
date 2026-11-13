@@ -4,12 +4,12 @@
 
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 
-import { pressableBaseClass } from "./constants/pressableClass.ts";
-import { pressableState } from "./libs/pressableState.ts";
-import { renderElement } from "./libs/renderElement.ts";
-import { Spinner } from "./Spinner.tsx";
-import type { FillVariant, Role, Size } from "./types.ts";
-import { VisuallyHidden } from "./VisuallyHidden.tsx";
+import { pressableBaseClass } from "../constants/pressableClass.ts";
+import { pressableState } from "../libs/pressableState.ts";
+import { renderElement } from "../libs/renderElement.ts";
+import { Spinner } from "../Spinner/Spinner.tsx";
+import type { FillVariant, Role, Size } from "../types.ts";
+import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden.tsx";
 
 /** Button의 채움 방식. 4개를 모두 받는다. */
 type ButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "ghost">;

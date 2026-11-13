@@ -33,13 +33,13 @@ import {
 import { mergeProps, mergeRefs, useTab, useTabList } from "react-aria";
 import { useTabListState, type TabListState } from "react-stately";
 
-import { cn } from "./libs/cn.ts";
+import { cn } from "../libs/cn.ts";
 import {
   asCollectionComponent,
   resolveCollectionChildren,
   valueItemCollectionNode,
   type CollectionValueItemProps,
-} from "./libs/listCollection.ts";
+} from "../libs/listCollection.ts";
 
 /** 탭 목록의 방향. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
 export type TabsOrientation = "horizontal" | "vertical";

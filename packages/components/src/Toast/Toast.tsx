@@ -51,15 +51,15 @@ import {
   alertIconClass,
   alertLayoutClass,
   alertTitleClass,
-} from "./constants/alertClass.ts";
-import { alertStatusIcon } from "./libs/alertStatusIcon.ts";
-import { Button } from "./Button.tsx";
-import { cn } from "./libs/cn.ts";
-import { IconButton } from "./IconButton.tsx";
-import { OverlayPortal } from "./components/OverlayPortal.tsx";
-import { useOverlayPresence } from "./hooks/useOverlayPresence.ts";
-import { overlaySurfaceClass, popoverMotionClass } from "./constants/overlayClass.ts";
-import type { Role } from "./types.ts";
+} from "../constants/alertClass.ts";
+import { alertStatusIcon } from "../libs/alertStatusIcon.ts";
+import { Button } from "../Button/Button.tsx";
+import { cn } from "../libs/cn.ts";
+import { IconButton } from "../IconButton/IconButton.tsx";
+import { OverlayPortal } from "../components/OverlayPortal.tsx";
+import { useOverlayPresence } from "../hooks/useOverlayPresence.ts";
+import { overlaySurfaceClass, popoverMotionClass } from "../constants/overlayClass.ts";
+import type { Role } from "../types.ts";
 
 /** 자동으로 닫히는 Toast가 보이는 가장 짧은 시간(ms). React Aria 문서가 권하는 최소값과 같다. */
 const minTimeout = 5000;

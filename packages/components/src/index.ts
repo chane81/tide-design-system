@@ -1,29 +1,29 @@
 export { cn } from "./libs/cn.ts";
-export { VisuallyHidden, type VisuallyHiddenProps } from "./VisuallyHidden.tsx";
-export { Typography, type TypographyProps } from "./Typography.tsx";
-export { Spinner, type SpinnerProps } from "./Spinner.tsx";
-export { Button, type ButtonProps } from "./Button.tsx";
-export { IconButton, type IconButtonProps } from "./IconButton.tsx";
-export { Link, type LinkProps } from "./Link.tsx";
-export { Field, type FieldProps } from "./Field.tsx";
-export { Input, type InputProps } from "./Input.tsx";
-export { Textarea, type TextareaProps } from "./Textarea.tsx";
-export { Checkbox, type CheckboxProps } from "./Checkbox.tsx";
+export { VisuallyHidden, type VisuallyHiddenProps } from "./VisuallyHidden/index.ts";
+export { Typography, type TypographyProps } from "./Typography/index.ts";
+export { Spinner, type SpinnerProps } from "./Spinner/index.ts";
+export { Button, type ButtonProps } from "./Button/index.ts";
+export { IconButton, type IconButtonProps } from "./IconButton/index.ts";
+export { Link, type LinkProps } from "./Link/index.ts";
+export { Field, type FieldProps } from "./Field/index.ts";
+export { Input, type InputProps } from "./Input/index.ts";
+export { Textarea, type TextareaProps } from "./Textarea/index.ts";
+export { Checkbox, type CheckboxProps } from "./Checkbox/index.ts";
 export {
   CheckboxGroup,
   type CheckboxGroupProps,
   type ChoiceOrientation,
-} from "./CheckboxGroup.tsx";
-export { Radio, type RadioProps } from "./Radio.tsx";
-export { RadioGroup, type RadioGroupProps } from "./RadioGroup.tsx";
-export { Switch, type SwitchProps } from "./Switch.tsx";
-export { Alert, type AlertProps } from "./Alert.tsx";
-export { Avatar, type AvatarProps } from "./Avatar.tsx";
-export { Badge, type BadgeProps } from "./Badge.tsx";
-export { Card, type CardProps } from "./Card.tsx";
-export { Separator, type SeparatorProps } from "./Separator.tsx";
-export { Skeleton, type SkeletonProps } from "./Skeleton.tsx";
-export { Progress, type ProgressProps } from "./Progress.tsx";
+} from "./CheckboxGroup/index.ts";
+export { Radio, type RadioProps } from "./Radio/index.ts";
+export { RadioGroup, type RadioGroupProps } from "./RadioGroup/index.ts";
+export { Switch, type SwitchProps } from "./Switch/index.ts";
+export { Alert, type AlertProps } from "./Alert/index.ts";
+export { Avatar, type AvatarProps } from "./Avatar/index.ts";
+export { Badge, type BadgeProps } from "./Badge/index.ts";
+export { Card, type CardProps } from "./Card/index.ts";
+export { Separator, type SeparatorProps } from "./Separator/index.ts";
+export { Skeleton, type SkeletonProps } from "./Skeleton/index.ts";
+export { Progress, type ProgressProps } from "./Progress/index.ts";
 export {
   Table,
   TableBody,
@@ -37,7 +37,7 @@ export {
   type TableHeaderCellProps,
   type TableProps,
   type TableRowProps,
-} from "./Table.tsx";
+} from "./Table/index.ts";
 export {
   Breadcrumb,
   BreadcrumbCurrent,
@@ -47,7 +47,7 @@ export {
   type BreadcrumbItemProps,
   type BreadcrumbLinkProps,
   type BreadcrumbProps,
-} from "./Breadcrumb.tsx";
+} from "./Breadcrumb/index.ts";
 export {
   Pagination,
   PaginationEllipsis,
@@ -61,7 +61,7 @@ export {
   type PaginationNextProps,
   type PaginationPreviousProps,
   type PaginationProps,
-} from "./Pagination.tsx";
+} from "./Pagination/index.ts";
 export {
   Menu,
   MenuContent,
@@ -74,7 +74,7 @@ export {
   type MenuProps,
   type MenuSectionProps,
   type MenuTriggerProps,
-} from "./Menu.tsx";
+} from "./Menu/index.ts";
 export {
   Popover,
   PopoverContent,
@@ -83,7 +83,7 @@ export {
   type PopoverPlacement,
   type PopoverProps,
   type PopoverTriggerProps,
-} from "./Popover.tsx";
+} from "./Popover/index.ts";
 export {
   Combobox,
   ComboboxItem,
@@ -91,7 +91,7 @@ export {
   type ComboboxItemProps,
   type ComboboxProps,
   type ComboboxSectionProps,
-} from "./Combobox.tsx";
+} from "./Combobox/index.ts";
 export {
   Select,
   SelectItem,
@@ -99,8 +99,8 @@ export {
   type SelectItemProps,
   type SelectProps,
   type SelectSectionProps,
-} from "./Select.tsx";
-export { AlertDialog, type AlertDialogProps } from "./AlertDialog.tsx";
+} from "./Select/index.ts";
+export { AlertDialog, type AlertDialogProps } from "./AlertDialog/index.ts";
 export {
   Dialog,
   DialogClose,
@@ -117,7 +117,7 @@ export {
   type DialogSize,
   type DialogTitleProps,
   type DialogTriggerProps,
-} from "./Dialog.tsx";
+} from "./Dialog/index.ts";
 export {
   Accordion,
   AccordionItem,
@@ -128,7 +128,7 @@ export {
   type AccordionPanelProps,
   type AccordionProps,
   type AccordionTriggerProps,
-} from "./Accordion.tsx";
+} from "./Accordion/index.ts";
 export {
   Tab,
   TabList,
@@ -140,8 +140,8 @@ export {
   type TabsActivationMode,
   type TabsOrientation,
   type TabsProps,
-} from "./Tabs.tsx";
-export { Tag, TagGroup, type TagGroupProps, type TagProps } from "./Tag.tsx";
+} from "./Tabs/index.ts";
+export { Tag, TagGroup, type TagGroupProps, type TagProps } from "./Tag/index.ts";
 export {
   ToastQueue,
   ToastRegion,
@@ -149,7 +149,7 @@ export {
   type ToastOptions,
   type ToastQueueOptions,
   type ToastRegionProps,
-} from "./Toast.tsx";
+} from "./Toast/index.ts";
 export {
   Tooltip,
   TooltipContent,
@@ -158,7 +158,7 @@ export {
   type TooltipPlacement,
   type TooltipProps,
   type TooltipTriggerProps,
-} from "./Tooltip.tsx";
+} from "./Tooltip/index.ts";
 export type {
   Color,
   ColorFamilyName,
