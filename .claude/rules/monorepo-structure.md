@@ -97,7 +97,7 @@ Tide 모노레포의 **콜로케이션** 구조 규칙. 파일·폴더를 만들
 ## import와 진입점
 
 - **경로:** 패키지·앱 안은 상대경로를 쓰고 확장자를 적지 않는다(`./cn`, `../_internal/hooks/useFieldControl`). tsconfig는 `moduleResolution: "bundler"`이고, 배포 결과물(JS·d.ts)의 확장자는 tsdown이 붙인다. 별칭(`@/`)은 두지 않는다.
-  - 예외: Node가 직접 실행하는 `scripts/` 아래 파일끼리는 `.ts`를 적는다(Node ESM은 확장자가 필요하다). 이런 스크립트는 패키지 `src`를 import하지 않고 빌드된 `dist`를 import한다.
+  - 예외: Node가 직접 실행하는 `scripts/` 아래 파일끼리는 `.ts`를 적는다(Node ESM은 확장자가 필요하다). 이런 스크립트는 패키지 `src`를 import하지 않고 빌드된 `dist`를 import한다. tide-color CLI가 읽는 foundation `test/fixtures`도 같다. 이런 파일은 패키지의 `tsconfig.scripts.json`(nodenext)이 타입 검사한다.
 - **내부 배럴 없음:** `_internal/`과 `components/`·`hooks/`·`libs/`·`constants/`에는 `index.ts`를 두지 않고 파일 경로로 import한다. Component 폴더의 `index.ts`는 대표 Component와 그 Props 타입(하위 Component가 있으면 그것까지)만 재수출한다.
   ```ts
   export { Select } from "./Select";
