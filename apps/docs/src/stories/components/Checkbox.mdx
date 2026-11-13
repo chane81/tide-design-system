@@ -49,6 +49,8 @@ import * as CheckboxStories from "./Checkbox.stories";
 
 `<Field group>` 안에 CheckboxGroup을 둡니다. Field의 label이 묶음의 이름, 설명·오류가 묶음의 설명이 됩니다.
 
+선택 값은 각 Checkbox가 가집니다. CheckboxGroup은 값을 모으지 않으므로, 고른 값은 Checkbox마다 `checked`·`onChange`로 다루거나 form 제출로 받습니다.
+
 <Canvas of={CheckboxStories.Group} />
 
 `orientation="horizontal"`이면 가로로 늘어놓습니다.
