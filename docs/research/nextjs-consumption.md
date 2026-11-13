@@ -169,7 +169,7 @@ export default {
 
 ### CSS import
 
-- 외부 패키지가 배포한 스타일시트는 `app` 디렉터리 어디에서든 import할 수 있다. 예시는 `import 'bootstrap/dist/css/bootstrap.css'`다. ([Next.js CSS — External stylesheets](https://nextjs.org/docs/app/getting-started/css#external-stylesheets), 16.4.5)
+- 외부 패키지가 배포한 스타일시트는 `app` 디렉터리 어디에서든 import할 수 있다. 예시는 외부 CSS 프레임워크 패키지의 `dist/css/*.css`를 import하는 형태다. ([Next.js CSS — External stylesheets](https://nextjs.org/docs/app/getting-started/css#external-stylesheets), 16.4.5)
 - 전역 CSS는 root layout에서 import하는 것을 권장한다. 라우트를 이동해도 스타일시트가 제거되지 않아 충돌이 생길 수 있으므로 "정말 전역인 CSS(Tailwind base 같은 것)"에만 쓰라고 한다. 프로덕션 빌드에서 CSS 순서는 **import 순서**를 따른다. (같은 문서 Global CSS, Ordering and Merging)
 - Tailwind 방식에서 Tide theme CSS는 JS에서 따로 import하기보다 앱의 `globals.css`에서 `@import "tailwindcss"` 다음에 `@import`해야 Tailwind가 그 안의 `@theme`를 처리할 수 있다. `@import` 해석에는 `style` 조건이 쓰인다(2절 참고). Tailwind가 `@theme`를 처리하는 방식은 tailwind-theme-and-autocomplete 문서의 범위다.
 

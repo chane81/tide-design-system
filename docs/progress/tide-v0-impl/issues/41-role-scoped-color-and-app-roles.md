@@ -7,7 +7,7 @@ Blocked by: 40 (열린 색 이름과 앱 브랜드 색 계열), 14 (IconButton�
 
 행동·의미 Component(Button, IconButton, Link, 이후 Checkbox·Radio·Switch·Alert·Toast 등)의 `color`는 Role만 받는다. 색 계열 이름(`gray`, `blue` 등)은 Badge·Tag·Avatar 같은 장식·분류 Component가 쓴다. 앱이 브랜드 색으로 Button을 칠하고 싶으면 Role을 하나 더한다(예: `brand`). 앱 Role의 색은 `defineColorFamily`·`tide-color` CLI로 만들어 대비 검사를 받는다.
 
-2026-11-10 사용자 결정: 티켓 40(ADR 0011)에서는 Button `color`가 Role, 색 계열 이름, 앱 브랜드 색을 모두 받았다. 사용자가 Atlassian Design System의 색 Foundation(<https://atlassian.design/foundations/color>)을 보고 결정을 바꿨다. Atlassian은 Role을 버튼에 써서 primary·secondary·warning·danger 동작을 구분하고, accent 색은 「특정한 뜻이 없는 색」이라 서로 바꿔도 경험이 같다고 설명한다. 뜻이 있는 동작에 뜻이 없는 색을 고르게 두면 같은 동작이 화면마다 다른 색이 된다.
+2026-11-10 사용자 결정: 티켓 40(ADR 0011)에서는 Button `color`가 Role, 색 계열 이름, 앱 브랜드 색을 모두 받았다. 사용자가 한 디자인 시스템의 색 Foundation을 보고 결정을 바꿨다. 그 시스템은 Role을 버튼에 써서 primary·secondary·warning·danger 동작을 구분하고, accent 색은 「특정한 뜻이 없는 색」이라 서로 바꿔도 경험이 같다고 설명한다. 뜻이 있는 동작에 뜻이 없는 색을 고르게 두면 같은 동작이 화면마다 다른 색이 된다.
 
 ## 설계
 
@@ -20,7 +20,7 @@ Blocked by: 40 (열린 색 이름과 앱 브랜드 색 계열), 14 (IconButton�
 
 ## 수용 기준
 
-- [x] ADR 0011을 정정한다(정정 표시와 이유: Atlassian 사례, Component 종류별 color 범위). 큰 변경이면 새 ADR(0016)로 대체한다.
+- [x] ADR 0011을 정정한다(정정 표시와 이유: 참고한 디자인 시스템 사례, Component 종류별 color 범위). 큰 변경이면 새 ADR(0016)로 대체한다.
 - [x] foundation에 `RoleRegistry`와 색 계열 등록 interface를 두고 `Role = keyof RoleRegistry`. Tide 내부 계산(Semantic Token 이름, 대비 쌍)은 앱 Role로 넓어지지 않는다.
 - [x] 기존 공개 계약(Role utility, `--tide-*` 변수)과 대비 결과가 바뀌지 않는다(회귀 스냅숏).
 - [x] Button·IconButton·Link의 `color`가 `Role`(앱 Role 포함)이다. 색 계열 이름은 타입 오류다(타입 테스트).

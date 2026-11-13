@@ -32,7 +32,7 @@ Status: resolved
 
 - Q1: 파스텔 위 글자는 새 슬롯 `on-subtle`(950 근처)로 둔다. `on-solid`와 짝
 - Q2: 파스텔 테두리는 새 슬롯 `subtle-border`로 둔다. 기존 `border`(outline·선택 표시용)는 그대로
-- Q3: 두 번째 파스텔은 새 강도 `faint`로 둔다(solid > subtle > faint). `muted`는 `text-muted`와, `soft`는 Radix 용법과 겹쳐서 피함
+- Q3: 두 번째 파스텔은 새 강도 `faint`로 둔다(solid > subtle > faint). `muted`는 `text-muted`와, `soft`는 다른 시스템의 기존 용법과 겹쳐서 피함
 - Q4: `text` 슬롯은 단독 색 글자(Link, Progress, Switch, Pagination, Toast) 전용으로 남기고, 값은 03에서 정한다
 
 ### 2라운드(2026-11-12)

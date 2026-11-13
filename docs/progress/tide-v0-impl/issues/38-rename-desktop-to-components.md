@@ -34,7 +34,7 @@ Blocked by: 37 (Storybook 브라우저 점검과 문서 문체 개편)
 - GLOSSARY Target 항목은 지웠다. 정의가 "Component 묶음이 겨냥하는 사용 환경"인데, Component 묶음을 사용 환경으로 나누는 개념 자체가 없어졌다. 정의만 바꿔 남기면 나중에 밀도 옵션을 Target이라고 부를 여지가 생긴다. 밀도 옵션의 용어는 그 옵션을 정할 때 새로 정한다.
 - "데스크톱 밀도의 웹 React Component이고 모바일 브라우저에서도 동작한다" 설명은 ADR 0006 Consequences와 GLOSSARY Target에만 있었다. 앞은 머지된 ADR 본문이라 두고, 뒤는 항목째 지웠다. Storybook 문서에는 이 설명이 없었다.
 - research 문서(release, testing, storybook)는 맨 위에 이름 변경 안내를 달았다. 실험 환경 설명과 도구 출력(예: changesets 경고 문구)은 그때 쓴 이름 그대로 두고, 분석·제안 문장만 새 이름으로 고쳤다.
-- 그대로 둔 desktop: 완료 티켓(01~11, 36, 37)과 tide-v0 resolved 티켓 본문·Comments, 지도 「Decisions so far」와 tide-v0-impl README의 완료 티켓 요약, 머지된 ADR 0002·0006·0007·0008 본문, 티켓 12의 `Blocked by`(이 티켓 제목), Primer 원칙 인용("desktop experiences")의 일반 낱말.
+- 그대로 둔 desktop: 완료 티켓(01~11, 36, 37)과 tide-v0 resolved 티켓 본문·Comments, 지도 「Decisions so far」와 tide-v0-impl README의 완료 티켓 요약, 머지된 ADR 0002·0006·0007·0008 본문, 티켓 12의 `Blocked by`(이 티켓 제목), 리서치 문서 원칙 인용 속 일반 낱말 desktop.
 
 **검증**
 

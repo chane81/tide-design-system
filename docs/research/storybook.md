@@ -41,7 +41,7 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
   - `code/renderers/react/src/componentManifest/reactDocgen/utils.ts`의 `getTsConfig`는 `import('typescript')` 후 `ts.findConfigFile(..., ts.sys.fileExists)`를 부른다. 단 `try/catch`로 감싸 실패하면 `{}`를 돌려준다. 16번 결정에 적힌 `react-docgen-typescript` 실패 메시지(`reading 'fileExists'`)는 `ts.sys`가 없을 때의 모양과 같다. TS 7에 JS API가 없어서 생기는 것으로 보인다(추론. 실패 스택을 따로 추적하지는 않았다).
   - **`features.experimentalDocgenServer`**(실험, 기본 `false`): "TypeScript Language Service로 dev 서버에서 메타데이터를 뽑는다"(문서 `docs/api/main-config/main-config-features.mdx`). 소스(`componentMeta/ComponentMetaProject.ts`)는 `@volar/language-core`와 `typescript` 타입을 쓴다. **TS 7 단독에서는 동작하지 않을 가능성이 높다**(추론, 실험하지 않음).
   - **`features.componentsManifest`**(기본 `false`): MCP 서버용 manifest를 만든다. React는 `reactDocgen` 설정을 그대로 따르므로 기본값에서는 react-docgen을 쓴다(`componentManifest/generator.ts`). `experimentalReactComponentMeta`를 켜면 TS 기반 엔진으로 바뀐다.
-- CSF Next(`definePreview`, `defineMain`)는 "preview" 단계 기능이다(문서 `docs/api/csf/csf-next.mdx`). `@storybook/react-vite@10.6.6`의 exports에 `./node`가 있다. SEED는 `@storybook/nextjs-vite/node`의 `defineMain`을 쓰고 있다(아래 8절).
+- CSF Next(`definePreview`, `defineMain`)는 "preview" 단계 기능이다(문서 `docs/api/csf/csf-next.mdx`). `@storybook/react-vite@10.6.6`의 exports에 `./node`가 있다. 8절의 시스템 D는 `@storybook/nextjs-vite/node`의 `defineMain`을 쓰고 있다.
 
 ### 실험 결과 (TS 7.0.2 단독)
 
@@ -98,7 +98,7 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 ### 직접 만든 React 블록 사례
 
 - Storybook 공식 문서가 직접 만드는 방법(`useOf`)과 IconGallery 확장 예시를 제공한다.
-- 레퍼런스 시스템은 Foundation 문서를 Storybook 기본 블록으로 만들지 않는다. Primer, Atlassian, Radix, SEED 모두 공개 문서를 Storybook이 아닌 별도 사이트로 운영한다(8절). 그래서 "Storybook 기본 블록으로 Token 페이지를 만든 대형 시스템" 사례는 찾지 못했다(**확인 불가**).
+- 레퍼런스 시스템은 Foundation 문서를 Storybook 기본 블록으로 만들지 않는다. 8절의 네 곳(시스템 A~D) 모두 공개 문서를 Storybook이 아닌 별도 사이트로 운영한다. 그래서 "Storybook 기본 블록으로 Token 페이지를 만든 대형 시스템" 사례는 찾지 못했다(**확인 불가**).
 - 실험에서는 `ColorSwatch`(Tailwind class + `var(--tide-*)`)를 `.tsx`로 만들어 MDX에서 `<Unstyled>`로 감싸 렌더링했다. 빌드와 렌더링 모두 문제없었다.
 
 ---
@@ -128,7 +128,7 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 - decorator는 story를 렌더링할 때만 실행된다. 원칙·Foundation처럼 story가 없는 MDX 페이지에는 decorator 방식만으로 Theme이 적용되지 않는다.
 - 대안으로 `preview.ts` 최상위에서 `addons.getChannel()`(`storybook/preview-api`)로 `SET_GLOBALS`·`GLOBALS_UPDATED`(`storybook/internal/core-events`) 이벤트를 구독해 `html`에 속성을 붙여 봤다. **story 없는 MDX 페이지에서도, manager URL로 열었을 때도 `dark`가 적용됐다.** `storybook/internal/core-events`는 이름에 internal이 들어 있지만 Storybook 문서의 addon API 예시(`docs/_snippets/storybook-addons-api-getchannel.md`)와 마이그레이션 표가 이 경로를 쓴다.
 - Storybook 문서 UI 자체(ArgTypes 표, 블록 배경)의 색은 `parameters.docs.theme`(`storybook/theming`의 `themes.dark` 등)으로 정한다. 공식 예시는 정적인 지정뿐이다(`docs/_snippets/storybook-preview-docs-dark-theme.md`). globals에 따라 바꾸려면 `parameters.docs.container`로 `DocsContainer`를 감싸는 방법(`docs/writing-docs/autodocs.mdx`)이 있지만 실험하지 않았다(**확인 불가**).
-- Primer는 globals에 `all`을 두어 모든 Theme을 나란히 렌더링한다(`primer/react` `packages/react/.storybook/preview.jsx`). `body`에 `data-color-mode` 등을 붙인다.
+- 8절의 시스템 A는 globals에 `all`을 두어 모든 Theme을 나란히 렌더링한다(그 저장소의 `.storybook/preview` 설정). `body`에 color mode용 `data-*` 속성을 붙인다.
 
 ### 전환 순간 transition 끄기를 넣을 위치
 
@@ -194,18 +194,18 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 
 ## 8. 레퍼런스 디자인 시스템의 문서 사이트 구성
 
-2026-11-09에 각 사이트를 헤드리스 브라우저로 렌더링해 navigation 링크를 뽑았고, GitHub 저장소 트리를 확인했다.
+2026-11-09에 공개 디자인 시스템 네 곳(이하 시스템 A~D)의 문서 사이트를 헤드리스 브라우저로 렌더링해 navigation 링크를 뽑았고, 공개 저장소 트리를 확인했다. 공개 저장소 규칙에 따라 이름·링크는 적지 않는다.
 
-| 시스템           | 공개 문서 사이트                                                                                                                                    | 최상위 구성                                                                                                                                                                                                                                                                        | Component 페이지 구성                                                                                        | Storybook 위치                                                                                                                                              |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primer**       | [primer.style/product](https://primer.style/product/) (Storybook 아님)                                                                              | Getting started(Foundations: Color usage, Content, Icons, Layout, Responsive, Typography / React·Rails별 안내) → Primitives(Color, Size, Typography, Token Names) → UI Patterns → Scenario Patterns → Components. 상단에 Product UI, Brand UI, Octicons, Accessibility가 따로 있음 | Overview / Guidelines / Accessibility 하위 페이지([button](https://primer.style/product/components/button/)) | `primer/react`의 `packages/react/.storybook`. stories에 `src/**/*.mdx`도 포함. [primer.style/react/storybook](https://primer.style/react/storybook/)에 공개 |
-| **Atlassian**    | [atlassian.design](https://atlassian.design/) (Storybook 아님)                                                                                      | Get started(Design, Develop, With AI, Content design, About the design system — 원칙은 About에 있음) → Foundations(Tokens, Accessibility, Content, Spacing, Grid, Color, Typography, Motion, Iconography, Illustrations, Logos, Elevation, Border, Radius) → Components → Tools 등 | Examples / Code / Usage / Changelog 하위 경로([button](https://atlassian.design/components/button))          | 공개 Storybook은 **확인 불가**                                                                                                                              |
-| **Radix Themes** | [radix-ui.com/themes/docs](https://www.radix-ui.com/themes/docs/overview/getting-started) (Next.js, `radix-ui/website` 저장소의 `data/themes/docs`) | Overview(Getting started, Styling, Layout, Releases) → Theme(Overview, Color, Dark mode, Typography, Spacing, Breakpoints, Radius, Shadows, Cursors) → Components(70여 개)                                                                                                         | 한 페이지 안에 API Reference와 Examples                                                                      | `radix-ui/themes` 저장소에는 Storybook이 없고 `apps/playground`만 있음                                                                                      |
-| **SEED**         | [seed-design.io](https://seed-design.io/) (Next.js + Sanity, `daangn/seed-design`의 `docs/`)                                                        | Get Started → Foundations(Design token, Color, Typography, Iconography, Elevation, Gradient, Inclusive design, International design, Layout, Motion, Radius, Spacing, State, Voice and tone, Writing, Feedback) → Components → Patterns → AI & Tools → Updates. 원칙은 홈 섹션     | (세부 탭 구성은 확인하지 않음)                                                                               | `docs/.storybook`(`@storybook/nextjs-vite`, `stories/**/*.stories.*`만, MDX 없음) + `chromatic.config.json` → 시각 회귀 테스트용                            |
+| 시스템       | 공개 문서 사이트                                            | 최상위 구성                                                                                                                                                                                                                                                                        | Component 페이지 구성                             | Storybook 위치                                                                                                                   |
+| ------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **시스템 A** | 별도 문서 사이트(Storybook 아님)                            | Getting started(Foundations: Color usage, Content, Icons, Layout, Responsive, Typography / 프레임워크별 안내) → Primitives(Color, Size, Typography, Token Names) → UI Patterns → Scenario Patterns → Components. 상단에 제품 UI, 브랜드 UI, 아이콘 세트, Accessibility가 따로 있음 | Overview / Guidelines / Accessibility 하위 페이지 | React 패키지 저장소의 `.storybook`. stories에 `src/**/*.mdx`도 포함. 별도 경로에 공개                                            |
+| **시스템 B** | 별도 문서 사이트(Storybook 아님)                            | Get started(Design, Develop, With AI, Content design, About the design system — 원칙은 About에 있음) → Foundations(Tokens, Accessibility, Content, Spacing, Grid, Color, Typography, Motion, Iconography, Illustrations, Logos, Elevation, Border, Radius) → Components → Tools 등 | Examples / Code / Usage / Changelog 하위 경로     | 공개 Storybook은 **확인 불가**                                                                                                   |
+| **시스템 C** | 별도 문서 사이트(Next.js, 웹사이트 저장소 안의 docs 데이터) | Overview(Getting started, Styling, Layout, Releases) → Theme(Overview, Color, Dark mode, Typography, Spacing, Breakpoints, Radius, Shadows, Cursors) → Components(70여 개)                                                                                                         | 한 페이지 안에 API Reference와 Examples           | Component 저장소에는 Storybook이 없고 playground 앱만 있음                                                                       |
+| **시스템 D** | 별도 문서 사이트(Next.js + Sanity, 모노레포의 `docs/`)      | Get Started → Foundations(Design token, Color, Typography, Iconography, Elevation, Gradient, Inclusive design, International design, Layout, Motion, Radius, Spacing, State, Voice and tone, Writing, Feedback) → Components → Patterns → AI & Tools → Updates. 원칙은 홈 섹션     | (세부 탭 구성은 확인하지 않음)                    | `docs/.storybook`(`@storybook/nextjs-vite`, `stories/**/*.stories.*`만, MDX 없음) + `chromatic.config.json` → 시각 회귀 테스트용 |
 
-- 공통점: 네 곳 모두 **원칙 → Foundation → Component** 순서다. 원칙은 독립 최상위 섹션이 아니라 Get started나 홈 안에 들어 있다(Atlassian은 Get started의 About, SEED는 홈 섹션, Primer는 [principles-reference-systems.md](./principles-reference-systems.md)에서 본 `primer.style/guides/introduction`. 현재 Product UI nav에서 그 페이지의 위치는 확인하지 않았다). Foundation에 Token, Color, Typography, Motion, Radius, Elevation(그림자), Iconography가 공통으로 있다.
-- 네 곳 모두 공개 문서 사이트는 Storybook이 아니다. Storybook은 개발·예제(Primer)나 시각 테스트(SEED)에 쓴다. **Storybook 하나로 공개 문서를 운영하는 Tide 구성과 같은 사례는 이 네 곳에 없다.**
-- Component 페이지를 "사용 지침 / 코드·API / 접근성"으로 나누는 것이 흔하다(Primer는 3개, Atlassian은 4개 하위 경로).
+- 공통점: 네 곳 모두 **원칙 → Foundation → Component** 순서다. 원칙은 독립 최상위 섹션이 아니라 Get started나 홈 안에 들어 있다(시스템 B는 Get started의 About, 시스템 D는 홈 섹션, 시스템 A는 [principles-reference-systems.md](./principles-reference-systems.md)에서 본 소개 가이드 페이지. 현재 제품 UI 문서 nav에서 그 페이지의 위치는 확인하지 않았다). Foundation에 Token, Color, Typography, Motion, Radius, Elevation(그림자), Iconography가 공통으로 있다.
+- 네 곳 모두 공개 문서 사이트는 Storybook이 아니다. Storybook은 개발·예제(시스템 A)나 시각 테스트(시스템 D)에 쓴다. **Storybook 하나로 공개 문서를 운영하는 Tide 구성과 같은 사례는 이 네 곳에 없다.**
+- Component 페이지를 "사용 지침 / 코드·API / 접근성"으로 나누는 것이 흔하다(시스템 A는 3개, 시스템 B는 4개 하위 경로).
 
 ---
 
@@ -231,7 +231,7 @@ Tide 공개 문서 사이트(Storybook 하나, MDX, private `apps/docs`)를 만�
 - `parameters.a11y.test`가 `undefined`일 때 Vitest CLI에서 실패로 처리되는지
 - 실제 Lucide 아이콘 2,000개 이상, 저사양 기기와 네트워크 지연에서의 성능
 - Storybook 기본 블록으로 Token 페이지를 만든 대형 시스템 사례
-- Atlassian의 공개 Storybook 존재 여부, SEED Component 페이지의 세부 탭 구성
+- 8절 시스템 B의 공개 Storybook 존재 여부, 시스템 D Component 페이지의 세부 탭 구성
 - `docs/essentials/themes.mdx`(`draft: true`)가 공개 사이트에 보이는지
 - 실제 GitHub Pages·Vercel 배포(로컬에서 하위 경로 서빙만 확인)
 

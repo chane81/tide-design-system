@@ -14,8 +14,8 @@ Component의 `variant` × `color` × `size` 클래스는 cva나 tailwind-variant
 
 - **`class-variance-authority`(cva)**: shadcn이 쓰는 사실상 표준이다. 하지만 0.7.1(2024-11) 이후 릴리스가 없고, 후속 패키지 `cva` 1.0은 아직 `1.0.0-beta.12`다.
 - **`tailwind-variants` 4.0.1**: slots와 compound variant를 지원한다. 하지만 v3.3부터 tailwind-merge 대신 자체 병합 엔진을 기본 빌드에 넣었다. 기존 twMerge 설정은 "대체로 호환"된다고만 적혀 있다. 쓰면 병합기가 둘이 되고(tv 내부와 `cn`), 우리가 생성하는 tailwind-merge 설정과 결과가 어긋날 수 있다.
-- **`asChild`(Slot)**: Radix, Ark, SEED가 쓴다. 하지만 자식 요소를 복제해 props를 합치는 방식이라 동작이 암묵적이다. Tide는 headless 라이브러리를 쓰지 않으므로(ADR 0004) Slot도 직접 구현하거나 따로 가져와야 한다. shadcn도 Base UI로 옮기면서 `asChild`를 `render`로 바꿨다.
-- **`as`(polymorphic)**: Primer와 Carbon이 쓴다. 넘긴 요소 타입에 따라 props 타입이 달라지므로 타입 정의가 복잡해지고, 에러 메시지도 읽기 어려워진다.
+- **`asChild`(Slot)**: Radix, Ark와 참고한 디자인 시스템 한 곳이 쓴다. 하지만 자식 요소를 복제해 props를 합치는 방식이라 동작이 암묵적이다. Tide는 headless 라이브러리를 쓰지 않으므로(ADR 0004) Slot도 직접 구현하거나 따로 가져와야 한다. shadcn도 Base UI로 옮기면서 `asChild`를 `render`로 바꿨다.
+- **`as`(polymorphic)**: 참고한 디자인 시스템 두 곳이 쓴다. 넘긴 요소 타입에 따라 props 타입이 달라지므로 타입 정의가 복잡해지고, 에러 메시지도 읽기 어려워진다.
 
 ## Consequences
 

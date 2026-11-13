@@ -15,7 +15,7 @@ Tide 공개 문서 사이트(Storybook 하나, MDX 사용, private `apps/docs`)�
 5. 접근성 addon(`addon-a11y`)의 현재 동작과 axe 버전
 6. 아이콘 2,000개 이상(「아이콘 전략 결정」)을 검색하는 페이지를 Storybook 안에서 만들 때의 성능·구성 사례
 7. 정적 빌드 배포처(GitHub Pages, Vercel 등)와 base path 설정
-8. 레퍼런스 디자인 시스템(Primer, Atlassian, Radix, SEED 등)이 Storybook 또는 문서 사이트에서 원칙·Foundation·Component 페이지를 어떻게 나누는지
+8. 레퍼런스 디자인 시스템이 Storybook 또는 문서 사이트에서 원칙·Foundation·Component 페이지를 어떻게 나누는지
 
 결과는 `docs/research/storybook.md`에 main 브랜치로 커밋한다.
 
@@ -34,6 +34,6 @@ Tide 공개 문서 사이트(Storybook 하나, MDX 사용, private `apps/docs`)�
 - addon-a11y는 axe-core 4.14.0. 기본은 WCAG 2.0/2.1 A·AA이고 `wcag22aa`로 추가되는 규칙은 `target-size` 하나. 자동 검사는 story 화면에서만 돌고 docs 페이지에서는 돌지 않음
 - 아이콘 2,000개 검색 페이지는 직접 만들어야 함. 가짜 아이콘 실험에서 별도 청크(gzip 86 kB), 약 0.3초 렌더
 - 빌드는 `base: "./"`라 하위 경로 배포에 설정이 필요 없음(로컬 확인). GitHub Pages·Vercel 모두 가능
-- Primer·Atlassian·Radix·SEED는 원칙 → Foundation → Component 순서지만 공개 문서를 Storybook으로 운영하는 곳은 없음. Component 페이지는 사용 지침/코드/접근성으로 나눔
+- 레퍼런스 디자인 시스템 네 곳은 원칙 → Foundation → Component 순서지만 공개 문서를 Storybook으로 운영하는 곳은 없음. Component 페이지는 사용 지침/코드/접근성으로 나눔
 - `next/font`는 react-vite에서 못 씀 → `preview-head.html`이나 `staticDirs`로 폰트 로드
 - 확인 불가 항목은 문서의 「확인 불가」 절에 있음. 26번 쟁점: MDX 페이지 Theme 적용 방식, Token 블록 범위, Do/Don't를 CSF story로 할지, 사이드바 구조, 배포처와 시각 회귀의 관계

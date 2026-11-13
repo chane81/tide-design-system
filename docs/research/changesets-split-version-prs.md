@@ -120,16 +120,16 @@
 
 ## 5. 다른 저장소 사례
 
-2026-11-12에 각 저장소 기본 브랜치의 `.changeset/config.json`과 workflow를 `gh api`로 읽었다.
+2026-11-12에 각 저장소 기본 브랜치의 `.changeset/config.json`과 workflow를 `gh api`로 읽었다. 대상은 changesets를 쓰는 공개 디자인 시스템 저장소 다섯 곳과 Radix Primitives다. 공개 저장소 규칙에 따라 디자인 시스템 이름·링크는 적지 않는다.
 
-| 저장소                                                                                                                                                                 | private docs·storybook 처리                                                                                                                            | Version PR          |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
-| [chakra-ui/chakra-ui](https://github.com/chakra-ui/chakra-ui/blob/main/.changeset/config.json)                                                                         | `ignore`에 `storybook-ts`, `@chakra-ui/www` 등. `fixed: [["@chakra-ui/**"]]`                                                                           | 1개                 |
-| [radix-ui/primitives](https://github.com/radix-ui/primitives/blob/main/.changeset/config.json)                                                                         | `ignore`에 `@repo/storybook` 등                                                                                                                        | 1개                 |
-| [primer/react](https://github.com/primer/react/blob/main/.changeset/config.json)                                                                                       | `privatePackages: { version: true, tag: false }`, `ignore: ["example-*", "codesandbox"]`                                                               | 1개                 |
-| [daangn/seed-design](https://github.com/daangn/seed-design/blob/dev/.changeset/config.json) (기본 `dev`)                                                               | `privatePackages: { version: false, tag: false }`                                                                                                      | 1개                 |
-| [grommet/hpe-design-system](https://github.com/grommet/hpe-design-system/blob/52467e57bfd94119e06970d6e1d021849b74465d/.github/workflows/design-tokens-release-pr.yml) | `changeset version --ignore docs --ignore …`로 **design tokens만** Version PR. 아이콘은 changesets PR이 아닌 별도 workflow(`hpe-icons-publish.yml` 등) | changesets PR은 1개 |
-| [iTwin/iTwinUI](https://github.com/iTwin/iTwinUI/blob/3c4935b3c2bd04b527e9f5068786d2816e4d9d2f/.github/workflows/changeset-release.yml)                                | `version: pnpm changeset version --ignore @itwin/itwinui-css`, `changeset status` 출력에 특정 패키지가 있을 때만 PR 단계 실행                          | 1개                 |
+| 저장소                                                                                         | private docs·storybook 처리                                                                                                        | Version PR          |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| 디자인 시스템 A                                                                                | `ignore`에 storybook 패키지, 문서 사이트 패키지 등. `fixed`에 자기 scope 전체(`@<scope>/**`)                                       | 1개                 |
+| [radix-ui/primitives](https://github.com/radix-ui/primitives/blob/main/.changeset/config.json) | `ignore`에 `@repo/storybook` 등                                                                                                    | 1개                 |
+| 디자인 시스템 B                                                                                | `privatePackages: { version: true, tag: false }`, `ignore: ["example-*", "codesandbox"]`                                           | 1개                 |
+| 디자인 시스템 C (기본 `dev`)                                                                   | `privatePackages: { version: false, tag: false }`                                                                                  | 1개                 |
+| 디자인 시스템 D                                                                                | `changeset version --ignore docs --ignore …`로 **design tokens만** Version PR. 아이콘은 changesets PR이 아닌 별도 publish workflow | changesets PR은 1개 |
+| 디자인 시스템 E                                                                                | `version: pnpm changeset version --ignore <CSS 패키지>`, `changeset status` 출력에 특정 패키지가 있을 때만 PR 단계 실행            | 1개                 |
 
 - 살펴본 곳 중 **같은 저장소에서 changesets Version PR을 2개 이상 유지하는 곳은 찾지 못했다.** 사례들은 docs·storybook을 `ignore`하거나(버전 없음), private 버전만 올리고 Version PR은 하나로 둔다. `--ignore`는 "일부만 changesets로 릴리스하고 나머지는 다른 흐름"에 쓰였다.
 - 우회 workflow로 커스텀 브랜치 PR을 만든 예는 [changesets/action#254 댓글](https://github.com/changesets/action/issues/254)(rohit-gohri, 2024-01-30)에 있다. 공개 저장소에서 이를 운영 중인 사례는 확인 불가.
@@ -176,7 +176,7 @@
 ### (c) Storybook은 버전 대신 TDS 버전별 스냅샷 배포
 
 - 동작: docs는 버전을 갖지 않는다(지금처럼). TDS가 publish될 때마다 그 커밋의 Storybook을 배포하고, 필요하면 `v0.5`처럼 TDS 버전별 경로·도메인에 남긴다. docs만 고친 변경(오타, 예시)은 수동 `workflow_dispatch`로 "현재 TDS 버전 문서"를 다시 배포한다.
-- 장점: changesets 설정을 거의 안 바꾼다. 문서와 npm 버전이 항상 맞는다(사용자가 0.5를 쓰면 0.5 문서를 본다). chakra·radix처럼 storybook을 `ignore`하는 사례와 같은 결.
+- 장점: changesets 설정을 거의 안 바꾼다. 문서와 npm 버전이 항상 맞는다(사용자가 0.5를 쓰면 0.5 문서를 본다). 디자인 시스템 A·Radix Primitives처럼 storybook을 `ignore`하는 사례와 같은 결.
 - 단점: Storybook 자체 변경 이력(CHANGELOG, 버전 번호)이 없다. 사용자가 원한 "Storybook 독립 버전"은 아니다. 버전별 보존을 하려면 Dokploy 앱을 버전마다 두거나 정적 호스팅 구조를 바꿔야 한다(이 저장소에서 미조사).
 - 이 저장소 기준 비용: "최신만 배포"는 0(지금 상태). 버전별 보존은 호스팅 구조에 따라 중간.
 
@@ -198,7 +198,7 @@
 1. 공식 액션으로는 PR 2개가 안 된다. 브랜치 이름이 `changeset-release/<base>`로 고정이고(changesets/action v2.1.2 `src/run.ts`), 같은 요구가 [#575](https://github.com/changesets/action/issues/575)·[#107](https://github.com/changesets/action/issues/107)로 열려 있으며 메인테이너도 "release line" 기능 없이는 어렵다고 했다([#445](https://github.com/changesets/action/issues/445)). (b-2)는 action이 하던 일을 Storybook 쪽에 다시 짜는 일이다.
 2. 사용자가 원한 "Storybook 독립 버전 관리"의 핵심인 **버전 번호와 CHANGELOG의 독립**은 (a)로도 된다. `privatePackages.version` + 명시적 `fixed`면 docs는 자기 changeset으로만 오른다(E1′, E3).
 3. (b-2)는 Dokploy가 main HEAD를 빌드하는 지금 구조에서 **npm 미발행 Component를 문서에 먼저 내보내는** 어긋남을 만든다. (a)는 같은 머지에서 함께 나가므로 이 문제가 없다.
-4. 살펴본 design system·라이브러리 모노레포(chakra, radix, primer, seed-design, HPE, iTwinUI) 중 Version PR을 2개 유지하는 곳은 없었다.
+4. 살펴본 design system·라이브러리 모노레포(Radix Primitives와 디자인 시스템 다섯 곳) 중 Version PR을 2개 유지하는 곳은 없었다.
 5. (a)에서 만드는 것(공통 전제, 제목 계산, Storybook 릴리스 감지 job, 섞인 changeset 검사)은 (b-2)에서도 그대로 쓰인다. 나중에 넘어갈 때 버릴 작업이 적다.
 
 ## 구현하면 바뀌는 파일 목록
