@@ -1,13 +1,9 @@
-// Foundation의 radius·Elevation·포커스 표시를 실제 Chromium에서 계산값으로 확인한다(tide-v0-impl 티켓 06).
-// 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
-// 두 instance에서 모두 돈다. forced-colors instance(contextOptions forcedColors: "active")에서는
-// 그림자와 border 색이 시스템 색으로 덮이므로, 투명 border·outline이 보이는지를 따로 단언한다.
+// forced-colors instance에서는 그림자·border 색이 시스템 색으로 덮여, 투명 border·outline이 보이는지를 따로 본다.
 import { color } from "@tide-design/foundation";
 import { describe, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-/** hex를 getComputedStyle이 돌려주는 rgb() 표기로 바꾼다 */
 function rgb(hex: string): string {
   const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
 
@@ -27,8 +23,7 @@ function tideLayers(boxShadow: string): { alpha: number; geometry: string }[] {
 }
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-// raised 표면의 class 조합. 두 Theme 모두 border 1px이고 색은 border-raised(light 투명, dark gray-800)다.
-// Theme 분기(dark:)가 없으므로 요소 단위 data-theme을 그대로 따른다.
+// Theme 분기(dark:)가 없어 요소 단위 data-theme을 그대로 따른다.
 const raisedClass = "bg-raised border border-raised rounded-lg shadow-md";
 
 describe("Elevation", () => {

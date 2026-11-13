@@ -1,6 +1,4 @@
 "use client";
-// Dialog·AlertDialog의 열림 상태를 부분 Component(DialogTrigger·DialogContent·DialogClose)에 넘기는 context.
-// 값은 components/DialogRoot.tsx가 만들고, 부분 Component(Dialog/Dialog.tsx)가 읽는다.
 
 import { createContext, use, type Context, type RefObject } from "react";
 import type { useOverlayTrigger } from "react-aria";

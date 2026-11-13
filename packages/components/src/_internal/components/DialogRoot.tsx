@@ -1,10 +1,6 @@
 "use client";
-// Dialog·AlertDialog가 같이 쓰는 열림 상태(tide-v0-impl 티켓 30). 공개 API가 아니다.
-// 근거 버전: react-aria 3.53.1(useOverlayTrigger), react-stately 3.51.0(useOverlayTriggerState).
-// 부분 Component는 Dialog/Dialog.tsx에 있고 hooks/useDialogContext.ts로 이 값을 읽는다.
-
 import { useMemo, useRef, useState, type ReactElement, type ReactNode } from "react";
-// 루트 entry에서 import한다(Popover/Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
+// 루트 entry에서 import해야 Vite 사전 번들 목록이 바뀌지 않는다.
 import { useOverlayTrigger } from "react-aria";
 import { useOverlayTriggerState } from "react-stately";
 

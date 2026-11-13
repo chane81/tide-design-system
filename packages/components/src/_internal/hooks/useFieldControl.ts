@@ -1,13 +1,5 @@
 "use client";
-// Field와 그 안의 입력 Component가 함께 쓰는 연결 정보(tide-v0-impl 티켓 15).
-// 서버 컴포넌트는 context를 만들 수 없으므로 context는 이 client 모듈에서 만든다.
-// 서버 컴포넌트인 Field는 이 context를 provider로 렌더만 하고, 값은 client Component(Input, Textarea)가 읽는다
-// (react.dev 「Server Components」 Rendering a context provider in a Server Component, React 19.3.1).
-//
-// 이후 Select·Combobox(useSelect, useComboBox)도 이 값을 읽어 연결한다. CheckboxGroup·RadioGroup은 티켓 16에서 연결했다.
-// - 단일 입력: `controlId`를 자기 id로 쓰면 Field의 `<label htmlFor>`가 이름이 된다.
-// - 묶음·버튼형 트리거: `labelId`를 `aria-labelledby`로 쓴다. 묶음이면 Field에 `group`을 줘 label이 `for` 없는 요소가 된다.
-// - 설명·오류: `describedBy`를 자기 `aria-describedby` 앞에 붙인다.
+// 서버 컴포넌트는 context를 만들 수 없어 client 모듈에 둔다. 서버 컴포넌트인 Field는 provider로 렌더만 한다.
 
 import { createContext, use, type Context } from "react";
 
@@ -48,10 +40,7 @@ export interface FieldControlProps {
   readonly required: boolean | undefined;
 }
 
-/**
- * Field 연결 정보와 입력 Component 자신의 props를 합친다.
- * 입력 Component에 직접 준 값(id, disabled 등)이 Field 값보다 이긴다. `aria-describedby`는 Field 것 뒤에 이어 붙인다.
- */
+/** 직접 준 값(id, disabled 등)이 Field 값을 이긴다. `aria-describedby`는 Field 것 뒤에 이어 붙인다. */
 export function useFieldControl(props: FieldControlInput): FieldControlProps {
   const field = use(FieldContext);
   const invalid = props.invalid ?? field?.invalid ?? false;

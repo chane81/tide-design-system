@@ -1,14 +1,9 @@
-// Foundation의 motion·쌓임 단계를 실제 Chromium에서 계산값으로 확인한다(tide-v0-impl 티켓 07).
-// 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
-// 두 instance에서 모두 돈다. 두 번째 instance(contextOptions reducedMotion: "reduce")에서는
-// motion-safe: class가 빠지고, Tide Token 자체(transition-colors의 fast)는 그대로인지를 단언한다
-// (tide-v0 티켓 21: hover 색 변화는 reduced-motion에서도 유지, 이동·확대·blur만 motion-safe:로 감싼다).
+// reduced-motion instance에서는 motion-safe: class만 빠지고 색 전환 Token(fast)은 그대로다.
 import { duration, easing, zIndex, type ZIndexName } from "@tide-design/foundation";
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-/** "150ms"를 getComputedStyle이 돌려주는 초 단위("0.15s")로 바꾼다 */
 const seconds = (ms: string): string => `${Number.parseFloat(ms) / 1000}s`;
 const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -65,7 +60,7 @@ describe("motion", () => {
 
 describe("쌓임 단계", () => {
   const names = Object.keys(zIndex) as ZIndexName[];
-  // Tailwind는 소스에 적힌 class만 만든다. 이름을 조합하지 않고 그대로 적는다.
+  // class는 문자열 그대로 적는다. Tailwind가 소스를 스캔한다.
   const tierClass: Record<ZIndexName, string> = {
     sticky: "z-sticky",
     modal: "z-modal",
