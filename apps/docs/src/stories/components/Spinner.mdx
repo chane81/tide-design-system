@@ -55,7 +55,7 @@ import * as SpinnerStories from "./Spinner.stories";
 
 ### 버튼 안에 넣기
 
-버튼 텍스트가 이미 로딩 중임을 말하면 Spinner에 `aria-hidden="true"`를 줍니다. 버튼의 로딩 상태 동작은 Button에서 정합니다.
+버튼의 로딩 표시는 Button의 `loading`을 씁니다. Button이 Spinner를 앞 아이콘 자리에 두고, 이름 뒤에 「로딩 중」을 숨김 텍스트로 붙입니다. 직접 만든 버튼에 넣을 때는 버튼 텍스트가 상태를 말하게 하고 Spinner에 `aria-hidden="true"`를 줍니다.
 
 <Canvas of={SpinnerStories.InButton} />
 

@@ -23,7 +23,7 @@ Blocked by: 코드 스타일 02 ([code-style/issues/02](../../code-style/issues/
 
 - 주석 줄 수(`//`·블록 주석 줄, 35개 Component 폴더): 2,013 → 1,093. 많이 줄어든 곳: Toast 139→65, Combobox 138→63, Menu 117→67, Accordion 110→49, Select 107→59, Tabs 102→56, Dialog 99→64, Tooltip 97→70, Popover 90→64.
 - 확인: 바뀐 121개 파일에서 주석·빈 줄을 뺀 코드 줄이 정리 전과 같다. 정리 전 JSDoc이 붙어 있던 공개 props·Component는 모두 JSDoc이 남았다(빠진 9곳은 index에서 export하지 않는 내부 조각).
-- MDX로 옮길 내용(티켓 04에서 판단):
+- MDX로 옮길 내용(티켓 04에서 판단). **06에서 반영**(`Switch.mdx` 「설명과 오류 붙이기」, `Checkbox.mdx` 「묶어서 이름 붙이기」, `Badge.mdx` 「크기 바꾸기」):
   - Switch: `invalid`면 꺼진 track 경계가 danger 색이 된다. Field 안에서는 `invalid` prop이 Field 값보다 우선한다.
   - Checkbox(CheckboxGroup): 선택 값은 각 Checkbox가 가지고, 묶음은 값을 모으지 않는다(지금은 `CheckboxGroup` JSDoc에만 있다).
   - Badge: 한 줄로만 쓴다(`whitespace-nowrap`). 줄바꿈하면 모양이 깨진다.

@@ -59,6 +59,8 @@ label에 마우스를 올리면 켜진 track은 색이 조금 진해지고, 꺼�
 
 Field 안에 두면 Field의 label이 이름이 되고, 설명과 오류가 연결됩니다. 이때 `children`은 비웁니다.
 
+Field에 `error`가 있거나 `invalid`를 주면 꺼진 track의 경계가 danger 색이 됩니다. Field 안에서 `invalid`를 직접 주면 Field 값보다 그 값을 따릅니다.
+
 <Canvas of={SwitchStories.WithField} />
 
 ### 상태를 앱이 정하기

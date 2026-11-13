@@ -25,6 +25,6 @@ Blocked by: 코드 스타일 02 ([code-style/issues/02](../../code-style/issues/
 - 판단: `subcomponents` 위 「부분 Component의 props 표도 함께 보여 준다」(10곳)는 코드를 풀어 쓴 주석이라 지웠다. react-docgen이 별칭을 풀지 못한다는 `argTypes` 주석은 남겼다.
 - 판단: `.storybook/main.ts` 머리의 설정 설명 블록은 각 설정 바로 위 한 줄로 나눴다(MDX 3 GFM, Vite 8 조건 대체, optimizeDeps, "use client" 경고). 확인 경로(설치본·docs 이름)는 지웠다.
 - 판단: `nginx.conf`·`Dockerfile`의 캐시·상속 설명은 tide-v0-impl 티켓 44에 있어 결론 두 줄만 남겼다.
-- 판단: 예시용 네이티브 버튼(`Icons.stories.tsx`, `Spinner.stories.tsx`)의 「Button Component(티켓 13) 전이라」는 작업 이력이라 지웠다. 지금은 Button이 있으니 예시를 Button으로 바꿀지는 따로 볼 일이다(코드 변경이라 이 티켓 범위 밖).
-- 보류(결정 근거인데 ADR·티켓에 없음, 1건): `Dockerfile` 머리의 「Dokploy가 main을 받아 이 파일로 빌드한다」. 배포 방식이 리서치 문서(`docs/research/changesets-split-version-prs.md`)에만 있다. 주석에 남겨 두었다. 배포 문서나 ADR로 옮길지 정해야 한다.
+- 판단: 예시용 네이티브 버튼(`Icons.stories.tsx`, `Spinner.stories.tsx`)의 「Button Component(티켓 13) 전이라」는 작업 이력이라 지웠다. 지금은 Button이 있으니 예시를 Button으로 바꿀지는 따로 볼 일이다(코드 변경이라 이 티켓 범위 밖). **06에서 반영**(Spinner `InButton`은 `<Button loading>`, Icons `Decorative`·`IconOnlyButton`은 `Button`·`IconButton`으로 바꿈. 판단은 06 Comments).
+- 보류(결정 근거인데 ADR·티켓에 없음, 1건): `Dockerfile` 머리의 「Dokploy가 main을 받아 이 파일로 빌드한다」. 배포 방식이 리서치 문서(`docs/research/changesets-split-version-prs.md`)에만 있다. 주석에 남겨 두었다. 배포 문서나 ADR로 옮길지 정해야 한다. **06에서 반영**(ADR 0020 「보충 (2026-11-14)」, `CONTRIBUTING.md` 「릴리스 흐름」 4번. Dockerfile 주석은 1줄에 `(ADR 0020)`을 붙임).
 - 검증: 바뀐 파일마다 주석·빈 줄을 뺀 코드 줄을 origin/main과 비교해 차이 0. `pnpm build`, `typecheck`, `test`, `lint`, `format:check` 통과.

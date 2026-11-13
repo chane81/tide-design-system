@@ -38,3 +38,12 @@ changesets Version PR(「Release x.y.z」)의 CI(`ci.yml`, `pull_request`)가 `a
 ## 결정
 
 - 2026-11-12: 1번(GitHub App token)으로 결정. App `tide-release-bot`, 저장소 변수 `RELEASE_APP_CLIENT_ID`, secret `RELEASE_APP_PRIVATE_KEY`. version job이 App token으로 Version PR을 만들고 assignee·라벨을 단다.
+
+## 보충 (2026-11-14): token 발급 액션 확인
+
+위 1번의 「적용할 때 공식 문서로 확인한다」를 확인했다. `release.yml`의 `actions/create-github-app-token@v3`는 v3.3.0과 같은 커밋이다. 근거는 v3.3.0 tag의 `action.yml`과 README다.
+
+- 입력: `client-id`(App의 Client ID)와 `private-key`. `app-id`도 받지만 deprecated다(`deprecationMessage: "Use 'client-id' instead."`). 그래서 저장소 변수는 App ID가 아니라 `RELEASE_APP_CLIENT_ID`다.
+- 권한: `permission-<이름>` 입력으로 token 권한을 installation 권한 안에서 좁힌다. 여기서는 contents·pull-requests·issues write다.
+- 출력: `token`. 다음 step에서만 쓴다.
+- 폐기: `skip-token-revoke`가 기본값 `false`라 job이 끝날 때 `post` step이 token을 폐기한다. 다른 job으로 넘길 수 없으므로 token은 version job 안에서 발급하고 쓴다.

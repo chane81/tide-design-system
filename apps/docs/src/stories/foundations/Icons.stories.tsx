@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button, IconButton } from "@tide-design/components";
 import { CircleCheckIcon, PlusIcon, SearchIcon, TrashIcon, XIcon } from "@tide-design/icons";
 
 import { IconSearch } from "../../components/IconSearch/index";
 
-// 버튼 모양은 예시용 네이티브 버튼이다.
 const meta = {
   title: "Foundation/아이콘",
 } satisfies Meta;
@@ -67,10 +67,9 @@ export const StrokeWidths: Story = {
 export const Decorative: Story = {
   name: "장식용 아이콘",
   render: () => (
-    <button type="button" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-      <TrashIcon />
+    <Button variant="outline" color="neutral" startIcon={<TrashIcon />}>
       삭제
-    </button>
+    </Button>
   ),
 };
 
@@ -89,9 +88,9 @@ export const Named: Story = {
 export const IconOnlyButton: Story = {
   name: "아이콘만 있는 버튼",
   render: () => (
-    <button type="button" aria-label="닫기" style={{ display: "inline-flex", padding: 4 }}>
-      <XIcon size={20} />
-    </button>
+    <IconButton variant="ghost" color="neutral" aria-label="닫기">
+      <XIcon />
+    </IconButton>
   ),
 };
 
