@@ -85,6 +85,7 @@ export function Typography({
   ...props
 }: TypographyProps): ReactElement {
   const element = elementByVariant[variant];
+
   return renderElement({
     defaultElement: typeof element === "number" ? `h${level ?? element}` : element,
     render,

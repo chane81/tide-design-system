@@ -75,6 +75,7 @@ export function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map((child: ReactNode) => textOf(child)).join("");
   if (isValidElement<{ children?: ReactNode }>(node)) return textOf(node.props.children);
+
   return "";
 }
 
@@ -92,20 +93,24 @@ export function resolveCollectionChildren(children: ReactNode): ReactNode[] {
   Children.forEach(children, (child) => {
     if (!isValidElement<{ children?: ReactNode }>(child)) {
       if (child != null && typeof child !== "boolean") resolved.push(child);
+
       return;
     }
     if (child.type === Fragment) {
       resolved.push(...resolveCollectionChildren(child.props.children));
+
       return;
     }
     if (isLazy(child.type)) {
       // React lazy의 `_init(_payload)`는 불러온 Component를 돌려준다(아직이면 Promise를 던져 Suspense로 기다린다).
       const type = child.type._init(child.type._payload) as CollectionComponent<object>;
       resolved.push(createElement(type, { ...child.props, key: child.key }));
+
       return;
     }
     resolved.push(child);
   });
+
   // 항목 key는 컬렉션 빌더가 요소의 key로, 없으면 자리 번호로 만든다.
   return resolved;
 }

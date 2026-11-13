@@ -33,6 +33,7 @@ async function resolve(property: "backgroundColor" | "color", value: string): Pr
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -41,6 +42,7 @@ function Pages({ current, ...props }: PaginationProps & { current: number }): Re
   const shown = [1, current - 1, current, current + 1, 10].filter(
     (value, index, list) => value >= 1 && value <= 10 && list.indexOf(value) === index,
   );
+
   return (
     <div data-theme="light">
       <Pagination {...props}>

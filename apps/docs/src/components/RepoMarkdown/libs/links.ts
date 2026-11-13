@@ -31,6 +31,7 @@ export function resolveRepoPath(from: string, href: string): string {
     }
   }
   const joined = segments.join("/");
+
   return href.endsWith("/") ? `${joined}/` : joined;
 }
 
@@ -53,6 +54,7 @@ export function toStorybookHref(from: string, href: string): string {
     return `?path=/docs/${docsId}${hash}`;
   }
   const kind = repoPath.endsWith("/") ? "tree" : "blob";
+
   return `${REPO_URL}/${kind}/main/${repoPath}${hash}`;
 }
 

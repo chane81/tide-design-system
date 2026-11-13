@@ -37,6 +37,7 @@ export function parseDeployments(body: unknown): Deployment[] {
   if (!Array.isArray(body)) {
     throw new Error("deployment.all 응답이 배열이 아니다. Dokploy API 모양이 바뀌었는지 확인한다.");
   }
+
   return body.map((item: unknown, index) => {
     const record = (typeof item === "object" && item !== null ? item : {}) as Record<
       string,
@@ -48,6 +49,7 @@ export function parseDeployments(body: unknown): Deployment[] {
         `deployment.all 응답 ${index}번 항목에 deploymentId·createdAt 문자열이 없다.`,
       );
     }
+
     return {
       deploymentId,
       status: typeof status === "string" ? status : null,
@@ -77,6 +79,7 @@ export function judgeDeployment(
   const { deploymentId, status } = latest;
   if (status === "running") return { kind: "running", deploymentId };
   if (status === "done") return { kind: "done", deploymentId };
+
   return { kind: "failed", deploymentId, status, errorMessage: latest.errorMessage ?? null };
 }
 

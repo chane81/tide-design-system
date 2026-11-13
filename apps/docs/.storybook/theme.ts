@@ -20,6 +20,7 @@ export function getTheme(): ThemeName {
 /** Theme이 바뀔 때 부를 함수를 등록한다. 돌려준 함수로 해제한다. */
 export function subscribeTheme(listener: () => void): () => void {
   listeners.add(listener);
+
   return () => {
     listeners.delete(listener);
   };

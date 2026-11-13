@@ -19,6 +19,7 @@ const withTheme: Decorator = (Story, context) => {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
   return <Story />;
 };
 

@@ -24,6 +24,7 @@ function resolve(property: "color" | "backgroundColor", value: string, color?: s
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -43,6 +44,7 @@ interface ExampleProps {
 /** 지우면 목록에서 빼는 상태 부모 */
 function Example({ removable = true, onRemove, group }: ExampleProps): ReactElement {
   const [tags, setTags] = useState<readonly (typeof initial)[number][]>(initial);
+
   return (
     <div data-theme="light">
       <button type="button" data-testid="before">
@@ -223,6 +225,7 @@ describe("키보드", () => {
 
 function SingleTag(): ReactElement {
   const [tags, setTags] = useState(["react"]);
+
   return (
     <TagGroup
       aria-label="키워드"
@@ -266,6 +269,7 @@ describe("지우기 버튼", () => {
       // 고대비 모드에서는 아이콘이 버튼 글자색(시스템 색)을 따른다.
       expect(getComputedStyle(icon).color).toBe(getComputedStyle(button).color);
       expect(getComputedStyle(icon).color).not.toBe(transparent);
+
       return;
     }
     expect(getComputedStyle(button).color).toBe(resolve("color", "var(--tide-blue-on-subtle)"));
@@ -304,6 +308,7 @@ describe("모양과 포커스 표시", () => {
       // 투명 경계가 시스템 색으로 보여 배경 없이도 태그 모양이 남는다.
       expect(design.borderTopColor).not.toBe(transparent);
       expect(design.borderTopWidth).toBe("1px");
+
       return;
     }
     expect(design.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-blue-subtle)"));

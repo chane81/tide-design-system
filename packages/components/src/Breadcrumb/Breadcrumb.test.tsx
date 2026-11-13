@@ -29,6 +29,7 @@ async function resolveColor(value: string): Promise<string> {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).color;
   probe.remove();
+
   return resolved;
 }
 
@@ -139,6 +140,7 @@ describe("구분자", () => {
     const separatorOf = (testId: string): SVGElement => {
       const svg = page.getByTestId(testId).element().querySelector("svg");
       if (!svg) throw new Error(`${testId}에 구분자가 없다`);
+
       return svg;
     };
     expect(getComputedStyle(separatorOf("first")).display).toBe("none");

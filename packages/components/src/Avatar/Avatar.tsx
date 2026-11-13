@@ -63,6 +63,7 @@ const imageClass = "absolute inset-0 bg-cover bg-center bg-no-repeat";
  */
 function cssUrl(src: string): string {
   const escaped = src.replace(/["\\\n\r\f]/g, (char) => `\\${char.charCodeAt(0).toString(16)} `);
+
   return `url("${escaped}")`;
 }
 
@@ -79,6 +80,7 @@ export function Avatar({
   ...props
 }: AvatarProps): ReactElement {
   const named = alt !== "";
+
   return (
     <span
       {...props}

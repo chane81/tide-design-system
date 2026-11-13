@@ -25,6 +25,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 
@@ -39,6 +40,7 @@ function solidPng(color: string): string {
   if (!context) throw new Error("canvas 2d context가 없다");
   context.fillStyle = color;
   context.fillRect(0, 0, 8, 8);
+
   return canvas.toDataURL("image/png");
 }
 
@@ -56,6 +58,7 @@ async function settle(src: string): Promise<"load" | "error"> {
   });
   // 배경 이미지가 그려질 시간을 둔다(두 프레임).
   await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+
   return result;
 }
 
@@ -70,6 +73,7 @@ async function pixelAt(base64: string, x: number, y: number): Promise<number[]> 
   const context = canvas.getContext("2d");
   if (!context) throw new Error("canvas 2d context가 없다");
   context.drawImage(image, 0, 0);
+
   return Array.from(context.getImageData(x, y, 1, 1).data.subarray(0, 3));
 }
 

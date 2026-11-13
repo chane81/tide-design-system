@@ -32,6 +32,7 @@ export type StyleSnapshot = Pick<CSSStyleDeclaration, (typeof styleKeys)[number]
 /** 지금 계산 스타일 중 motion 단언에 쓰는 값을 복사한다. */
 export function styleSnapshot(element: Element): StyleSnapshot {
   const style = getComputedStyle(element);
+
   return Object.fromEntries(styleKeys.map((key) => [key, style[key]])) as StyleSnapshot;
 }
 
@@ -49,6 +50,7 @@ export function transitions(element: Element): Map<string, TransitionSnapshot> {
     const frames = (animation.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
     found.set(animation.transitionProperty, { from: frames[0] ?? {}, to: frames.at(-1) ?? {} });
   }
+
   return found;
 }
 
@@ -60,6 +62,7 @@ export function transitions(element: Element): Map<string, TransitionSnapshot> {
 export function captureWhen<T>(condition: () => boolean, read: () => T): Promise<T> {
   // 동작 전에 이미 참이면 전환 시작을 붙잡을 수 없다. 테스트를 잘못 쓴 것이다.
   expect(condition(), "captureWhen: 동작 전에 이미 조건이 참이다").toBe(false);
+
   return new Promise<T>((resolve, reject) => {
     const observer = new MutationObserver(() => {
       try {
@@ -100,8 +103,10 @@ export function openControl(render: (open: boolean) => ReactElement, initial = t
   function Harness(): ReactElement {
     const [open, set] = useState(initial);
     setOpen = set;
+
     return render(open);
   }
+
   return {
     element: createElement(Harness),
     set(open) {

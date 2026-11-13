@@ -88,6 +88,7 @@ export function dataColorRule(name: string): string {
   const source = isRole(name)
     ? (slot: ColorSlot) => semanticVar(roleSlotToken(name, slot))
     : (slot: ColorSlot) => familyVar(name, slot);
+
   return [`[data-color="${name}"] {`, ...accentDeclarations(source), "}"].join("\n");
 }
 
@@ -130,6 +131,7 @@ export function roleAliasCss(className: SemanticColorName, theme: ThemeName): st
   const family = alias.family as (typeof roleFamily)[keyof typeof roleFamily];
   const familyValue = slotColorValue(family, familySlotSteps(family)[alias.slot][theme]);
   const entry = semanticEntries().find((candidate) => candidate.className === className)!;
+
   // 덮기·섞기 값은 객체라 모양으로 비교한다.
   return JSON.stringify(entry.value[theme]) === JSON.stringify(familyValue)
     ? `var(${familyVar(family, alias.slot)})`

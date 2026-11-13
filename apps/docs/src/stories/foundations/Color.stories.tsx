@@ -51,6 +51,7 @@ export const Scale: Story = {
 // 계산된 `rgb(r, g, b)` → `#rrggbb`. 타일은 불투명 hex로만 칠하므로 알파는 없다.
 function toHex(rgb: string): string {
   const channels = rgb.match(/\d+/g)?.slice(0, 3) ?? [];
+
   return `#${channels.map((value) => Number(value).toString(16).padStart(2, "0")).join("")}`;
 }
 

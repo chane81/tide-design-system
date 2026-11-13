@@ -41,6 +41,7 @@ function entryOf(changelog: string): string | null {
   const start = lines.findIndex((line) => line.trim() === `## ${version}`);
   if (start === -1) return null;
   const end = lines.findIndex((line, index) => index > start && line.startsWith("## "));
+
   return lines
     .slice(start + 1, end === -1 ? undefined : end)
     .join("\n")
@@ -58,6 +59,7 @@ const sections = names.map((name) => {
     console.error(`${name}의 CHANGELOG에 ${version} 항목이 없다`);
     process.exit(1);
   }
+
   // 패키지 제목 아래로 한 단계씩 내린다(### → ####).
   return `## ${name}@${version}\n\n${entry.replace(/^### /gm, "#### ")}`;
 });

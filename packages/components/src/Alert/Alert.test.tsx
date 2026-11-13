@@ -27,6 +27,7 @@ function resolve(value: string, theme = "light"): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 
@@ -66,6 +67,7 @@ describe("역할", () => {
   test("새로 렌더한 role=alert 안의 텍스트가 접근성 트리에 있다", async () => {
     function Form() {
       const [failed, setFailed] = useState(false);
+
       return (
         <>
           <button type="button" onClick={() => setFailed(true)}>
@@ -169,6 +171,7 @@ describe("닫기", () => {
   test("제어형이다. 앱이 onClose에서 Alert를 빼면 사라진다", async () => {
     function Notice() {
       const [open, setOpen] = useState(true);
+
       return open ? <Alert title="새 기능" onClose={() => setOpen(false)} /> : <p>닫힘</p>;
     }
     await render(<Notice />);
@@ -367,6 +370,7 @@ describe("forced-colors", () => {
     expect(style.borderTopWidth).toBe("1px");
     if (!forcedColors()) {
       expect(style.borderTopColor).toBe(resolve("var(--tide-border-danger-subtle)"));
+
       return;
     }
     expect(style.borderTopColor).toBe(resolve("CanvasText"));

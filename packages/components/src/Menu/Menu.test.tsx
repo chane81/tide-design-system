@@ -41,6 +41,7 @@ function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -520,6 +521,7 @@ describe("제어와 비제어", () => {
   test("상태를 가진 부모가 트리거 누름과 실행으로 열고 닫는다", async () => {
     function Controlled(): ReactElement {
       const [open, setOpen] = useState(false);
+
       return (
         <>
           <output data-testid="state">{open ? "열림" : "닫힘"}</output>
@@ -611,6 +613,7 @@ describe("위치와 표면", () => {
     if (forcedColors()) {
       expect(style.boxShadow).toBe("none");
       expect(style.borderTopColor).not.toBe(transparent);
+
       return;
     }
     expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-raised)"));

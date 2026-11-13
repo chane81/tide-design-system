@@ -23,6 +23,7 @@ export function useCloseOnTab(overlayRef: RefObject<HTMLElement | null>, close: 
       close();
     };
     window.addEventListener("keydown", onKeyDown, true);
+
     return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [close, overlayRef]);
 }

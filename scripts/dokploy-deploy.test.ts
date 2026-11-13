@@ -90,6 +90,7 @@ function fakeDokploy(responses: Array<Deployment[] | Error>) {
   let time = 0;
   let calls = 0;
   const events: string[] = [];
+
   return {
     events,
     options: {
@@ -97,6 +98,7 @@ function fakeDokploy(responses: Array<Deployment[] | Error>) {
         const next = responses[Math.min(calls, responses.length - 1)];
         calls += 1;
         if (next instanceof Error) throw next;
+
         return next;
       },
       request: async () => {

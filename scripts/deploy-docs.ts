@@ -22,6 +22,7 @@ function requireEnv(name: string): string {
     console.error(`환경 변수 ${name}가 없다.`);
     process.exit(2);
   }
+
   return value;
 }
 
@@ -39,6 +40,7 @@ async function call(path: string, init: RequestInit = {}): Promise<unknown> {
   if (!response.ok) {
     throw new Error(`${path.split("?")[0]} 응답 ${response.status}: ${text.slice(0, 300)}`);
   }
+
   return text === "" ? null : JSON.parse(text);
 }
 

@@ -117,6 +117,7 @@ export const Controlled: Story = {
   name: "제어",
   render: function Controlled(): ReactElement {
     const [on, setOn] = useState(false);
+
     return (
       <div className="flex flex-col gap-2">
         <Switch checked={on} onChange={(event) => setOn(event.target.checked)}>

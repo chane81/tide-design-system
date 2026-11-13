@@ -57,6 +57,7 @@ export const screenshotTestId: BrowserCommand<[testId: string]> = async (context
     throw new Error(`playwright provider만 지원한다: ${context.provider.name}`);
   }
   const buffer = await context.iframe.getByTestId(testId).screenshot({ animations: "disabled" });
+
   return buffer.toString("base64");
 };
 

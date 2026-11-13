@@ -33,6 +33,7 @@ function resolve(property: "color" | "backgroundColor", value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -215,6 +216,7 @@ describe("제어와 비제어", () => {
     const onValueChange = vi.fn();
     function Parent(): ReactElement {
       const [value, setValue] = useState<string[]>([]);
+
       return (
         <>
           <button type="button" onClick={() => setValue(["refund"])}>
@@ -317,6 +319,7 @@ describe("모양과 포커스 표시", () => {
       // 고대비 모드에서는 chevron이 글자색(시스템 색)을 그대로 따라 보인다.
       expect(getComputedStyle(chevron).color).toBe(getComputedStyle(byTestId("shipping")).color);
       expect(getComputedStyle(chevron).color).not.toBe(transparent);
+
       return;
     }
     expect(getComputedStyle(chevron).color).toBe(resolve("color", "var(--tide-text-muted)"));
@@ -355,6 +358,7 @@ describe("chevron motion", () => {
       // 움직임 줄이기: 바로 돈 상태다.
       expect(chevron().getAnimations()).toHaveLength(0);
       expect(getComputedStyle(chevron()).rotate).toBe("180deg");
+
       return;
     }
     expect(getComputedStyle(chevron()).transitionProperty).toBe("rotate");

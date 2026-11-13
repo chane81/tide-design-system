@@ -34,6 +34,7 @@ function resolve(property: "color" | "borderTopColor", value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -43,6 +44,7 @@ type ExampleProps = Partial<Omit<TabsProps, "children">> & {
 
 function Example({ list, ...props }: ExampleProps): ReactElement {
   const rootProps = { defaultValue: "account", ...props } as TabsProps;
+
   return (
     <div data-theme="light">
       <button type="button" data-testid="before">
@@ -271,6 +273,7 @@ describe("제어와 비제어", () => {
   test("상태를 가진 부모가 값을 바꾸면 탭과 패널이 따라간다", async () => {
     function Controlled(): ReactElement {
       const [value, setValue] = useState("account");
+
       return (
         <>
           <button type="button" onClick={() => setValue("notifications")}>
@@ -417,6 +420,7 @@ describe("막대 motion", () => {
       // 움직임 줄이기: 확대 없이 opacity만 바뀐다.
       expect(after.transitionProperty).toBe("opacity");
       expect(after.scale).toBe("none");
+
       return;
     }
     expect(after.transitionProperty).toBe("opacity, scale");

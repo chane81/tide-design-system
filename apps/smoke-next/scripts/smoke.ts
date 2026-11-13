@@ -47,11 +47,13 @@ async function installedVersion(name: string): Promise<string> {
   ) as {
     version: string;
   };
+
   return manifest.version;
 }
 
 async function filesUnder(dir: string, extension: string): Promise<string[]> {
   const entries = await readdir(dir, { recursive: true, withFileTypes: true });
+
   return entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(extension))
     .map((entry) => join(entry.parentPath, entry.name));
@@ -898,6 +900,7 @@ try {
     if (!d) {
       throw new Error(`${file}에서 도형을 찾지 못했다.`);
     }
+
     return d;
   };
   if (!builtJs.includes(await iconShape("plus-icon.js"))) {

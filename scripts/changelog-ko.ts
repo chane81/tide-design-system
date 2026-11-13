@@ -54,6 +54,7 @@ function localizeLatestEntry(changelog: string, storybook: boolean): string {
     )
     .replace(/^- Updated dependencies/gm, "- 의존성 업데이트")
     .replace(/^(- .*?) Thanks (\[@.+?)! - /gm, "$1 $2 - ");
+
   return changelog.slice(0, start) + localized + changelog.slice(end);
 }
 

@@ -162,6 +162,7 @@ export const Controlled: Story = {
   name: "제어",
   render: function Controlled() {
     const [value, setValue] = useState<string | null>("jp");
+
     return (
       <div className="flex w-72 flex-col items-start gap-3">
         <Field label="국가">
@@ -183,6 +184,7 @@ export const InForm: Story = {
   name: "폼 제출과 오류",
   render: function InForm() {
     const [submitted, setSubmitted] = useState("아직 없음");
+
     return (
       <form
         className="flex w-72 flex-col items-start gap-3"

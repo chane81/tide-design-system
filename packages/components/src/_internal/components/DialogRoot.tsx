@@ -45,5 +45,6 @@ export function DialogRoot({
     }),
     [state, triggerProps, overlayProps.id, triggerId, alert],
   );
+
   return <DialogContext value={value}>{children}</DialogContext>;
 }

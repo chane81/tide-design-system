@@ -76,11 +76,13 @@ export function roleSlotToken(role: TideRole, slot: ColorSlot): SemanticColorNam
 export function colorSlotValues(name: TideColor): Record<ColorSlot, ThemedColor> {
   if (isRole(name)) {
     const entries = new Map(semanticEntries().map((entry) => [entry.className, entry.value]));
+
     return Object.fromEntries(
       colorSlots.map((slot) => [slot, entries.get(roleSlotToken(name, slot))!]),
     ) as Record<ColorSlot, ThemedColor>;
   }
   const steps = familySlotSteps(name);
+
   return Object.fromEntries(
     colorSlots.map((slot) => [
       slot,
@@ -98,6 +100,7 @@ export function colorSlotValues(name: TideColor): Record<ColorSlot, ThemedColor>
  */
 export function colorSlotHex(name: TideColor, theme: ThemeName): Record<ColorSlot, string> {
   const values = colorSlotValues(name);
+
   return Object.fromEntries(
     colorSlots.map((slot) => [slot, colorValueHex(values[slot][theme])]),
   ) as Record<ColorSlot, string>;

@@ -140,6 +140,7 @@ export const Actions: Story = {
   name: "실행과 위치",
   render: function Actions() {
     const [last, setLast] = useState("없음");
+
     return (
       <div className="flex flex-col items-start gap-3 pt-48">
         <Menu>

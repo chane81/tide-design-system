@@ -46,6 +46,7 @@ export function bundleVersions(releases: readonly StatusRelease[]): BundleVersio
     throw new Error(`TDS 패키지는 fixed인데 다음 버전이 여러 개다: ${tdsVersions.join(", ")}`);
   }
   const storybook = bumped.find((release) => release.name === STORYBOOK_PACKAGE);
+
   return { tds: tdsVersions[0] ?? null, storybook: storybook?.newVersion ?? null };
 }
 
@@ -59,6 +60,7 @@ export function versionPrTitle(versions: BundleVersions): string {
   if (versions.tds) parts.push(`[TDS] Release ${versions.tds}`);
   if (versions.storybook) parts.push(`[Storybook] Release ${versions.storybook}`);
   if (parts.length === 0) throw new Error("이번 Version PR에서 버전이 오르는 묶음이 없다");
+
   return parts.join(" · ");
 }
 
@@ -120,6 +122,7 @@ export function storybookFollowType(changesets: readonly ChangesetSummary[]): Bu
     if (isTds(release.name)) highest = Math.max(highest, BUMP_RANK[release.type] ?? 0);
   }
   if (highest === 0) return null;
+
   return (["patch", "minor", "major"] as const)[highest - 1];
 }
 
@@ -130,6 +133,7 @@ export function incrementVersion(version: string, type: BumpType): string {
   const [major, minor, patch] = match.slice(1).map(Number);
   if (type === "major") return `${major + 1}.0.0`;
   if (type === "minor") return `${major}.${minor + 1}.0`;
+
   return `${major}.${minor}.${patch + 1}`;
 }
 
@@ -147,6 +151,7 @@ export function withStorybookFollow(
   if (!docs) throw new Error(`changeset status releases에 ${STORYBOOK_PACKAGE}가 없다`);
   const oldVersion = docs.oldVersion ?? docs.newVersion;
   const followed = { ...docs, type, oldVersion, newVersion: incrementVersion(oldVersion, type) };
+
   return releases.map((release) => (release.name === STORYBOOK_PACKAGE ? followed : release));
 }
 

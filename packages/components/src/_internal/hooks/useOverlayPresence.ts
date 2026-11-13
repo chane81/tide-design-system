@@ -21,6 +21,7 @@ export function useOverlayPresence(isOpen: boolean, ref: RefObject<HTMLElement |
     // 요소가 없거나 getAnimations를 지원하지 않으면 바로 뺀다.
     if (!element || typeof element.getAnimations !== "function") {
       setPresent(false);
+
       return;
     }
     let cancelled = false;
@@ -31,6 +32,7 @@ export function useOverlayPresence(isOpen: boolean, ref: RefObject<HTMLElement |
       const animations = element.getAnimations();
       if (animations.length === 0) {
         setPresent(false);
+
         return;
       }
       void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
@@ -38,6 +40,7 @@ export function useOverlayPresence(isOpen: boolean, ref: RefObject<HTMLElement |
       });
     };
     waitForExit();
+
     return () => {
       cancelled = true;
     };

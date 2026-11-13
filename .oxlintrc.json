@@ -1,7 +1,14 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["@stylistic/eslint-plugin"],
   "categories": {
     "correctness": "error"
+  },
+  "rules": {
+    "@stylistic/padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "*", "next": "return" }
+    ]
   },
   "ignorePatterns": ["**/dist/**", "**/storybook-static/**", "**/coverage/**", "**/.next/**"]
 }

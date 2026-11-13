@@ -34,6 +34,7 @@ async function loadFamilies(file: string): Promise<ColorFamilyDefinition[]> {
   const duplicated = names.filter((name, index) => names.indexOf(name) !== index);
   if (duplicated.length > 0)
     throw new Error(`같은 색 이름이 두 번 나온다: ${duplicated.join(", ")}`);
+
   return families;
 }
 
@@ -58,10 +59,12 @@ async function build(file: string): Promise<number> {
     process.stderr.write(
       "대비 기준에 못 미쳐 CSS를 만들지 않았다. 스케일을 고치거나 overrides로 슬롯 단계를 바꾼다.\n",
     );
+
     return 1;
   }
   const header = `/* tide-color가 ${file}에서 만들었다. 직접 고치지 않는다. Tide CSS 다음에 불러온다. */\n`;
   process.stdout.write(header + colorFamilyCss(families));
+
   return 0;
 }
 
@@ -69,12 +72,14 @@ async function main(args: string[]): Promise<number> {
   const [command, file, ...rest] = args;
   if (command !== "build" || !file || rest.length > 0) {
     process.stderr.write(`${usage}\n`);
+
     return 2;
   }
   try {
     return await build(file);
   } catch (error) {
     process.stderr.write(`tide-color: ${error instanceof Error ? error.message : String(error)}\n`);
+
     return 1;
   }
 }

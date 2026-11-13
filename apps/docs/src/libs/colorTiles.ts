@@ -44,12 +44,14 @@ const textCandidates = [color.black, color.white] as const;
 /** 바탕 위 글자색. 후보 중 대비가 더 높은 쪽을 고른다(같으면 진한 글자). */
 export function tileTextColor(background: string): string {
   const [dark, light] = textCandidates;
+
   return contrastRatio(light, background) > contrastRatio(dark, background) ? light : dark;
 }
 
 // sRGB 채널(0~255 hex 두 자리) → 선형 값. sRGB 전달 함수(IEC 61966-2-1)의 역이다.
 function linearChannel(hex: string, index: number): number {
   const channel = Number.parseInt(hex.slice(index, index + 2), 16) / 255;
+
   return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
 }
 
@@ -66,6 +68,7 @@ export function oklchChroma(hex: string): number {
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
   const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
   const bAxis = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+
   return Math.hypot(a, bAxis);
 }
 

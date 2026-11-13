@@ -39,6 +39,7 @@ export function nameRemovalProblem(
   if (hasIconsMinor) return null;
   const shown = removed.slice(0, 20).join(", ");
   const more = removed.length > 20 ? ` 외 ${removed.length - 20}개` : "";
+
   return [
     `아이콘 이름표(packages/icons/icon-names.json)에서 키 ${removed.length}개가 빠졌다: ${shown}${more}`,
     `이름표 키를 지우거나 바꾸는 것은 breaking이다. "${ICONS_PACKAGE}": minor changeset을 더한다(CONTRIBUTING.md 「버전 규칙」).`,

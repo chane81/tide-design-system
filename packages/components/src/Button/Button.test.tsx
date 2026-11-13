@@ -25,6 +25,7 @@ declare module "@tide-design/foundation" {
 
 function rgb(hex: string): string {
   const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+
   return `rgb(${r}, ${g}, ${b})`;
 }
 
@@ -43,6 +44,7 @@ async function resolve(
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -236,6 +238,7 @@ describe("스타일 축", () => {
         document.body.append(div);
         const resolved = getComputedStyle(div)[property];
         div.remove();
+
         return resolved;
       };
       const button = page.getByRole("button").element() as HTMLElement;
@@ -412,6 +415,7 @@ describe("press 축소", () => {
     await new Promise((resolve) => setTimeout(resolve, 250));
     const scale = getComputedStyle(page.getByTestId("target").element()).scale;
     await commands.mouseUp();
+
     return scale;
   }
 

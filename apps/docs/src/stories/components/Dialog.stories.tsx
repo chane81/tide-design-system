@@ -144,6 +144,7 @@ export const Controlled: Story = {
   render: function Controlled() {
     const [name, setName] = useState("디자인 리뷰");
     const [isOpen, setOpen] = useState(false);
+
     return (
       <Dialog open={isOpen} onOpenChange={setOpen}>
         <DialogTrigger render={<Button variant="outline" />}>이름: {name}</DialogTrigger>

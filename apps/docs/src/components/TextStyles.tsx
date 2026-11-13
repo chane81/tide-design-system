@@ -48,6 +48,7 @@ export function TextStyles(): ReactElement {
           {textStyleNames.map((name) => {
             const style = textStyle[name];
             const size = fontSize[style.fontSize];
+
             return (
               <tr key={name} className="border-b border-default align-top">
                 <td className="py-2 pr-4 font-mono whitespace-nowrap">text-{name}</td>

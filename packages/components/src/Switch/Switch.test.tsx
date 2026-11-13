@@ -31,6 +31,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).borderTopColor;
   probe.remove();
+
   return resolved;
 }
 
@@ -40,6 +41,7 @@ const settle = (): Promise<void> => new Promise((done) => setTimeout(done, 250))
 /** track(네이티브 input)과 thumb(바로 뒤 형제 span) */
 function parts(name: string): { track: HTMLInputElement; thumb: HTMLElement; root: HTMLElement } {
   const track = page.getByRole("switch", { name }).element() as HTMLInputElement;
+
   return {
     track,
     thumb: track.nextElementSibling as HTMLElement,
@@ -109,6 +111,7 @@ describe("제어와 비제어", () => {
   test("제어: checked와 onChange로 앱이 상태를 정한다", async () => {
     function Controlled(): ReactElement {
       const [on, setOn] = useState(false);
+
       return (
         <div>
           <Switch checked={on} onChange={(event) => setOn(event.target.checked)}>

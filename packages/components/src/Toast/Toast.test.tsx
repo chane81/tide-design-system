@@ -36,6 +36,7 @@ function resolve(property: "backgroundColor" | "color", value: string, color?: s
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
+
   return resolved;
 }
 
@@ -57,6 +58,7 @@ async function setup(
       <ToastRegion queue={queue} data-testid="region" {...props} />
     </div>,
   );
+
   return queue;
 }
 
@@ -68,6 +70,7 @@ async function show(queue: ToastQueue, options: ToastOptions): Promise<HTMLEleme
   queue.add(options);
   const locator = toastByName(String(options.title));
   await expect.element(locator).toBeVisible();
+
   return locator.element() as HTMLElement;
 }
 
@@ -94,6 +97,7 @@ async function addFaked(queue: ToastQueue, options: ToastOptions): Promise<HTMLE
     element.textContent?.startsWith(String(options.title)),
   );
   if (!found) throw new Error(`Toast를 찾지 못했다: ${String(options.title)}`);
+
   return found as HTMLElement;
 }
 
@@ -383,6 +387,7 @@ describe("퇴장 중 상호작용", () => {
   function pause(element: Element): Animation[] {
     const running = element.getAnimations();
     for (const animation of running) animation.pause();
+
     return running;
   }
 
@@ -429,6 +434,7 @@ describe("퇴장 중 상호작용", () => {
     const reopened = captureExit(first, () => {
       const inert = first.inert;
       queue.close(secondKey);
+
       return inert;
     });
     secondKey = queue.add({ title: "둘", timeout: null });
@@ -449,6 +455,7 @@ describe("다른 오버레이와 함께", () => {
     const queue = new ToastQueue();
     function App(): ReactElement {
       const [open, setOpen] = useState(true);
+
       return (
         <div data-theme="light">
           <Dialog open={open} onOpenChange={setOpen}>
@@ -573,6 +580,7 @@ describe("등장과 퇴장 motion", () => {
       expect(style.transitionProperty).toBe("opacity, display");
       expect(running.has("filter")).toBe(false);
       expect(running.has("translate")).toBe(false);
+
       return;
     }
     expect(style.transitionProperty).toBe("opacity, filter, translate, display");
@@ -585,6 +593,7 @@ describe("등장과 퇴장 motion", () => {
     const key = queue.add({ title: "저장했습니다" });
     const toast = await (async () => {
       await expect.element(toastByName("저장했습니다")).toBeVisible();
+
       return toastByName("저장했습니다").element() as HTMLElement;
     })();
     await settle(toast);

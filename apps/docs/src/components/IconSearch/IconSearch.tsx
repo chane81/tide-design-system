@@ -86,6 +86,7 @@ export function IconSearch(): ReactElement {
       <ul style={styles.grid}>
         {results.map(({ name }) => {
           const Icon = iconByName[name];
+
           return (
             <li key={name}>
               <button type="button" onClick={() => void copy(name)} style={styles.button}>

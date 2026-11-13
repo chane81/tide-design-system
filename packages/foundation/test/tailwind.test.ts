@@ -13,6 +13,7 @@ async function buildCss(candidates: string[]): Promise<string> {
     base: packageDir,
     onDependency: () => {},
   });
+
   return compiler.build(candidates);
 }
 
@@ -21,6 +22,7 @@ function ruleBody(css: string, className: string): string | undefined {
   // CSS 선택자에서는 `:`가 `\:`로 이스케이프된다.
   const selector = className.replace(/:/g, "\\:");
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
   return new RegExp(`\\.${escaped}\\s*\\{([^}]*)\\}`).exec(css)?.[1];
 }
 

@@ -10,6 +10,7 @@ import { render } from "vitest-browser-react";
 /** hex를 getComputedStyle이 돌려주는 rgb() 표기로 바꾼다 */
 function rgb(hex: string): string {
   const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+
   return `rgb(${r}, ${g}, ${b})`;
 }
 

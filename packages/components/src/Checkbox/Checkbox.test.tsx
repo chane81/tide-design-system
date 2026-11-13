@@ -29,6 +29,7 @@ function resolve(value: string): string {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).color;
   probe.remove();
+
   return resolved;
 }
 
@@ -92,6 +93,7 @@ describe("체크", () => {
   test("제어: checked와 onChange로 앱이 값을 정한다", async () => {
     function Controlled(): ReactElement {
       const [checked, setChecked] = useState(false);
+
       return (
         <>
           <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)}>
@@ -149,6 +151,7 @@ describe("indeterminate", () => {
       const [items, setItems] = useState([true, false]);
       const all = items.every(Boolean);
       const some = items.some(Boolean);
+
       return (
         <>
           <Checkbox
@@ -395,6 +398,7 @@ describe("hover", () => {
         page.getByRole("checkbox", { name }).element(),
       ).backgroundColor;
       await commands.mouseUp();
+
       return value;
     };
     const checked = await pressed("checked", "체크됨");
@@ -408,6 +412,7 @@ describe("hover", () => {
         resolve("Canvas"),
         resolve("Highlight"),
       ]);
+
       return;
     }
     expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));

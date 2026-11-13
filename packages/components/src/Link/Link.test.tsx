@@ -28,6 +28,7 @@ async function resolveColor(value: string): Promise<string> {
   document.body.append(probe);
   const resolved = getComputedStyle(probe).color;
   probe.remove();
+
   return resolved;
 }
 

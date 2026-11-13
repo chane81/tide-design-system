@@ -42,8 +42,10 @@ function mergeRefs<T>(...refs: Ref<T>[]): RefCallback<T> {
     const cleanups = refs.map((ref) => {
       if (typeof ref === "function") return ref(node);
       if (ref) ref.current = node;
+
       return undefined;
     });
+
     return () => {
       refs.forEach((ref, index) => {
         const cleanup = cleanups[index];
@@ -64,6 +66,7 @@ function mergeProps(elementProps: AnyProps, props: AnyProps): AnyProps {
     if (isHandlerName(name) && typeof existing === "function" && typeof value === "function") {
       merged[name] = (...args: unknown[]) => {
         (existing as Handler)(...args);
+
         return (value as Handler)(...args);
       };
     } else if (name === "style" && existing && typeof existing === "object") {
@@ -74,6 +77,7 @@ function mergeProps(elementProps: AnyProps, props: AnyProps): AnyProps {
       merged[name] = value;
     }
   }
+
   return merged;
 }
 
@@ -91,5 +95,6 @@ export function renderElement({
   const elementProps = render.props as AnyProps;
   const merged = mergeProps(elementProps, rest);
   merged["className"] = cn(baseClassName, elementProps["className"] as string, className);
+
   return cloneElement(render, merged);
 }

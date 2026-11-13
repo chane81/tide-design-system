@@ -105,6 +105,7 @@ export const Controlled: Story = {
   name: "제어 입력",
   render: function Controlled(): ReactElement {
     const [value, setValue] = useState("");
+
     return (
       <div className="flex max-w-sm flex-col gap-2">
         <Field label="닉네임" description={`${value.length}/12자`}>

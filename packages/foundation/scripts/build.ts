@@ -70,6 +70,7 @@ const tideSemanticVar = (className: string): string => `--tide-${className}`;
  */
 function cssValue(value: SemanticColorValue): string {
   if (value === "transparent") return "transparent";
+
   return typeof value === "string" ? `var(${tidePrimitiveVar(value)})` : colorValueHex(value);
 }
 

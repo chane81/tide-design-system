@@ -131,6 +131,7 @@ export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement
               light: colorSlotHex(name, "light"),
               dark: colorSlotHex(name, "dark"),
             }).filter((result) => result.theme === theme);
+
             return (
               <tr key={name} className="border-b border-default">
                 <th scope="row" className="py-1 pr-4 text-left font-mono font-normal">
@@ -139,6 +140,7 @@ export function ColorNameContrast({ theme }: { theme: ThemeName }): ReactElement
                 {groups.map((group) => {
                   const matched = results.filter((result) => inGroup(result, group.match));
                   const lowest = Math.min(...matched.map((result) => result.ratio));
+
                   return (
                     <td key={group.key} className="py-1 pr-4 font-mono">
                       {lowest.toFixed(2)}:1{" "}
@@ -179,6 +181,7 @@ function percent(amount: number): string {
 function slotValueLabel(value: SlotValue): string {
   if (typeof value !== "object") return String(value);
   if ("mix" in value) return `${value.mix[0]}·${value.mix[1]} 반씩`;
+
   return `${value.step} + ${value.overlay} ${percent(value.amount)}`;
 }
 
@@ -213,6 +216,7 @@ export function ColorSlotRules(): ReactElement {
         <tbody>
           {colorSlots.map((slot) => {
             const utility = accentUtilities.find((item) => item.slot === slot);
+
             return (
               <tr key={slot} className="border-b border-default">
                 <th scope="row" className="py-1 pr-4 text-left font-mono font-normal">

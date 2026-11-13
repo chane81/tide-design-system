@@ -90,6 +90,7 @@ export const Horizontal: Story = {
 
 function ControlledExample(): ReactElement {
   const [value, setValue] = useState("fast");
+
   return (
     <div className="flex flex-col gap-2">
       <Field label="배송 방법" group>

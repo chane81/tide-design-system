@@ -174,6 +174,7 @@ export const OtherIcon: Story = {
 
 function LoadingDemo(): ReactElement {
   const [loading, setLoading] = useState(false);
+
   return (
     <IconButton
       aria-label="새로 고침"
