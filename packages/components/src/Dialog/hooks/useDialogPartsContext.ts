@@ -13,5 +13,6 @@ export const DialogPartsContext = createContext<DialogPartsContextValue | null>(
 export function useDialogPartsContext(part: string): DialogPartsContextValue {
   const context = use(DialogPartsContext);
   if (!context) throw new Error(`${part}는 DialogContent 안에 둔다.`);
+
   return context;
 }

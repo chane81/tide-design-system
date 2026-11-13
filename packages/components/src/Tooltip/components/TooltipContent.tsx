@@ -24,6 +24,7 @@ export function TooltipContent(props: TooltipContentProps): ReactElement | null 
   const tooltipRef = useRef<HTMLDivElement>(null);
   const present = useOverlayPresence(context.state.isOpen, tooltipRef);
   if (!present) return null;
+
   // Tooltip은 포커스를 받지 않으므로 FocusScope 없이 portal만 한다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen} focusManagement={false}>

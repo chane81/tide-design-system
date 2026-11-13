@@ -16,5 +16,6 @@ export const AccordionItemContext = createContext<AccordionItemContextValue | nu
 export function useAccordionItemContext(part: string): AccordionItemContextValue {
   const context = use(AccordionItemContext);
   if (!context) throw new Error(`${part}는 AccordionItem 안에 둔다.`);
+
   return context;
 }

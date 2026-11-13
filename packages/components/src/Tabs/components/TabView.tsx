@@ -36,6 +36,7 @@ export function TabView({ node, state, context }: TabViewProps): ReactElement {
   } = node.props as TabProps & { isDisabled?: boolean };
   const { tabProps, isSelected, isDisabled } = useTab({ key: node.key }, state, tabRef);
   const mergedRef = useMemo(() => mergeRefs(ref, tabRef), [ref, tabRef]);
+
   return (
     <button
       {...mergeProps(props, tabProps)}

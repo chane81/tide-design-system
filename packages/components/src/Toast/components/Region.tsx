@@ -30,6 +30,7 @@ export function Region({
   // regionProps: role="region" 랜드마크·이름, hover·포커스 동안 시간 멈춤, 닫힌 Toast의 포커스 옮기기,
   // data-react-aria-top-layer(열린 모달 Popover·Dialog가 바깥을 inert로 막을 때 빠지고, 눌러도 그 오버레이를 닫지 않는다).
   const { regionProps } = useToastRegion({ "aria-label": ariaLabel }, state, regionRef);
+
   return (
     <div {...mergeProps(props, regionProps)} ref={mergedRef} className={cn(regionClass, className)}>
       {entries.map((entry) => (

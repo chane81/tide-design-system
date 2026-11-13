@@ -13,6 +13,7 @@ export function ListBoxSectionView({ node, state }: ViewProps): ReactElement {
     heading: node.rendered,
     "aria-label": node["aria-label"],
   });
+
   return (
     <div {...itemProps} className={className}>
       {node.rendered != null && (

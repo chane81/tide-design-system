@@ -104,6 +104,7 @@ export function Tabs({
     }),
     [value, setValue, orientation, activationMode, baseId],
   );
+
   return (
     <div
       {...props}

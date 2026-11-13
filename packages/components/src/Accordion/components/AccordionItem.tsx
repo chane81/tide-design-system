@@ -59,6 +59,7 @@ export function AccordionItem({
     }),
     [state.isExpanded, disabled, buttonProps, panelProps],
   );
+
   return (
     <div
       {...props}

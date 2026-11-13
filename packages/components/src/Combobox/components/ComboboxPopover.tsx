@@ -30,6 +30,7 @@ export interface ComboboxPopoverProps {
 export function ComboboxPopover(props: ComboboxPopoverProps): ReactElement | null {
   const present = useOverlayPresence(props.state.isOpen, props.popoverRef);
   if (!present) return null;
+
   return (
     <OverlayPortal isExiting={!props.state.isOpen} focusManagement={false}>
       <ComboboxPopoverInner {...props} />

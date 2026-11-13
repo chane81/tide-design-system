@@ -36,14 +36,26 @@ export interface MenuProps {
  * 안에 `MenuTrigger` 하나와 `MenuContent` 하나를 둔다.
  */
 export function Menu({ open, defaultOpen, onOpenChange, children }: MenuProps): ReactElement {
-  const state = useMenuTriggerState({ isOpen: open, defaultOpen, onOpenChange });
+  const state = useMenuTriggerState({
+    isOpen: open,
+    defaultOpen,
+    onOpenChange,
+  });
   const triggerRef = useRef<HTMLElement>(null);
   const { menuTriggerProps, menuProps } = useMenuTrigger<unknown>({}, state, triggerRef);
   const generatedTriggerId = useId();
   const [triggerId, setTriggerId] = useState(generatedTriggerId);
   const value = useMemo<MenuContextValue>(
-    () => ({ state, triggerRef, menuTriggerProps, menuProps, triggerId, setTriggerId }),
+    () => ({
+      state,
+      triggerRef,
+      menuTriggerProps,
+      menuProps,
+      triggerId,
+      setTriggerId,
+    }),
     [state, menuTriggerProps, menuProps, triggerId],
   );
+
   return <MenuContext value={value}>{children}</MenuContext>;
 }

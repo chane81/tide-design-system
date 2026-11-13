@@ -38,6 +38,7 @@ export function MenuItemView({ node, tree }: ViewProps): ReactElement {
   // useMenuItem은 글자·설명·단축키를 따로 둘 자리의 id를 aria-labelledby·describedby로 건다. Tide 항목은 내용 전체가
   // 이름이므로 그 id를 빼고 앱이 준 값만 남긴다(없는 id를 가리키지 않게).
   const merged = mergeProps(props, menuItemProps);
+
   return (
     <div
       {...merged}

@@ -15,6 +15,7 @@ export function MenuSectionView({ node, tree }: ViewProps): ReactElement {
     heading: node.rendered,
     "aria-label": node["aria-label"],
   });
+
   return (
     <div {...itemProps} className={className}>
       {node.rendered != null && (

@@ -66,5 +66,6 @@ export function Tooltip({
     () => ({ state, triggerRef, triggerProps, tooltipId: tooltipProps.id }),
     [state, triggerProps, tooltipProps.id],
   );
+
   return <TooltipContext value={value}>{children}</TooltipContext>;
 }

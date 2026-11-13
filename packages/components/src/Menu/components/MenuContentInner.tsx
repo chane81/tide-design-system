@@ -74,6 +74,7 @@ export function MenuContentInner({
             <MenuItemView key={node.key} node={node} tree={tree} />
           );
         if (!separator) return element;
+
         return [
           <div
             key={`${String(node.key)}-separator`}

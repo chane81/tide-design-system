@@ -82,6 +82,7 @@ export function TagGroup({
     () => ({ onRemove, removeLabel }),
     [onRemove, removeLabel],
   );
+
   return (
     <div {...mergeProps(props, gridProps)} ref={mergedRef} className={cn(tagGroupClass, className)}>
       <TagGroupContext value={context}>

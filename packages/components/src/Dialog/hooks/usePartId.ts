@@ -7,7 +7,9 @@ export function usePartId(id: string | undefined, register: (id: string | null) 
   const resolved = id ?? generated;
   useLayoutEffect(() => {
     register(resolved);
+
     return () => register(null);
   }, [resolved, register]);
+
   return resolved;
 }

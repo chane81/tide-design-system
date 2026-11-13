@@ -62,6 +62,7 @@ export function ToastRegion({ queue, ...props }: ToastRegionProps): ReactElement
   }, []);
 
   if (entries.length === 0) return null;
+
   return (
     <OverlayPortal isExiting={false} focusManagement={false}>
       <Region {...props} state={state} entries={entries} onExited={onExited} />

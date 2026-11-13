@@ -51,5 +51,6 @@ export function Popover({ open, defaultOpen, onOpenChange, children }: PopoverPr
     }),
     [state, triggerProps, overlayProps.id, triggerId],
   );
+
   return <PopoverContext value={value}>{children}</PopoverContext>;
 }

@@ -24,6 +24,7 @@ export function PopoverContent(props: PopoverContentProps): ReactElement | null 
   const popoverRef = useRef<HTMLDivElement>(null);
   const present = useOverlayPresence(context.state.isOpen, popoverRef);
   if (!present) return null;
+
   // 역할 hook(useDialog)이 포커스 가두기를 Overlay context로 요청하므로 hook을 부르는 쪽이 portal 안에 있어야 한다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen}>

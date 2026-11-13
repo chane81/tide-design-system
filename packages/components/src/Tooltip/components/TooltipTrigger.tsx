@@ -43,6 +43,7 @@ export function TooltipTrigger({
     // 기본 요소는 class가 없다. className을 주면 그대로 붙는다.
     return createElement("button", { type: "button", ...merged, className });
   }
+
   return renderElement({
     defaultElement: "button",
     render,

@@ -17,5 +17,6 @@ export const TabsContext = createContext<TabsContextValue | null>(null);
 export function useTabsContext(part: string): TabsContextValue {
   const context = use(TabsContext);
   if (!context) throw new Error(`${part}는 Tabs 안에 둔다.`);
+
   return context;
 }

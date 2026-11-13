@@ -66,6 +66,7 @@ export function Accordion({
     // 같은 값이 다시 오는 일은 없다.
     onExpandedChange: onValueChange && ((keys) => onValueChange([...keys].map(String))),
   });
+
   return (
     <div {...props} ref={ref} className={cn(accordionClass, className)}>
       <AccordionContext value={state}>{children}</AccordionContext>

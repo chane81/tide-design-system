@@ -29,5 +29,6 @@ export function DialogClose({
   };
   const merged = { ...props, onClick: handleClick, className };
   if (!render) return createElement("button", { type: "button", ...merged });
+
   return renderElement({ defaultElement: "button", render, baseClassName: "", props: merged });
 }

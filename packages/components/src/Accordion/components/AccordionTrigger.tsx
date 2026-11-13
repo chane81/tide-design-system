@@ -39,6 +39,7 @@ export function AccordionTrigger({
   const { buttonProps } = useButton(item.buttonProps, buttonRef);
   const mergedRef = useMemo(() => mergeRefs(ref, buttonRef), [ref, buttonRef]);
   const Heading = `h${level}` as const;
+
   return (
     <Heading className="flex">
       <button

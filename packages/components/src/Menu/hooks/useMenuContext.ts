@@ -23,5 +23,6 @@ export const MenuContext = createContext<MenuContextValue | null>(null);
 export function useMenuContext(part: string): MenuContextValue {
   const context = use(MenuContext);
   if (!context) throw new Error(`${part}는 Menu 안에 둔다.`);
+
   return context;
 }

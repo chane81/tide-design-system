@@ -30,6 +30,7 @@ export function AccordionPanel({
 }: AccordionPanelProps): ReactElement {
   const item = useAccordionItemContext("AccordionPanel");
   const mergedRef = useMemo(() => mergeRefs(ref, item.panelRef), [ref, item.panelRef]);
+
   return (
     <div
       {...mergeProps(props, item.panelProps)}

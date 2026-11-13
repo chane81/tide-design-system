@@ -14,6 +14,7 @@ export type DialogTitleProps = ComponentProps<"h2">;
 export function DialogTitle({ id, className, ...props }: DialogTitleProps): ReactElement {
   const { alert, setTitleId } = useDialogPartsContext("DialogTitle");
   const resolvedId = usePartId(id, setTitleId);
+
   return (
     <h2
       {...props}

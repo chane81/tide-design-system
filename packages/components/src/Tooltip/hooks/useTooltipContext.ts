@@ -18,5 +18,6 @@ export const TooltipContext = createContext<TooltipContextValue | null>(null);
 export function useTooltipContext(part: string): TooltipContextValue {
   const context = use(TooltipContext);
   if (!context) throw new Error(`${part}는 Tooltip 안에 둔다.`);
+
   return context;
 }

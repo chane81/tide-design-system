@@ -42,6 +42,7 @@ export function DialogTrigger({
   // 내용에 이름이 없을 때 트리거 글자를 이름으로 쓰려고 id를 알린다. 트리거가 빠지면 지운다.
   useLayoutEffect(() => {
     setTriggerId(resolvedId);
+
     return () => setTriggerId(null);
   }, [resolvedId, setTriggerId]);
 
@@ -55,6 +56,7 @@ export function DialogTrigger({
     // 기본 요소는 class가 없다. className을 주면 그대로 붙는다.
     return createElement("button", { type: "button", ...merged, className });
   }
+
   return renderElement({
     defaultElement: "button",
     render,

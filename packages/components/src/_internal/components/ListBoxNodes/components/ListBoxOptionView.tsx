@@ -37,6 +37,7 @@ export function ListBoxOptionView({ node, state }: ViewProps): ReactElement {
   // 빼고 앱이 준 값만 남긴다(없는 id를 가리키지 않게, Menu 항목과 같다). 옵션 id는 React Aria가 정한다
   // (목록의 aria-activedescendant·스크롤에 쓴다).
   const merged = mergeProps(props, optionProps);
+
   return (
     <div
       {...merged}

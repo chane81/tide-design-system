@@ -27,6 +27,7 @@ interface ListBoxNodesProps {
  */
 export function ListBoxNodes({ state }: ListBoxNodesProps): ReactNode {
   const nodes = [...state.collection];
+
   return nodes.map((node, index) => {
     const previous = nodes[index - 1];
     const separator =
@@ -38,6 +39,7 @@ export function ListBoxNodes({ state }: ListBoxNodesProps): ReactNode {
         <ListBoxOptionView key={node.key} node={node} state={state} />
       );
     if (!separator) return element;
+
     return [
       <div
         key={`${String(node.key)}-separator`}

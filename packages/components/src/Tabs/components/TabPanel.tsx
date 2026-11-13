@@ -23,6 +23,7 @@ export function TabPanel({
 }: TabPanelProps): ReactElement | null {
   const context = useTabsContext("TabPanel");
   if (context.value !== value) return null;
+
   return (
     <div
       {...props}

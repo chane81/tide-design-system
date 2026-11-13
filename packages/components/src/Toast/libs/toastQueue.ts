@@ -14,6 +14,7 @@ function resolveTimeout(options: ToastOptions): number | undefined {
   const timeout = options.timeout === undefined ? minTimeout : options.timeout;
   // Infinity·NaN은 setTimeout에서 바로 끝나므로 자동 닫힘 없음으로 본다.
   if (timeout === null || !Number.isFinite(timeout)) return undefined;
+
   return Math.max(timeout, minTimeout);
 }
 
@@ -33,6 +34,7 @@ export class ToastQueue {
   /** Toast를 띄우고 key를 돌려준다. 새 Toast가 맨 앞(영역의 아래)에 온다. */
   add(options: ToastOptions): string {
     const { timeout: _timeout, onClose, ...content } = options;
+
     return queueOf(this).add(content, { timeout: resolveTimeout(options), onClose });
   }
 
@@ -50,5 +52,6 @@ export class ToastQueue {
 export function queueOf(queue: ToastQueue): StatelyToastQueue<ToastContent> {
   const stately = statelyQueues.get(queue);
   if (!stately) throw new Error("ToastRegion의 queue에는 new ToastQueue()로 만든 큐를 넘긴다.");
+
   return stately;
 }

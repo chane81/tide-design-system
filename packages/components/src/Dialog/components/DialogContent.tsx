@@ -26,6 +26,7 @@ export function DialogContent(props: DialogContentProps): ReactElement | null {
   // 바깥 막이 화면에서 빠지는(display) 전환을 기다린다. 안의 Dialog 전환도 같은 duration이다.
   const present = useOverlayPresence(context.state.isOpen, backdropRef);
   if (!present) return null;
+
   // 역할 hook(useDialog)·useModalOverlay가 포커스 가두기를 Overlay context로 요청하므로 portal 안에서 부른다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen}>

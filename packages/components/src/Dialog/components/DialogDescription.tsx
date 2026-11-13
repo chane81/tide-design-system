@@ -18,5 +18,6 @@ export function DialogDescription({
 }: DialogDescriptionProps): ReactElement {
   const { setDescriptionId } = useDialogPartsContext("DialogDescription");
   const resolvedId = usePartId(id, setDescriptionId);
+
   return <p {...props} id={resolvedId} className={cn("text-body-md text-muted", className)} />;
 }

@@ -21,5 +21,6 @@ export const PopoverContext = createContext<PopoverContextValue | null>(null);
 export function usePopoverContext(part: string): PopoverContextValue {
   const context = use(PopoverContext);
   if (!context) throw new Error(`${part}는 Popover 안에 둔다.`);
+
   return context;
 }

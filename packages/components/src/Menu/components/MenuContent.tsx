@@ -26,6 +26,7 @@ export function MenuContent(props: MenuContentProps): ReactElement | null {
   const popoverRef = useRef<HTMLDivElement>(null);
   const present = useOverlayPresence(context.state.isOpen, popoverRef);
   if (!present) return null;
+
   // Menu는 항목에 포커스가 오므로 FocusScope로 감싸(focusManagement 기본값) 닫힐 때 트리거로 포커스를 돌려준다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen}>

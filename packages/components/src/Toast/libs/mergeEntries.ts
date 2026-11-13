@@ -13,5 +13,6 @@ export function mergeEntries(
     if (visibleKeys.has(entry.toast.key)) return;
     next.splice(Math.min(index, next.length), 0, { toast: entry.toast, open: false });
   });
+
   return next;
 }

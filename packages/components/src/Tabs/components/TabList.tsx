@@ -53,6 +53,7 @@ export function TabList({ ref, className, children, ...props }: TabListProps): R
     listRef,
   );
   const mergedRef = useMemo(() => mergeRefs(ref, listRef), [ref, listRef]);
+
   return (
     <div
       {...mergeProps(props, tabListProps)}

@@ -52,6 +52,7 @@ export function TagView({ node, state }: TagViewProps): ReactElement {
   );
   const mergedRef = useMemo(() => mergeRefs(ref, rowRef), [ref, rowRef]);
   const onRemove = context?.onRemove;
+
   return (
     <div
       {...mergeProps(props, rowProps)}
