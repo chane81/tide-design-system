@@ -1,11 +1,5 @@
-// Version PR 제목을 계산해 표준 출력에 찍는다(ADR 0020).
-//
-//   node scripts/version-pr-title.ts <changeset status --output JSON 파일>
-//
-// changesets/action v2.1.2의 `pr-title`에는 버전 자리 표시자가 없어서(version/action.yml, src/run.ts)
-// release.yml version job이 미리 계산해 넘긴다. 규칙은 scripts/release-scope.ts에 있다.
-// 제목은 `changeset version` 전에 셈하므로, 그때 `storybook-follow.ts`가 더할 Storybook bump(ADR 0021)를
-// `withStorybookFollow`로 미리 반영한다.
+// Version PR 제목을 계산해 찍는다. 액션의 pr-title에 버전 자리 표시자가 없어 release.yml이 미리 넘긴다(ADR 0020).
+// `changeset version` 전에 셈하므로 storybook-follow.ts가 더할 bump(ADR 0021)를 미리 반영한다.
 import { readFileSync } from "node:fs";
 
 import {

@@ -4,16 +4,11 @@ import { HashIcon } from "@tide-design/icons";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Tag 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(←→·Home/End, Delete·Backspace 제거와 포커스 이동, 지우기 버튼 이름,
-// ring, forced-colors)은 components의 `Tag.test.tsx`에 있다.
-//
-// 키보드 포커스 상태(focus-ring)의 a11y도 보려고 story마다 play에서 Tab으로 첫 태그에 들어간다.
+// focus-ring 상태의 a11y도 보려고 story마다 play에서 Tab으로 첫 태그에 들어간다.
 
 const meta = {
   title: "Component/Tag",
   component: TagGroup,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: { Tag },
   argTypes: {
     children: { control: false, table: { type: { summary: "ReactNode" } } },

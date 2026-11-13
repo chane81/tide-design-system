@@ -1,10 +1,5 @@
-// 릴리스 묶음(TDS, Storybook)을 가르는 규칙. ADR 0020, docs/research/changesets-split-version-prs.md 추천안 (a).
-//
-// - TDS: npm에 내는 세 패키지. `.changeset/config.json`의 `fixed`로 언제나 같은 버전이다(ADR 0008).
-// - Storybook: private 앱 `@tide-design/docs`(apps/docs). `privatePackages.version`으로 자기 changeset으로만 버전이 오른다.
-//
-// Version PR은 하나다. 제목만 들어간 묶음에 따라 정한다. 이 파일은 순수 함수만 두고,
-// git·파일을 읽는 일은 `version-pr-title.ts`, `storybook-release.ts`, `check-changesets.ts`가 한다.
+// 릴리스 묶음(TDS: fixed 세 패키지, Storybook: private `@tide-design/docs`)을 가르는 순수 함수(ADR 0020).
+// git·파일을 읽는 일은 version-pr-title.ts, storybook-release.ts, check-changesets.ts가 한다.
 
 /** npm에 내는 TDS 패키지. 문서와 같은 순서(Token → 아이콘 → Component). */
 export const TDS_PACKAGES = [
@@ -33,9 +28,8 @@ function isTds(name: string): boolean {
 }
 
 /**
- * releases에서 묶음별 다음 버전을 꺼낸다. 버전이 실제로 오르는 항목(`type !== "none"`)만 센다.
- * `none`은 버전 관리 대상이지만 이번에 오르지 않는 패키지다(changeset status가 계획에 넣는다).
- * TDS 세 패키지는 fixed라 버전이 하나여야 한다. 다르면 설정이 깨진 것이라 오류를 던진다.
+ * releases에서 묶음별 다음 버전을 꺼낸다. 실제로 오르는 항목(`type !== "none"`)만 센다.
+ * TDS는 fixed라 버전이 하나여야 하고, 다르면 설정이 깨진 것이라 던진다.
  */
 export function bundleVersions(releases: readonly StatusRelease[]): BundleVersions {
   const bumped = releases.filter((release) => release.type !== "none");
@@ -51,9 +45,8 @@ export function bundleVersions(releases: readonly StatusRelease[]): BundleVersio
 }
 
 /**
- * Version PR 제목. TDS만 `[TDS] Release <x>`, Storybook만 `[Storybook] Release <y>`,
- * 둘 다 `[TDS] Release <x> · [Storybook] Release <y>`. 둘 다 없으면 오류를 던진다
- * (version mode인데 오르는 묶음이 없으면 changeset이 잘못 쓰인 것이다).
+ * Version PR 제목. `[TDS] Release <x>`, `[Storybook] Release <y>`, 둘 다면 ` · `로 잇는다.
+ * 오르는 묶음이 없으면 던진다.
  */
 export function versionPrTitle(versions: BundleVersions): string {
   const parts: string[] = [];
@@ -65,9 +58,8 @@ export function versionPrTitle(versions: BundleVersions): string {
 }
 
 /**
- * 한 changeset 파일에 TDS 패키지와 Storybook이 함께 있으면 실패 메시지를 돌려준다.
- * 묶음을 나눠 `changeset version --ignore`로 따로 올리는 길(근거 문서 (b-2))을 열어 두려고 지금부터 막는다.
- * @changesets/assemble-release-plan 7.0.0은 `--ignore`를 쓸 때 섞인 changeset을 거부한다.
+ * 한 changeset에 TDS와 Storybook이 섞이면 실패 메시지를 돌려준다.
+ * 나중에 `changeset version --ignore`로 따로 올릴 수 있게 지금부터 막는다(ADR 0020).
  */
 export function mixedChangesetProblems(changesets: readonly ChangesetSummary[]): string[] {
   return changesets
@@ -88,20 +80,15 @@ export function storybookTag(version: string): string {
 }
 
 /**
- * main의 Storybook 버전을 릴리스해야 하는가. 0.0.0은 아직 한 번도 릴리스하지 않은 시작값이라 제외한다.
- * 그 밖에는 그 버전의 tag가 없으면 릴리스한다(배포 실패 뒤 다음 push에서 다시 시도된다).
+ * main의 Storybook 버전을 릴리스해야 하는가. 시작값 0.0.0은 제외한다.
+ * tag가 없으면 릴리스한다(배포 실패 뒤 다음 push에서 다시 시도된다).
  */
 export function shouldReleaseStorybook(version: string, tagExists: boolean): boolean {
   return version !== "0.0.0" && !tagExists;
 }
 
 // ── Storybook이 TDS 릴리스를 따라 오르기(ADR 0021) ──
-//
-// TDS 릴리스가 든 Version PR에 Storybook changeset이 없으면, Storybook도 TDS와 같은 단계로 올린다.
-// changesets 공식 기능(`___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH.updateInternalDependents: "always"`)은
-// 쓰지 않는다. docs는 TDS를 devDependencies로 받는데, @changesets/assemble-release-plan 7.0.0
-// `determineDependents`는 devDependencies 의존자를 `none`으로 두고, dependencies여도 patch만 준다.
-// 그래서 `pnpm release:version`이 `changeset version` 전에 아래 파일을 만든다(`scripts/storybook-follow.ts`).
+// changesets의 updateInternalDependents는 devDependencies 의존자를 올리지 않아 쓰지 않는다.
 
 /** 자동으로 더하는 Storybook changeset의 id(파일 이름 `.changeset/<id>.md`). */
 export const STORYBOOK_FOLLOW_ID = "storybook-follows-tds";

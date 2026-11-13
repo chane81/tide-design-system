@@ -12,10 +12,7 @@ import {
   screenshotTestId,
 } from "./test/commands";
 
-// Vitest projects(vitest 5 docs/guide/projects.md, docs/config/browser/playwright.md).
-// - unit: Node에서 순수 함수(cn 등)를 본다. 대상 옆 `src/**/*.test.ts`와 패키지 전체를 보는 `test/**/*.test.ts`.
-// - browser: 실제 Chromium에서 Component 동작(`src/`)과 패키지 CSS 전체(`test/foundation*.test.tsx`)를 본다. 두 번째 instance는 forced-colors와 reduced-motion을 켠다.
-//   instance의 provider 옵션은 부모와 병합되지 않고 덮어쓴다.
+// browser 두 번째 instance는 forced-colors·reduced-motion을 켠다. instance의 provider 옵션은 부모와 병합되지 않고 덮어쓴다.
 export default defineConfig({
   test: {
     // 로컬은 동시 실행 수를 줄인다(루트 vitest.workers.ts).
@@ -30,12 +27,7 @@ export default defineConfig({
       },
       {
         plugins: [tailwindcss()],
-        // next/link(CJS)를 처음부터 사전 번들한다. 실행 중에 발견하면 Vite가 다시 최적화하며 페이지를 새로 고쳐
-        // 차가운 캐시에서 테스트 파일 import가 실패한다(2026-11-10 로컬에서 재현).
-        // react-aria·react-stately(오버레이 hook, 티켓 25)도 같은 이유로 처음부터 사전 번들한다. Component는 루트 entry만 import한다.
-        // react-dom 루트 entry(test/motion.ts의 flushSync)도 같은 이유로 넣는다. 이 import를 더한 직후, 전에 만든 캐시가
-        // 남은 상태에서 실행 중에 발견되어 다시 최적화하며 「Vitest failed to find the runner」로 import에 실패했다
-        // (2026-11-12 로컬. 빈 캐시에서는 첫 scan이 찾아 재현되지 않는다).
+        // 실행 중 발견되면 Vite가 다시 최적화하며 페이지를 새로 고쳐 import가 실패한다. 그래서 처음부터 사전 번들한다.
         optimizeDeps: { include: ["next/link.js", "react-aria", "react-stately", "react-dom"] },
         test: {
           name: "browser",
@@ -45,8 +37,6 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright(),
-            // `:active`를 붙잡아 둘 마우스 명령(Button press 축소 단언용), 가려진 요소의 모서리 누름(Dialog 바깥 막 단언용),
-            // 요소 화면 찍기(Avatar fallback 단언용), 마우스를 페이지 밖으로 빼기(테스트마다 포인터 위치 초기화, browser-setup.ts)
             commands: { mouseDownOn, mouseDownAtCorner, mouseLeavePage, mouseUp, screenshotTestId },
             instances: [
               { browser: "chromium", name: "chromium" },

@@ -13,17 +13,12 @@ import { SettingsIcon } from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Popover 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(열고 닫기, 포커스, 위치, motion)은 components의 `Popover.test.tsx`에 있다.
-//
-// 내용은 document.body로 portal된다. 열린 상태의 a11y를 검사하려고 story마다 play에서 트리거를 눌러 연다.
-// play는 Docs 페이지에서 돌지 않으므로(storybook 10.6.5 `parameters.docs.story.autoplay` 기본 false) 문서에서는 닫혀 있다.
-// 열려 있는 동안 바깥은 inert가 되므로 문서 예시에 defaultOpen을 두지 않는다.
+// 열린 상태의 a11y를 보려고 story마다 play에서 연다(play는 Docs 페이지에서 돌지 않는다).
+// 열린 동안 바깥이 inert라 문서 예시에 defaultOpen을 두지 않는다.
 
 const meta = {
   title: "Component/Popover",
   component: Popover,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: { PopoverTrigger, PopoverContent },
   argTypes: {
     children: { control: false, table: { type: { summary: "ReactNode" } } },

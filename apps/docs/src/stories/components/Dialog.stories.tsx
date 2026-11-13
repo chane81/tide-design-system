@@ -19,17 +19,12 @@ import { TrashIcon } from "@tide-design/icons";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Dialog·AlertDialog 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(포커스 가두기·복귀, Esc, 바깥 막 누름, Select·Tooltip과 함께, motion)은
-// components의 `Dialog.test.tsx`에 있다.
-//
-// 내용은 document.body로 portal된다. 열린 상태의 a11y를 검사하려고 story마다 play에서 트리거를 눌러 연다.
-// play는 Docs 페이지에서 돌지 않으므로 문서에서는 닫혀 있다. 열린 동안 바깥은 inert라 문서 예시에 defaultOpen을 두지 않는다.
+// 열린 상태의 a11y를 보려고 story마다 play에서 연다(play는 Docs 페이지에서 돌지 않는다).
+// 열린 동안 바깥이 inert라 문서 예시에 defaultOpen을 두지 않는다.
 
 const meta = {
   title: "Component/Dialog",
   component: Dialog,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: {
     DialogTrigger,
     DialogContent,

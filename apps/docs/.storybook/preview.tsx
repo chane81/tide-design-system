@@ -9,8 +9,7 @@ import { DocsAnchor } from "../src/components/DocsAnchor";
 import { applyTheme, DEFAULT_THEME, THEMES, toTheme } from "./theme";
 import { ThemedDocsContainer } from "./ThemedDocsContainer";
 
-// addon-themes 툴바(storybook 10.6.6 DecoratorHelpers): 툴바에 Theme 목록을 등록하고 story마다 global을 읽는다.
-// story parameters의 `themes.themeOverride`가 있으면 그것을 먼저 쓴다.
+// story parameters의 `themes.themeOverride`가 툴바 값보다 먼저다.
 DecoratorHelpers.initializeThemeState([...THEMES], DEFAULT_THEME);
 
 const withTheme: Decorator = (Story, context) => {
@@ -38,12 +37,8 @@ import.meta.hot?.dispose(() => {
 
 applyTheme(DEFAULT_THEME);
 
-// solid 위 글자는 대비 하한이 4:1이다(ADR 0023, 티켓 47). axe의 color-contrast는 일반 글자에 4.5:1을 걸므로,
-// solid 위 글자(`*-on-solid` class)와 문서 견본 중 4:1 등급(`data-contrast-tier="4"`)만 따로 떼어 4:1로 검사한다.
-// 나머지 요소는 기본 color-contrast(4.5:1) 그대로다. 값 대비는 foundation의 대비 쌍 테스트가 따로 강제한다.
-// axe-core 4.14.0 axe.configure: rules[].selector로 대상 요소를 고르고, checks[]에 기존 evaluate('color-contrast-evaluate')를
-// 다른 옵션으로 등록한다. 옵션은 4.14.0 기본값(color-contrast check)에서 contrastRatio.normal.expected만 바꿨다.
-// runOnly가 tag로 고르므로 새 규칙에도 wcag2aa tag를 단다.
+// solid 위 글자와 4:1 등급 견본만 color-contrast에서 떼어 4:1로 검사한다(ADR 0023).
+// 옵션은 axe-core 4.14.0 color-contrast 기본값에서 normal.expected만 바꿨다. runOnly가 tag로 고르므로 wcag2aa를 단다.
 const lowerTierSelector = '[class*="on-solid"], [data-contrast-tier="4"]';
 const solidContrastConfig = {
   checks: [
@@ -88,13 +83,11 @@ const preview: Preview = {
   decorators: [withTheme],
   initialGlobals: {
     theme: DEFAULT_THEME,
-    // 기본 viewport는 desktop(1280×1024)이다. storybook 10.6.6 기본 목록 MINIMAL_VIEWPORTS의 `desktop` 키.
+    // Storybook 기본 목록 MINIMAL_VIEWPORTS의 `desktop`(1280×1024).
     viewport: { value: "desktop", isRotated: false },
   },
   parameters: {
-    // 사이드바 순서(storybook 10.6.6 `parameters.options.storySort`). order에 없는 항목은 method로 정렬한다.
-    // method의 실제 기본값은 'configure'(파일 순서)라서(10.6.6 preview runtime `storySort`) 'alphabetical'을 명시한다.
-    // Component 아래는 order를 주지 않으므로 이름순이다. locales를 고정해 실행 환경의 언어 설정에 따라 순서가 바뀌지 않게 한다.
+    // method 기본값은 'configure'(파일 순서)라 'alphabetical'을 명시한다. locales는 실행 환경 언어와 무관하게 고정한다.
     options: {
       storySort: {
         method: "alphabetical",
@@ -109,13 +102,11 @@ const preview: Preview = {
         ],
       },
     },
-    // MDX의 Markdown 문법 링크도 외부 주소는 새 탭으로 연다(storybook 10.6.6 `parameters.docs.components`).
-    // container는 Docs 페이지의 Storybook 색을 툴바 Theme에 맞춘다(storybook 10.6.6 `parameters.docs.container`).
+    // MDX의 Markdown 링크도 외부 주소는 새 탭으로 연다.
     docs: {
       components: { a: DocsAnchor },
       container: ThemedDocsContainer,
     },
-    // 모든 story에 axe 검사를 돌리고 위반을 테스트 실패로 다룬다(storybook 10.6.6 A11yParameters).
     // 의도적으로 잘못된 Don't story만 story parameters에서 `a11y: { test: "off" }`로 끈다.
     a11y: {
       test: "error",

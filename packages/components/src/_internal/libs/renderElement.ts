@@ -9,15 +9,8 @@ import {
 
 import { cn } from "./cn";
 
-// `render` prop 병합 유틸(ADR 0005). 루트가 DOM 요소 하나인 Component가 함께 쓴다.
-// 넘겨받은 요소에 Component의 props를 얹는다. 규칙:
-// - className: Component 기본 class → render 요소의 class → 사용자 className 순서로 `cn`에 넣는다(사용자가 이긴다).
-// - style: render 요소의 style 위에 Component(사용자) style을 덮는다.
-// - 이벤트 핸들러(`on` + 대문자): 둘 다 있으면 render 요소의 것을 먼저, Component(사용자)의 것을 나중에 부른다.
-// - ref: 둘 다 있으면 하나로 합친다. 하나만 있으면 그대로 넘긴다(서버 컴포넌트에서 함수를 새로 만들지 않게).
-// - children: Component에 준 children이 있으면 그것을, 없으면 render 요소의 children을 쓴다.
-// - 그 밖의 props는 Component(사용자) 쪽이 이긴다.
-// 이 파일은 hook·state·이벤트를 쓰지 않으므로 "use client"가 없다. 서버 컴포넌트에서도 쓸 수 있다.
+// `render` 요소에 Component props를 얹는다(ADR 0005). 충돌하면 사용자 쪽이 이기고, 핸들러는 render 요소 것을 먼저 부른다.
+// ref는 하나만 있으면 합치지 않고 그대로 넘긴다. 서버 컴포넌트에서 함수를 새로 만들지 않기 위해서다.
 
 /** `renderElement`의 인자 */
 export interface RenderOptions {
@@ -57,7 +50,7 @@ function mergeRefs<T>(...refs: Ref<T>[]): RefCallback<T> {
   };
 }
 
-/** render 요소의 props와 Component props를 위 규칙대로 합친다. */
+/** render 요소의 props와 Component props를 합친다. */
 function mergeProps(elementProps: AnyProps, props: AnyProps): AnyProps {
   const merged: AnyProps = { ...elementProps };
   for (const [name, value] of Object.entries(props)) {

@@ -12,12 +12,8 @@ import {
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Combobox 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(거르기, 화살표로 고르기, 한글 IME 조합, 결과 개수 안내, 폼 제출,
-// focus-field)은 components의 `Combobox.test.tsx`에 있다.
-//
-// 목록은 document.body로 portal된다. 열린 상태(가상 포커스 highlight 포함)의 a11y를 검사하려고 목록이 있는 story는
-// play에서 입력에 포커스하고 ↓로 연다(또는 글자를 친다). play는 Docs 페이지에서 돌지 않으므로 문서에서는 닫혀 있다.
+// 열린 상태의 a11y를 보려고 목록이 있는 story는 play에서 입력에 포커스하고 ↓로 연다.
+// play는 Docs 페이지에서 돌지 않으므로 문서에서는 닫혀 있다.
 
 const meta = {
   title: "Component/Combobox",

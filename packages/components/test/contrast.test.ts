@@ -1,6 +1,4 @@
-// Link·IconButton이 쓰는 글자색이 대비 쌍에 등록되어 있는지 본다(tide-v0-impl 티켓 14, Component 완료 기준 5).
-// 값의 대비비는 foundation이 검사한다. 여기서는 「등록되어 있는지」와 하한 등급만 본다.
-// 하한 세 등급(ADR 0023): 정지 상태 글자 4.5, hover·누름 같은 일시 상태 글자와 solid 위 글자 4, UI 요소 3.
+// 각 Component가 쓰는 색이 대비 쌍에 등록됐는지와 하한 등급(ADR 0023)만 본다. 대비비는 foundation이 검사한다.
 import { contrastPairs } from "@tide-design/foundation";
 import {
   checkColorContrast,
@@ -34,10 +32,7 @@ const ruled = (foreground: string, background: string, minRatio: number): boolea
     (r) => r.foreground === foreground && r.background === background && r.minRatio === minRatio,
   );
 
-/**
- * on-subtle × subtle-active의 하한. 누름은 일시 상태라 4지만, neutral(text-default × bg-neutral-subtle-active)은
- * 목록의 선택 유지 바탕이기도 해서 정지 상태 등급 4.5로 한 번 등록되어 있다.
- */
+/** neutral on-subtle × subtle-active는 목록 선택 유지 바탕이기도 해서 4.5로 등록되어 있다. */
 const subtleActiveRatio = (role: string): number => (role === "neutral" ? 4.5 : 4);
 
 /** Tide 색 계열 8개가 색 이름 규칙의 그 짝들을 light·dark에서 통과하는지 */
@@ -58,7 +53,6 @@ function familiesPass(pairs: readonly (readonly [string, string])[]): void {
 }
 
 describe("Link 글자색 대비 쌍", () => {
-  // Link는 accent 슬롯의 text를 표면 층 위에 쓴다. Role의 text는 Role Token으로 등록되어 있다.
   // neutral은 역할 text가 없어 text-default다.
   const roleText = [
     "text-default",
@@ -94,8 +88,7 @@ describe("Link 글자색 대비 쌍", () => {
   });
 });
 
-// Badge·Card·Separator(tide-v0-impl 티켓 19)가 쓰는 색이 대비 쌍에 등록되어 있거나 제외 목록에 있는지 본다.
-// subtle·faint 글자는 파스텔 글자 on-subtle이고, subtle 테두리(subtle-border)는 꾸밈이라 제외 목록에 있다(ADR 0022).
+// subtle 테두리는 꾸밈이라 제외 목록에 있다(ADR 0022).
 describe("Badge 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   it.each(tideRoles)(
@@ -160,8 +153,6 @@ describe("Card·Separator 대비 쌍", () => {
   });
 });
 
-// Alert(tide-v0-impl 티켓 20, tide-color-tone-impl 티켓 03)가 쓰는 파스텔 글자·subtle 배경 조합과 닫기 버튼 색·포커스 표시가
-// 등록되어 있는지 본다. 테두리는 파스텔 테두리(subtle-border)라 꾸밈이고 제외 목록에 있다(ADR 0022 §1).
 describe("Alert 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
@@ -205,7 +196,6 @@ describe("Alert 대비 쌍", () => {
   });
 });
 
-// Avatar(tide-v0-impl 티켓 21)의 fallback은 색 계열의 on-subtle(아이콘) × subtle(배경)이다(ADR 0022). 색 이름 규칙으로 검사된다.
 // 이미지 층은 사용자 사진이라 대비 검사 대상이 아니다.
 describe("Avatar 대비 쌍", () => {
   it("색 계열 8개의 fallback 아이콘(on-subtle) × 배경(subtle)이 light·dark에서 4.5:1을 통과한다", () => {
@@ -217,9 +207,7 @@ describe("Avatar 대비 쌍", () => {
   });
 });
 
-// Progress(tide-v0-impl 티켓 22)의 막대는 accent 슬롯의 text 색, 트랙은 같은 색 subtle이다.
-// 막대 × 트랙은 UI 경계 대비(3:1, WCAG 1.4.11)가 필요하다. 이 짝은 글자 기준(4.5:1)으로 이미 등록되어 있어 3:1을 넘는다.
-// solid × subtle은 dark에서 3:1이 되지 않아(예: primary 2.90) 막대에 쓰지 않는다.
+// 막대 × 트랙은 UI 경계 3:1이 필요하다. solid × subtle은 dark에서 3:1이 안 돼(primary 2.90) 막대에 쓰지 않는다.
 describe("Progress 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
 
@@ -243,16 +231,13 @@ describe("Progress 대비 쌍", () => {
   });
 });
 
-// Skeleton(tide-v0-impl 티켓 22)은 aria-hidden 장식이라 대비 의무가 없다(글자·경계를 올리지 않는다).
-// 쓰는 Token(bg-neutral-subtle-active)은 다른 Component 글자 배경으로 대비 쌍에 이미 등록되어 있다.
+// Skeleton은 aria-hidden 장식이라 대비 의무가 없다.
 describe("Skeleton 대비 쌍", () => {
   it("bg-neutral-subtle-active는 text-default의 배경으로 등록되어 있다", () => {
     expect(registered("text-default", "bg-neutral-subtle-active", 4.5)).toBe(true);
   });
 });
 
-// Table(tide-v0-impl 티켓 23)의 글자는 text-default 하나다(머리 칸도 같다). 배경은 놓인 표면 층과 본문 행 hover(bg-hover)다.
-// 행 사이 선은 장식용 border-default라 대비 검사에서 제외된 Token이다.
 describe("Table 대비 쌍", () => {
   it("글자(text-default) × 표면 층 3개가 4.5:1로 등록되어 있다", () => {
     for (const background of surfaces) {
@@ -270,11 +255,6 @@ describe("Table 대비 쌍", () => {
   });
 });
 
-// Breadcrumb·Pagination(tide-v0-impl 티켓 24)이 쓰는 글자색과 배경이 대비 쌍에 등록되어 있는지 본다.
-// - Breadcrumb: 링크 text-muted(hover text-default), 현재 페이지 text-default. 배경은 놓인 표면 층이다.
-//   구분자 아이콘은 장식용이라 대비 대상이 아니다(글자색 text-muted를 따른다).
-// - Pagination: 번호·이전/다음은 neutral ghost(text-default, hover·누름 bg-hover·bg-active),
-//   현재 페이지는 primary subtle(text-primary-on-subtle × bg-primary-subtle 3단계). 생략 아이콘은 장식용이다.
 describe("Breadcrumb·Pagination 대비 쌍", () => {
   it.each(["text-muted", "text-default"])(
     "%s × 표면 층 3개가 4.5:1로 등록되어 있다",
@@ -305,7 +285,6 @@ describe("Breadcrumb·Pagination 대비 쌍", () => {
   });
 });
 
-// Popover(tide-v0-impl 티켓 25)와 이후 오버레이가 같이 쓰는 raised 표면의 색이 등록되어 있거나 제외 목록에 있는지 본다.
 describe("Popover(오버레이 표면) 대비 쌍", () => {
   it("글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
@@ -320,7 +299,7 @@ describe("Popover(오버레이 표면) 대비 쌍", () => {
   });
 });
 
-// Tooltip(tide-v0-impl 티켓 26)은 Popover와 같은 raised 표면을 쓴다. 안에 조작 요소가 없으므로 포커스 표시 쌍은 쓰지 않는다.
+// Tooltip은 안에 조작 요소가 없어 포커스 표시 쌍을 쓰지 않는다.
 describe("Tooltip 대비 쌍", () => {
   it("글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
@@ -331,7 +310,6 @@ describe("Tooltip 대비 쌍", () => {
   });
 });
 
-// Menu(tide-v0-impl 티켓 27)와 Select·Combobox 목록이 같이 쓰는 목록·항목 색이 등록되어 있거나 제외 목록에 있는지 본다.
 describe("Menu(목록) 대비 쌍", () => {
   it("항목 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
@@ -363,7 +341,6 @@ describe("Menu(목록) 대비 쌍", () => {
   });
 });
 
-// Select(tide-v0-impl 티켓 28) 트리거가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 목록·옵션 색은 위 Menu(목록)와 같다.
 describe("Select 대비 쌍", () => {
   it("트리거 값·placeholder·chevron: text-default·text-muted × bg-canvas가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-canvas", 4.5)).toBe(true);
@@ -391,8 +368,6 @@ describe("Select 대비 쌍", () => {
   });
 });
 
-// Combobox(tide-v0-impl 티켓 29) 입력·chevron·결과 없음 글자가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다.
-// 목록·옵션 색은 위 Menu(목록)·Select와 같다.
 describe("Combobox 대비 쌍", () => {
   it("입력 글자·placeholder·chevron: text-default·text-muted × bg-canvas가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-canvas", 4.5)).toBe(true);
@@ -419,8 +394,7 @@ describe("Combobox 대비 쌍", () => {
   });
 });
 
-// Dialog·AlertDialog(tide-v0-impl 티켓 30)가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다.
-// 닫기 IconButton(ghost neutral)과 Footer의 Button 색은 Button·IconButton 대비 쌍이 맡는다.
+// 닫기·Footer 버튼 색은 Button·IconButton 대비 쌍이 맡는다.
 describe("Dialog·AlertDialog 대비 쌍", () => {
   it("제목·본문 글자: text-default × bg-raised가 4.5:1로 등록되어 있다", () => {
     expect(registered("text-default", "bg-raised", 4.5)).toBe(true);
@@ -444,10 +418,6 @@ describe("Dialog·AlertDialog 대비 쌍", () => {
   });
 });
 
-// Tabs(tide-v0-impl 티켓 31)가 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 탭은 놓인 표면 층 위에 그린다.
-// - 글자: 고르지 않은 탭 text-muted(hover text-default), 고른 탭 text-primary. 비활성 text-disabled는 제외 Token이다.
-// - 고른 표시 막대: border-primary(UI 경계 3:1, WCAG 1.4.11). 탭 목록 선 border-default는 장식용 구분선이다.
-// - 포커스 표시: 탭과 패널의 outline-focus.
 describe("Tabs 대비 쌍", () => {
   it.each(["text-muted", "text-default", "text-primary"])(
     "탭 글자 %s × 표면 층 3개가 4.5:1로 등록되어 있다",
@@ -476,10 +446,7 @@ describe("Tabs 대비 쌍", () => {
   });
 });
 
-// Accordion(tide-v0-impl 티켓 32)이 쓰는 색이 등록되어 있거나 제외 목록에 있는지 본다. 배경이 없어 놓인 표면 층 위에 그린다.
-// - 글자: 트리거·패널 text-default, chevron text-muted(펼침 상태를 보이는 그래픽이라 3:1이면 되지만 4.5:1 쌍으로 등록되어 있다).
-// - 트리거 hover 배경 bg-hover 위 글자와 chevron은 둘 다 text-default다.
-// - 포커스 표시: 트리거의 outline-focus. 루트 경계·항목 사이 선 border-default와 비활성 text-disabled는 제외 Token이다.
+// chevron은 그래픽이라 3:1이면 되지만 4.5:1 쌍으로 등록되어 있다.
 describe("Accordion 대비 쌍", () => {
   it.each(["text-default", "text-muted"])(
     "트리거·패널 글자와 chevron %s × 표면 층 3개가 4.5:1로 등록되어 있다",
@@ -511,8 +478,6 @@ describe("Accordion 대비 쌍", () => {
   });
 });
 
-// Tag(tide-v0-impl 티켓 33)는 색 계열의 on-subtle(글자·지우기 아이콘) × subtle(배경)이고, 지우기 버튼 hover·누름은
-// 같은 계열의 subtle-hover·subtle-active다. 색 이름 규칙(on-subtle × subtle 3단계)으로 검사된다. 테두리는 꾸밈이다.
 describe("Tag 대비 쌍", () => {
   it("색 계열 8개의 글자(on-subtle) × subtle(4.5:1)·subtle-hover·subtle-active(4:1)가 light·dark에서 통과한다", () => {
     familiesPass([
@@ -544,8 +509,7 @@ describe("Tag 대비 쌍", () => {
   });
 });
 
-// Toast(tide-v0-impl 티켓 34)는 Alert 배치에 오버레이 raised 표면을 얹는다. 글자는 text-default, 상태 아이콘은 Toast의
-// Role 색(accent 슬롯)이고, 닫기(ghost)·액션(outline) 버튼은 neutral이다(티켓 03 사용자 결정). 모두 bg-raised 위에 그린다.
+// Toast의 닫기·액션 버튼은 neutral이다.
 describe("Toast 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
@@ -607,10 +571,6 @@ describe("Toast 대비 쌍", () => {
   });
 });
 
-// Button·IconButton(tide-v0-impl 티켓 14, tide-color-tone-impl 티켓 03)의 채움 방식별 글자·배경이 등록되어 있는지 본다.
-// - solid: on-solid × solid 3단계(solid 위 글자 4, ADR 0023)
-// - subtle: 파스텔 글자 on-subtle × subtle 3단계(neutral은 text-default). 기본 4.5, hover·누름 4(ADR 0023)
-// - outline·ghost: 바탕 없는 색 글자 text × 무채색 호버·클릭 bg-hover·bg-active(흰 표면 bg-canvas 위 합성, ADR 0022 §3). 4(ADR 0023)
 describe("Button·IconButton 채움 방식 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
   const allRoles = ["neutral", ...tideRoles] as const;
@@ -637,8 +597,7 @@ describe("Button·IconButton 채움 방식 대비 쌍", () => {
     },
   );
 
-  // outline·ghost는 같은 색으로 채운다(ADR 0025): Role은 hover faint·누름 subtle(4.5),
-  // neutral은 색 없이 덮는다(bg-hover·bg-active, canvas·raised 위 합성 4).
+  // outline·ghost: Role은 같은 색 faint·subtle, neutral은 색 없이 덮는다(ADR 0025).
   it.each(tideRoles)(
     "%s outline·ghost: text × 같은 Role faint·subtle이 4.5:1로 등록되어 있다",
     (role) => {
@@ -666,11 +625,6 @@ describe("Button·IconButton 채움 방식 대비 쌍", () => {
   });
 });
 
-// Switch(tide-v0-impl 티켓 17)의 track·thumb 색이 등록되어 있는지 본다(티켓 46).
-// - 켜짐: thumb text-accent-on-solid × solid 3단계(solid 위 4, Button·IconButton 쌍과 같다).
-// - 꺼짐: thumb text-muted × 표면 층(4.5), hover thumb text-accent × subtle(4.5),
-//   누름 thumb text-accent × subtle-active(UI 요소 3). neutral 누름은 text-default × bg-neutral-subtle-active(4.5)다.
-// - 경계: border-strong·border-accent × 표면 층(3), 포커스 표시 outline-focus × 표면 층(3).
 describe("Switch 대비 쌍", () => {
   const tideRoles = ["primary", "success", "warning", "danger", "info"] as const;
 

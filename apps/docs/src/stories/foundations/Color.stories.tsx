@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// 내부 서브패스(앱 개발자용 아님). 렌더된 타일 글자색의 대비비를 계산한다.
+// 내부 서브패스(앱 개발자용 아님).
 import { colorFamilyNames, contrastRatio } from "@tide-design/foundation/internal";
 import { expect, within } from "storybook/test";
 
@@ -8,7 +8,6 @@ import { ColorScale } from "../../components/ColorScale";
 import { colorTileGroups } from "../../libs/colorTiles";
 import { ContrastExclusions, ContrastPairs } from "../../components/ContrastPairs";
 
-// 컬러 Foundation 문서의 Token 블록. MDX에서 Canvas로 보여 주고, storybook project가 렌더·a11y를 검사한다.
 const meta = {
   title: "Foundation/컬러",
   parameters: {

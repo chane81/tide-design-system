@@ -1,12 +1,9 @@
 import { zIndex, type ZIndexName } from "@tide-design/foundation";
 import type { ReactElement } from "react";
 
-// 쌓임 단계 Token 블록: Token 원본에서 단계 목록과 값을 그린다(spec 「문서 앱」).
-// 미리보기는 class 이름을 조합하지 않고 공개 계약 변수(--tide-z-*)를 inline style로 쓴다.
-
 const names = Object.keys(zIndex) as ZIndexName[];
 
-/** 단계별 쓰는 곳(tide-v0 티켓 22 「쌓임 단계」) */
+/** 단계별 쓰는 곳 */
 const usage: Record<ZIndexName, string> = {
   sticky: "앱의 sticky 헤더·사이드바(v0 Tide Component는 쓰지 않음)",
   modal: "Dialog·AlertDialog와 그 backdrop",
@@ -61,10 +58,7 @@ export function StackingTiers(): ReactElement {
   );
 }
 
-/**
- * sticky 헤더 아래로 포커스가 숨지 않게 하는 예시. 스크롤 영역에 헤더 높이만큼 scroll-padding-top을 준다.
- * Tab으로 아래 버튼을 옮겨 다니면 포커스된 버튼이 헤더 아래로 들어가지 않는다.
- */
+/** sticky 헤더 아래로 포커스가 숨지 않게 스크롤 영역에 헤더 높이만큼 scroll-padding-top을 주는 예시. */
 export function StickyHeaderScrollPadding(): ReactElement {
   return (
     <div className="bg-canvas p-6 text-default">

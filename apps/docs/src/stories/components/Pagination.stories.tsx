@@ -9,14 +9,9 @@ import {
 } from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 
-// Pagination 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(랜드마크·이름, aria-current, 이전/다음 이름과 disabled)은
-// components의 `Pagination.test.tsx`에 있다.
-
 const meta = {
   title: "Component/Pagination",
   component: Pagination,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: {
     PaginationItem,
     PaginationLink,

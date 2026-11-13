@@ -1,7 +1,3 @@
-// Alert와 Toast(티켓 34)가 함께 쓰는 상태 아이콘 고르기(tide-v0-impl 티켓 20). 루트에서 export하지 않는다.
-// class 문자열은 constants/alertClass.ts에 있다.
-// 이 파일은 JSX를 렌더하지 않고 hook·이벤트도 없다. 서버 컴포넌트에서 import해도 된다.
-
 import type { TideRole } from "@tide-design/foundation";
 import {
   CircleCheckIcon,
@@ -16,8 +12,7 @@ import type { Role } from "../../types";
 
 type IconComponent = (props: IconProps) => ReactElement;
 
-// 상태 아이콘은 모양으로도 서로 구분된다(WCAG 1.4.1): 원 안 i, 원 안 체크, 삼각형 안 느낌표, 팔각형 안 느낌표.
-// neutral·primary는 「상태」가 아닌 일반 알림이라 info와 같은 i 아이콘이다.
+// 아이콘 모양으로도 상태를 구분한다(WCAG 1.4.1). neutral·primary는 일반 알림이라 info와 같은 아이콘이다.
 const statusIcons: Record<TideRole, IconComponent> = {
   neutral: InfoIcon,
   primary: InfoIcon,

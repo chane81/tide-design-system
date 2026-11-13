@@ -4,16 +4,11 @@ import { BellIcon, LockIcon, UserIcon } from "@tide-design/icons";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
-// Tabs 문서의 예시. 모든 예시(Do/Don't 포함)는 story로 두고 MDX에서 Canvas로 보여 준다.
-// story는 문서·렌더·a11y만 맡는다. 동작 단언(키보드 탐색, 자동·수동 활성화, 제어/비제어, ring, forced-colors, motion)은
-// components의 `Tabs.test.tsx`에 있다.
-//
-// 키보드 포커스 상태(focus-ring)의 a11y도 보려고 story마다 play에서 Tab으로 고른 탭에 들어간다.
+// focus-ring 상태의 a11y도 보려고 story마다 play에서 Tab으로 고른 탭에 들어간다.
 
 const meta = {
   title: "Component/Tabs",
   component: Tabs,
-  // 부분 Component의 props 표도 함께 보여 준다.
   subcomponents: { TabList, Tab, TabPanel },
   argTypes: {
     children: { control: false, table: { type: { summary: "ReactNode" } } },

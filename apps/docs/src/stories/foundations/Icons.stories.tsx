@@ -3,8 +3,7 @@ import { CircleCheckIcon, PlusIcon, SearchIcon, TrashIcon, XIcon } from "@tide-d
 
 import { IconSearch } from "../../components/IconSearch/index";
 
-// 아이콘 페이지(Foundation/아이콘)의 예시. MDX에서 Canvas로 보여 준다.
-// 버튼 모양은 예시용 기본 버튼이다(Button Component는 티켓 13).
+// 버튼 모양은 예시용 네이티브 버튼이다.
 const meta = {
   title: "Foundation/아이콘",
 } satisfies Meta;
@@ -96,10 +95,7 @@ export const IconOnlyButton: Story = {
   ),
 };
 
-/**
- * 검색 블록. MDX에 직접 넣으므로 사이드바와 문서에서는 숨기고(`!dev`, `!autodocs`),
- * storybook project의 렌더·a11y 검사에만 쓴다(storybook 10.6.6 tags).
- */
+/** MDX에 직접 넣으므로 사이드바·문서에서는 숨기고 렌더·a11y 검사에만 쓴다. */
 export const Search: Story = {
   name: "검색",
   tags: ["!dev", "!autodocs"],

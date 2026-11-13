@@ -1,11 +1,9 @@
 import { radius, shadow, type RadiusName, type ShadowName } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님). 그림자 값을 CSS 그대로 보여 주려고 쓴다.
+// 내부 서브패스(앱 개발자용 아님).
 import { shadowCss } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
-// radius·Elevation Token 블록: Token 원본에서 단계 목록과 값을 그린다(spec 「문서 앱」 Token 블록).
-// 미리보기는 class 이름을 조합하지 않고 공개 계약 변수(--tide-*)를 inline style로 쓴다.
-// Tailwind는 소스에 그대로 적힌 class만 만들기 때문이다.
+// Tailwind는 소스에 그대로 적힌 class만 만들므로 class를 조합하지 않고 변수(--tide-*)를 inline style로 쓴다.
 
 const radiusNames = Object.keys(radius) as RadiusName[];
 const shadowNames = Object.keys(shadow) as ShadowName[];
@@ -98,8 +96,7 @@ export function Shadows(): ReactElement {
 }
 
 /** 포커스 표시 ring과 field. 포커스 상태를 고정해서 보여 준다(focus-ring, focus-field를 variant 없이 씀). */
-// focus-field 예시에는 border 색 class를 붙이지 않는다. variant 없이 쓰면 우선순위가 같아 CSS에서 뒤에 오는
-// border-default가 이겨, 바깥 회색 1px + 안쪽 포커스 색 1px로 실제(2px 포커스 색)와 다르게 보였다.
+// focus-field 예시에는 border 색 class를 붙이지 않는다. variant 없이는 뒤에 오는 border-default가 이겨 실제와 달라진다.
 export function FocusIndicators(): ReactElement {
   return (
     <div className="flex">

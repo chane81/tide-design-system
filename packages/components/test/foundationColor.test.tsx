@@ -1,7 +1,4 @@
-// Foundation의 색 이름(data-color)과 accent 슬롯을 실제 Chromium에서 계산값으로 확인한다(tide-v0-impl 티켓 40).
-// 앱과 같은 CSS(@import "tailwindcss" + components styles.css → foundation tailwind.css)를 쓴다.
-// accent 슬롯 변수(--tide-accent-*)는 forced-colors에서도 바뀌지 않으므로 두 instance에서 변수 값을 단언하고,
-// 실제 배경색은 forced-colors가 아닐 때만 단언한다.
+// accent 변수는 forced-colors에서도 바뀌지 않아 두 instance에서 단언하고, 실제 배경색은 forced-colors가 아닐 때만 본다.
 import { color } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { afterEach, describe, expect, test } from "vitest";

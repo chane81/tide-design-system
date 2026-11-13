@@ -1,9 +1,6 @@
 "use client";
-// CheckboxGroup·RadioGroup이 안쪽 Checkbox·Radio에 넘기는 연결 정보(tide-v0-impl 티켓 16).
-// - 묶음 자신은 Field의 `labelId`·`describedBy`를 `aria-labelledby`·`aria-describedby`로 받는다(ADR 0013 정정).
-// - `aria-invalid`는 묶음이 아니라 안쪽 input 하나하나에 붙인다(group·radiogroup 역할에서는 지원이 고르지 않다).
-// - 묶음은 FieldContext를 `null`로 덮어 안쪽 항목이 Field의 `controlId`를 자기 id로 쓰지 않게 한다(id 중복 방지).
-// 서버 컴포넌트는 context를 만들 수 없으므로 이 client 모듈에서 만든다(hooks/useFieldControl.ts와 같다).
+// aria-invalid는 group 역할 지원이 고르지 않아 안쪽 input마다 붙인다(ADR 0013).
+// 묶음은 FieldContext를 null로 덮어 안쪽 항목이 Field의 controlId를 쓰지 않게 한다(id 중복 방지).
 
 import { createContext, use, type Context } from "react";
 
@@ -58,10 +55,7 @@ export interface ChoiceGroupConnection {
   readonly required: boolean;
 }
 
-/**
- * Field 연결 정보와 묶음 자신의 props를 합친다. 묶음에 직접 준 값이 Field 값을 이긴다(useFieldControl과 같은 규칙).
- * `aria-labelledby`를 직접 주면 Field label 대신 그것을 쓴다. `aria-describedby`는 Field 것 뒤에 이어 붙인다.
- */
+/** 묶음에 직접 준 값이 Field 값을 이긴다. `aria-describedby`는 Field 것 뒤에 이어 붙인다. */
 export function useChoiceGroup(props: ChoiceGroupInput): ChoiceGroupConnection {
   const field = use(FieldContext);
   const invalid = props.invalid ?? field?.invalid ?? false;
