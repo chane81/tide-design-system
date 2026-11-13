@@ -6,6 +6,7 @@
 - 한 번에 만들지 않는다. 리서치, 진행상황, 결정은 모두 `docs/` 아래 분류별 폴더에 md로 남긴다(구조는 `docs/agents/domain.md` 참고).
 - 문서와 주석은 한글로 작성한다.
 - 파일·폴더 배치는 `.claude/rules/monorepo-structure.md`를 따른다(콜로케이션, 폴더 이름 `components`·`hooks`·`libs`·`constants`).
+- 코드 주석은 `.claude/rules/code-comments.md`를 따른다(코드로 안 보이는 이유·제약만 1~2줄).
 
 ## Agent skills
 

@@ -85,7 +85,7 @@ import { cn } from "@tide-design/components"; // foundation → components (역�
 import { color } from "@tide-design/foundation"; // icons ↔ foundation (서로 독립)
 
 // ❌ packages/components/src/_internal/libs/cn.ts
-import { colorTiles } from "../../../../../apps/docs/src/libs/colorTiles.ts"; // packages → apps
+import { colorTiles } from "../../../../../apps/docs/src/libs/colorTiles"; // packages → apps
 
 // ❌ packages/components/src/Badge/Badge.tsx
 import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 docs·빌드 스크립트 전용
@@ -102,7 +102,7 @@ import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 
    src/Rating/Rating.test.tsx   # 생기면 여기
 ```
 
-- `src/index.ts`는 `export { Rating, type RatingProps } from "./Rating/index.ts"`로 폴더의 `index.ts`를 가리킨다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
+- `src/index.ts`는 `export { Rating, type RatingProps } from "./Rating/index"`로 폴더의 `index.ts`를 가리킨다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
 - ❌ `src/Rating/index.tsx`에 본문을 쓴다.
 - ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 폴더를 갖는다. 둘이 함께 쓰는 코드는 `src/_internal/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
 - ✅ `TableRow`·`TableCell`은 `Table/Table.tsx`(또는 `Table/components/`)에 두고 `Table/index.ts`가 함께 재수출한다. Table 없이 쓰지 않는다.
@@ -140,14 +140,14 @@ subpath 이름은 그대로 둔다.
 
 ```ts
 // ✅ packages/components/src/Select/Select.tsx
-import { useFieldControl } from "../_internal/hooks/useFieldControl.ts";
-import { useSelectValue } from "./hooks/useSelectValue.ts";
+import { useFieldControl } from "../_internal/hooks/useFieldControl";
+import { useSelectValue } from "./hooks/useSelectValue";
 
 // ❌ packages/components/src/_internal/hooks/index.ts
-export * from "./useFieldControl.ts";
+export * from "./useFieldControl";
 
 // ❌ packages/components/src/index.ts
-export * from "./Select/index.ts"; // 공개 이름이 진입점에 보이지 않는다
+export * from "./Select/index"; // 공개 이름이 진입점에 보이지 않는다
 ```
 
 `"use client"`를 가진 hook을 다른 파일로 옮기면서 지시어를 두고 오면 smoke 앱의 `next build`가 실패한다. 옮긴 파일 머리에 지시어가 있는지 먼저 본다.
