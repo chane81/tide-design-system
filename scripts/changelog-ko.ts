@@ -1,16 +1,5 @@
-// `changeset version`이 새로 쓴 CHANGELOG 항목의 고정 영어 문구를 한글로 바꾼다(spec 「CHANGELOG는 한글로 쓴다」).
-//
-//   pnpm release:version   (= changeset version && node scripts/changelog-ko.ts)
-//
-// 본문(changeset 요약)은 기여자가 한글로 쓴다. 이 스크립트는 도구가 넣는 문구만 바꾼다.
-// - 제목 `### Minor Changes` 등: @changesets/apply-release-plan 8.1.1이 `### ${Type} Changes`로 고정해 넣고 설정이 없다.
-//   changesets/action v2.1.2가 Version PR 본문을 만들 때 제목의 major/minor/patch 낱말로 변경 수준을 읽으므로
-//   그 낱말은 괄호 안에 남긴다.
-// - `No changes in this release.`: 같은 패키지가 fixed 묶음 때문에 변경 없이 버전만 오를 때 넣는다.
-// - `Thanks [@user](…)!`, `Updated dependencies`: @changesets/changelog-github 1.0.1이 넣는다.
-// - Storybook(`apps/docs/CHANGELOG.md`, ADR 0020)도 같이 고친다. 문서 앱에는 호환성 계약이 없으므로
-//   0.x 여부와 상관없이 minor는 「추가와 개편」, patch는 「수정」으로 쓴다.
-// 맨 위 버전 항목만 고치므로 이미 나간 항목은 건드리지 않는다. 두 번 돌려도 결과가 같다.
+// `changeset version`이 쓴 맨 위 CHANGELOG 항목의 고정 영어 문구만 한글로 바꾼다. 두 번 돌려도 결과가 같다.
+// 제목의 major/minor/patch 낱말은 changesets/action이 변경 수준을 읽으므로 괄호 안에 남긴다.
 import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 

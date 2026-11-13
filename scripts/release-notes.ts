@@ -1,10 +1,5 @@
-// 릴리스 하나의 GitHub Release 본문을 만든다(spec 릴리스 절: tag는 패키지마다, GitHub Release는 릴리스당 하나).
-//
-//   PUBLISHED_PACKAGES='[{"name":"@tide-design/icons","version":"0.2.0"}, …]' node scripts/release-notes.ts <본문 파일>
-//
-// PUBLISHED_PACKAGES는 changesets/action/publish v2.1.2의 `published-packages` 출력이다.
-// 세 패키지는 fixed라 버전이 하나여야 한다. 다르면 실패한다. 본문 파일에 각 패키지 CHANGELOG의 그 버전 항목을
-// 이어 붙이고, 표준 출력에 버전을 찍는다.
+// GitHub Release 본문을 파일에 쓰고 표준 출력에 버전을 찍는다. PUBLISHED_PACKAGES는 publish 액션의 출력이다.
+// 세 패키지는 fixed라 버전이 하나여야 하고, 다르면 실패한다.
 import { readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
