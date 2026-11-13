@@ -1,4 +1,4 @@
-import { mixHex, type ColorSlot } from "./color-slot.ts";
+import { mixHex, type ColorSlot } from "./colorSlot.ts";
 import { semanticHex, type SemanticColorName, type ThemeName, type TideRole } from "./semantic.ts";
 
 /**

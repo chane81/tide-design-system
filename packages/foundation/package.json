@@ -28,8 +28,8 @@
       "default": "./dist/internal.js"
     },
     "./color-family": {
-      "types": "./dist/color-family.d.ts",
-      "default": "./dist/color-family.js"
+      "types": "./dist/colorFamily.d.ts",
+      "default": "./dist/colorFamily.js"
     },
     "./tokens.css": "./dist/tokens.css",
     "./tailwind.css": "./dist/tailwind.css",

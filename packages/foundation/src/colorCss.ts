@@ -1,5 +1,5 @@
 import { color, type ColorStep } from "./color.ts";
-import { colorFamilyNames, isRole, roleNames, roleSlotToken } from "./color-name.ts";
+import { colorFamilyNames, isRole, roleNames, roleSlotToken } from "./colorName.ts";
 import {
   colorSlots,
   familySlotSteps,
@@ -8,7 +8,7 @@ import {
   slotValueHex,
   type ColorSlot,
   type SlotRule,
-} from "./color-slot.ts";
+} from "./colorSlot.ts";
 import {
   roleFamily,
   semanticEntries,

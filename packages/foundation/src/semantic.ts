@@ -11,7 +11,7 @@ import {
   type SlotColorRef,
   type SlotOverrides,
   type SlotValue,
-} from "./color-slot.ts";
+} from "./colorSlot.ts";
 
 /** Theme 이름 */
 export type ThemeName = "light" | "dark";
