@@ -13,7 +13,7 @@ import { render } from "vitest-browser-react";
 import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion.ts";
 
 import { Button } from "../Button/Button.tsx";
-import { Dialog, DialogContent, DialogTitle } from "../Dialog/Dialog.tsx";
+import { Dialog, DialogContent, DialogTitle } from "../Dialog/index.ts";
 import {
   ToastQueue,
   ToastRegion,

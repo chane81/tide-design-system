@@ -23,7 +23,7 @@ import {
   DialogTrigger,
   type DialogContentProps,
   type DialogProps,
-} from "./Dialog.tsx";
+} from "./index.ts";
 import { Select, SelectItem } from "../Select/Select.tsx";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/Tooltip.tsx";
 
