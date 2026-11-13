@@ -1,5 +1,11 @@
 # @tide-tds/icons
 
+## 0.11.2
+
+### 기능 추가와 수정 (patch)
+
+- [#58](https://github.com/chane81/tide-design-system/pull/58) [`a871bce`](https://github.com/chane81/tide-design-system/commit/a871bce14db131018dca0744fbc2c13721514a49) [@chane81](https://github.com/chane81) - 소스에서 `return` 앞에 빈 줄을 넣었다(lint 규칙 `padding-line-between-statements`). 빈 줄만 바뀌어 동작과 공개 API는 그대로다.
+
 ## 0.11.1
 
 변경 없음. 다른 Tide 패키지와 같은 버전으로 맞췄다.
