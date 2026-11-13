@@ -14,7 +14,7 @@ import { captureExit, styleSnapshot } from "../../test/motion.ts";
 import { Button } from "../Button/Button.tsx";
 import { Field } from "../Field/Field.tsx";
 import { Input } from "../Input/Input.tsx";
-import { Select, SelectItem, SelectSection, type SelectProps } from "./Select.tsx";
+import { Select, SelectItem, SelectSection, type SelectProps } from "./index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";

@@ -24,7 +24,7 @@ import {
   type DialogContentProps,
   type DialogProps,
 } from "./index.ts";
-import { Select, SelectItem } from "../Select/Select.tsx";
+import { Select, SelectItem } from "../Select/index.ts";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip/Tooltip.tsx";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;

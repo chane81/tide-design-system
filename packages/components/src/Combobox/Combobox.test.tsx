@@ -14,10 +14,10 @@ import { render } from "vitest-browser-react";
 import { captureExit, styleSnapshot } from "../../test/motion.ts";
 
 import { Button } from "../Button/Button.tsx";
-import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./Combobox.tsx";
+import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./index.ts";
 import { Field } from "../Field/Field.tsx";
 import { Input } from "../Input/Input.tsx";
-import { Select, SelectItem } from "../Select/Select.tsx";
+import { Select, SelectItem } from "../Select/index.ts";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
