@@ -6,8 +6,8 @@
  * @packageDocumentation
  */
 import { color, type ColorStep } from "./color.ts";
-import { tideColorNames } from "./color-name.ts";
-import { dataColorRule, familyThemeDeclarations, primitiveVar } from "./color-css.ts";
+import { tideColorNames } from "./colorName.ts";
+import { dataColorRule, familyThemeDeclarations, primitiveVar } from "./colorCss.ts";
 import {
   colorSlots,
   resolveSlotSteps,
@@ -18,7 +18,7 @@ import {
   type SlotRule,
   type SlotStep,
   type SlotValue,
-} from "./color-slot.ts";
+} from "./colorSlot.ts";
 import { checkColorContrast, type ColorContrastResult } from "./contrast.ts";
 import type { ThemeName } from "./semantic.ts";
 
@@ -31,7 +31,7 @@ export type {
   SlotRule,
   SlotStep,
   SlotValue,
-} from "./color-slot.ts";
+} from "./colorSlot.ts";
 export type { ColorContrastResult, ColorContrastRule } from "./contrast.ts";
 
 /** 50~950의 11단계 스케일. 값은 `#rrggbb` hex다. */

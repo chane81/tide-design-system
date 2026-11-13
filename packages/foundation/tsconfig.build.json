@@ -1,5 +1,7 @@
 {
   // 배포 빌드(tsdown)가 읽는다. isolatedDeclarations를 켠 채 src만 보고 oxc로 d.ts를 만든다.
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "include": ["src"],
+  // 원본 옆 단위 테스트(src/*.test.ts)는 배포 빌드에서 뺀다.
+  "exclude": ["src/**/*.test.ts"]
 }

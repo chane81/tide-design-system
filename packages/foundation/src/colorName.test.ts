@@ -13,7 +13,7 @@ import type {
   RoleRegistry,
   semantic,
   TideRole,
-} from "../src/index.ts";
+} from "./index.ts";
 import {
   checkColorContrast,
   colorSlotHex,
@@ -21,12 +21,12 @@ import {
   roleNames,
   semanticHex,
   tideColorNames,
-} from "../src/internal.ts";
+} from "./internal.ts";
 
 // 앱이 Role과 장식용 계열을 더하는 것과 같은 augmentation. re-export한 모듈(index)을 대상으로 해도 원래 interface에
 // 합쳐진다(TypeScript 7.0.2에서 확인, 티켓 40·41 Comments). 이 augmentation은 foundation 타입 검사 전체에 걸린다.
 // 그래서 Tide 안의 계산(Semantic Token 이름)이 앱 Role로 넓어지지 않는지도 함께 본다.
-declare module "../src/index.ts" {
+declare module "./index.ts" {
   interface RoleRegistry {
     "test-brand": true;
   }
@@ -112,8 +112,8 @@ describe("테스트 전용 계열을 더하면", () => {
 
   async function withPink() {
     vi.resetModules();
-    vi.doMock("../src/color.ts", async (importOriginal) => {
-      const original = await importOriginal<typeof import("../src/color.ts")>();
+    vi.doMock("./color.ts", async (importOriginal) => {
+      const original = await importOriginal<typeof import("./color.ts")>();
       const color = { ...original.color, pink };
       return {
         ...original,
@@ -127,8 +127,8 @@ describe("테스트 전용 계열을 더하면", () => {
         },
       };
     });
-    const internal = await import("../src/internal.ts");
-    vi.doUnmock("../src/color.ts");
+    const internal = await import("./internal.ts");
+    vi.doUnmock("./color.ts");
     return internal;
   }
 

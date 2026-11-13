@@ -22,7 +22,7 @@ export {
   type SlotRule,
   type SlotStep,
   type SlotValue,
-} from "./color-slot.ts";
+} from "./colorSlot.ts";
 export {
   colorValueHex,
   roleFamily,
@@ -41,7 +41,7 @@ export {
   roleSlotToken,
   tideColorNames,
   type TideColor,
-} from "./color-name.ts";
+} from "./colorName.ts";
 export {
   accentDefaultDeclarations,
   accentUtilities,
@@ -54,7 +54,7 @@ export {
   semanticVar,
   tideFamilyThemeDeclarations,
   type AccentUtility,
-} from "./color-css.ts";
+} from "./colorCss.ts";
 export {
   checkColorContrast,
   colorContrastRules,

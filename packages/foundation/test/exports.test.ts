@@ -77,7 +77,7 @@ describe("exports", () => {
   });
 
   it("color-family 서브패스는 앱 브랜드 색 계열 API를 낸다(티켓 40)", async () => {
-    const colorFamily = await import("../dist/color-family.js");
+    const colorFamily = await import("../dist/colorFamily.js");
     expect(Object.keys(colorFamily).sort()).toEqual(
       ["checkColorFamily", "colorFamilyCss", "colorFamilySlotHex", "defineColorFamily"].sort(),
     );

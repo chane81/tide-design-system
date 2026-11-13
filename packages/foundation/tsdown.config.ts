@@ -7,7 +7,7 @@ export default defineConfig([
   {
     // internal은 문서 앱·빌드 스크립트용 내부 서브패스다(앱 개발자용 아님).
     // color-family는 앱 브랜드 색 계열 API 서브패스다(티켓 40).
-    entry: ["src/index.ts", "src/internal.ts", "src/color-family.ts"],
+    entry: ["src/index.ts", "src/internal.ts", "src/colorFamily.ts"],
     // 원본 파일 단위로 낸다(디렉터리 구조 유지).
     unbundle: true,
     format: "esm",

@@ -1,5 +1,5 @@
 import { color, type ColorFamily } from "./color.ts";
-import { colorSlots, familySlotSteps, type ColorSlot } from "./color-slot.ts";
+import { colorSlots, familySlotSteps, type ColorSlot } from "./colorSlot.ts";
 import {
   colorValueHex,
   roleFamily,

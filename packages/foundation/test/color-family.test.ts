@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { checkColorFamily, colorFamilyCss, defineColorFamily } from "../dist/color-family.js";
+import { checkColorFamily, colorFamilyCss, defineColorFamily } from "../dist/colorFamily.js";
 import brand from "./fixtures/brand.ts";
 import { yellowScale } from "./fixtures/yellow.ts";
 
