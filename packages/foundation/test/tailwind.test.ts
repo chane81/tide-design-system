@@ -424,14 +424,14 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     expect(css).toMatch(/\.focus\\:focus-field:focus\s*\{\s*border-color:/);
   });
 
-  it("error+focus 조합을 명시해서 오류 border보다 우선한다", () => {
-    // 오류 border는 [aria-invalid="true"] 하나(0,2,0)이고, focus-field는 그 조합을 따로 적어(0,3,0) 이긴다.
+  it("error+focus 조합은 같은 2px 표시를 오류 색으로 그린다", () => {
+    // border와 inset을 둘 다 border-danger로 맞춰, 빨강 border 안쪽에 파랑 inset이 겹치지 않는다(ADR 0026).
     expect(css).toMatch(
       /\.aria-invalid\\:border-danger\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\)/,
     );
     const field = /\.focus\\:focus-field:focus\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? "";
     expect(field).toMatch(
-      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-outline-focus\);\s*box-shadow: inset 0 0 0 1px var\(--tide-outline-focus\);/,
+      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\);\s*box-shadow: inset 0 0 0 1px var\(--tide-border-danger\);/,
     );
   });
 });

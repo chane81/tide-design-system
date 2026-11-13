@@ -54,7 +54,7 @@ Utility class 두 개를 직접 만든 요소에도 그대로 붙입니다. 색�
 <input className="rounded-md border border-default aria-invalid:border-danger focus:focus-field" />
 ```
 
-- 오류 입력창도 포커스 중에는 focus 색이 이깁니다. 오류는 메시지, 아이콘, `aria-invalid`가 계속 알립니다. 이 규칙은 오류 상태를 `aria-invalid="true"`로 나타낼 때만 적용됩니다.
+- 오류 입력창은 포커스 중에 같은 2px 표시를 오류 색(`border-danger`)으로 그립니다. 빨간 경계 안쪽에 파란 포커스 색이 겹치지 않고, 포커스는 1px → 2px 두께 변화로 드러납니다. 오류는 메시지, 아이콘, `aria-invalid`가 계속 알립니다. 이 규칙은 오류 상태를 `aria-invalid="true"`로 나타낼 때만 적용됩니다.
 - `focus-field`는 평소에는 outline이 없고, 고대비 모드에서만 투명 outline을 둡니다. 고대비 모드에서 border 색과 그림자가 덮여도 이 outline이 시스템 색으로 그려져 포커스 표시가 남습니다. 평소에도 투명 outline을 두면 클릭 직후 색 전환 때문에 outline이 잠깐 보이므로 두지 않습니다.
 - 목록 안 항목(Menu 항목, Select 옵션)은 ring 대신 배경 강조(highlight)를 씁니다. Component가 직접 그립니다.
 

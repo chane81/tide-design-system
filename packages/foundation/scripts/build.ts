@@ -239,8 +239,10 @@ const tailwindCss = [
   //   시스템 색으로 그려져 포커스 표시가 남는다(그 모드는 border 색과 box-shadow를 덮어쓴다).
   //   평소에도 투명 outline을 두면 transition-colors가 outline-color를 currentColor → transparent로 전환해,
   //   클릭 직후 150ms 동안 글자색 outline이 번쩍였다 사라진다. 그래서 forced-colors 안으로 옮겼다.
-  // - error+focus: 오류 입력창(aria-invalid="true")에서도 포커스 중에는 field가 이긴다. 선택자 순서에 기대지 않도록
-  //   [aria-invalid="true"] 조합을 따로 적어 aria-invalid:border-danger(0,2,0)보다 우선순위(0,3,0)를 높인다.
+  // - error+focus: 오류 입력창(aria-invalid="true")은 포커스 중에 같은 2px 표시를 오류 색(border-danger)으로 그린다
+  //   (ADR 0026). 빨간 border 안쪽에 파란 inset이 겹쳐 두 색이 보이지 않게 border와 inset을 같은 색으로 맞춘다.
+  //   variant 없이 쓰면 .focus-field[aria-invalid](0,2,0)가 aria-invalid:border-danger(0,2,0)와 동률이지만,
+  //   둘 다 border-danger라 순서와 상관없이 결과가 같다.
   "@utility focus-ring {",
   "  outline: var(--tide-focus-ring-width) solid var(--tide-outline-focus);",
   "  outline-offset: var(--tide-focus-ring-offset);",
@@ -254,8 +256,8 @@ const tailwindCss = [
   "    outline: var(--tide-focus-ring-width) solid transparent;",
   "  }",
   '  &[aria-invalid="true"] {',
-  "    border-color: var(--tide-outline-focus);",
-  "    box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",
+  "    border-color: var(--tide-border-danger);",
+  "    box-shadow: inset 0 0 0 1px var(--tide-border-danger);",
   "  }",
   "}",
   "",

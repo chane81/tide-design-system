@@ -529,7 +529,7 @@ describe("모양", () => {
     }
   });
 
-  test("오류 상태에서도 포커스 중에는 focus-field가 이긴다", async () => {
+  test("오류 상태에서는 포커스 중에 오류 색 2px로 보인다", async () => {
     await render(<Fruits invalid />);
     await tabToTrigger();
     await settle();
@@ -538,9 +538,9 @@ describe("모양", () => {
       expect(style.outlineColor).not.toBe(transparent);
       return;
     }
-    const focus = resolve("borderTopColor", "var(--tide-outline-focus)");
-    expect(style.borderTopColor).toBe(focus);
-    expect(style.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
+    const danger = resolve("borderTopColor", "var(--tide-border-danger)");
+    expect(style.borderTopColor).toBe(danger);
+    expect(style.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
   });
 
   test("forced-colors에서도 트리거 경계가 보인다", async () => {
