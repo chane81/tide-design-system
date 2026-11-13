@@ -1,7 +1,7 @@
 # 02: components 공개 Component 주석 정리
 
 Status: ready-for-agent
-Blocked by: 구조 이행 05 ([project-structure/issues/05](../../project-structure/issues/05-components-internal-folder.md))
+Blocked by: 코드 스타일 02 ([code-style/issues/02](../../code-style/issues/02-extensionless-imports.md))
 
 ## What to build
 

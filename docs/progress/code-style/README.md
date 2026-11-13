@@ -4,8 +4,9 @@
 
 ## 티켓
 
-| 번호                                        | 제목              | 차단         |
-| ------------------------------------------- | ----------------- | ------------ |
-| [01](issues/01-blank-line-before-return.md) | `return` 앞 빈 줄 | 구조 이행 06 |
+| 번호                                        | 제목                        | 차단         |
+| ------------------------------------------- | --------------------------- | ------------ |
+| [01](issues/01-blank-line-before-return.md) | `return` 앞 빈 줄           | 구조 이행 06 |
+| [02](issues/02-extensionless-imports.md)    | 상대 import에서 확장자 빼기 | 01           |
 
-구조 이행 06(Component 파일 나누기)이 머지된 뒤, 주석 정리([comment-cleanup](../comment-cleanup/README.md))보다 먼저 한다. 저장소 전체 파일을 건드리므로 다른 작업과 동시에 하지 않는다.
+구조 이행 06(Component 파일 나누기)이 머지된 뒤 01 → 02 순서로, 주석 정리([comment-cleanup](../comment-cleanup/README.md))보다 먼저 한다. 저장소 전체 파일을 건드리므로 다른 작업과 동시에 하지 않는다.
