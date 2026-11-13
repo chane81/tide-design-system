@@ -5,7 +5,7 @@ import { describe, expect, test } from "vitest";
 
 import { githubSlug, rewriteRepoLinks, STORYBOOK_DOCS, toStorybookHref } from "./links.ts";
 
-const repoRoot = join(import.meta.dirname, "../../../..");
+const repoRoot = join(import.meta.dirname, "../../../../../..");
 
 describe("toStorybookHref", () => {
   test("Storybook에 실은 문서는 docs 경로로 바꾸고 앵커를 유지한다", () => {

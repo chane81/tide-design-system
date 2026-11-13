@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { FocusIndicators, Radii, Shadows } from "../docs-blocks/Shape.tsx";
+import { FocusIndicators, Radii, Shadows } from "../../components/Shape.tsx";
 
 // radius·Elevation·포커스 표시 Foundation 문서의 Token 블록. MDX에서 Canvas로 보여 주고, storybook project가 렌더·a11y를 검사한다.
 const meta = {

@@ -6,7 +6,7 @@ import {
   formatChroma,
   type ColorTile,
   type ColorTileGroup,
-} from "./colorTiles.ts";
+} from "../libs/colorTiles.ts";
 
 // 색 Token 블록: Primitive 스케일을 Token 원본에서 그린다(spec 「문서 앱」 Token 블록, 티켓 45).
 // - 계열마다 카드 하나. 제목은 계열 이름과 그 계열을 쓰는 Role(장식 계열은 「장식」)이다.

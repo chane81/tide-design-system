@@ -1,6 +1,6 @@
 # 03: 문서 앱 섹션·블록 재배치
 
-Status: ready-for-agent
+Status: done
 Blocked by: 없음 (바로 시작 가능)
 
 ## What to build

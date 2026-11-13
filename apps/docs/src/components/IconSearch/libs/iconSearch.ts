@@ -3,7 +3,7 @@
 // - 태그: 업스트림 원본 패키지의 tags.json(원본 SVG 이름 → 영어 태그). lucide-static 1.70.0 설치본 확인.
 import tags from "lucide-static/tags.json" with { type: "json" };
 
-import names from "../../../../packages/icons/icon-names.json" with { type: "json" };
+import names from "../../../../../../packages/icons/icon-names.json" with { type: "json" };
 
 export interface IconEntry {
   /** Tide export 이름(예: `HouseIcon`). */
