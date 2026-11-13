@@ -1,5 +1,11 @@
 # @tide-tds/foundation
 
+## 0.9.1
+
+### 기능 추가와 수정 (patch)
+
+- [#33](https://github.com/chane81/tide-design-system/pull/33) [`115a8e6`](https://github.com/chane81/tide-design-system/commit/115a8e63748d6979a971b4fb5d7197fc56936b70) [@chane81](https://github.com/chane81) - `defineColorFamily` JSDoc 예시 스케일을 Tide 방식으로 만든 값(브랜드 색 문서 예시와 같은 값)으로 바꿨다. 동작은 그대로다.
+
 ## 0.9.0
 
 ### 호환되지 않는 변경 (minor)
