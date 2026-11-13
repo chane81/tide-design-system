@@ -18,7 +18,7 @@ Next.js(App Router)로 웹 앱을 만드는 개발자는 한글 UI에 맞고, �
 - 색은 Primitive와 Semantic 두 층의 Token으로 나뉜다. Component는 Semantic Token만 쓴다. `[data-theme]` 속성 하나로 light와 dark를 바꾼다.
 - 모든 Component는 WCAG 2.2 AA를 최소 기준으로 삼는다. 접근성 동작은 React Aria hooks로 가져오고, 마크업과 스타일은 Tide가 직접 만든다.
 - 아이콘은 `@tide-tds/icons`로 함께 배포한다. 사용자는 Tide 이름으로만 쓴다.
-- 문서는 Storybook 하나로 만들어 릴리스마다 `tide-tds.lakegreen.net`에 배포한다.
+- 문서는 Storybook 하나로 만들어 릴리스마다 `tds.lakegreen.net`에 배포한다.
 - 원칙 4개(① 접근성 > 미려함, ② 명확함 > 화려함, ③ 단순함 > 유연함, ④ 발견할 수 있음 > 외워야 함)가 모든 판단의 우선순위다.
 
 ## User Stories
@@ -426,7 +426,7 @@ Component별로 이미 정한 범위:
 - **Token 블록**: 5종(색 스케일과 대비비, 텍스트 스타일, radius, 그림자 light/dark, motion)을 직접 만든다. 모두 Token 원본을 import해 그린다.
 - **아이콘 페이지**: 이름표의 이름과 Lucide `tags.json`으로 검색하고, 클릭하면 import 문을 복사한다. 가상화 없이 시작한다. 검색 메타데이터는 공개 API가 아니다.
 - **가이드**: z-index 페이지에 `scroll-padding-top`, 아이콘 페이지에 사용 가이드, 시작하기에 Theme 전환 시 transition 끄기를 둔다.
-- **배포**: Dokploy(`tide-tds.lakegreen.net`)에 Dockerfile(pnpm build → nginx)로 올린다. Autodeploy는 끄고, 릴리스 workflow의 마지막에 API로 배포를 요청한 뒤 배포가 끝날 때까지 기다린다(실패·15분 타임아웃이면 job 실패). nginx는 해시 없는 파일에 `Cache-Control: no-cache`, 해시 붙은 `assets/*`에 1년 `immutable`을 붙인다([티켓 44](../tide-v0-impl/issues/44-docs-cache-and-deploy-wait.md), 2026-11-12 덧붙임).
+- **배포**: Dokploy(`tds.lakegreen.net`)에 Dockerfile(pnpm build → nginx)로 올린다. Autodeploy는 끄고, 릴리스 workflow의 마지막에 API로 배포를 요청한 뒤 배포가 끝날 때까지 기다린다(실패·15분 타임아웃이면 job 실패). nginx는 해시 없는 파일에 `Cache-Control: no-cache`, 해시 붙은 `assets/*`에 1년 `immutable`을 붙인다([티켓 44](../tide-v0-impl/issues/44-docs-cache-and-deploy-wait.md), 2026-11-12 덧붙임).
 
 ### 릴리스 ([버전과 배포 정책 결정](issues/30-grilling-release.md), [ADR 0008](../../decisions/0008-fixed-versions-and-oidc-direct-publish.md))
 

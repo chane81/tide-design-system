@@ -55,6 +55,6 @@ pnpm changeset --empty  # 바꿨지만 릴리스가 필요 없을 때(테스트,
 1. changeset이 든 PR을 main에 머지하면 「chore: 릴리스 버전 올리기」 PR(Version PR)이 생기거나 갱신된다. 버전과 CHANGELOG 변경이 들어 있다. Version PR은 하나이고 제목은 든 묶음에 따라 `[TDS] Release 0.6.0`, `[Storybook] Release 0.1.0`, `[TDS] Release 0.6.0 · [Storybook] Release 0.2.0` 중 하나다. TDS가 오르면 Storybook도 따라 오르므로 TDS가 든 Version PR은 「둘 다」 꼴이 된다.
 2. 릴리스할 때 Version PR을 머지한다. 단계 경계(0.1.0 … 0.5.0)는 이 PR을 머지할 때 사람이 고른다.
 3. 릴리스 workflow(`.github/workflows/release.yml`)가 전체 `typecheck test build smoke`를 다시 돌리고, npm에 publish한다(trusted publishing, provenance). tag는 패키지마다(`@tide-tds/components@0.2.0` 등) 생기고 GitHub Release는 `v0.2.0` 하나로 합쳐진다.
-4. publish가 실제로 일어났으면 문서 사이트(`tide-tds.lakegreen.net`) 배포를 요청하고, Dokploy에서 배포가 끝날 때까지 기다린다(실패하거나 15분 안에 끝나지 않으면 job이 실패한다). Storybook만 오른 Version PR을 머지했을 때는 npm publish 없이 문서만 배포하고, 성공하면 tag `@tide-tds/docs@0.1.0`을 만든다(GitHub Release는 없다). 아직 릴리스하지 않은 TDS changeset이 main에 남아 있으면 Storybook만으로는 배포하지 않는다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
+4. publish가 실제로 일어났으면 문서 사이트(`tds.lakegreen.net`) 배포를 요청하고, Dokploy에서 배포가 끝날 때까지 기다린다(실패하거나 15분 안에 끝나지 않으면 job이 실패한다). Storybook만 오른 Version PR을 머지했을 때는 npm publish 없이 문서만 배포하고, 성공하면 tag `@tide-tds/docs@0.1.0`을 만든다(GitHub Release는 없다). 아직 릴리스하지 않은 TDS changeset이 main에 남아 있으면 Storybook만으로는 배포하지 않는다. 문서 배포가 실패해도 npm 릴리스는 그대로 둔다. Actions에서 Release workflow를 수동 실행(workflow_dispatch)하면 문서 배포만 다시 한다.
 
 prerelease dist-tag(`next`, `canary`)는 v0에서 쓰지 않는다.
