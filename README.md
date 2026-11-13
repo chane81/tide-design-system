@@ -1,6 +1,6 @@
 # Tide Design System
 
-`#3183f5`(blue)를 primary로 삼는 React 디자인 시스템입니다. 원칙(Principle), 파운데이션(Foundation), 컴포넌트(Component) 세 층으로 이루어집니다.
+Tide는 원칙(Principle), 파운데이션(Foundation), 컴포넌트(Component) 세 층으로 이루어집니다.
 
 - 문서(Storybook): https://tide-tds.lakegreen.net
 - 기술 스택: React 19, Tailwind CSS 4, react-aria, TypeScript
