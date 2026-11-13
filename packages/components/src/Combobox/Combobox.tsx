@@ -1,16 +1,5 @@
 "use client";
-// 글자를 쳐서 옵션을 거르고 하나를 고르는 Combobox(tide-v0-impl 티켓 29). React Aria hooks만 쓰고 마크업은 직접 만든다
-// (ADR 0004). 근거 버전: react-aria 3.53.1(useComboBox, useButton, useListBox, useFilter, mergeProps, mergeRefs),
-// react-stately 3.51.0(useComboBoxState). 위치·portal·motion은 오버레이 공통 부분(_internal/components/OverlayPortal.tsx, ADR 0018), 목록 class와
-// 옵션 모으기·그리기는 Select와 같은 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, _internal/components/ListBoxNodes/ListBoxNodes.tsx, ADR 0019)을 쓴다.
-//
-// 구조:
-// - `Combobox`: 루트 DOM은 `role="combobox"` 텍스트 `<input>`이다(입력창 모양, Input과 같은 size). 감싸개 `<div>` 안에서
-//   그 뒤에 목록을 여는 chevron 버튼(Tab 순서 밖)과 폼 제출용 숨은 `<input type="hidden">`(고른 옵션의 `value`)이 온다.
-//   열리면 `document.body`에 목록을 portal한다.
-// - 포커스는 늘 입력에 있다. 목록 안 위치는 가상 포커스(`aria-activedescendant`)로 옮기고 옵션의 `data-highlighted`로 보인다.
-//   그래서 목록은 바깥을 inert로 막지 않는 non-modal이고(입력이 바깥이다), 포커스 가두기·복귀도 하지 않는다.
-// - `ComboboxItem`·`ComboboxSection`은 Select 옵션·묶음과 같다(_internal/components/ListBoxNodes/ListBoxNodes.tsx).
+// 포커스는 늘 입력에 있고 목록 위치는 가상 포커스(aria-activedescendant)로 옮긴다. 그래서 목록은 non-modal이다.
 
 import { ChevronDownIcon } from "@tide-design/icons";
 import {
@@ -22,7 +11,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-// 루트 entry에서 import한다(Popover.tsx 참고).
+// 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import { mergeProps, mergeRefs, useButton, useComboBox, useFilter } from "react-aria";
 import { useComboBoxState } from "react-stately";
 
@@ -46,9 +35,7 @@ export interface ComboboxProps extends Omit<
   value?: string | null;
   /** 처음 고른 값(비제어). 입력에 그 옵션의 글자가 보인다. 폼을 reset하면 이 값으로 돌아간다. */
   defaultValue?: string;
-  /**
-   * 고른 값이 바뀌면 부른다. 옵션을 고르면 그 `value`로, 사용자가 입력을 모두 지우면 `null`로 부른다.
-   */
+  /** 고른 값이 바뀌면 부른다. 옵션을 고르면 그 `value`로, 사용자가 입력을 모두 지우면 `null`로 부른다. */
   onValueChange?: (value: string | null) => void;
   /** 목록이 열리거나 닫힐 때 새 상태로 부른다. 열림 상태는 입력이 정하므로 제어할 수 없다. */
   onOpenChange?: (open: boolean) => void;
@@ -60,36 +47,24 @@ export interface ComboboxProps extends Omit<
   form?: string;
   /** 높이 `sm` 32px, `md` 40px, `lg` 48px. 같은 size의 Input·Select·Button과 높이가 같다. 기본값은 `md`다. */
   size?: InputSize;
-  /**
-   * 오류 상태. 입력에 `aria-invalid="true"`와 `data-invalid`가 붙고 경계가 danger 색이 된다.
-   * Field 안에서는 Field의 값을 따르고, 여기에 준 값이 이긴다.
-   */
+  /** 오류 상태. 입력에 `aria-invalid="true"`와 `data-invalid`가 붙는다. Field 안에서는 여기 준 값이 이긴다. */
   invalid?: boolean;
   /**
-   * 필수. 비어 있으면 폼 제출이 막히고 입력으로 포커스가 오며 오류 상태가 된다(브라우저 오류 말풍선은 없다).
-   * 메시지는 Field의 `error`로 앱이 보여 준다. Field 안에서는 Field의 값을 따른다.
+   * 필수. 비어 있으면 제출이 막히고 입력으로 포커스가 오며 오류 상태가 된다(브라우저 말풍선 없음).
+   * 메시지는 Field `error`로 보여 준다. Field 안에서는 Field의 값을 따른다.
    */
   required?: boolean;
   /** `ComboboxItem`과 `ComboboxSection`. 이 요소들을 바로 아래(또는 Fragment·배열 안)에 둔다. */
   children?: ReactNode;
 }
 
-/**
- * 한글 IME 조합 중의 keydown인지. 조합 중 Enter·화살표·Esc는 IME가 쓰므로 목록 동작에 쓰지 않는다.
- * Chromium·Firefox는 `isComposing`이 `true`다. Safari는 조합을 끝내는 Enter의 keydown이 compositionend 뒤에
- * `isComposing: false`로 오지만 `keyCode`가 229다(조합 처리 중인 키). 그래서 둘 다 본다.
- */
+// Safari는 조합을 끝내는 Enter keydown이 compositionend 뒤에 `isComposing: false`로 오지만 keyCode가 229라 둘 다 본다.
 const isComposingKey = (event: KeyboardEvent): boolean =>
   event.nativeEvent.isComposing || event.keyCode === 229;
 
 /**
- * 글자를 쳐서 옵션을 거르고 하나를 고르는 입력. 치면 목록이 열리고 옵션 글자에 친 글자가 들어 있는 옵션만 남는다
- * (대소문자·악센트 무시, 현재 locale 기준). ↓·↑로 목록을 열고 옵션을 옮겨 Enter로 고르며, chevron 버튼을 누르면 거르지
- * 않은 전체 목록이 열린다. 고르면 닫히고 입력에 그 옵션의 글자가 들어간다. Esc는 닫고 입력을 고른 옵션의 글자로 되돌린다.
- * 포커스가 나가면 고르지 않은 글자는 지워진다(자유 입력 없음). 거른 결과가 없으면 목록에 `emptyMessage`가 보인다.
- * Field 안에 두면 label·설명·오류가 자동으로 연결되고, `name`을 주면 고른 옵션의 `value`가 폼에 제출된다.
- * 상태는 `data-open`·`data-invalid`·네이티브 `:disabled`(입력), `data-open`(목록),
- * `data-highlighted`·`data-selected`·`data-disabled`(옵션)로 노출한다.
+ * 글자를 쳐서 옵션을 거르고 하나를 고르는 입력. 포커스가 나가면 고르지 않은 글자는 지워진다(자유 입력 없음).
+ * Field 안에 두면 label·설명·오류가 연결되고, `name`을 주면 고른 옵션의 `value`가 제출된다.
  */
 export function Combobox({
   value,
@@ -126,30 +101,26 @@ export function Combobox({
   const isDisabled = control.disabled ?? false;
   const isRequired = control.required ?? false;
   const items = useMemo(() => resolveCollectionChildren(children), [children]);
-  // 대소문자·악센트를 무시하는 locale 기준 「포함」 검사(React Aria ComboBox 기본 거르기와 같다).
   const { contains } = useFilter({ sensitivity: "base" });
   const state = useComboBoxState<object>({
-    // useComboBoxState의 children 타입은 React Stately 요소(Item·Section)지만, 같은 방식으로 getCollectionNode를 붙인
-    // Tide 옵션 요소를 넘긴다(_internal/libs/listCollection.ts, Select와 같다).
+    // 타입은 React Stately Item·Section이지만, getCollectionNode를 붙인 Tide 옵션 요소를 넘긴다(ADR 0019).
     children: items as unknown as Parameters<typeof useComboBoxState<object>>[0]["children"],
     defaultFilter: contains,
     value,
     defaultValue,
     onChange: (key) => onValueChange?.(key == null ? null : String(key)),
     onOpenChange: (open) => onOpenChange?.(open),
-    // 거른 결과가 없어도 목록을 닫지 않고 「결과 없음」을 보인다.
     allowsEmptyCollection: true,
     isDisabled,
     isReadOnly: readOnly,
     isRequired,
-    // 필수 검사는 네이티브 제약 검사(입력의 required)로 한다. 비면 제출을 막고 입력으로 포커스를 옮긴다.
     validationBehavior: "native",
   });
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const listBoxRef = useRef<HTMLDivElement>(null);
-  // Field의 label은 `<label for>`로 입력의 이름이 되고, labelId를 aria-labelledby로도 넘겨 목록·버튼의 이름에 쓴다.
+  // labelId를 aria-labelledby로도 넘겨 목록·버튼의 이름에 쓴다(입력은 `<label for>`로 이름을 받는다).
   const { inputProps, buttonProps, listBoxProps, isInvalid } = useComboBox<object>(
     {
       inputRef,
@@ -176,14 +147,12 @@ export function Combobox({
       <input
         {...mergeProps(props, ariaInputProps)}
         ref={mergedRef}
-        // IME 조합 중의 키는 React Aria 목록 동작에 넘기지 않는다(Enter로 조합을 끝낼 때 고르거나 입력을 되돌리지 않게).
-        // 앱이 준 onKeyDown은 늘 먼저 부른다.
+        // IME 조합 중의 키는 React Aria에 넘기지 않는다. 조합을 끝내는 Enter가 옵션을 고르지 않게 한다.
         onKeyDown={(event) => {
           props.onKeyDown?.(event);
           if (!isComposingKey(event)) ariaKeyDown?.(event);
         }}
-        // useComboBox(useTextField·useField)는 값 요소와 자기 설명·오류 요소 자리의 id를 aria-describedby에 넣는다. Tide는
-        // 그 요소를 그리지 않고 Field가 설명·오류를 그리므로 Field 연결 값만 쓴다(Select와 같다).
+        // useComboBox는 그리지 않는 자기 설명·오류 요소의 id를 넣으므로, Field가 연결한 값만 쓴다.
         aria-describedby={control["aria-describedby"]}
         aria-invalid={showInvalid ? true : control["aria-invalid"]}
         data-invalid={showInvalid ? "" : undefined}

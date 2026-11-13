@@ -1,6 +1,3 @@
-// Spinner 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 09).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 회전이 유지되는지를
-// 계산값과 Web Animations API로 단언한다(tide-v0 티켓 21: Spinner 회전은 reduced-motion에서도 유지).
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -49,7 +46,6 @@ describe("역할과 이름", () => {
 });
 
 describe("size", () => {
-  // spec 아이콘 크기 규칙의 「텍스트 옆 아이콘」 열
   const sizes: [NonNullable<SpinnerProps["size"]>, number][] = [
     ["xs", 14],
     ["sm", 14],
@@ -90,9 +86,8 @@ describe("회전", () => {
     const svg = page.getByRole("status").element();
     const style = getComputedStyle(svg);
 
-    // 두 번째 instance는 forced-colors와 reduced-motion을 함께 켠다. 분기가 실제로 두 쪽 다 도는지 확인한다.
     expect(reducedMotion()).toBe(forcedColors());
-    // reduced-motion instance에서도 같은 값이다. motion-safe:로 감싸지 않았기 때문이다.
+    // motion-safe:로 감싸지 않아 reduced-motion instance에서도 같은 값이다.
     expect(style.animationName).toBe("spin");
     expect(style.animationDuration).toBe("1s");
     expect(style.animationTimingFunction).toBe("linear");
@@ -101,7 +96,6 @@ describe("회전", () => {
 
     const [animation] = svg.getAnimations();
     expect(animation?.playState).toBe("running");
-    // 실제로 시간이 흐르며 각도가 바뀐다.
     const before = getComputedStyle(svg).transform;
     await new Promise((resolve) => setTimeout(resolve, 100));
     expect(getComputedStyle(svg).transform).not.toBe(before);

@@ -1,10 +1,5 @@
-// Combobox 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 29).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 포커스·위치 표시가 시스템 색
-// outline으로 남는지를 본다.
-//
-// 목록은 non-modal이라 열린 동안에도 바깥이 inert가 아니다. 그래서 바깥 누름은 보통 click으로 한다(Select와 다르다).
-// 한글 IME 조합은 Chrome DevTools Protocol(`cdp()`, vitest 5.1.0 docs/api/browser/context.md)의
-// `Input.imeSetComposition`·`Input.insertText`로 실제 compositionstart/update/end를 일으켜 확인한다.
+// 목록은 non-modal이라 열린 동안에도 바깥이 inert가 아니어서 바깥 누름은 click으로 한다.
+// 한글 IME 조합은 CDP `Input.imeSetComposition`·`Input.insertText`로 실제 composition 이벤트를 일으킨다.
 import { useState, type ReactElement } from "react";
 import { I18nProvider } from "react-aria";
 import { describe, expect, test, vi } from "vitest";
@@ -90,7 +85,6 @@ const hiddenValue = (): string | undefined =>
 const announced = (): string =>
   document.querySelector('[aria-live="assertive"]')?.textContent?.trim() ?? "";
 
-/** 목록이 DOM에서 빠질 때까지(퇴장 전환 끝) 기다린다. */
 async function expectClosed(): Promise<void> {
   await expect.poll(listbox).toBeNull();
 }
@@ -101,7 +95,6 @@ async function tabToInput(): Promise<void> {
   expect(document.activeElement).toBe(input());
 }
 
-/** 가상 포커스가 가리키는 옵션. 입력의 aria-activedescendant로 찾는다. */
 const activeOption = (): HTMLElement | null => {
   const id = input().getAttribute("aria-activedescendant");
 
@@ -119,13 +112,11 @@ describe("이름과 연결", () => {
     expect(input()).toHaveAttribute("aria-expanded", "false");
     expect(input()).toHaveAttribute("autocomplete", "off");
     expect(input()).not.toHaveAttribute("aria-controls");
-    // label의 for가 입력을 가리킨다(label을 누르면 입력에 포커스).
     const label = document.querySelector("label")!;
     expect(label.htmlFor).toBe(input().id);
     await userEvent.click(page.getByText("과일", { exact: true }));
     await expect.element(page.getByTestId("input")).toHaveFocus();
     expect(listbox()).toBeNull();
-    // 설명 요소만 가리킨다(React Aria가 만든 값·설명·오류 빈 자리 id는 쓰지 않는다).
     const ids = input().getAttribute("aria-describedby")!.split(" ");
     expect(ids).toHaveLength(1);
     expect(document.getElementById(ids[0]!)).not.toBeNull();
@@ -165,7 +156,6 @@ describe("입력 필터링", () => {
     expect(input()).toHaveAttribute("aria-controls", listbox()!.id);
     expect(input()).toHaveAttribute("data-open", "");
     expect(document.activeElement).toBe(input());
-    // 글자를 지우면 다시 전체가 남는다.
     await userEvent.keyboard("{Backspace}");
     await expect.poll(optionNames).toHaveLength(6);
     await userEvent.keyboard("포");
@@ -195,12 +185,10 @@ describe("입력 필터링", () => {
     expect(optionNames()).toEqual([]);
     const popover = listbox()!.parentElement!;
     await expect.element(page.getByText("결과가 없습니다")).toBeVisible();
-    // 메시지는 listbox 밖(같은 목록 표면 안)에 있다. listbox 자식은 option·group만 될 수 있다.
     expect(listbox()!.textContent).toBe("");
     expect(popover).toHaveTextContent("결과가 없습니다");
     expect(input()).toHaveAttribute("aria-expanded", "true");
     expect(input()).not.toHaveAttribute("aria-activedescendant");
-    // Enter는 아무것도 고르지 않는다.
     await userEvent.keyboard("{ArrowDown}{Enter}");
     expect(input().value).toBe("");
   });
@@ -223,7 +211,6 @@ describe("입력 필터링", () => {
     await userEvent.keyboard("수");
     await expect.poll(announced).toMatch(/0 options available\.$/);
 
-    // 앱 locale이 한국어면 한국어로 알린다(React Aria 번역 문구).
     await render(
       <I18nProvider locale="ko-KR">
         <Combobox aria-label="과일" data-testid="ko">
@@ -286,7 +273,6 @@ describe("화살표 이동과 선택", () => {
     await tabToInput();
     await userEvent.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
     await expect.poll(activeOption).toBe(byTestId("pear"));
-    // 체리(disabled)를 건너뛴다.
     await userEvent.keyboard("{ArrowDown}");
     await expect.poll(activeOption).toBe(byTestId("grape"));
     expect(byTestId("cherry")).toHaveAttribute("aria-disabled", "true");
@@ -322,13 +308,11 @@ describe("화살표 이동과 선택", () => {
     await tabToInput();
     await userEvent.keyboard("{ArrowDown}");
     await expect.poll(listbox).not.toBeNull();
-    // 열 때는 입력 글자로 거르지 않고 전체를 보인다.
     expect(optionNames()).toHaveLength(6);
     expect(byTestId("banana")).toHaveAttribute("aria-selected", "true");
     expect(byTestId("banana")).toHaveAttribute("data-selected", "");
     expect(byTestId("banana").querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     expect(byTestId("apple")).toHaveAttribute("aria-selected", "false");
-    // ↓·↑ 모두 고른 옵션에 위치해 연다.
     await expect.poll(activeOption).toBe(byTestId("banana"));
     await userEvent.keyboard("{Escape}");
     await expectClosed();
@@ -404,7 +388,6 @@ describe("닫기와 자유 입력 없음", () => {
     await expectClosed();
     expect(input().value).toBe("");
     expect(onValueChange).not.toHaveBeenCalled();
-    // 포커스를 입력으로 되돌리지 않는다.
     expect(document.activeElement).not.toBe(input());
   });
 
@@ -412,9 +395,7 @@ describe("닫기와 자유 입력 없음", () => {
     const onValueChange = vi.fn();
     await render(<Fruits onValueChange={onValueChange} />);
     await tabToInput();
-    // 거른 목록이 열린 것을 본 뒤에 ↓를 누른다. 입력으로 목록을 여는 것은 React Stately가 render 뒤 effect에서 하므로,
-    // 그 전에 ↓가 도착하면 「닫힌 목록을 ↓로 연다」가 되어 거르지 않은 전체 목록의 첫 옵션(사과)에 간다
-    // (useComboBoxState open(…, 'manual') → showAllItems). 한 번에 "포{ArrowDown}"을 보내면 부하에 따라 그렇게 됐다.
+    // 입력으로 목록을 여는 것은 render 뒤 effect라, 거른 목록을 본 뒤에 ↓를 누른다. 먼저 도착하면 전체 목록이 열린다.
     await userEvent.keyboard("포");
     await expect.poll(optionNames).toEqual(["포도"]);
     await userEvent.keyboard("{ArrowDown}");
@@ -481,7 +462,6 @@ describe("한글 IME 조합", () => {
     expect(events).toEqual(["start", "enter:true", "end"]);
     expect(input().value).toBe("바");
     await expect.poll(optionNames).toEqual(["바나나"]);
-    // 조합이 끝난 뒤의 ↓·Enter는 목록 동작이다.
     await userEvent.keyboard("{ArrowDown}{Enter}");
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith("banana");
     expect(input().value).toBe("바나나");
@@ -712,11 +692,9 @@ describe("모양", () => {
       expect(box.right - icon.right).toBe(end);
       const selectIcon = byTestId("select").querySelector("svg")!.getBoundingClientRect();
       expect(byTestId("select").getBoundingClientRect().right - selectIcon.right).toBe(end);
-      // 글자가 chevron 밑으로 들어가지 않게 끝 padding이 chevron + 8px를 비운다.
       expect(box.right - Number.parseFloat(style.paddingRight)).toBeLessThanOrEqual(
         icon.left - 8 + 1,
       );
-      // 버튼은 입력 끝 안쪽에 겹친다(높이도 입력과 같다).
       const button = chevron().getBoundingClientRect();
       expect(button.right).toBe(box.right);
       expect(button.height).toBe(height);
@@ -795,7 +773,6 @@ describe("모양", () => {
     await render(<Fruits defaultValue="banana" />);
     await userEvent.hover(page.getByTestId("outside"));
     await tabToInput();
-    // 고른 옵션이 있으면 ↓로 열 때 그 옵션에 위치한다.
     await userEvent.keyboard("{ArrowDown}");
     await expect.poll(activeOption).toBe(byTestId("banana"));
     const banana = byTestId("banana");
@@ -837,7 +814,7 @@ describe("모양", () => {
     const popover = listbox()!.parentElement!;
     expect(getComputedStyle(popover).opacity).toBe("1");
     expect(getComputedStyle(popover).transitionProperty).toBe("none");
-    // 닫힌 직후(퇴장 전환 중)의 계산값. Escape 명령이 돌아온 뒤에 읽으면 부하에 따라 퇴장이 이미 끝나 있다(test/motion.ts).
+    // 퇴장 전환 중 값은 닫힌 순간에 붙잡는다. Escape 명령 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
     const exit = captureExit(popover, () => ({
       connected: popover.isConnected,
       style: styleSnapshot(popover),

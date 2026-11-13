@@ -18,14 +18,7 @@ function resolveTimeout(options: ToastOptions): number | undefined {
   return Math.max(timeout, minTimeout);
 }
 
-/**
- * Toast 큐. React 밖(모듈)에서 만들어 `ToastRegion`에 넘기고, 어디서든 `add`로 띄운다.
- *
- * ```tsx
- * export const toasts = new ToastQueue();
- * toasts.add({ title: "저장했습니다" });
- * ```
- */
+/** Toast 큐. 모듈에서 `new ToastQueue()`로 만들어 `ToastRegion`에 넘기고, 어디서든 `add`로 띄운다. */
 export class ToastQueue {
   constructor({ maxVisible = 3 }: ToastQueueOptions = {}) {
     statelyQueues.set(this, new StatelyToastQueue<ToastContent>({ maxVisibleToasts: maxVisible }));

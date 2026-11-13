@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useRef, type ReactElement } from "react";
-// 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
+// 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import { mergeProps, mergeRefs, useToastRegion } from "react-aria";
 import type { ToastState } from "react-stately";
 
@@ -27,8 +27,7 @@ export function Region({
 }: RegionProps): ReactElement {
   const regionRef = useRef<HTMLDivElement>(null);
   const mergedRef = useMemo(() => mergeRefs(ref, regionRef), [ref]);
-  // regionProps: role="region" 랜드마크·이름, hover·포커스 동안 시간 멈춤, 닫힌 Toast의 포커스 옮기기,
-  // data-react-aria-top-layer(열린 모달 Popover·Dialog가 바깥을 inert로 막을 때 빠지고, 눌러도 그 오버레이를 닫지 않는다).
+  // regionProps의 data-react-aria-top-layer 덕에 열린 모달이 바깥을 inert로 막을 때 영역은 빠진다.
   const { regionProps } = useToastRegion({ "aria-label": ariaLabel }, state, regionRef);
 
   return (

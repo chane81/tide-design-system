@@ -1,9 +1,5 @@
-// Toast 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 34).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 경계가 시스템 색으로 남는지와
-// 등장·퇴장이 opacity 전환만 남는지를 본다.
-//
-// 자동 닫힘 시간은 가짜 타이머(setTimeout·clearTimeout·Date만)로 앞당긴다. react-stately Timer가 setTimeout과
-// Date.now로 남은 시간을 잰다. 가짜 타이머는 Toast를 띄운 뒤에 켜고 테스트 끝에 끈다.
+// react-stately Timer는 setTimeout·Date.now로 남은 시간을 재므로 그 둘만 가짜로 바꾼다.
+// 가짜 타이머는 Toast를 띄운 뒤에 켜고 테스트 끝에 끈다.
 import { useState, type ReactElement } from "react";
 import { I18nProvider } from "react-aria";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -44,7 +40,6 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-/** 영역을 그리고 큐를 돌려준다. */
 async function setup(
   options?: ToastQueueOptions,
   props?: Partial<ToastRegionProps>,
@@ -65,7 +60,6 @@ async function setup(
 const region = (): HTMLElement => page.getByTestId("region").element() as HTMLElement;
 const toastByName = (name: string) => page.getByRole("alertdialog", { name });
 
-/** Toast를 띄우고 그 요소가 보일 때까지 기다린다. */
 async function show(queue: ToastQueue, options: ToastOptions): Promise<HTMLElement> {
   queue.add(options);
   const locator = toastByName(String(options.title));
@@ -74,7 +68,6 @@ async function show(queue: ToastQueue, options: ToastOptions): Promise<HTMLEleme
   return locator.element() as HTMLElement;
 }
 
-/** 등장 전환이 끝날 때까지 기다린다. */
 async function settle(element: Element): Promise<void> {
   await Promise.all(element.getAnimations().map((animation) => animation.finished));
 }
@@ -89,7 +82,6 @@ async function frames(): Promise<void> {
   for (let i = 0; i < 2; i += 1) await new Promise((done) => requestAnimationFrame(done));
 }
 
-/** 가짜 타이머를 켠 채로 Toast를 띄운다. 자동 닫힘 타이머가 가짜 setTimeout으로 시작된다. */
 async function addFaked(queue: ToastQueue, options: ToastOptions): Promise<HTMLElement> {
   queue.add(options);
   await frames();
@@ -104,7 +96,6 @@ async function addFaked(queue: ToastQueue, options: ToastOptions): Promise<HTMLE
 describe("영역과 읽기", () => {
   test("Toast가 없으면 아무것도 그리지 않고, 띄우면 body에 portal한 region 랜드마크가 생긴다", async () => {
     const queue = new ToastQueue();
-    // 기본 이름은 React Aria 번역이라 locale을 따른다(ko-KR 「1개 알림.」).
     await render(
       <I18nProvider locale="ko-KR">
         <ToastRegion queue={queue} data-testid="region" />
@@ -115,7 +106,6 @@ describe("영역과 읽기", () => {
     const landmark = page.getByRole("region", { name: "1개 알림." });
     await expect.element(landmark).toBeVisible();
     expect(region().parentElement).toBe(document.body);
-    // 열린 모달 오버레이가 바깥을 inert로 막을 때 빠지는 표시(React Aria useToastRegion)
     expect(region()).toHaveAttribute("data-react-aria-top-layer");
   });
 
@@ -140,7 +130,6 @@ describe("영역과 읽기", () => {
     expect(alert).not.toBeNull();
     expect(alert).toHaveAttribute("aria-atomic", "true");
     expect(alert).toHaveTextContent("업로드 완료파일 3개를 올렸습니다.");
-    // 상태 아이콘은 장식용이다.
     expect(toast.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 
@@ -184,17 +173,13 @@ describe("큐", () => {
     await expect.element(toastByName("셋")).toBeVisible();
     queue.clear();
     await expect.poll(() => document.querySelector("[role='region']")).toBeNull();
-    // clear는 onClose를 부르지 않는다(react-stately ToastQueue.clear).
     expect(onClose).not.toHaveBeenCalled();
   });
 });
 
 describe("자동 닫힘", () => {
-  // 가짜 타이머를 켠 동안에는 expect.element·expect.poll(타이머로 다시 시도)을 쓰지 않고 frames()로 렌더를 기다린다.
-  // vitest 5.1.0 browser는 요소를 기다리는 명령(hover·unhover·click 등 locator 명령)이 도는 동안, 가짜 타이머가 켜져
-  // 있으면 실제 50ms마다 `vi.advanceTimersByTime(50)`을 부른다(`@vitest/browser` dist/context.js
-  // `advanceFakeTimersWhilePending`). 그래서 그런 명령 뒤에는 가짜 시계가 명령에 걸린 실제 시간만큼 움직여 있다.
-  // 부하가 크면 수 초가 될 수 있으니, 명령을 쓰는 테스트는 그 시간이 결과를 바꾸지 않게 짠다.
+  // 가짜 타이머 중에는 expect.element·expect.poll 대신 frames()로 기다린다. vitest 5.1.0 browser는 locator 명령이
+  // 도는 동안 가짜 시계를 실제 시간만큼 움직이므로, 명령을 쓰는 테스트는 그 시간이 결과를 바꾸지 않게 짠다.
   test("기본 5초 뒤에 닫히고 onClose를 부른다. 그 전에는 닫히지 않는다", async () => {
     const onClose = vi.fn();
     const queue = await setup();
@@ -260,15 +245,12 @@ describe("자동 닫힘", () => {
   });
 
   test("영역에 마우스를 올린 동안 멈추고, 떠나면 남은 시간이 지나 닫힌다", async () => {
-    // hover·unhover 명령이 도는 동안 가짜 시계가 실제 시간만큼 움직인다(describe 주석). 5초 Toast는 부하로 명령이 2초를
-    // 넘기면 마우스가 닿기 전에 닫혀 hover가 Toast를 찾지 못했다(전체 turbo 실행, 2026-11-12). 그래서 테스트 시간 제한
-    // (15초)보다 훨씬 긴 60초 Toast를 쓰고, 마우스가 들어오고 나간 순간의 가짜 시각을 그 자리에서 기록해 남은 시간을
-    // 정확히 계산한다. 명령이 얼마나 걸리든 결과가 같다.
+    // 부하로 hover 명령이 길어지면 5초 Toast는 마우스가 닿기 전에 닫힌다. 60초 Toast를 쓰고, 들어오고 나간
+    // 순간의 가짜 시각을 기록해 남은 시간을 계산한다.
     const timeout = 60_000;
     const queue = await setup();
     fakeTimers();
     const toast = await addFaked(queue, { title: "저장했습니다", timeout });
-    // 자동 닫힘 타이머는 addFaked 안(effect)에서 시작했고, 그 뒤로는 가짜 시계를 움직이지 않았다.
     const startedAt = Date.now();
     const moments: { enter?: number; leave?: number } = {};
     region().addEventListener("pointerenter", () => (moments.enter ??= Date.now()));
@@ -277,14 +259,12 @@ describe("자동 닫힘", () => {
     vi.advanceTimersByTime(3000);
     await userEvent.hover(toast);
     expect(moments.enter).toBeDefined();
-    // 올린 동안에는 남은 시간을 훨씬 넘겨도 닫히지 않는다.
     vi.advanceTimersByTime(10 * timeout);
     await frames();
     expect(toast).toHaveAttribute("data-open", "");
 
     await userEvent.unhover(toast);
     expect(moments.leave).toBeDefined();
-    // 떠난 순간부터 남은 시간(올리기 전까지 흐른 시간을 뺀 값)이 지나면 닫힌다.
     const closesAt = moments.leave! + timeout - (moments.enter! - startedAt);
     vi.advanceTimersByTime(closesAt - Date.now() - 1);
     await frames();
@@ -351,7 +331,6 @@ describe("닫기·액션과 포커스", () => {
     outside.focus();
     await userEvent.keyboard("{F6}");
     await expect.poll(() => region().contains(document.activeElement)).toBe(true);
-    // 영역 안의 첫 Toast로 Tab이 간다.
     const toast = toastByName("삭제했습니다").element();
     if (document.activeElement === region()) await userEvent.tab();
     expect(document.activeElement).toBe(toast);
@@ -396,9 +375,8 @@ describe("퇴장 중 상호작용", () => {
     const older = await show(queue, { title: "하나", action: { label: "되돌리기" } });
     const newer = await show(queue, { title: "둘", timeout: null });
     await settle(older);
-    // DOM은 새것이 먼저다(둘, 하나). 하나를 닫으면 Tab 순서의 마지막 Toast가 퇴장한다.
     expect(page.getByRole("alertdialog").elements()).toEqual([newer, older]);
-    // 퇴장이 시작되는 순간 전환을 멈춰 둔다(test/motion.ts의 captureExit, 렌더링 단계보다 먼저 돈다).
+    // captureExit은 렌더링 단계보다 먼저 돌아 퇴장이 시작되는 순간 전환을 멈출 수 있다.
     const exit = captureExit(older, () => ({ inert: older.inert, paused: pause(older) }));
     await userEvent.click(page.getByRole("button", { name: "되돌리기" }));
     const { inert, paused } = await exit;
@@ -408,7 +386,6 @@ describe("퇴장 중 상호작용", () => {
 
     const buttons = [...older.querySelectorAll("button")];
     expect(buttons).toHaveLength(2);
-    // inert 안의 요소는 focus()로도 포커스를 받지 않는다.
     const newerClose = newer.querySelector("button") as HTMLButtonElement;
     newerClose.focus();
     expect(document.activeElement).toBe(newerClose);
@@ -416,7 +393,6 @@ describe("퇴장 중 상호작용", () => {
       button.focus();
       expect(document.activeElement).toBe(newerClose);
     }
-    // 남은 Toast의 마지막 버튼에서 Tab을 누르면 퇴장 중 Toast의 버튼을 건너뛴다.
     await userEvent.tab();
     expect(older.contains(document.activeElement)).toBe(false);
     expect(older.inert).toBe(true);
@@ -429,7 +405,7 @@ describe("퇴장 중 상호작용", () => {
     const queue = await setup({ maxVisible: 1 });
     const first = await show(queue, { title: "하나", timeout: null });
     await settle(first);
-    // 둘을 띄우면 하나가 보이는 목록에서 밀려나 퇴장한다. 그 순간 둘을 닫으면 하나가 같은 key로 다시 보인다.
+    // 둘을 띄우면 하나가 밀려나 퇴장하고, 그 순간 둘을 닫으면 하나가 같은 key로 다시 보인다.
     let secondKey = "";
     const reopened = captureExit(first, () => {
       const inert = first.inert;
@@ -475,7 +451,6 @@ describe("다른 오버레이와 함께", () => {
     await userEvent.click(page.getByRole("button", { name: "저장" }));
     const toast = toastByName("저장했습니다");
     await expect.element(toast).toBeVisible();
-    // Dialog가 연 뒤 body에 붙었어도 inert·aria-hidden이 되지 않는다.
     expect(region().closest("[inert]")).toBeNull();
     expect(region().closest("[aria-hidden='true']")).toBeNull();
     const backdrop = (page.getByTestId("content").element() as HTMLElement)
@@ -533,7 +508,6 @@ describe("위치·표면·색", () => {
     expect(toast).toHaveAttribute("data-color", "info");
     const close = page.getByRole("button", { name: "닫기" }).element() as HTMLElement;
     const action = page.getByRole("button", { name: "새로 고침" }).element() as HTMLElement;
-    // raised 위 Role 색 글자는 bg-active 위에서 4:1에도 못 미치는 색이 있어 버튼은 neutral(text-default)이다(티켓 03·46).
     expect(close).toHaveAttribute("data-color", "neutral");
     expect(action).toHaveAttribute("data-color", "neutral");
     expect(close.getBoundingClientRect().height).toBe(24);
@@ -564,7 +538,7 @@ describe("위치·표면·색", () => {
 describe("등장과 퇴장 motion", () => {
   test("등장: opacity + blur 4px + 아래 4px에서 normal(300ms)로 떠오른다. 움직임 줄이기에서는 opacity만", async () => {
     const queue = await setup();
-    // 전환 중 값(등장 300ms)은 Toast가 DOM에 들어온 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 등장이 끝나 있다(test/motion.ts).
+    // 전환 중 값은 DOM에 들어온 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 등장이 끝나 있다.
     const toastNow = (): HTMLElement | null => document.querySelector("[role='alertdialog']");
     const entered = captureWhen(
       () => toastNow() !== null,
@@ -597,7 +571,7 @@ describe("등장과 퇴장 motion", () => {
       return toastByName("저장했습니다").element() as HTMLElement;
     })();
     await settle(toast);
-    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다(test/motion.ts).
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. poll 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
     const exit = captureExit(toast, () => ({
       connected: toast.isConnected,
       role: toast.getAttribute("role"),
@@ -608,7 +582,6 @@ describe("등장과 퇴장 motion", () => {
     queue.close(key);
     const { connected, role, inert, style, running } = await exit;
     expect(connected).toBe(true);
-    // 퇴장 중에는 역할이 빠져 스크린 리더·포커스 이동에서 빠지고, inert라 안의 버튼에 닿지 않는다(티켓 43).
     expect(role).toBeNull();
     expect(inert).toBe(true);
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
@@ -623,7 +596,6 @@ describe("등장과 퇴장 motion", () => {
       expect(running.get("translate")?.to["translate"]).toBe("0px 2px");
     }
     await expect.poll(() => toast.isConnected).toBe(false);
-    // 마지막 Toast가 빠지면 영역도 빠진다.
     expect(document.querySelector("[role='region']")).toBeNull();
   });
 });
