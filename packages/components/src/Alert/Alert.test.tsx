@@ -1,5 +1,4 @@
-// Alert의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 20).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서는 배경이 사라져도 경계로 영역이 남는지 본다.
+// 두 번째 instance(forced-colors)에서도 돈다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -8,7 +7,7 @@ import { render } from "vitest-browser-react";
 
 import { Alert, type AlertProps } from "./Alert";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -17,7 +16,6 @@ declare module "@tide-design/foundation" {
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
 function resolve(value: string, theme = "light"): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = theme;
@@ -153,10 +151,8 @@ describe("닫기", () => {
     const button = page.getByRole("button", { name: "닫기" });
     await expect.element(button).toHaveAttribute("type", "button");
     await expect.element(button).toHaveAttribute("data-color", "info");
-    // 아이콘은 버튼 안에서도 장식용이다.
     expect(button.element().querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     await userEvent.click(button);
-    // 누른 뒤 포커스가 버튼에 있다. 키보드로 두 번 더 누른다.
     await expect.element(button).toHaveFocus();
     await userEvent.keyboard("{Enter}");
     await userEvent.keyboard(" ");
@@ -191,7 +187,6 @@ describe("닫기", () => {
     expect(button.getBoundingClientRect().height).toBe(24);
     expect(button).toHaveAttribute("data-color", "danger");
     if (forcedColors()) return;
-    // subtle 바탕 위라 글자는 on-subtle이다(ADR 0022 §1).
     expect(getComputedStyle(button).color).toBe(resolve("var(--tide-text-danger-on-subtle)"));
     await userEvent.hover(button);
     await expect
@@ -285,7 +280,7 @@ describe("색", () => {
       );
       expect(root()).toHaveAttribute("data-color", role);
       if (forcedColors()) return;
-      // neutral의 on-subtle은 text-default를 공유한다. 파스텔 테두리는 neutral도 Role Token이 있다(ADR 0022).
+      // neutral의 on-subtle은 text-default를 공유한다(ADR 0022).
       const text =
         role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role}-on-subtle)`;
       const border = `var(--tide-border-${role}-subtle)`;
@@ -377,7 +372,6 @@ describe("forced-colors", () => {
     expect(style.color).toBe(resolve("CanvasText"));
     expect(style.backgroundColor).toBe(resolve("Canvas"));
     expect(getComputedStyle(icon()).color).toBe(resolve("CanvasText"));
-    // 닫기 버튼(ghost)도 투명 경계가 보여 버튼 모양이 남는다.
     const button = getComputedStyle(page.getByRole("button", { name: "닫기" }).element());
     expect(button.borderTopWidth).toBe("1px");
     expect(button.borderTopColor).not.toBe("rgba(0, 0, 0, 0)");
@@ -406,7 +400,6 @@ describe("공통 API", () => {
     expect(root()).not.toHaveClass("rounded-lg");
     expect(root()).not.toHaveClass("p-4");
     expect(getComputedStyle(root()).paddingTop).toBe("24px");
-    // title은 제목(ReactNode)이고 HTML title 속성(툴팁)으로 붙지 않는다.
     expect(root()).not.toHaveAttribute("title");
   });
 

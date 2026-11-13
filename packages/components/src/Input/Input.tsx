@@ -1,7 +1,4 @@
 "use client";
-// 한 줄 입력창. 네이티브 `<input>`이고 React Aria hook을 쓰지 않는다(ADR 0004).
-// Field 안에서는 context로 id·aria-describedby·aria-invalid를 받으므로 client Component다.
-
 import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "../_internal/libs/cn";

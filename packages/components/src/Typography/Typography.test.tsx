@@ -4,7 +4,7 @@ import { render } from "vitest-browser-react";
 
 import { Typography, type TypographyProps } from "./Typography";
 
-// 기본 요소(spec 「Component 33개와 구현 순서」 Typography). [variant, 요소, heading 단계]
+// [variant, 요소, heading 단계]
 const defaults: [NonNullable<TypographyProps["variant"]>, string, number | undefined][] = [
   ["display-lg", "H1", 1],
   ["display-md", "H1", 1],
@@ -104,15 +104,12 @@ describe("render", () => {
 
     const label = page.getByText("이름").element();
     expect(label.tagName).toBe("LABEL");
-    // render 요소의 props는 남고, 겹치면 Typography 쪽이 이긴다.
     expect(label).toHaveAttribute("for", "name");
     expect(label).toHaveAttribute("data-from", "typography");
     // className: 기본 class → render 요소 class → 사용자 className
     expect(label.className).toBe("text-label-md block text-muted");
-    // ref는 둘 다 같은 요소를 받는다.
     expect(node).toBe(label);
     expect(elementRef).toBe(label);
-    // label 연결이 살아 있다.
     await expect.element(page.getByRole("textbox", { name: "이름" })).toBeInTheDocument();
   });
 
@@ -172,7 +169,6 @@ describe("props", () => {
     const element = page.getByText("소개").element();
     expect(node).toBe(element);
     expect(element).toHaveAttribute("id", "intro");
-    // text-body-sm은 사용자의 text-body-lg에 지워지고 글자색은 남는다.
     expect(element.className).toBe("text-body-lg text-muted");
   });
 });

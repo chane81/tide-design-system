@@ -6,11 +6,11 @@ import { VisuallyHidden } from "../../VisuallyHidden/VisuallyHidden";
 import { ellipsisClass } from "../constants/paginationClass";
 
 export interface PaginationEllipsisProps extends Omit<ComponentProps<"span">, "children"> {
-  /** 스크린리더가 읽는 텍스트. 화면에는 「…」 아이콘만 보인다. 기본값은 `"페이지 생략"`이다. */
+  /** 스크린리더가 읽는 텍스트(화면에는 「…」만 보인다). 기본값 `"페이지 생략"`. */
   children?: ReactNode;
 }
 
-/** 생략된 번호 자리 `<span>`. 화면에는 「…」 아이콘, 스크린리더에는 텍스트(기본 `"페이지 생략"`)를 보인다. */
+/** 생략된 번호 자리. 화면에는 「…」 아이콘, 스크린리더에는 텍스트를 보인다. */
 export function PaginationEllipsis({
   className,
   children = "페이지 생략",

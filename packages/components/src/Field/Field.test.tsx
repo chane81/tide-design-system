@@ -1,5 +1,4 @@
-// Field가 label, 설명, 오류 메시지를 입력 Component에 연결하는지 실제 Chromium에서 확인한다(tide-v0-impl 티켓 15).
-// 이름·설명은 브라우저가 계산한 접근 가능한 이름·설명으로 단언한다. 두 instance에서 모두 돈다.
+// 이름·설명은 브라우저가 계산한 접근 가능한 이름·설명으로 단언한다.
 import { useState, type ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -114,7 +113,6 @@ describe("설명과 오류", () => {
     await expect.element(input).toHaveAttribute("aria-invalid", "true");
     await expect.element(input).toHaveAttribute("data-invalid", "");
     expect(page.getByTestId("field").element()).toHaveAttribute("data-invalid", "");
-    // 오류 아이콘은 장식용이라 설명에 들어가지 않는다.
     await expect
       .element(input)
       .toHaveAccessibleDescription("회사 메일을 씁니다. 이메일 형식이 아닙니다.");

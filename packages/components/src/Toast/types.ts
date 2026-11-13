@@ -7,9 +7,7 @@ import type { Role } from "../types";
 export interface ToastAction {
   /** 버튼 글자. 예: 「되돌리기」, 「다시 시도」 */
   label: ReactNode;
-  /**
-   * 누르면 부른다. 부른 뒤 Toast를 닫는다. `event.preventDefault()`를 부르면 닫지 않는다.
-   */
+  /** 누르면 부른 뒤 Toast를 닫는다. `event.preventDefault()`를 부르면 닫지 않는다. */
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -20,17 +18,15 @@ export interface ToastOptions {
   /** 본문. Toast의 설명이 된다. */
   description?: ReactNode;
   /**
-   * Role. Tide Role 6개와 앱이 `RoleRegistry`에 더한 Role을 받는다. 기본값은 `info`다(Alert와 같다).
-   * 상태 아이콘과 그 색을 정한다. 닫기·액션 버튼은 색과 관계없이 neutral이다. `danger`(오류)는 자동으로 닫지 않는다.
-   * 색 계열 이름(`blue` 등)은 받지 않는다(ADR 0016).
+   * Role(Tide Role + 앱 Role). 기본값 `info`. 상태 아이콘과 그 색을 정하고, 버튼은 neutral 고정이다.
+   * `danger`는 자동으로 닫지 않는다. 색 계열 이름은 받지 않는다.
    */
   color?: Role;
   /** 액션 버튼. 있으면 자동으로 닫지 않는다. */
   action?: ToastAction;
   /**
-   * 자동으로 닫을 시간(ms). 기본값은 5000이고, 더 짧은 값은 5000으로 올린다. `null`이면 자동으로 닫지 않는다.
-   * 액션이 있거나 `color="danger"`면 이 값과 관계없이 자동으로 닫지 않는다.
-   * 시간은 영역에 마우스를 올리거나 포커스가 있는 동안 멈춘다.
+   * 자동으로 닫을 시간(ms). 기본값 5000, 더 짧은 값은 5000으로 올린다. `null`이면 자동으로 닫지 않는다.
+   * 액션이 있거나 `danger`면 닫지 않고, 영역에 hover·포커스가 있는 동안 멈춘다.
    */
   timeout?: number | null;
   /** 닫힐 때(닫기 버튼, 액션, 자동 닫힘, `queue.close`) 부른다. */

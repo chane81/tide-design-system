@@ -1,6 +1,3 @@
-// Tabs 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 31).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 고른 탭의 막대가 시스템 강조색으로
-// 남는지와 막대 전환이 opacity만인지를 본다.
 import { useState, type ReactElement, type ReactNode } from "react";
 import { I18nProvider } from "react-aria";
 import { describe, expect, test, vi } from "vitest";
@@ -100,7 +97,6 @@ describe("역할과 연결", () => {
     await expect
       .element(page.getByRole("tab", { name: "보안" }))
       .toHaveAttribute("aria-selected", "false");
-    // 고르지 않은 탭은 없는 패널을 가리키지 않는다.
     expect(byTestId("security")).not.toHaveAttribute("aria-controls");
     expect(byTestId("security")).not.toHaveAttribute("data-selected");
 
@@ -108,7 +104,6 @@ describe("역할과 연결", () => {
     await expect.element(tabpanel).toHaveTextContent("계정 패널");
     expect(account.element().getAttribute("aria-controls")).toBe(panel().id);
     expect(panel().getAttribute("aria-labelledby")).toBe(account.element().id);
-    // 고른 탭의 패널만 렌더한다.
     expect(page.getByRole("tabpanel").elements()).toHaveLength(1);
     expect(byTestId("root")).toHaveAttribute("data-orientation", "horizontal");
   });
@@ -134,10 +129,8 @@ describe("키보드 탐색", () => {
     await render(<Example defaultValue="security" />);
     await tabIntoList();
     await expect.element(page.getByTestId("security")).toHaveFocus();
-    // 고르지 않은 탭은 Tab 순서 밖이다(roving tabindex).
     expect(byTestId("account")).toHaveAttribute("tabindex", "-1");
     await userEvent.tab();
-    // 보안 패널은 첫 내용이 글자라 패널 자신이 Tab 순서에 있다.
     await expect.element(page.getByRole("tabpanel")).toHaveFocus();
     expect(panel()).toHaveAttribute("tabindex", "0");
   });
@@ -151,7 +144,6 @@ describe("키보드 탐색", () => {
     expect(selectedTab()).toBe("보안");
     await expect.element(page.getByRole("tabpanel", { name: "보안" })).toBeVisible();
     await userEvent.keyboard("{ArrowRight}");
-    // 결제(비활성)를 건너뛴다.
     await expect.element(page.getByTestId("notifications")).toHaveFocus();
     await userEvent.keyboard("{ArrowRight}");
     await expect.element(page.getByTestId("account")).toHaveFocus();
@@ -318,7 +310,6 @@ describe("포커스 표시와 고른 표시", () => {
     await render(<Example />);
     await tabIntoList();
     await expect.element(page.getByTestId("account")).toHaveFocus();
-    // focus-ring 색이 transition에 묶이지 않는지도 함께 본다(글자색 전환 없음).
     await wait(250);
     const style = getComputedStyle(byTestId("account"));
     expect(style.outlineStyle).toBe("solid");
@@ -329,7 +320,6 @@ describe("포커스 표시와 고른 표시", () => {
     if (!forcedColors()) {
       expect(style.outlineColor).toBe(resolve("color", "var(--tide-outline-focus)"));
     }
-    // 마우스로 누른 탭은 ring이 없다(focus-visible).
     await userEvent.click(page.getByTestId("security"));
     expect(getComputedStyle(byTestId("security")).outlineStyle).toBe("none");
   });
@@ -355,7 +345,6 @@ describe("포커스 표시와 고른 표시", () => {
     expect(selected.borderBottomWidth).toBe("2px");
     expect(selected.position).toBe("absolute");
     expect(selected.bottom).toBe("-1px");
-    // 막대가 탭 폭 전체에 걸쳐 탭 목록 선(border-default 1px)과 겹친다.
     expect(Number.parseFloat(selected.width)).toBeCloseTo(
       byTestId("account").getBoundingClientRect().width,
       1,
@@ -373,7 +362,6 @@ describe("포커스 표시와 고른 표시", () => {
     expect(getComputedStyle(byTestId("security")).color).toBe(
       resolve("color", "var(--tide-text-muted)"),
     );
-    // 고르지 않은 탭 hover는 text-default로 바로 바뀐다.
     await userEvent.hover(page.getByTestId("security"));
     expect(getComputedStyle(byTestId("security")).color).toBe(
       resolve("color", "var(--tide-text-default)"),
@@ -417,7 +405,6 @@ describe("막대 motion", () => {
     const after = getComputedStyle(byTestId("security"), "::after");
     expect(after.transitionDuration).toBe("0.15s");
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // 움직임 줄이기: 확대 없이 opacity만 바뀐다.
       expect(after.transitionProperty).toBe("opacity");
       expect(after.scale).toBe("none");
 
@@ -427,8 +414,7 @@ describe("막대 motion", () => {
     expect(after.scale).toBe("0 1");
     expect(getComputedStyle(byTestId("account"), "::after").scale).toBe("1");
 
-    // 막 고른 탭의 막대가 전환 중이다. 고른 순간에 붙잡는다. click 명령이 돌아온 뒤에 읽으면 부하에 따라 전환이
-    // 끝나 있다(test/motion.ts).
+    // click이 돌아온 뒤 읽으면 부하에 따라 전환이 끝나 있어, 고른 순간에 붙잡는다.
     const selected = captureWhen(
       () => byTestId("security").getAttribute("aria-selected") === "true",
       () =>
@@ -519,7 +505,6 @@ describe("ref·className·타입", () => {
     expect(getComputedStyle(byTestId("list")).columnGap).toBe("12px");
     expect(getComputedStyle(byTestId("tab")).paddingLeft).toBe("20px");
     expect(getComputedStyle(byTestId("panel")).padding).toBe("4px");
-    // 첫 내용이 조작 요소면 패널을 Tab 순서에서 뺄 수 있다.
     expect(byTestId("panel")).toHaveAttribute("tabindex", "-1");
   });
 

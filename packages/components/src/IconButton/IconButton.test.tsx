@@ -1,7 +1,5 @@
-// IconButton 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 14).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
-// press 축소가 빠지는지, 투명 border·포커스 ring이 보이는지를 계산값으로 단언한다.
-// 채움 방식·색 맵과 상태 처리는 Button과 같은 모듈(_internal/constants/pressableClass.ts, _internal/libs/pressableState.ts)이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
+// 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
+// 채움 방식·상태 처리는 Button과 같은 모듈이라 대표 조합만 본다. 전체 조합은 Button.test.tsx가 본다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import Link from "next/link.js";
 import type { ReactNode } from "react";
@@ -11,7 +9,7 @@ import { render } from "vitest-browser-react";
 
 import { IconButton, type IconButtonProps } from "./IconButton";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -22,7 +20,6 @@ const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
 async function resolve(
   property: "backgroundColor" | "color" | "borderColor",
   value: string,
@@ -49,7 +46,6 @@ describe("역할과 이름", () => {
     const button = page.getByRole("button", { name: "설정" });
     await expect.element(button).toBeInTheDocument();
     expect(button.element()).toHaveAttribute("type", "button");
-    // 아이콘은 장식용으로 숨는다.
     expect(page.getByTestId("icon").element().parentElement).toHaveAttribute("aria-hidden", "true");
   });
 
@@ -62,9 +58,9 @@ describe("역할과 이름", () => {
     const c: IconButtonProps = { "aria-label": "설정", children: <Icon />, variant: "link" };
     // @ts-expect-error -- size는 xs/sm/md/lg만 받는다. 24px보다 작은 size는 없다.
     const d: IconButtonProps = { "aria-label": "설정", children: <Icon />, size: "2xs" };
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
+    // @ts-expect-error -- color는 Role만 받는다. 장식 계열 purple도 Role이 아니다.
     const e: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "purple" };
-    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
+    // @ts-expect-error -- 색 계열 이름은 받지 않는다(ADR 0016).
     const f: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "blue" };
     const ok: IconButtonProps = { "aria-label": "설정", children: <Icon />, color: "brand" };
     expect([a, b, c, d, e, f, ok]).toHaveLength(7);
@@ -101,7 +97,7 @@ describe("키보드와 클릭", () => {
 
 describe("크기", () => {
   const sizes: [NonNullable<IconButtonProps["size"]>, number, number][] = [
-    // size, 정사각형 한 변, 아이콘(spec 아이콘 크기 규칙 IconButton 열)
+    // size, 정사각형 한 변, 아이콘
     ["xs", 24, 16],
     ["sm", 32, 16],
     ["md", 40, 20],
@@ -109,7 +105,6 @@ describe("크기", () => {
   ];
 
   test.each(sizes)("%s는 %ipx 정사각형이고 아이콘은 %ipx다", async (size, side, icon) => {
-    // 다른 라이브러리 아이콘의 width/height(24)를 덮어써 size에 맞춘다.
     await render(
       <IconButton aria-label="설정" size={size}>
         <svg data-testid="icon" width={24} height={24} viewBox="0 0 24 24" />
@@ -176,7 +171,7 @@ describe("스타일 축", () => {
   });
 
   describe("앱 Role", () => {
-    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -353,7 +348,6 @@ describe("상태", () => {
     expect(element).not.toHaveAttribute("disabled");
     expect(page.getByTestId("icon").elements()).toHaveLength(0);
 
-    // Spinner는 아이콘 크기(lg 24px)이고 접근성 트리에서는 숨는다.
     const spinner = element.querySelector("svg")!;
     expect(spinner).toHaveAttribute("aria-hidden", "true");
     expect(spinner.getBoundingClientRect().width).toBe(24);
@@ -398,7 +392,6 @@ describe("render와 공통 API", () => {
     expect(element).not.toHaveAttribute("type");
     expect(node).toBe(element);
     expect(element).toHaveClass("shadow-md");
-    // 사용자 className이 기본 크기를 이긴다.
     expect(element).toHaveClass("size-14");
     expect(element).not.toHaveClass("size-10");
 

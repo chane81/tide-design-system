@@ -1,6 +1,3 @@
-// Switch의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 17).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
-// 켜짐·꺼짐이 시스템 색 채움과 thumb 위치로 구분되는지, thumb 이동 transition이 빠지는지를 계산값으로 단언한다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -10,7 +7,7 @@ import { render } from "vitest-browser-react";
 import { Field } from "../Field/Field";
 import { Switch, type SwitchProps } from "./Switch";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다, ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -315,7 +312,6 @@ describe("size", () => {
     const blue: SwitchProps = { color: "blue" };
     // @ts-expect-error neutral과 다른 색인 gray도 받지 않는다.
     const gray: SwitchProps = { color: "gray" };
-    // augmentation한 앱 Role은 타입을 통과한다.
     const brand: SwitchProps = { color: "brand" };
     expect([xs, blue, gray, brand]).toHaveLength(4);
   });
@@ -350,7 +346,6 @@ describe("색", () => {
     );
     expect(getComputedStyle(on.track).borderTopColor).toBe(resolve("var(--tide-border-primary)"));
     expect(getComputedStyle(on.thumb).backgroundColor).toBe(resolve("var(--tide-text-on-solid)"));
-    // 꺼짐: 투명 track에 border-strong 경계, text-muted thumb
     expect(getComputedStyle(off.track).backgroundColor).toBe(transparent);
     expect(getComputedStyle(off.track).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
     expect(getComputedStyle(off.thumb).backgroundColor).toBe(resolve("var(--tide-text-muted)"));
@@ -531,23 +526,18 @@ describe("forced-colors", () => {
     const onThumb = getComputedStyle(on.thumb);
     const offThumb = getComputedStyle(off.thumb);
 
-    // 경계가 보인다.
     expect(offTrack.borderTopWidth).toBe("1px");
     expect(offTrack.borderTopColor).not.toBe(transparent);
-    // 켜진 track은 채워지고, 꺼진 track과 배경이 다르다.
     expect(onTrack.backgroundColor).not.toBe(transparent);
     expect(onTrack.backgroundColor).not.toBe(offTrack.backgroundColor);
-    // thumb은 각 track 배경과 다른 색이다.
     expect(onThumb.backgroundColor).not.toBe(onTrack.backgroundColor);
     expect(offThumb.backgroundColor).not.toBe(transparent);
-    // thumb 위치가 다르다(꺼짐 시작 쪽, 켜짐 끝 쪽).
     const onOffset = on.thumb.getBoundingClientRect().left - on.track.getBoundingClientRect().left;
     const offOffset =
       off.thumb.getBoundingClientRect().left - off.track.getBoundingClientRect().left;
     expect(onOffset).toBeGreaterThan(offOffset);
 
     if (forcedColors()) {
-      // 시스템 색으로 그린다: 켜짐 Highlight 채움, 꺼짐은 Canvas 위 CanvasText 경계와 thumb.
       expect(onTrack.backgroundColor).toBe(resolve("Highlight"));
       expect(onThumb.backgroundColor).toBe(resolve("HighlightText"));
       expect(offTrack.borderTopColor).toBe(resolve("CanvasText"));
@@ -606,7 +596,6 @@ describe("hover와 누름", () => {
     await hoverLabel("켜짐");
     const hovered = getComputedStyle(track).backgroundColor;
     if (forcedColors()) {
-      // forced-colors에서는 hover에도 켜짐 채움(Highlight)이 그대로다.
       expect(hovered).toBe(resolve("Highlight"));
       expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("HighlightText"));
     } else {
@@ -641,7 +630,6 @@ describe("hover와 누름", () => {
     } else {
       expect(hovered).toBe(resolve("var(--tide-bg-primary-subtle)"));
       expect(getComputedStyle(thumb).backgroundColor).toBe(resolve("var(--tide-text-primary)"));
-      // 경계는 그대로 border-strong이다.
       expect(getComputedStyle(track).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
     }
 

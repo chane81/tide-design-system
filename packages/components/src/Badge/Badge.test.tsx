@@ -1,5 +1,4 @@
-// Badge의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 19).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서는 배경이 사라져도 경계로 모양이 남는지 본다.
+// 두 번째 instance(forced-colors)에서도 돈다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { afterEach, describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
@@ -7,7 +6,7 @@ import { render } from "vitest-browser-react";
 
 import { Badge, type BadgeProps } from "./Badge";
 
-// 앱 Role(brand)과 앱 장식 계열(leaf)을 색 이름 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)과 앱 장식 계열(leaf)을 색 이름 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -20,7 +19,6 @@ declare module "@tide-design/foundation" {
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
 function resolve(value: string): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = "light";
@@ -38,7 +36,6 @@ const badge = (text: string): HTMLElement =>
   page.getByText(text, { exact: true }).element() as HTMLElement;
 
 const roles = ["neutral", "primary", "success", "warning", "danger", "info"] as const;
-// 색 계열은 Theme 블록이 정한 계열 변수(--tide-<계열>-<슬롯>)를 accent 슬롯으로 쓴다(ADR 0011).
 const families = ["gray", "blue", "green", "amber", "red", "cyan", "purple", "mint"] as const;
 
 describe("역할과 이름", () => {
@@ -53,7 +50,7 @@ describe("역할과 이름", () => {
     const element = badge("완료");
     expect(element.tagName).toBe("SPAN");
     expect(element).not.toHaveAttribute("role");
-    // live region(status)이 아니다. 바뀔 때 읽어 줘야 하면 앱이 알림 영역을 둔다.
+    // live region이 아니다. 바뀔 때 읽어 줘야 하면 앱이 알림 영역을 둔다.
     expect(page.getByRole("status").elements()).toHaveLength(0);
     await expect.element(page.getByRole("listitem")).toHaveTextContent("배포 완료");
   });
@@ -169,7 +166,6 @@ describe("색", () => {
     },
   );
 
-  // subtle·faint의 계산된 색이 Token 값과 같은지 light·dark에서 본다(티켓 03 수용 기준).
   test.each(
     (["light", "dark"] as const).flatMap((theme) =>
       (["subtle", "faint"] as const).flatMap((variant) =>
@@ -200,7 +196,6 @@ describe("색", () => {
       role === "neutral" ? "var(--tide-text-default)" : `var(--tide-text-${role}-on-subtle)`;
     expect(style.backgroundColor).toBe(probe(`var(--tide-bg-${role}-${variant})`));
     expect(style.color).toBe(probe(text));
-    // faint는 테두리가 없다(투명).
     expect(style.borderTopColor).toBe(
       variant === "faint" ? transparent : probe(`var(--tide-border-${role}-subtle)`),
     );
@@ -284,10 +279,8 @@ describe("색", () => {
       { children: "a", color: "success" },
       { children: "a", color: "blue" },
       { children: "a", color: "gray" },
-      // 장식 계열 purple·mint(ADR 0022 §5)
       { children: "a", color: "purple" },
       { children: "a", color: "mint" },
-      // 앱 Role과 앱 장식 계열도 받는다.
       { children: "a", color: "brand" },
       { children: "a", color: "leaf" },
     ];
@@ -304,8 +297,7 @@ describe("색", () => {
   });
 
   describe("앱 Role과 앱 장식 계열", () => {
-    // 앱이 RoleRegistry에 brand, ColorFamilyRegistry에 leaf를 더하고, tide-color로 만든 CSS를
-    // Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다. 계열 CSS는 등록 종류와 관계없이 같은 모양이다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다. 계열 CSS는 등록 종류와 관계없이 같은 모양이다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {

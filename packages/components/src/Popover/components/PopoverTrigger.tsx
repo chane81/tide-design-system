@@ -34,9 +34,8 @@ export function PopoverTrigger({
   const { state, triggerRef, triggerProps, triggerId, setTriggerId } =
     usePopoverContext("PopoverTrigger");
   const { onPress, ...ariaProps } = triggerProps;
-  // useOverlayTrigger의 onPress는 React Aria press 이벤트다. 트리거는 render로 Tide Button 등 다른 요소가 되므로
-  // useButton 대신 press 동작만 usePress로 붙인다(type·disabled는 요소가 정한다).
-  // 열린 동안 트리거는 바깥(inert)이므로, 다시 누르면 바깥 누름으로 닫힌다.
+  // 트리거가 render로 다른 요소가 되므로 useButton 대신 press 동작만 붙인다(type·disabled는 요소가 정한다).
+  // 열린 동안 트리거는 바깥(inert)이라 다시 누르면 바깥 누름으로 닫힌다.
   const { pressProps } = usePress({ onPress, ref: triggerRef });
   const mergedRef = useMemo(() => mergeRefs(ref, triggerRef), [ref, triggerRef]);
   const resolvedId = id ?? triggerId;
@@ -51,7 +50,6 @@ export function PopoverTrigger({
     "data-open": state.isOpen ? "" : undefined,
   };
   if (!render) {
-    // 기본 요소는 class가 없다. className을 주면 그대로 붙는다.
     return createElement("button", { type: "button", ...merged, className });
   }
 

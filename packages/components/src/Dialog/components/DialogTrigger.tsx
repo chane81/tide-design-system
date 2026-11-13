@@ -23,7 +23,7 @@ export interface DialogTriggerProps extends ComponentProps<"button"> {
 
 /**
  * Dialog를 여는 버튼. 누르면(마우스, 터치, Enter, Space) 연다. 열린 동안은 바깥이 inert라 다시 누를 수 없다.
- * `aria-haspopup="dialog"`, `aria-expanded`, 열렸을 때 `aria-controls`와 `data-open`이 붙는다.
+ * `aria-expanded`, 열렸을 때 `aria-controls`와 `data-open`이 붙는다.
  */
 export function DialogTrigger({
   render,
@@ -34,7 +34,7 @@ export function DialogTrigger({
 }: DialogTriggerProps): ReactElement {
   const { state, triggerRef, triggerProps, setTriggerId } = useDialogContext("DialogTrigger");
   const { onPress, ...ariaProps } = triggerProps;
-  // Popover 트리거와 같다. 트리거가 render로 Tide Button 등이 되므로 useButton 대신 press 동작만 붙인다.
+  // 트리거가 render로 다른 요소가 되므로 useButton 대신 press 동작만 붙인다.
   const { pressProps } = usePress({ onPress, ref: triggerRef });
   const mergedRef = useMemo(() => mergeRefs(ref, triggerRef), [ref, triggerRef]);
   const generatedId = useId();
@@ -53,7 +53,6 @@ export function DialogTrigger({
     "data-open": state.isOpen ? "" : undefined,
   };
   if (!render) {
-    // 기본 요소는 class가 없다. className을 주면 그대로 붙는다.
     return createElement("button", { type: "button", ...merged, className });
   }
 

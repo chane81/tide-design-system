@@ -1,6 +1,3 @@
-// Tag 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 33).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 태그 경계가 시스템 색으로 남는지와
-// 지우기 아이콘이 버튼 글자색을 따르는지를 본다.
 import { useState, type ReactElement } from "react";
 import { I18nProvider } from "react-aria";
 import { describe, expect, test, vi } from "vitest";
@@ -41,7 +38,6 @@ interface ExampleProps {
   readonly group?: Partial<TagGroupProps>;
 }
 
-/** 지우면 목록에서 빼는 상태 부모 */
 function Example({ removable = true, onRemove, group }: ExampleProps): ReactElement {
   const [tags, setTags] = useState<readonly (typeof initial)[number][]>(initial);
 
@@ -104,9 +100,7 @@ describe("역할과 이름", () => {
       .element(page.getByRole("button", { name: "제거 디자인" }))
       .toHaveAttribute("type", "button");
     await expect.element(page.getByRole("button", { name: "제거 영업" })).toBeInTheDocument();
-    // 지우기 버튼은 Tab 순서에서 빠진다(키보드는 Delete로 지운다).
     expect(removeButton("design")).toHaveAttribute("tabindex", "-1");
-    // 태그 행의 이름은 글자다.
     await expect.element(page.getByRole("row", { name: "마케팅" })).toBeInTheDocument();
   });
 
@@ -140,7 +134,6 @@ describe("키보드", () => {
     await expect.element(page.getByTestId("design")).toHaveFocus();
     await userEvent.keyboard("{ArrowRight}");
     await expect.element(page.getByTestId("marketing")).toHaveFocus();
-    // 보관(비활성)은 건너뛴다.
     await userEvent.keyboard("{ArrowRight}");
     await expect.element(page.getByTestId("sales")).toHaveFocus();
     await userEvent.keyboard("{ArrowRight}");
@@ -151,7 +144,6 @@ describe("키보드", () => {
     await expect.element(page.getByTestId("design")).toHaveFocus();
     await userEvent.keyboard("{End}");
     await expect.element(page.getByTestId("sales")).toHaveFocus();
-    // Tab은 묶음을 떠난다(지우기 버튼에 들르지 않는다).
     await userEvent.tab();
     await expect.element(page.getByTestId("after")).toHaveFocus();
     await userEvent.tab({ shift: true });
@@ -248,7 +240,6 @@ describe("지우기 버튼", () => {
     expect(onRemove).toHaveBeenCalledTimes(1);
     expect(onRemove).toHaveBeenCalledWith("marketing");
     expect(rows()).toEqual(["디자인", "보관", "영업"]);
-    // 다음 태그(보관)는 비활성이라 건너뛴다.
     await expect.element(page.getByTestId("sales")).toHaveFocus();
   });
 
@@ -261,7 +252,6 @@ describe("지우기 버튼", () => {
     const icon = button.querySelector("svg") as SVGElement;
     expect(icon.closest("[aria-hidden='true']")).not.toBeNull();
     expect(icon.getBoundingClientRect().width).toBe(16);
-    // 버튼은 태그 끝에서 3px + border 1px 안쪽, 위아래 가운데다.
     const row = byTestId("design").getBoundingClientRect();
     expect(row.right - rect.right).toBeCloseTo(4, 0);
     expect(rect.top - row.top).toBeCloseTo(4, 0);
@@ -285,7 +275,6 @@ describe("지우기 버튼", () => {
       resolve("backgroundColor", "var(--tide-blue-subtle-hover)"),
     );
     expect(getComputedStyle(removeButton("design")).borderTopLeftRadius).toBe("4px");
-    // 비활성 태그의 버튼은 hover 배경이 없다.
     await userEvent.hover(removeButton("archive"), { force: true });
     await wait(200);
     expect(getComputedStyle(removeButton("archive")).backgroundColor).toBe(transparent);

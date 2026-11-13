@@ -1,5 +1,4 @@
-// Link 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 14).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서도 밑줄과 포커스 ring이 남는지 본다.
+// 두 번째 instance(forced-colors)에서도 돈다.
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import Next from "next/link.js";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -8,7 +7,7 @@ import { render } from "vitest-browser-react";
 
 import { Link, type LinkProps } from "./Link";
 
-// 앱 Role(brand)을 Role 타입에 더한다(앱의 augmentation과 같다. 티켓 41, ADR 0016).
+// 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
 declare module "@tide-design/foundation" {
   interface RoleRegistry {
     brand: true;
@@ -41,7 +40,6 @@ describe("역할과 모양", () => {
     const element = link.element();
     expect(element).toHaveAttribute("href", "#guide");
     const style = getComputedStyle(element);
-    // 색만으로 링크를 구분하지 않는다(WCAG 1.4.1). 고대비 모드에서도 밑줄이 남는다.
     expect(style.textDecorationLine).toBe("underline");
     expect(style.textDecorationThickness).toBe("1px");
     expect(style.textUnderlineOffset).toBe("2px");
@@ -94,16 +92,16 @@ describe("색 이름(data-color)", () => {
   });
 
   test("Role이 아닌 색 이름은 타입 오류다", () => {
-    // @ts-expect-error -- color는 Role(Tide Role 6개와 augmentation한 앱 Role)만 받는다. 장식 계열 purple도 Role이 아니다.
+    // @ts-expect-error -- color는 Role만 받는다. 장식 계열 purple도 Role이 아니다.
     const a: LinkProps = { color: "purple" };
-    // @ts-expect-error -- 색 계열 이름은 장식·분류 Component용이라 받지 않는다(ADR 0016).
+    // @ts-expect-error -- 색 계열 이름은 받지 않는다(ADR 0016).
     const b: LinkProps = { color: "blue", href: "/x" };
     const c: LinkProps = { color: "brand", href: "/x" };
     expect([a, b, c]).toHaveLength(3);
   });
 
   describe("앱 Role", () => {
-    // 앱이 tide-color로 만든 CSS를 Tide CSS 뒤에 불러오는 것과 같은 순서로 넣는다.
+    // 앱처럼 tide-color로 만든 CSS를 Tide CSS 뒤에 넣는다.
     const brand = defineColorFamily({
       name: "brand",
       scale: {
@@ -197,12 +195,10 @@ describe("render", () => {
     expect(element).toHaveAttribute("data-testid", "link");
     expect(element).toHaveAttribute("data-color", "success");
     expect(node).toBe(element);
-    // render 요소의 className과 사용자 className을 모두 붙이고, 사용자 className이 기본 밑줄을 이긴다.
     expect(element).toHaveClass("font-bold");
     expect(element).toHaveClass("no-underline");
     expect(element).not.toHaveClass("underline");
 
-    // 키보드 이동: 앞 버튼 → 링크. Enter로 실행하면 두 onClick이 render 요소 → Link 순서로 불린다.
     await userEvent.tab();
     await userEvent.tab();
     await expect.element(link).toHaveFocus();

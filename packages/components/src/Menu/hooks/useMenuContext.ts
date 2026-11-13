@@ -1,6 +1,6 @@
 "use client";
 import { createContext, use, type RefObject } from "react";
-// 루트 entry에서 import한다(Popover.tsx 참고).
+// 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import type { useMenuTrigger } from "react-aria";
 import type { MenuTriggerState } from "react-stately";
 
@@ -9,9 +9,7 @@ type MenuTriggerAria = ReturnType<typeof useMenuTrigger<unknown>>;
 export interface MenuContextValue {
   readonly state: MenuTriggerState;
   readonly triggerRef: RefObject<HTMLElement | null>;
-  /** useMenuTrigger가 만든 트리거 props(누름·키보드 열기, aria-haspopup·expanded·controls) */
   readonly menuTriggerProps: MenuTriggerAria["menuTriggerProps"];
-  /** useMenuTrigger가 만든 목록 props(id, 처음 포커스 위치, 닫기) */
   readonly menuProps: MenuTriggerAria["menuProps"];
   /** 트리거 요소 id. 목록에 이름이 없을 때 aria-labelledby로 쓴다. */
   readonly triggerId: string;

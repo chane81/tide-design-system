@@ -15,10 +15,8 @@ export interface DialogContentProps extends Omit<ComponentProps<"div">, "id" | "
 }
 
 /**
- * 화면 가운데 뜨는 모달 내용(`role="dialog"`, AlertDialog 안에서는 `role="alertdialog"`).
- * 열릴 때만 `document.body`에 portal하고, 반투명 막(`bg-overlay`)과 함께 `z-modal`로 쌓는다.
- * 등장은 opacity + scale 0.96 → 1(`normal`), 퇴장은 opacity + scale 0.98(`fast`)이다. 움직임 줄이기에서는 opacity만 바뀐다.
- * Dialog에는 끝 위쪽에 닫기 버튼(IconButton)이 있고 바깥 막을 누르면 닫힌다. AlertDialog는 둘 다 없다(Esc는 닫는다).
+ * 화면 가운데 뜨는 모달 내용(`role="dialog"`, AlertDialog 안에서는 `alertdialog`). 열릴 때만 `document.body`에 portal한다.
+ * Dialog는 끝 위쪽 닫기 버튼과 바깥 막 누름으로 닫히고, AlertDialog는 둘 다 없다(Esc는 닫는다).
  */
 export function DialogContent(props: DialogContentProps): ReactElement | null {
   const context = useDialogContext("DialogContent");

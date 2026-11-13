@@ -3,22 +3,16 @@ import type { HTMLAttributes, ReactElement, Ref } from "react";
 
 import { renderElement } from "../_internal/libs/renderElement";
 
-/** heading·display 텍스트 스타일. 항상 `<h*>`로 렌더되고 `level`을 받는다. */
 type HeadingVariant = Extract<TextStyleName, `display-${string}` | `heading-${string}`>;
 
-/** heading·display가 아닌 텍스트 스타일 */
 type TextVariant = Exclude<TextStyleName, HeadingVariant>;
 
-/** 제목 단계 */
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface TypographyBaseProps extends HTMLAttributes<HTMLElement> {
   /** 루트 DOM 요소에 연결한다. */
   ref?: Ref<HTMLElement>;
-  /**
-   * 다른 요소로 렌더한다. 예: `render={<label htmlFor="name" />}`.
-   * props, ref, className을 그 요소에 병합하고 `level`과 기본 요소는 무시한다.
-   */
+  /** 다른 요소로 렌더한다. 예: `render={<label htmlFor="name" />}`. 이때 `level`은 무시한다. */
   render?: ReactElement;
 }
 
@@ -30,7 +24,7 @@ interface TypographyHeadingProps extends TypographyBaseProps {
 }
 
 interface TypographyTextProps extends TypographyBaseProps {
-  /** 텍스트 스타일 이름. 기본값은 `body-md`다. */
+  /** 텍스트 스타일 이름. 기본값 `body-md`. */
   variant?: TextVariant;
   /** heading·display 텍스트 스타일에만 있다. */
   level?: never;
@@ -38,7 +32,7 @@ interface TypographyTextProps extends TypographyBaseProps {
 
 export type TypographyProps = TypographyHeadingProps | TypographyTextProps;
 
-// class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔해 class를 만들기 때문에 이름을 조합하면 안 된다.
+// class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 const variantClass: Record<TextStyleName, string> = {
   "display-lg": "text-display-lg",
   "display-md": "text-display-md",
@@ -56,7 +50,7 @@ const variantClass: Record<TextStyleName, string> = {
   caption: "text-caption",
 };
 
-// 기본 요소(spec 「Component 33개와 구현 순서」 Typography). heading·display는 단계 숫자로 적는다.
+// heading·display는 `level`로 바꿀 수 있게 단계 숫자로 적는다.
 const elementByVariant: Record<HeadingVariant, HeadingLevel> & Record<TextVariant, "p" | "span"> = {
   "display-lg": 1,
   "display-md": 1,
@@ -75,8 +69,8 @@ const elementByVariant: Record<HeadingVariant, HeadingLevel> & Record<TextVarian
 };
 
 /**
- * 텍스트 스타일 하나로 크기, 행간, 굵기를 정하고 알맞은 시맨틱 요소로 렌더한다.
- * heading·display는 항상 `<h*>`다. 다른 요소가 필요하면 `render`를 쓴다. 서버 컴포넌트로 쓸 수 있다.
+ * 텍스트 스타일 하나로 크기·행간·굵기를 정하고 알맞은 시맨틱 요소로 렌더한다.
+ * heading·display는 항상 `<h*>`다. 다른 요소는 `render`로. 서버 컴포넌트로 쓸 수 있다.
  */
 export function Typography({
   variant = "body-md",

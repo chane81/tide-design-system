@@ -9,7 +9,7 @@ export interface SelectSectionProps extends ListBoxSectionProps {}
  * 앞뒤 다른 옵션·묶음과의 사이에 구분선이 그려진다.
  */
 export function SelectSection(_props: SelectSectionProps): null {
-  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(_internal/components/ListBoxNodes/ListBoxNodes.tsx).
+  // 렌더하지 않는다. Select가 컬렉션으로 모아 그린다(ADR 0019).
   return null;
 }
 asCollectionComponent(SelectSection, sectionCollectionNode);

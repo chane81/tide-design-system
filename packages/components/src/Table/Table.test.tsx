@@ -1,5 +1,3 @@
-// Table의 역할·헤더 연결, 행 hover, 모양을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 23).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 행 경계가 시스템 색으로 남는지 본다.
 import { describe, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -195,7 +193,6 @@ describe("행 hover", () => {
     if (!forcedColors()) {
       expect(getComputedStyle(row).backgroundColor).toBe(resolve("var(--tide-bg-hover)"));
     }
-    // 마우스가 떠나면 바로 투명으로 돌아온다.
     await hoverAway();
     if (!forcedColors()) expect(getComputedStyle(row).backgroundColor).toBe(transparent);
   });

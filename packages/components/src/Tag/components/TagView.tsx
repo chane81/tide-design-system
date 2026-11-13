@@ -1,7 +1,7 @@
 "use client";
 import { XIcon } from "@tide-design/icons";
 import { use, useMemo, useRef, type ReactElement } from "react";
-// 루트 entry에서 import한다(Popover.tsx 참고).
+// 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import { mergeProps, mergeRefs, useTag } from "react-aria";
 import type { ListState } from "react-stately";
 
@@ -23,7 +23,7 @@ export interface TagViewProps {
   readonly state: ListState<object>;
 }
 
-/** 태그 하나를 그린다. node.props는 앱이 Tag에 준 props(와 컬렉션이 더한 isDisabled)다. */
+// node.props는 앱이 Tag에 준 props에 컬렉션이 더한 isDisabled다.
 export function TagView({ node, state }: TagViewProps): ReactElement {
   const context = use(TagGroupContext);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -65,7 +65,7 @@ export function TagView({ node, state }: TagViewProps): ReactElement {
         <span className={tagLabelClass}>{node.rendered}</span>
         {allowsRemoving && onRemove ? (
           <IconButton
-            // 이름은 aria-labelledby(버튼 자신 + 태그 행)로 「제거 디자인」처럼 읽힌다(React Aria removeButtonProps).
+            // aria-labelledby(버튼 자신 + 태그 행)로 「제거 디자인」처럼 읽힌다.
             aria-label={context.removeLabel}
             aria-labelledby={removeButtonProps["aria-labelledby"]}
             id={removeButtonProps.id}
@@ -73,8 +73,7 @@ export function TagView({ node, state }: TagViewProps): ReactElement {
             color="neutral"
             size="xs"
             disabled={isDisabled}
-            // Tab 순서에서 뺀다. 키보드는 태그에서 Delete·Backspace로 지운다(태그 설명으로 알린다). 버튼이 Tab 순서에
-            // 있으면 태그마다 Tab 자리가 생겨 grid의 「Tab 자리 하나」가 깨진다.
+            // 버튼이 Tab 순서에 있으면 grid의 「Tab 자리 하나」가 깨진다. 키보드는 태그에서 Delete로 지운다.
             tabIndex={-1}
             onClick={() => onRemove(String(node.key))}
             className={cn(removeClass, isDisabled ? undefined : removeInteractionClass)}

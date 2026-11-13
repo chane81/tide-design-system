@@ -1,9 +1,4 @@
-// Menu 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 27).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 highlight 위치가 시스템 색 outline으로
-// 남는지와 퇴장이 opacity 전환만 있는지를 본다.
-//
-// 열려 있는 동안 바깥은 inert라 Playwright click(누를 수 있는지 먼저 확인)이 바깥 요소를 누르지 못한다.
-// 바깥 누름은 좌표로 마우스를 누르는 사용자 명령(mouseDownOn·mouseUp)으로 한다(Popover.test.tsx와 같다).
+// 열린 동안 바깥은 inert라 Playwright click이 바깥을 누르지 못한다. 바깥 누름은 좌표 명령(mouseDownOn·mouseUp)으로 한다.
 import { useState, type ReactElement, type ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
@@ -87,7 +82,6 @@ async function pressAt(testId: string): Promise<void> {
   await commands.mouseUp();
 }
 
-/** 목록이 DOM에서 빠질 때까지(퇴장 전환 끝) 기다린다. */
 async function expectClosed(): Promise<void> {
   await expect.element(page.getByTestId("content")).not.toBeInTheDocument();
 }
@@ -111,12 +105,10 @@ describe("열고 닫기", () => {
     expect(trigger()).toHaveAttribute("aria-controls", content().id);
     expect(trigger()).toHaveAttribute("data-open", "");
     expect(content()).toHaveAttribute("data-open", "");
-    // 마우스로 열면 위치 표시 없이 목록 자신이 포커스를 받는다(React Aria useMenuTrigger).
     await expect.element(page.getByTestId("content")).toHaveFocus();
     expect(highlighted()).toEqual([]);
     expect(page.getByRole("menuitem").elements()).toHaveLength(5);
 
-    // 열린 동안 트리거는 바깥(inert)이다. 좌표로 누르면 바깥 누름으로 닫힌다.
     await pressAt("trigger");
     await expectClosed();
     expect(trigger()).toHaveAttribute("aria-expanded", "false");
@@ -179,14 +171,12 @@ describe("키보드 탐색", () => {
     await expect.element(page.getByTestId("rename")).toHaveFocus();
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("copy")).toHaveFocus();
-    // 보관(disabled)을 건너뛴다.
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("share")).toHaveFocus();
     expect(highlighted()).toEqual(["PDF로 내보내기"]);
     await userEvent.keyboard("{ArrowUp}");
     await expect.element(page.getByTestId("copy")).toHaveFocus();
     await userEvent.keyboard("{ArrowUp}{ArrowUp}");
-    // 처음에서 ↑는 마지막으로 돈다.
     await expect.element(page.getByTestId("delete")).toHaveFocus();
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("rename")).toHaveFocus();
@@ -205,8 +195,7 @@ describe("키보드 탐색", () => {
     expect(highlighted()).toEqual(["이름 바꾸기"]);
   });
 
-  // 타입어헤드는 keydown의 글자(e.key)로 찾는다. 한글은 IME 조합 중 keydown이 "Process"로 와서 쓰이지 않으므로
-  // 영문으로 시작하는 항목으로 확인한다(판단 보류 참고).
+  // 한글은 IME 조합 중 keydown이 "Process"로 와서 타입어헤드에 쓰이지 않으므로 영문 항목으로 확인한다.
   test("글자를 치면 그 글자로 시작하는 항목으로 간다(타입어헤드)", async () => {
     await render(<Example />);
     await tabToTrigger();
@@ -302,7 +291,6 @@ describe("highlight(키보드 위치와 hover)", () => {
     expect(style.outlineColor).toBe(transparent);
     expect(getComputedStyle(other).backgroundColor).toBe(transparent);
 
-    // 옮기면 이전 항목은 바로 투명으로 돌아간다(전환 없음).
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("copy")).toHaveFocus();
     expect(getComputedStyle(item).backgroundColor).toBe(transparent);
@@ -318,7 +306,6 @@ describe("highlight(키보드 위치와 hover)", () => {
     await userEvent.hover(page.getByTestId("share"));
     await expect.element(page.getByTestId("share")).toHaveFocus();
     expect(highlighted()).toEqual(["PDF로 내보내기"]);
-    // 비활성 항목에 올리면 위치가 옮겨 가지 않는다.
     await userEvent.hover(page.getByTestId("archive"));
     expect(highlighted()).toEqual(["PDF로 내보내기"]);
     if (forcedColors()) return;
@@ -419,16 +406,13 @@ describe("묶음", () => {
         .elements()
         .map((item) => item.textContent),
     ).toEqual(["이름순", "날짜순"]);
-    // 앞 항목과 첫 묶음 사이, 두 묶음 사이에 구분선이 있다.
     expect(content().querySelectorAll("[role='separator']")).toHaveLength(2);
-    // 제목은 묶음 이름으로만 쓰고 보조기술에는 따로 드러나지 않는다.
     const heading = page.getByText("정렬").element();
     expect(heading).toHaveAttribute("role", "presentation");
     if (!forcedColors()) {
       expect(getComputedStyle(heading).color).toBe(resolve("color", "var(--tide-text-muted)"));
     }
 
-    // 키보드 이동은 묶음을 넘나든다.
     await userEvent.keyboard("{ArrowDown}{ArrowDown}");
     await expect.element(page.getByRole("menuitem", { name: "이름순" })).toHaveFocus();
     await userEvent.keyboard("{End}");
@@ -489,7 +473,6 @@ describe("묶음", () => {
     await tabToTrigger();
     await userEvent.keyboard("{Enter}");
     await expect.element(page.getByRole("menuitem", { name: "Copy" })).toHaveFocus();
-    // 바로 안의 아이콘은 16px로 맞춘다.
     const icon = page.getByRole("menuitem", { name: "Copy" }).element().querySelector("svg");
     expect(icon?.getBoundingClientRect().width).toBe(16);
     await userEvent.keyboard("p");
@@ -649,7 +632,6 @@ describe("위치와 표면", () => {
 });
 
 describe("등장과 퇴장 motion", () => {
-  // 퇴장 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts).
   test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
     const screen = await render(<Example open={false} />);
     await screen.rerender(<Example open />);
@@ -663,7 +645,7 @@ describe("등장과 퇴장 motion", () => {
     const screen = await render(<Example open />);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
-    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다(test/motion.ts).
+    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
     const exit = captureExit(element, () => ({
       connected: element.isConnected,
       style: styleSnapshot(element),
@@ -688,7 +670,7 @@ describe("등장과 퇴장 motion", () => {
     await render(control.element);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
-    // 닫고 다시 여는 일을 한 task 안에서 한다. 사이에 렌더링 단계가 없어 퇴장 전환이 끝나 요소가 빠질 수 없다(test/motion.ts).
+    // 닫고 다시 여는 일을 한 task 안에서 해, 사이에 렌더링 단계가 없어 요소가 빠지지 않게 한다.
     control.set(false);
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(transitions(element).has("opacity")).toBe(true);

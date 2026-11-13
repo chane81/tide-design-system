@@ -1,16 +1,4 @@
 "use client";
-// 값 하나를 고르는 Select(tide-v0-impl 티켓 28). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
-// 근거 버전: react-aria 3.53.1(useSelect, useButton, useListBox, HiddenSelect, DismissButton, mergeProps, mergeRefs),
-// react-stately 3.51.0(useSelectState). 위치·portal·motion은 오버레이 공통 부분(_internal/components/OverlayPortal.tsx, ADR 0018), 목록 class와
-// 옵션 모으기는 목록 공통 부분(_internal/constants/listClass.ts, _internal/libs/listCollection.ts, ADR 0019), 옵션·묶음 그리기는 _internal/components/ListBoxNodes/ListBoxNodes.tsx를 쓴다.
-//
-// 구조:
-// - `Select`: 루트 DOM은 트리거 `<button type="button">`이다(입력창 모양, Input과 같은 size). 그 옆에 폼 제출용 숨은
-//   `<select>`(React Aria HiddenSelect, 보조기술에서 숨김)를 두고, 열리면 `document.body`에 목록을 portal한다.
-// - 목록: 위치를 잡는 바깥 요소(raised 표면, 앞뒤 숨은 닫기 버튼) 안에 `role="listbox"` 요소가 있다. listbox의 자식은
-//   option·group만 될 수 있어 닫기 버튼을 바깥 요소에 둔다(Popover와 같은 DismissButton).
-// - `SelectItem`: `role="option"`. `value`가 고른 값이고 폼에 제출된다. `SelectSection`: 옵션 묶음(`role="group"`).
-
 import { ChevronDownIcon } from "@tide-design/icons";
 import {
   use,
@@ -35,9 +23,9 @@ export interface SelectProps extends Omit<
   ComponentProps<"button">,
   "value" | "defaultValue" | "onChange" | "type" | "size" | "children" | "name" | "form"
 > {
-  /** 고른 값(제어). 고른 옵션의 `value`다. `null`이면 아무것도 고르지 않은 상태다. 주면 `onValueChange`로 바꾼다. */
+  /** 고른 옵션의 `value`(제어). `null`이면 아무것도 고르지 않은 상태다. */
   value?: string | null;
-  /** 처음 고른 값(비제어). 주지 않으면 아무것도 고르지 않은 상태로 시작한다. 폼을 reset하면 이 값으로 돌아간다. */
+  /** 처음 고른 값(비제어). 폼을 reset하면 이 값으로 돌아간다. */
   defaultValue?: string;
   /** 사용자가 다른 옵션을 고르면 그 옵션의 `value`로 부른다. */
   onValueChange?: (value: string) => void;
@@ -57,27 +45,17 @@ export interface SelectProps extends Omit<
   placeholder?: string;
   /** 높이 `sm` 32px, `md` 40px, `lg` 48px. 같은 size의 Input·Button과 높이가 같다. 기본값은 `md`다. */
   size?: InputSize;
-  /**
-   * 오류 상태. 트리거에 `aria-invalid="true"`와 `data-invalid`가 붙고 경계가 danger 색이 된다.
-   * Field 안에서는 Field의 값을 따르고, 여기에 준 값이 이긴다.
-   */
+  /** 오류 상태. 트리거에 `aria-invalid="true"`와 `data-invalid`가 붙는다. Field 값보다 여기 준 값이 이긴다. */
   invalid?: boolean;
-  /**
-   * 필수. 고르지 않고 폼을 제출하면 제출이 막히고 트리거로 포커스가 오며 오류 상태가 된다(브라우저 오류 말풍선은
-   * 없다). 메시지는 Field의 `error`로 앱이 보여 준다. Field 안에서는 Field의 값을 따른다.
-   */
+  /** 필수. 비운 채 제출하면 막고 트리거로 포커스를 옮긴다(브라우저 말풍선 없음, 메시지는 Field `error`). */
   required?: boolean;
   /** `SelectItem`과 `SelectSection`. 이 요소들을 바로 아래(또는 Fragment·배열 안)에 둔다. */
   children?: ReactNode;
 }
 
 /**
- * 값 하나를 고르는 입력. 트리거를 누르거나(마우스는 누르는 순간) Enter·Space·↓·↑로 목록을 열고, 화살표·Home/End·
- * 영문 글자로 옵션을 옮겨 Enter·Space·누름으로 고른다. 닫힌 채로 글자를 치면 바로 그 옵션을 고른다.
- * 고르면 닫히고 포커스는 트리거로 돌아온다. Esc·바깥 누름·Tab으로도 닫힌다.
+ * 값 하나를 고르는 입력. 루트 DOM은 트리거 `<button>`이고 목록은 `document.body`에 portal한다.
  * Field 안에 두면 label·설명·오류가 자동으로 연결되고, `name`을 주면 고른 값이 폼에 제출된다.
- * 상태는 `data-open`(트리거·목록), `data-invalid`(트리거), 네이티브 `:disabled`(트리거),
- * `data-highlighted`·`data-selected`·`data-disabled`(옵션)로 노출한다.
  */
 export function Select({
   value,
@@ -118,8 +96,7 @@ export function Select({
   const items = useMemo(() => resolveCollectionChildren(children), [children]);
   // 컬렉션 key가 옵션 value(문자열)라 고른 값이 곧 key다(valueItemCollectionNode).
   const state = useSelectState<object>({
-    // useSelectState의 children 타입은 React Stately 요소(Item·Section)지만, 같은 방식으로 getCollectionNode를 붙인
-    // Tide 옵션 요소를 넘긴다(_internal/libs/listCollection.ts).
+    // 타입은 React Stately Item·Section이지만, getCollectionNode를 같은 방식으로 붙인 Tide 옵션을 넘긴다(ADR 0019).
     children: items as unknown as Parameters<typeof useSelectState<object>>[0]["children"],
     value,
     defaultValue,
@@ -131,12 +108,11 @@ export function Select({
     onOpenChange,
     isDisabled,
     isRequired,
-    // 필수 검사는 네이티브 제약 검사(숨은 select의 required)로 한다. 비면 제출을 막고 트리거로 포커스를 옮긴다.
+    // 필수 검사는 숨은 select의 네이티브 제약 검사로 한다.
     validationBehavior: "native",
   });
   const triggerRef = useRef<HTMLButtonElement>(null);
-  // Field의 label은 이름으로(aria-labelledby), 설명·오류는 aria-describedby로 잇는다(ADR 0013). 트리거 id는
-  // Field의 controlId라 label의 for와 오류 요약 링크(#id)가 트리거를 가리킨다.
+  // 트리거 id가 Field의 controlId라 label의 for와 오류 요약 링크(#id)가 트리거를 가리킨다(ADR 0013).
   const { triggerProps, valueProps, menuProps, hiddenSelectProps, isInvalid } = useSelect<object>(
     {
       id: control.id,
@@ -163,8 +139,7 @@ export function Select({
       <button
         {...mergeProps(props, buttonProps)}
         ref={mergedRef}
-        // useSelect(useField)는 자기 설명·오류 요소 자리의 id를 aria-describedby에 넣는다. Tide는 그 요소를 그리지 않고
-        // Field가 설명·오류를 그리므로 Field 연결 값만 쓴다(서버 HTML에 없는 id를 가리키지 않게).
+        // useSelect는 그리지 않는 설명·오류 요소 id를 넣으므로 Field 연결 값만 쓴다(없는 id를 가리키지 않게).
         aria-describedby={control["aria-describedby"]}
         aria-invalid={showInvalid ? true : control["aria-invalid"]}
         data-invalid={showInvalid ? "" : undefined}

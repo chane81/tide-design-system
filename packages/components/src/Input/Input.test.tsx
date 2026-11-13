@@ -1,6 +1,3 @@
-// Input·Textarea의 모양과 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 15).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는
-// border 색과 box-shadow가 시스템 색으로 덮이므로, 투명 outline이 보여 포커스 표시가 남는지를 계산값으로 단언한다.
 import { useState, type ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -31,7 +28,6 @@ const settle = (): Promise<void> => new Promise((done) => setTimeout(done, 250))
 
 describe("size", () => {
   const sizes: [NonNullable<InputProps["size"]>, number, string][] = [
-    // size, 높이, 텍스트 스타일
     ["sm", 32, "label-md"],
     ["md", 40, "label-md"],
     ["lg", 48, "label-lg"],

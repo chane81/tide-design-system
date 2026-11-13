@@ -1,6 +1,6 @@
 import type { IconButtonProps } from "../IconButton/IconButton";
 
-/** 이전/다음 항목 props. IconButton의 props에서 모양(variant·color·size)과 아이콘·로딩을 고정했다. */
+/** 이전/다음 항목 props. IconButton에서 모양·아이콘·로딩을 고정했다. */
 export interface PaginationArrowProps extends Omit<
   IconButtonProps,
   "aria-label" | "children" | "variant" | "color" | "size" | "loading" | "loadingLabel"

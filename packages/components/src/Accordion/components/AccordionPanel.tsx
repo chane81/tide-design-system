@@ -11,10 +11,7 @@ export interface AccordionPanelProps extends Omit<
   ComponentProps<"div">,
   "id" | "role" | "hidden" | "aria-labelledby"
 > {
-  /**
-   * 패널 역할. 기본값은 `region`(트리거 이름이 붙은 영역, APG 예시)이다.
-   * 함께 펼칠 수 있는 패널이 많으면(대략 6개 넘음) 영역 랜드마크가 너무 늘지 않게 `group`으로 둔다(APG).
-   */
+  /** 패널 역할. 기본값 `region`. 함께 펼칠 패널이 많으면(대략 6개 넘음) `group`으로 둔다(APG). */
   role?: "region" | "group";
 }
 

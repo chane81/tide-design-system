@@ -25,7 +25,7 @@ export function SelectPopover(props: SelectPopoverProps): ReactElement | null {
   const present = useOverlayPresence(props.state.isOpen, popoverRef);
   if (!present) return null;
 
-  // 옵션에 포커스가 오므로 FocusScope로 감싸(focusManagement 기본값) 닫힐 때 트리거로 포커스를 돌려준다.
+  // 옵션에 포커스가 오므로 FocusScope(focusManagement 기본값)로 감싸 닫힐 때 트리거로 포커스를 돌려준다.
   return (
     <OverlayPortal isExiting={!props.state.isOpen}>
       <SelectPopoverInner {...props} popoverRef={popoverRef} />

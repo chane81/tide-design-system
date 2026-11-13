@@ -1,9 +1,4 @@
-// Select 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 28).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 포커스·위치 표시가 시스템 색
-// outline으로 남는지와 고른 옵션이 체크 아이콘으로 보이는지를 본다.
-//
-// 열려 있는 동안 바깥은 inert라 Playwright click(누를 수 있는지 먼저 확인)이 바깥 요소를 누르지 못한다.
-// 바깥 누름은 좌표로 마우스를 누르는 사용자 명령(mouseDownOn·mouseUp)으로 한다(Popover·Menu 테스트와 같다).
+// 열린 동안 바깥은 inert라 Playwright click이 누르지 못한다. 바깥 누름은 좌표 마우스 명령으로 한다.
 import { useState, type ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
@@ -103,10 +98,8 @@ describe("이름과 값", () => {
     expect(trigger()).toHaveAttribute("type", "button");
     expect(trigger()).toHaveTextContent("Banana");
     await expect.element(button).toHaveAccessibleDescription("하나만 고릅니다.");
-    // label의 for가 트리거를 가리킨다(오류 요약 #id 링크용).
     const label = document.querySelector("label")!;
     expect(label.htmlFor).toBe(trigger().id);
-    // 숨은 select가 값을 갖고 보조기술에서 숨는다.
     const hidden = document.querySelector<HTMLSelectElement>('select[name="fruit"]')!;
     expect(hidden.value).toBe("banana");
     expect(hidden.closest("[aria-hidden='true']")).not.toBeNull();
@@ -189,7 +182,6 @@ describe("열고 고르기", () => {
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("apple")).toHaveFocus();
     await userEvent.keyboard("{ArrowDown}{ArrowDown}");
-    // Cherry(disabled)를 건너뛴다.
     await expect.element(page.getByTestId("grape")).toHaveFocus();
     await userEvent.keyboard("{End}");
     await expect.element(page.getByTestId("kiwi")).toHaveFocus();
@@ -263,7 +255,6 @@ describe("열고 고르기", () => {
     const dismiss = popover.querySelectorAll("button");
     expect(dismiss).toHaveLength(2);
     expect(dismiss[0]).toHaveAttribute("tabindex", "-1");
-    // listbox의 자식은 option·group만 될 수 있어 닫기 버튼은 바깥 요소에 listbox 앞뒤로 둔다.
     expect(listbox()!.querySelector("button")).toBeNull();
     expect(dismiss[0]!.compareDocumentPosition(listbox()!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(dismiss[1]!.compareDocumentPosition(listbox()!)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
@@ -281,7 +272,6 @@ describe("타입어헤드", () => {
     await expect.element(page.getByTestId("apple")).toHaveFocus();
     await userEvent.keyboard("g");
     await expect.element(page.getByTestId("grape")).toHaveFocus();
-    // 비활성 옵션(Cherry)으로는 가지 않는다.
     await userEvent.keyboard("c");
     await expect.element(page.getByTestId("grape")).toHaveFocus();
   });
@@ -305,7 +295,6 @@ describe("제어와 비제어", () => {
     await userEvent.click(page.getByRole("option", { name: "Kiwi" }));
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith("kiwi");
     await expectClosed();
-    // 부모가 바꾸지 않았으므로 그대로다.
     expect(trigger()).toHaveTextContent("Apple");
   });
 
@@ -364,7 +353,6 @@ describe("Field와 폼", () => {
     await expect.element(button).toHaveAttribute("aria-invalid", "true");
     await expect.element(button).toHaveAttribute("data-invalid", "");
     await expect.element(button).toHaveAccessibleDescription("하나만 고릅니다. 과일을 고르세요.");
-    // Field가 그린 설명·오류 요소만 가리킨다(React Aria가 만든 빈 자리 id는 쓰지 않는다).
     const ids = button.element().getAttribute("aria-describedby")!.split(" ");
     expect(ids).toHaveLength(2);
     expect(ids.every((id) => document.getElementById(id) !== null)).toBe(true);
@@ -444,7 +432,6 @@ describe("Field와 폼", () => {
     expect(onSubmit).not.toHaveBeenCalled();
     await expect.element(page.getByTestId("trigger")).toHaveFocus();
     await expect.element(page.getByTestId("trigger")).toHaveAttribute("aria-invalid", "true");
-    // 고르면 오류 상태가 풀리고 제출된다.
     await userEvent.keyboard("{ArrowDown}");
     await userEvent.keyboard("{Enter}");
     await expectClosed();
@@ -624,7 +611,7 @@ describe("모양", () => {
     const popover = listbox()!.parentElement!;
     expect(getComputedStyle(popover).opacity).toBe("1");
     expect(getComputedStyle(popover).transitionProperty).toBe("none");
-    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts). rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
+    // rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있어, data-open이 빠지는 순간에 붙잡는다.
     const exit = captureExit(popover, () => ({
       connected: popover.isConnected,
       style: styleSnapshot(popover),

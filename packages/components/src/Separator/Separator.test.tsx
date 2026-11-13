@@ -1,5 +1,4 @@
-// Separator의 역할과 모양을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 19).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors)에서는 선이 시스템 색으로 남는지 본다.
+// 두 번째 instance(forced-colors)에서도 돈다.
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -8,7 +7,6 @@ import { Separator, type SeparatorProps } from "./Separator";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-/** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
 function resolve(value: string): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = "light";
@@ -28,7 +26,6 @@ describe("역할과 이름", () => {
     await expect.element(separator).toBeInTheDocument();
     const element = separator.element();
     expect(element.tagName).toBe("HR");
-    // hr은 암묵 역할과 가로 방향을 가지므로 role·aria-orientation을 붙이지 않는다.
     expect(element).not.toHaveAttribute("role");
     expect(element).not.toHaveAttribute("aria-orientation");
     expect(element).toHaveAttribute("data-orientation", "horizontal");
@@ -51,7 +48,6 @@ describe("역할과 이름", () => {
     expect(page.getByRole("separator").elements()).toHaveLength(0);
     const line = page.getByTestId("line").element();
     expect(line).toHaveAttribute("role", "none");
-    // 장식용은 방향 속성도 붙이지 않는다(역할이 없으면 의미가 없다).
     expect(page.getByTestId("vertical").element()).not.toHaveAttribute("aria-orientation");
   });
 

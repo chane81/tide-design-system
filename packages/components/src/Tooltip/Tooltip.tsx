@@ -1,16 +1,4 @@
 "use client";
-// 트리거에 짧은 설명을 붙이는 Tooltip(tide-v0-impl 티켓 26). React Aria hooks만 쓰고 마크업은 직접 만든다(ADR 0004).
-// 근거 버전: react-aria 3.53.1(useTooltipTrigger, useTooltip, useOverlayPosition, mergeProps, mergeRefs),
-// react-stately 3.51.0(useTooltipTriggerState). portal·위치 보정·Theme·motion은 오버레이 공통 부분(ADR 0018)을 쓴다.
-//
-// 구조:
-// - `Tooltip`: 열림 상태만 갖는다(DOM 없음). `open`/`defaultOpen`/`onOpenChange(open)`, `delay`, `closeDelay`, `disabled`.
-// - `TooltipTrigger`: 기본 `<button type="button">`. 마우스를 올리면 `delay` 뒤에, 키보드 포커스면 바로 연다.
-//   열린 동안 `aria-describedby`가 설명을 가리킨다. `render={<IconButton />}`로 Tide 요소를 쓴다.
-// - `TooltipContent`: `document.body`로 portal한 `role="tooltip"` 요소. `z-tooltip`으로 Dialog·Popover 위에 쌓인다.
-//   포커스를 받지 않는다. Esc, 포인터가 떠남(`closeDelay` 뒤), 트리거 누름, 포커스가 떠남으로 닫힌다.
-//   설명 위에 포인터를 올리면 닫히지 않는다(WCAG 1.4.13).
-
 import { useMemo, useRef, type ReactElement, type ReactNode } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고).
 import { useTooltipTrigger } from "react-aria";

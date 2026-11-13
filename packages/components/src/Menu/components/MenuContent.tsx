@@ -17,9 +17,8 @@ export interface MenuContentProps extends Omit<ComponentProps<"div">, "id" | "ro
 }
 
 /**
- * 트리거 옆에 뜨는 동작 목록(`role="menu"`). 열릴 때만 `document.body`에 portal로 렌더하고 `z-popover`로 쌓는다.
- * 바로 나타나고, 닫히면 opacity만 `fast`(150ms)로 사라진다.
- * 열려 있으면 `data-open`이, 트리거 기준 방향이 `data-placement`(`top`/`bottom`/`left`/`right`)로 붙는다.
+ * 트리거 옆에 뜨는 동작 목록(`role="menu"`). 열릴 때만 `document.body`에 portal한다.
+ * 상태는 `data-open`, 방향은 `data-placement`(`top`/`bottom`/`left`/`right`)로 붙는다.
  */
 export function MenuContent(props: MenuContentProps): ReactElement | null {
   const context = useMenuContext("MenuContent");
@@ -27,7 +26,7 @@ export function MenuContent(props: MenuContentProps): ReactElement | null {
   const present = useOverlayPresence(context.state.isOpen, popoverRef);
   if (!present) return null;
 
-  // Menu는 항목에 포커스가 오므로 FocusScope로 감싸(focusManagement 기본값) 닫힐 때 트리거로 포커스를 돌려준다.
+  // 항목에 포커스가 오므로 FocusScope로 감싸(focusManagement 기본값) 닫힐 때 포커스를 트리거로 돌린다.
   return (
     <OverlayPortal isExiting={!context.state.isOpen}>
       <MenuContentInner {...props} context={context} popoverRef={popoverRef} />

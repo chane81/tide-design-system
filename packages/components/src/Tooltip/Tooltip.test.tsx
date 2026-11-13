@@ -1,7 +1,3 @@
-// Tooltip 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 26).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서는 경계가 시스템 색으로 남는지와
-// 퇴장이 그대로 opacity 전환인지를 본다.
-//
 // React Aria Tooltip 상태는 전역 warmup을 갖는다. 한 Tooltip이 닫힌 뒤 0.5초 안에 다른 Tooltip을 열면 delay 없이 바로
 // 열린다. delay를 재는 테스트는 그 시간이 지나기를 먼저 기다린다. 나머지는 delay={0}으로 연다.
 import { useState, type ReactElement } from "react";
@@ -78,10 +74,8 @@ async function expectClosed(): Promise<void> {
 }
 
 /**
- * 마우스를 트리거에 올린다. 먼저 앞 버튼으로 옮겨 포인터가 트리거 밖에서 들어오게 한다.
- * React Aria는 마지막 입력이 포인터(pointermove)일 때만 hover로 연다.
- * 테스트 시작 때 마우스는 페이지 밖에 있다(test/browser-setup.ts). 앞 테스트 자리에 마우스가 남아 있으면 Chromium이
- * 새로 그린 트리거에 약 0.1초 뒤 pointerenter를 보내 render 직후 Tooltip이 저절로 열린다.
+ * 앞 버튼을 거쳐 트리거에 마우스를 올린다. React Aria는 마지막 입력이 pointermove일 때만 hover로 연다.
+ * 마우스가 앞 테스트 자리에 남으면 Chromium의 늦은 pointerenter로 저절로 열려, 시작 때 페이지 밖에 둔다(test/browser-setup.ts).
  */
 async function hoverTrigger(): Promise<void> {
   await userEvent.hover(page.getByTestId("before"));
@@ -150,7 +144,6 @@ describe("hover로 열고 닫기", () => {
 
 describe("키보드", () => {
   test("Tab으로 포커스하면 delay 없이 열리고 Esc로 닫혀도 포커스는 트리거에 남는다", async () => {
-    // delay가 길어도 키보드 포커스는 기다리지 않는다.
     await render(<Example delay={5000} />);
     await tabToTrigger();
     await expect.element(page.getByRole("tooltip")).toBeVisible();
@@ -417,7 +410,6 @@ describe("표면", () => {
 });
 
 describe("등장과 퇴장 motion", () => {
-  // 퇴장 중 값은 data-open이 빠지는 순간에 붙잡는다(test/motion.ts).
   test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
     const screen = await render(<Example open={false} />);
     await screen.rerender(<Example open />);

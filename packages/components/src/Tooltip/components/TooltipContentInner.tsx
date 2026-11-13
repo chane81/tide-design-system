@@ -49,8 +49,8 @@ export function TooltipContentInner({
       id={tooltipId}
       ref={mergedRef}
       data-open={state.isOpen ? "" : undefined}
-      // 열린 Popover·Dialog가 바깥을 inert로 막아도(React Aria ariaHideOutside) 설명은 막지 않는다.
-      // React Aria가 「늘 보이는 요소」로 남기는 표시다(react-aria 3.53.1 ariaHideOutside·useInteractOutside 소스).
+      // 열린 Popover·Dialog가 바깥을 inert로 막아도(ariaHideOutside) 설명은 막지 않는다.
+      // React Aria가 「늘 보이는 요소」로 남기는 표시다(react-aria 3.53.1).
       data-react-aria-top-layer=""
       className={cn(
         contentClass,

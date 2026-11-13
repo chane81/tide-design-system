@@ -1,7 +1,7 @@
 "use client";
 import { XIcon } from "@tide-design/icons";
 import { useEffect, useRef, type ReactElement } from "react";
-// 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
+// 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import { useToast } from "react-aria";
 import type { QueuedToast, ToastState } from "react-stately";
 
@@ -33,7 +33,6 @@ export function ToastItem({ toast, open, state, onExited }: ToastItemProps): Rea
     if (!present) onExited(toast.key);
   }, [present, onExited, toast.key]);
 
-  // useToast: 자동 닫힘 타이머 시작(보일 때), alertdialog 역할·이름·설명, alert 역할 글자.
   const { toastProps, contentProps, titleProps, descriptionProps } = useToast(
     { toast },
     state,
@@ -45,6 +44,7 @@ export function ToastItem({ toast, open, state, onExited }: ToastItemProps): Rea
 
   return (
     <div
+      // 퇴장 중에는 역할을 빼서 useToastRegion의 포커스 이동과 스크린 리더에서 빠지게 한다.
       {...(open ? toastProps : {})}
       ref={ref}
       // 색은 항상 붙인다(기본 info). 바깥 data-color를 물려받지 않게 한다(ADR 0011).
@@ -55,7 +55,6 @@ export function ToastItem({ toast, open, state, onExited }: ToastItemProps): Rea
       data-placement="top"
       className={toastClass}
     >
-      {/* 아이콘은 장식용이다. 뜻은 제목·본문 글자가 전한다. */}
       <StatusIcon size={20} aria-hidden="true" className={`${alertIconClass} text-accent`} />
       <div className="flex min-w-0 flex-1 flex-col gap-3">
         <div {...(open ? contentProps : {})} className={alertContentClass}>
@@ -68,6 +67,7 @@ export function ToastItem({ toast, open, state, onExited }: ToastItemProps): Rea
             </div>
           )}
         </div>
+        {/* 버튼은 neutral 고정이다. Role 색 글자는 dark raised 표면의 hover·누름에서 대비가 모자란다. */}
         {action !== undefined && (
           <Button
             variant="outline"

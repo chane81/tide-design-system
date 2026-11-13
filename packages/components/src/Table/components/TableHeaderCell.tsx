@@ -16,6 +16,7 @@ export interface TableHeaderCellProps extends ComponentProps<"th"> {
  * 복잡한 표(여러 줄 머리)는 `id`와 칸의 `headers`로 직접 잇는다.
  */
 export function TableHeaderCell({
+  // scope가 없으면 브라우저·보조 기술·테스트 도구가 위치로 추측한 결과가 서로 달라 기본값을 둔다.
   scope = "col",
   className,
   ...props

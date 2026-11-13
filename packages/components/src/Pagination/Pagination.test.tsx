@@ -1,6 +1,4 @@
-// Pagination 동작을 실제 Chromium에서 확인한다(tide-v0-impl 티켓 24).
-// 두 instance에서 모두 돈다. 두 번째 instance(forced-colors·reduced-motion)에서도 포커스 ring·크기·disabled를 본다.
-// 페이지 번호는 Button, 이전/다음은 IconButton이라 채움 방식·누름 반응 전체는 Button.test.tsx·IconButton.test.tsx가 본다.
+// 채움 방식·누름 반응 전체는 Button.test.tsx·IconButton.test.tsx가 본다.
 import Next from "next/link.js";
 import type { ReactElement } from "react";
 import { describe, expect, test, vi } from "vitest";
@@ -34,7 +32,7 @@ async function resolve(property: "backgroundColor" | "color", value: string): Pr
   return resolved;
 }
 
-/** 10쪽 중 `current`쪽. 앞뒤 1쪽과 처음·끝을 보이고 사이를 생략한다(범위 계산은 앱이 한다). */
+/** 10쪽 중 `current`쪽. 앞뒤 1쪽과 처음·끝을 보이고 사이를 생략한다. */
 function Pages({ current, ...props }: PaginationProps & { current: number }): ReactElement {
   const shown = [1, current - 1, current, current + 1, 10].filter(
     (value, index, list) => value >= 1 && value <= 10 && list.indexOf(value) === index,
@@ -68,7 +66,6 @@ describe("랜드마크와 이름", () => {
     const nav = page.getByRole("navigation", { name: "페이지 이동" });
     await expect.element(nav).toBeInTheDocument();
     expect(nav.element().firstElementChild?.tagName).toBe("UL");
-    // 화살표·생략 아이콘은 읽히지 않는다. 생략 자리는 텍스트 「페이지 생략」으로 읽힌다.
     await expect.element(nav).toMatchAriaInlineSnapshot(`
       - navigation "페이지 이동":
         - list:
@@ -123,7 +120,6 @@ describe("현재 페이지", () => {
       expect(style.backgroundColor).toBe(
         await resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
       );
-      // 현재 페이지는 Button subtle이라 글자가 파스텔 글자 on-subtle이다(ADR 0022).
       expect(style.color).toBe(await resolve("color", "var(--tide-text-primary-on-subtle)"));
       const other = getComputedStyle(others[0] as Element);
       expect(other.backgroundColor).toBe(transparent);
@@ -168,7 +164,6 @@ describe("크기", () => {
     expect(box(wide).width).toBeGreaterThan(32);
     expect(getComputedStyle(wide).paddingInlineStart).toBe("8px");
     expect(getComputedStyle(wide).fontVariantNumeric).toBe("tabular-nums");
-    // 화살표 아이콘은 16px다(IconButton sm).
     const arrow = page.getByRole("button", { name: "이전 페이지" }).element().querySelector("svg");
     expect(arrow && box(arrow).width).toBe(16);
   });
@@ -257,7 +252,7 @@ describe("포커스", () => {
     await render(<Pages current={1} />);
     await userEvent.tab();
     const first = page.getByRole("link", { name: "1", exact: true });
-    // 첫 페이지라 이전 버튼은 disabled로 건너뛴다.
+    // 첫 페이지라 disabled인 이전 버튼은 건너뛴다.
     await expect.element(first).toHaveFocus();
     // outline 색도 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
     await new Promise((resolve) => setTimeout(resolve, 250));
@@ -318,7 +313,6 @@ describe("render", () => {
     expect(element).toHaveAttribute("aria-current", "page");
     expect(node).toBe(element);
     expect(element).toHaveClass("font-bold");
-    // 사용자 className이 기본 최소 폭(32px)을 이긴다.
     expect(element.getBoundingClientRect().width).toBe(40);
     await userEvent.click(link);
     expect(onClick).toHaveBeenCalledTimes(1);
