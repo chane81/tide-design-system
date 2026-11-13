@@ -105,8 +105,36 @@ import { primitiveHex } from "@tide-design/foundation/internal"; // internal은 
 - `src/index.ts`는 `export { Rating, type RatingProps } from "./Rating/index.ts"`로 폴더의 `index.ts`를 가리킨다. 앱이 쓰는 공개 경로(`@tide-design/components`)는 그대로다.
 - ❌ `src/Rating/index.tsx`에 본문을 쓴다.
 - ❌ `CheckboxGroup`을 `Checkbox/` 폴더 안에 넣는다. 따로 공개되는 Component라 자기 폴더를 갖는다. 둘이 함께 쓰는 코드는 `src/_internal/hooks/useChoiceGroup.ts`처럼 공통 부모에 둔다.
-- ✅ `TableRow`·`TableCell`은 `Table/Table.tsx`(또는 `Table/components/`)에 두고 `Table/index.ts`가 함께 재수출한다. Table 없이 쓰지 않는다.
+- ✅ `TableRow`·`TableCell`은 `Table/components/TableRow.tsx`·`TableCell.tsx`에 두고 `Table/index.ts`가 함께 재수출한다(7-1).
 - 내부 Component는 다르다: `src/_internal/components/OverlayPortal.tsx`는 테스트·전용 조각이 없으면 파일 하나로 둔다.
+
+## 7-1. 파일 하나에 Component 하나
+
+Menu 본문 파일 하나(391줄)에 Component 8개와 Context가 들어 있다.
+
+```
+❌ Menu/Menu.tsx   # Menu, MenuTrigger, MenuContent, MenuContentInner, MenuItem, MenuSection,
+                   # MenuItemView, MenuSectionView, MenuContext, useMenuContext
+
+✅ Menu/
+   ├── index.ts                    # Menu·MenuTrigger·MenuContent·MenuItem·MenuSection + Props
+   ├── Menu.tsx                    # 루트: 열림 상태 + Context 제공
+   ├── Menu.test.tsx
+   ├── types.ts                    # MenuPlacement 등 함께 쓰는 타입
+   ├── hooks/useMenuContext.ts     # MenuContext + useMenuContext
+   └── components/
+       ├── MenuTrigger.tsx
+       ├── MenuContent.tsx
+       ├── MenuContentInner.tsx    # 비공개 조각도 자기 파일
+       ├── MenuItem.tsx
+       ├── MenuSection.tsx
+       ├── MenuItemView.tsx
+       └── MenuSectionView.tsx
+```
+
+- ❌ "Menu만 쓰는 작은 조각이니까" `MenuItemView`를 `Menu.tsx` 아래쪽에 둔다. 비공개여도 Component면 자기 파일이다.
+- ✅ `Menu.tsx` 안의 3줄짜리 `toKey(value)` 같은 비-Component 헬퍼는 그대로 둬도 된다. `MenuItemView`도 쓰기 시작하면 `Menu/libs/toKey.ts`로 뺀다.
+- 테스트는 대표 Component 테스트 하나(`Menu.test.tsx`)로 둬도 된다. 하위 Component를 따로 검사하면 그 옆에 `components/MenuItem.test.tsx`.
 
 ## 8. 이름
 
