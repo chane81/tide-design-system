@@ -77,7 +77,7 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 | 글자      | `text-default`, `text-muted`, `text-disabled`, `text-on-solid`                                                                        |
 | 테두리    | `border-default`(장식용 구분선), `border-strong`(입력창 등 UI 경계), `border-raised`(raised 표면 경계. light는 투명, dark는 gray-800) |
 | 호버·누름 | `bg-hover`, `bg-active`(색 없는 바탕의 호버·누름. 반투명)                                                                             |
-| 기타      | `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(포커스 테두리), `outline-focus-halo`·`outline-danger-halo`(포커스 halo)     |
+| 기타      | `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(primary 포커스 테두리 색)                                                   |
 
 ## 색 이름으로 고르기
 
@@ -202,6 +202,6 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 ### 검사에서 뺀 Token
 
-아래 Token은 대비 검사 대상이 아닙니다. 비활성 상태는 색만으로 나타내지 않고, Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다. 파스텔 테두리는 꾸밈이라 뺍니다. 포커스 halo는 옅은 200단계 색이라 3:1에 못 미치는 것을 알고 고른 모양입니다.
+아래 Token은 대비 검사 대상이 아닙니다. 비활성 상태는 색만으로 나타내지 않고, Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다. 파스텔 테두리는 꾸밈이라 뺍니다. 파스텔 테두리는 포커스 halo로도 쓰며, 3:1에 못 미치는 것을 알고 고른 모양입니다.
 
 <Canvas of={ColorStories.Exclusions} sourceState="none" />
