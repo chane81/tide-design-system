@@ -40,4 +40,4 @@
 - **문서가 등급을 보여 준다.** Color 문서 「대비」와 대비 쌍 표, 색 이름별 대비 표, 브랜드 색 문서의 검사 표가 세 등급을 적는다. Component 문서의 「4.5:1 이상」 문장 중 호버·누름·solid를 말하는 것은 4:1로 고친다.
 - **[접근성 기준](../standards/accessibility.md)의 텍스트 대비 줄이 이 ADR을 가리킨다.**
 
-> 덧붙임(2026-11-14, [ADR 0032](0032-unified-focus-halo.md)): UI 요소 3:1 등급은 포커스 테두리(`outline-focus`)에만 적용한다. 포커스 halo(`outline-focus-halo`·`outline-danger-halo`)는 3:1에 못 미치는 것을 알고 고른 모양이라 대비 검사에서 뺐다. Alert 닫기 버튼 등 subtle 바탕 위 조작 요소는 halo만 그려 `outline-focus × bg-*-subtle` 쌍 6개를 지웠다.
+> 덧붙임(2026-11-14, [ADR 0032](0032-unified-focus-halo.md)): UI 요소 3:1 등급은 포커스 테두리(accent `border` 슬롯)에만 적용한다. 포커스 halo(accent `subtle-border` 슬롯)는 3:1에 못 미치는 것을 알고 고른 모양이라 대비 검사에서 뺀다(파스텔 테두리 제외에 이유를 덧붙였다). Alert 닫기 버튼 등 subtle 바탕 위 조작 요소는 halo만 그려 `outline-focus × bg-*-subtle` 쌍 6개를 지웠다.

@@ -79,7 +79,7 @@ _Avoid_: 표면 층, z-index(겹치는 순서와 혼동)
 _Avoid_: 층(Layer와 혼동), level(표면 층과 혼동), elevation(그림자와 혼동)
 
 **포커스 표시 (Focus indicator)**:
-포커스가 어느 요소에 있는지 보여주는 시각 표시. 모양은 요소에 간격 없이 붙은 3px **halo**(primary 200단계 색) 하나다(ADR 0032). **ring**(`focus-ring`)은 halo만 그린다. **field**(`focus-field`)는 테두리 색을 focus 색(`outline-focus`)으로 바꾸고 halo를 그린다. 오류 입력창은 같은 모양을 빨강(`border-danger`, `outline-danger-halo`)으로 그린다. **highlight**는 목록 안 항목(Menu 항목, Select 옵션)의 배경과 글자색을 바꾼다. 테두리가 있는 요소(입력창, Checkbox·Radio, outline 버튼)는 field, 목록 안 항목은 highlight, 나머지는 ring을 쓴다.
+포커스가 어느 요소에 있는지 보여주는 시각 표시. 모양은 요소에 간격 없이 붙은 3px **halo** 하나다(ADR 0032). 색은 요소의 accent를 따른다(halo `subtle-border`, 테두리 `border` 슬롯). **ring**(`focus-ring`)은 halo만 그린다. **field**(`focus-field`)는 테두리 색을 accent `border`로 바꾸고 halo를 그린다. 오류 입력창은 같은 모양을 빨강(`border-danger`, `border-danger-subtle`)으로 그린다. **highlight**는 목록 안 항목(Menu 항목, Select 옵션)의 배경과 글자색을 바꾼다. 테두리가 있는 요소(입력창, Checkbox·Radio, outline 버튼)는 field, 목록 안 항목은 highlight, 나머지는 ring을 쓴다.
 _Avoid_: focus ring(ring 한 종류만 가리킬 때만 씀), 포커스 테두리(field가 바꾸는 테두리만 가리킬 때만 씀), offset ring
 
 **대비 쌍 (Contrast pair)**:

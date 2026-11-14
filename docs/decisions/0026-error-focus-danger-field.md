@@ -16,4 +16,4 @@
 - 오류 입력창에 포커스해도 오류 색이 유지되어 오류 상태를 놓치지 않는다. 오류는 계속 메시지·`aria-invalid`로도 알린다.
 - Input·Textarea·Select·Combobox 트리거가 모두 `focus:focus-field`를 써서 함께 바뀐다.
 
-> 덧붙임(2026-11-14, [ADR 0032](0032-unified-focus-halo.md)): 포커스 표시를 간격 없는 3px halo로 통일했다. 오류 입력창은 포커스 중에 테두리 `border-danger`(1px 그대로)와 halo `outline-danger-halo`(light red-200, dark red-800)로 그린다. inset 1px로 두껍게 보이던 표시는 없어졌다. "오류일 때는 포커스 색도 빨강" 결정은 그대로다.
+> 덧붙임(2026-11-14, [ADR 0032](0032-unified-focus-halo.md)): 포커스 표시를 간격 없는 3px halo로 통일했다. 오류 입력창은 포커스 중에 테두리 `border-danger`(1px 그대로)와 halo `border-danger-subtle`(light red-200, dark red-800)로 그린다. inset 1px로 두껍게 보이던 표시는 없어졌다. "오류일 때는 포커스 색도 빨강" 결정은 그대로다.
