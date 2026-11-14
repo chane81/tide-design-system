@@ -3,11 +3,16 @@ import type { ReactElement } from "react";
 
 import { IconButton } from "../../IconButton/IconButton";
 import { itemSize } from "../constants/paginationClass";
-import type { PaginationArrowProps } from "../types";
+import type { PaginationArrowOwnProps, PaginationArrowProps } from "../types";
+
+export interface PaginationNextOwnProps extends PaginationArrowOwnProps {}
 
 export interface PaginationNextProps extends PaginationArrowProps {}
 
-/** 다음 페이지로 가는 IconButton(ghost, 32px, ›). 마지막 페이지에서는 `disabled`를 준다. */
+/**
+ * 다음 페이지로 가는 IconButton(ghost, 32px, ›). 마지막 페이지에서는 `disabled`를 준다.
+ * Tide props: `aria-label`, `noPressScale`, `render` ({@link PaginationNextOwnProps}). 나머지는 `<button>` 속성.
+ */
 export function PaginationNext({
   "aria-label": ariaLabel = "다음 페이지",
   ...props

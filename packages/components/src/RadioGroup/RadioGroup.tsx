@@ -10,7 +10,7 @@ import {
 import { cn } from "../_internal/libs/cn";
 import { FieldContext } from "../_internal/hooks/useFieldControl";
 
-export interface RadioGroupProps extends Omit<ComponentProps<"div">, "defaultValue"> {
+export interface RadioGroupOwnProps {
   /** 안의 Radio가 함께 쓰는 `name`. form에 이 이름으로 제출된다. 주지 않으면 자동으로 만든다. */
   name?: string;
   /** 선택된 Radio의 값(제어). `onValueChange`와 함께 쓴다. */
@@ -32,9 +32,13 @@ export interface RadioGroupProps extends Omit<ComponentProps<"div">, "defaultVal
   required?: boolean;
 }
 
+export interface RadioGroupProps
+  extends RadioGroupOwnProps, Omit<ComponentProps<"div">, keyof RadioGroupOwnProps> {}
+
 /**
  * Radio 여러 개를 하나의 이름과 선택 값으로 묶는다. `<Field label group>` 안에 두면 label이 묶음의 이름,
  * 설명·오류가 묶음의 설명이 된다. Field 밖에서는 `aria-label`이나 `aria-labelledby`를 준다.
+ * Tide props: `name`, `value`, `defaultValue`, `onValueChange`, `orientation`, `invalid`, `disabled`, `required` ({@link RadioGroupOwnProps}). 나머지는 `<div>` 속성.
  */
 export function RadioGroup({
   name,

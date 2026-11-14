@@ -17,14 +17,18 @@ import { tabListOrientationClass } from "../constants/tabsClass";
 import { useTabsContext } from "../hooks/useTabsContext";
 import { TabView } from "./TabView";
 
-export interface TabListProps extends Omit<ComponentProps<"div">, "role" | "children"> {
+export interface TabListOwnProps {
   /** `Tab`. 바로 아래(또는 Fragment·배열 안)에 둔다. */
   children?: ReactNode;
 }
 
+export interface TabListProps
+  extends TabListOwnProps, Omit<ComponentProps<"div">, keyof TabListOwnProps | "role"> {}
+
 /**
  * 탭 목록(`role="tablist"`). 화살표로 탭을 옮기고(끝에서 처음으로 돈다) Home·End로 처음·마지막 탭에 간다.
  * 비활성 탭은 건너뛴다. 이름은 `aria-label`이나 `aria-labelledby`로 준다.
+ * Tide props: `children` ({@link TabListOwnProps}). 나머지는 `<div>` 속성.
  */
 export function TabList({ ref, className, children, ...props }: TabListProps): ReactElement {
   const context = useTabsContext("TabList");

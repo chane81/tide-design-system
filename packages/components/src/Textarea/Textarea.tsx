@@ -11,12 +11,15 @@ import type { Size } from "../types";
 /** Textarea의 size. Input과 같이 `sm`/`md`/`lg`만 받는다. */
 type TextareaSize = Extract<Size, "sm" | "md" | "lg">;
 
-export interface TextareaProps extends ComponentProps<"textarea"> {
+export interface TextareaOwnProps {
   /** 글자 크기와 padding. 글자 크기는 같은 size의 Input과 같다(14/14/16px). 기본값은 `md`다. */
   size?: TextareaSize;
   /** 오류 상태. `aria-invalid="true"`와 `data-invalid`가 붙는다. Field 값보다 여기 준 값이 이긴다. */
   invalid?: boolean;
 }
+
+export interface TextareaProps
+  extends TextareaOwnProps, Omit<ComponentProps<"textarea">, keyof TextareaOwnProps> {}
 
 // 세로 padding은 한 줄일 때 글자 위아래 여백이 같은 size의 Input과 같도록 정했다(border 포함 6/9/13px).
 const sizeClass: Record<TextareaSize, string> = {
@@ -28,6 +31,7 @@ const sizeClass: Record<TextareaSize, string> = {
 /**
  * 여러 줄 텍스트를 입력하는 네이티브 `<textarea>`. 기본 3줄 높이이고 세로로만 크기를 바꿀 수 있다.
  * Field 안에 두면 label, 설명, 오류 메시지가 자동으로 연결된다.
+ * Tide props: `size`, `invalid` ({@link TextareaOwnProps}). 나머지는 `<textarea>` 속성.
  */
 export function Textarea({
   size = "md",

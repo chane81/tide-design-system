@@ -5,7 +5,7 @@ import { cn } from "../_internal/libs/cn";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import { inputBaseClass, inputSizeClass, type InputSize } from "../_internal/constants/inputClass";
 
-export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
+export interface InputOwnProps {
   /** 높이 `sm` 32px, `md` 40px, `lg` 48px. 같은 size의 Button과 높이가 같다. 기본값은 `md`다. */
   size?: InputSize;
   /**
@@ -15,9 +15,13 @@ export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
   invalid?: boolean;
 }
 
+export interface InputProps
+  extends InputOwnProps, Omit<ComponentProps<"input">, keyof InputOwnProps> {}
+
 /**
  * 한 줄 텍스트를 입력하는 네이티브 `<input>`. `type`(`email`, `password`, `date` 등)을 그대로 받는다.
  * Field 안에 두면 label, 설명, 오류 메시지가 자동으로 연결된다.
+ * Tide props: `size`, `invalid` ({@link InputOwnProps}). 나머지는 `<input>` 속성.
  */
 export function Input({
   size = "md",

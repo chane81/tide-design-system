@@ -9,19 +9,30 @@ import { chevronClass, triggerClass } from "../constants/accordionClass";
 import { useAccordionItemContext } from "../hooks/useAccordionItemContext";
 import type { AccordionHeadingLevel } from "../types";
 
-export interface AccordionTriggerProps extends Omit<
-  ComponentProps<"button">,
-  "type" | "id" | "disabled" | "aria-expanded" | "aria-controls"
-> {
+export interface AccordionTriggerOwnProps {
   /** 트리거를 감싸는 제목 요소의 단계(`<h1>`~`<h6>`). 기본값 `3`. 페이지 제목 구조에 맞춘다. */
   level?: AccordionHeadingLevel;
   /** 항목 제목. 제목 요소 안에는 버튼만 둔다(APG). */
   children?: ReactNode;
 }
 
+export interface AccordionTriggerProps
+  extends
+    AccordionTriggerOwnProps,
+    Omit<
+      ComponentProps<"button">,
+      | keyof AccordionTriggerOwnProps
+      | "type"
+      | "id"
+      | "disabled"
+      | "aria-expanded"
+      | "aria-controls"
+    > {}
+
 /**
  * 항목 제목 버튼. 제목 요소(`level`, 기본 `<h3>`) 안의 `<button>`이고 끝에 장식용 chevron이 있다.
  * `ref`·`className`·나머지 props는 버튼에 간다. 펼침 상태는 `aria-expanded`와 `data-open`이다.
+ * Tide props: `level`, `children` ({@link AccordionTriggerOwnProps}). 나머지는 `<button>` 속성.
  */
 export function AccordionTrigger({
   level = 3,

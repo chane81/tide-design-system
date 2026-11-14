@@ -19,10 +19,7 @@ import { resolveCollectionChildren } from "../_internal/libs/listCollection";
 import { SelectPopover } from "./components/SelectPopover";
 import { chevronClass, placeholderClass, triggerClass, valueClass } from "./constants/selectClass";
 
-export interface SelectProps extends Omit<
-  ComponentProps<"button">,
-  "value" | "defaultValue" | "onChange" | "type" | "size" | "children" | "name" | "form"
-> {
+export interface SelectOwnProps {
   /** 고른 옵션의 `value`(제어). `null`이면 아무것도 고르지 않은 상태다. */
   value?: string | null;
   /** 처음 고른 값(비제어). 폼을 reset하면 이 값으로 돌아간다. */
@@ -53,9 +50,15 @@ export interface SelectProps extends Omit<
   children?: ReactNode;
 }
 
+export interface SelectProps
+  extends
+    SelectOwnProps,
+    Omit<ComponentProps<"button">, keyof SelectOwnProps | "onChange" | "type"> {}
+
 /**
  * 값 하나를 고르는 입력. 루트 DOM은 트리거 `<button>`이고 목록은 `document.body`에 portal한다.
  * Field 안에 두면 label·설명·오류가 자동으로 연결되고, `name`을 주면 고른 값이 폼에 제출된다.
+ * Tide props: `value`, `defaultValue`, `onValueChange`, `open`, `defaultOpen`, `onOpenChange`, `name`, `form`, `autoComplete`, `placeholder`, `size`, `invalid`, `required`, `children` ({@link SelectOwnProps}). 나머지는 `<button>` 속성.
  */
 export function Select({
   value,

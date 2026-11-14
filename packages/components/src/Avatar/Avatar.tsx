@@ -8,10 +8,7 @@ import type { ColorFamilyName, Size } from "../types";
 // Chromium이 깨진 아이콘·alt를 그리고 CSS로 지울 수 없어 쓰지 않는다. 그래서 이름은 루트 `role="img"`로 붙인다.
 type AvatarSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
 
-export interface AvatarProps extends Omit<
-  ComponentProps<"span">,
-  "color" | "children" | "role" | "aria-label"
-> {
+export interface AvatarOwnProps {
   /** 사용자 이미지 주소. 없거나 빈 문자열이거나 불러오지 못하면 fallback 아이콘이 보인다. */
   src?: string;
   /**
@@ -27,6 +24,11 @@ export interface AvatarProps extends Omit<
    */
   color?: ColorFamilyName;
 }
+
+export interface AvatarProps
+  extends
+    AvatarOwnProps,
+    Omit<ComponentProps<"span">, keyof AvatarOwnProps | "children" | "role" | "aria-label"> {}
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 const sizeClass: Record<AvatarSize, string> = {
@@ -52,6 +54,7 @@ function cssUrl(src: string): string {
 /**
  * 사용자 이미지를 원 안에 보여 준다. 이미지가 없거나 불러오지 못하면 fallback 아이콘이 보인다.
  * 누르는 동작이 없다. 클릭이 필요하면 Button이나 IconButton 안에 넣는다. 서버 컴포넌트로 쓸 수 있다.
+ * Tide props: `src`, `alt`, `size`, `color` ({@link AvatarOwnProps}). 나머지는 `<span>` 속성.
  */
 export function Avatar({
   src,

@@ -7,6 +7,6 @@ export type { TableBodyProps } from "./components/TableBody";
 export { TableRow } from "./components/TableRow";
 export type { TableRowProps } from "./components/TableRow";
 export { TableHeaderCell } from "./components/TableHeaderCell";
-export type { TableHeaderCellProps } from "./components/TableHeaderCell";
+export type { TableHeaderCellOwnProps, TableHeaderCellProps } from "./components/TableHeaderCell";
 export { TableCell } from "./components/TableCell";
 export type { TableCellProps } from "./components/TableCell";

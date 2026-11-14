@@ -25,10 +25,7 @@ import { cn } from "../_internal/libs/cn";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
-export interface RadioProps extends Omit<
-  ComponentProps<"input">,
-  "type" | "size" | "color" | "children" | "className" | "style" | "value"
-> {
+export interface RadioOwnProps {
   /** 이 라디오의 값. RadioGroup의 `value`·`onValueChange`가 쓰고 form에 제출된다. */
   value: string;
   /** 원 옆에 보이는 label. 라디오의 이름이 된다. 없으면 `aria-label`을 준다. */
@@ -45,6 +42,9 @@ export interface RadioProps extends Omit<
   style?: CSSProperties;
 }
 
+export interface RadioProps
+  extends RadioOwnProps, Omit<ComponentProps<"input">, keyof RadioOwnProps | "type"> {}
+
 const boxClass: Record<ChoiceSize, string> = {
   sm: "size-4 rounded-full",
   md: "size-5 rounded-full",
@@ -53,7 +53,10 @@ const boxClass: Record<ChoiceSize, string> = {
 // 채운 원 아이콘이라 선 두께 2px이 더해진다.
 const dotSize: Record<ChoiceSize, number> = { sm: 6, md: 8 };
 
-/** 네이티브 라디오 버튼. 보통 `RadioGroup` 안에 둔다. 묶음 밖에서는 `name`·`checked`·`onChange`를 직접 준다. */
+/**
+ * 네이티브 라디오 버튼. 보통 `RadioGroup` 안에 둔다. 묶음 밖에서는 `name`·`checked`·`onChange`를 직접 준다.
+ * Tide props: `value`, `children`, `size`, `color`, `invalid`, `className`, `style` ({@link RadioOwnProps}). 나머지는 `<input>` 속성.
+ */
 export function Radio({
   value,
   children,

@@ -1,11 +1,11 @@
 export { Menu } from "./Menu";
 export type { MenuProps } from "./Menu";
 export { MenuTrigger } from "./components/MenuTrigger";
-export type { MenuTriggerProps } from "./components/MenuTrigger";
+export type { MenuTriggerOwnProps, MenuTriggerProps } from "./components/MenuTrigger";
 export { MenuContent } from "./components/MenuContent";
-export type { MenuContentProps } from "./components/MenuContent";
+export type { MenuContentOwnProps, MenuContentProps } from "./components/MenuContent";
 export { MenuItem } from "./components/MenuItem";
-export type { MenuItemProps } from "./components/MenuItem";
+export type { MenuItemOwnProps, MenuItemProps } from "./components/MenuItem";
 export { MenuSection } from "./components/MenuSection";
 export type { MenuSectionProps } from "./components/MenuSection";
 export type { MenuPlacement } from "./types";

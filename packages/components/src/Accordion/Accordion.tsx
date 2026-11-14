@@ -8,7 +8,7 @@ import { cn } from "../_internal/libs/cn";
 import { accordionClass } from "./constants/accordionClass";
 import { AccordionContext } from "./hooks/useAccordionContext";
 
-export interface AccordionProps extends Omit<ComponentProps<"div">, "defaultValue" | "onChange"> {
+export interface AccordionOwnProps {
   /** 펼친 항목의 값 목록(제어). `multiple`이 아닌데 값이 둘 이상이면 첫 값만 남긴다. */
   value?: readonly string[];
   /** 처음 펼친 항목의 값 목록(비제어). 기본값은 빈 목록(모두 접힘)이다. */
@@ -21,7 +21,13 @@ export interface AccordionProps extends Omit<ComponentProps<"div">, "defaultValu
   children?: ReactNode;
 }
 
-/** 접고 펴는 영역 묶음. 안에 `AccordionItem`을 둔다. 기본은 한 번에 한 항목만 펼친다. */
+export interface AccordionProps
+  extends AccordionOwnProps, Omit<ComponentProps<"div">, keyof AccordionOwnProps | "onChange"> {}
+
+/**
+ * 접고 펴는 영역 묶음. 안에 `AccordionItem`을 둔다. 기본은 한 번에 한 항목만 펼친다.
+ * Tide props: `value`, `defaultValue`, `onValueChange`, `multiple`, `children` ({@link AccordionOwnProps}). 나머지는 `<div>` 속성.
+ */
 export function Accordion({
   value,
   defaultValue,

@@ -27,10 +27,7 @@ import { cn } from "../_internal/libs/cn";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
-export interface CheckboxProps extends Omit<
-  ComponentProps<"input">,
-  "type" | "size" | "color" | "children" | "className" | "style"
-> {
+export interface CheckboxOwnProps {
   /** 상자 옆에 보이는 label. 체크박스의 이름이 된다. 없으면 `aria-label`을 준다. */
   children?: ReactNode;
   /** 상자 16px(`sm`) 또는 20px(`md`). 누르는 영역은 둘 다 24×24px. 기본값 `md`. */
@@ -47,6 +44,9 @@ export interface CheckboxProps extends Omit<
   style?: CSSProperties;
 }
 
+export interface CheckboxProps
+  extends CheckboxOwnProps, Omit<ComponentProps<"input">, keyof CheckboxOwnProps | "type"> {}
+
 const boxClass: Record<ChoiceSize, string> = {
   sm: "size-4 rounded-sm",
   md: "size-5 rounded-sm",
@@ -54,7 +54,10 @@ const boxClass: Record<ChoiceSize, string> = {
 
 const iconSize: Record<ChoiceSize, number> = { sm: 12, md: 16 };
 
-/** 네이티브 체크박스. 여러 개를 묶어 이름·설명·오류를 붙이려면 `Field group` 안의 `CheckboxGroup`에 둔다. */
+/**
+ * 네이티브 체크박스. 여러 개를 묶어 이름·설명·오류를 붙이려면 `Field group` 안의 `CheckboxGroup`에 둔다.
+ * Tide props: `children`, `size`, `color`, `indeterminate`, `invalid`, `className`, `style` ({@link CheckboxOwnProps}). 나머지는 `<input>` 속성.
+ */
 export function Checkbox({
   children,
   size = "md",

@@ -19,7 +19,7 @@ import {
   type AccordionItemContextValue,
 } from "../hooks/useAccordionItemContext";
 
-export interface AccordionItemProps extends Omit<ComponentProps<"div">, "value"> {
+export interface AccordionItemOwnProps {
   /** 항목을 가리키는 값. `Accordion`의 `value`·`defaultValue` 목록에 이 값을 넣으면 펼친다. */
   value: string;
   /** 펼치거나 접을 수 없게 한다. 트리거가 네이티브 `disabled`가 된다. 펼친 채 비활성이면 펼친 채로 남는다. */
@@ -28,9 +28,13 @@ export interface AccordionItemProps extends Omit<ComponentProps<"div">, "value">
   children?: ReactNode;
 }
 
+export interface AccordionItemProps
+  extends AccordionItemOwnProps, Omit<ComponentProps<"div">, keyof AccordionItemOwnProps> {}
+
 /**
  * 항목 하나. 안에 `AccordionTrigger`와 `AccordionPanel`을 둔다.
  * 펼쳐 있으면 `data-open`, 비활성이면 `data-disabled`가 붙는다.
+ * Tide props: `value`, `disabled`, `children` ({@link AccordionItemOwnProps}). 나머지는 `<div>` 속성.
  */
 export function AccordionItem({
   value,

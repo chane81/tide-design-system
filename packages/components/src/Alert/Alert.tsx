@@ -18,10 +18,7 @@ import type { Role } from "../types";
 
 // 서버 컴포넌트에서 쓰도록 "use client"를 두지 않는다. `onClose`는 만들지 않고 IconButton(client)에 그대로 넘긴다.
 
-export interface AlertProps extends Omit<
-  ComponentProps<"div">,
-  "color" | "title" | "role" | "onClose"
-> {
+export interface AlertOwnProps {
   /**
    * Role(Tide Role + 앱 Role). 기본값 `info`. 색 계열 이름은 받지 않는다.
    * `info`·`success`·`warning`·`danger`는 상태마다 다른 아이콘, 나머지는 `info` 아이콘이다.
@@ -42,7 +39,13 @@ export interface AlertProps extends Omit<
   closeLabel?: string;
 }
 
-/** 화면 안에서 상태나 알릴 내용을 보여 주는 표면. 서버 컴포넌트로 쓸 수 있다. */
+export interface AlertProps
+  extends AlertOwnProps, Omit<ComponentProps<"div">, keyof AlertOwnProps> {}
+
+/**
+ * 화면 안에서 상태나 알릴 내용을 보여 주는 표면. 서버 컴포넌트로 쓸 수 있다.
+ * Tide props: `color`, `title`, `children`, `role`, `onClose`, `closeLabel` ({@link AlertOwnProps}). 나머지는 `<div>` 속성.
+ */
 export function Alert({
   color = "info",
   title,
