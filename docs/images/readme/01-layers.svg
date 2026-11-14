@@ -5,23 +5,23 @@
     .title { fill: #28292c; }
     .t1 { fill: #3f4247; }
     .t2 { fill: #5b6068; }
-    .note { fill: #2b5fa8; }
+    .note { fill: #0060b3; }
     .ln { fill: none; stroke: #82878e; }
     .purple { fill: #f0e9ff; stroke: #c4b5e4; } .purple-1 { fill: #412963; } .purple-2 { fill: #6b4e99; }
     .cyan { fill: #ddf1f9; stroke: #97c6da; } .cyan-1 { fill: #1c4351; } .cyan-2 { fill: #006a87; }
     .mint { fill: #d7f4f1; stroke: #91cbc6; } .mint-1 { fill: #11403e; } .mint-2 { fill: #116e6a; }
-    .blue { fill: #e3eefd; stroke: #a7c0e3; } .blue-1 { fill: #113465; } .blue-2 { fill: #2b5fa8; }
+    .blue { fill: #e1eeff; stroke: #97c2f4; } .blue-1 { fill: #003568; } .blue-2 { fill: #0060b3; }
     @media (prefers-color-scheme: dark) {
       .bg { fill: #1a1a1a; }
       .title { fill: #f0f0f0; }
       .t1 { fill: #e8e8e8; }
       .t2 { fill: #9a9a9a; }
-      .note { fill: #65a1f9; }
+      .note { fill: #53a3fe; }
       .ln { stroke: #8a8a8a; }
       .purple { fill: #412963; stroke: #c4b5e4; } .purple-1 { fill: #f0e9ff; } .purple-2 { fill: #c4b5e4; }
       .cyan { fill: #1c4351; stroke: #97c6da; } .cyan-1 { fill: #ddf1f9; } .cyan-2 { fill: #97c6da; }
       .mint { fill: #11403e; stroke: #91cbc6; } .mint-1 { fill: #d7f4f1; } .mint-2 { fill: #91cbc6; }
-      .blue { fill: #113465; stroke: #65a1f9; } .blue-1 { fill: #e3eefd; } .blue-2 { fill: #a7c0e3; }
+      .blue { fill: #003568; stroke: #53a3fe; } .blue-1 { fill: #e1eeff; } .blue-2 { fill: #97c2f4; }
     }
   </style>
   <defs>

@@ -1,6 +1,6 @@
 # Tide Design System
 
-`#3183f5`(blue)를 primary로 삼는 범용 디자인 시스템. Principle, Foundation, Component 세 층(Layer)으로 이루어진다.
+`#148cfc`(blue)를 primary로 삼는 범용 디자인 시스템. Principle, Foundation, Component 세 층(Layer)으로 이루어진다.
 
 ## 구조
 

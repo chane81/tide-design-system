@@ -5,25 +5,25 @@
     .title { fill: #28292c; }
     .t1 { fill: #3f4247; }
     .t2 { fill: #5b6068; }
-    .note { fill: #2b5fa8; }
+    .note { fill: #0060b3; }
     .ln { fill: none; stroke: #82878e; }
     .box { fill: #ffffff; stroke: #bec1c4; }
     .mono { fill: #3f4247; }
-    .swatch { stroke: #2b5fa8; }
+    .swatch { stroke: #0060b3; }
     .mint { fill: #d7f4f1; stroke: #91cbc6; } .mint-1 { fill: #11403e; } .mint-2 { fill: #116e6a; }
-    .blue { fill: #e3eefd; stroke: #a7c0e3; } .blue-1 { fill: #113465; } .blue-2 { fill: #2b5fa8; }
+    .blue { fill: #e1eeff; stroke: #97c2f4; } .blue-1 { fill: #003568; } .blue-2 { fill: #0060b3; }
     @media (prefers-color-scheme: dark) {
       .bg { fill: #1a1a1a; }
       .title { fill: #f0f0f0; }
       .t1 { fill: #e8e8e8; }
       .t2 { fill: #9a9a9a; }
-      .note { fill: #65a1f9; }
+      .note { fill: #53a3fe; }
       .ln { stroke: #8a8a8a; }
       .box { fill: #2a2b2e; stroke: #5b6068; }
       .mono { fill: #e8e8ea; }
-      .swatch { stroke: #a7c0e3; }
+      .swatch { stroke: #97c2f4; }
       .mint { fill: #11403e; stroke: #91cbc6; } .mint-1 { fill: #d7f4f1; } .mint-2 { fill: #91cbc6; }
-      .blue { fill: #113465; stroke: #65a1f9; } .blue-1 { fill: #e3eefd; } .blue-2 { fill: #a7c0e3; }
+      .blue { fill: #003568; stroke: #53a3fe; } .blue-1 { fill: #e1eeff; } .blue-2 { fill: #97c2f4; }
     }
   </style>
   <rect class="bg" width="920" height="520" rx="16"/>
@@ -79,10 +79,10 @@
   </g>
 
   <!-- 결과 미리보기: 버튼과 색 (실제 값이라 Theme과 무관하게 고정) -->
-  <rect x="770" y="74" width="110" height="38" rx="8" fill="#4e7aba"/>
+  <rect x="770" y="74" width="110" height="38" rx="8" fill="#1e7bd8"/>
   <text x="825" y="99" fill="#ffffff" font-size="15" font-weight="700" text-anchor="middle">추가</text>
-  <rect class="swatch" x="770" y="412" width="40" height="40" rx="8" fill="#4e7aba"/>
-  <text class="t1" x="820" y="437" font-size="13" font-family="ui-monospace, Menlo, monospace">#4e7aba</text>
+  <rect class="swatch" x="770" y="412" width="40" height="40" rx="8" fill="#1e7bd8"/>
+  <text class="t1" x="820" y="437" font-size="13" font-family="ui-monospace, Menlo, monospace">#1e7bd8</text>
 
   <!-- 하단 설명 -->
   <text class="note" x="460" y="494" font-size="14" font-weight="700" text-anchor="middle">Component는 hex를 모른다 — color="danger"로 바꾸면 슬롯만 red 계열로 바뀐다</text>
