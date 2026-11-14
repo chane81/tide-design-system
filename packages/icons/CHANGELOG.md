@@ -1,5 +1,11 @@
 # @tide-tds/icons
 
+## 0.11.5
+
+### 기능 추가와 수정 (patch)
+
+- [#72](https://github.com/chane81/tide-design-system/pull/72) [`c240ceb`](https://github.com/chane81/tide-design-system/commit/c240ceb47f61e7887733ab9c523c3909a081322b) [@chane81](https://github.com/chane81) - 공개 Props마다 Tide props만 담은 `XxxOwnProps` 타입(예: `ButtonOwnProps`, `IconOwnProps`)을 더했다. Component에 마우스를 올리면 JSDoc에 Tide props 이름 목록이 보인다. 기존 `XxxProps`가 받는 props는 그대로다.
+
 ## 0.11.4
 
 ### 기능 추가와 수정 (patch)
