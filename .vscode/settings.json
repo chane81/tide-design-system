@@ -1,0 +1,19 @@
+{
+  // 포맷은 oxfmt, 린트 자동 수정은 oxlint (oxc 확장)
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always"
+  },
+
+  // Tailwind v4는 CSS 진입점을 직접 지정해야 Tide Token class까지 자동완성된다.
+  "tailwindCSS.experimental.configFile": {
+    "apps/docs/.storybook/preview.css": ["packages/components/**", "apps/docs/**"],
+    "apps/smoke-next/template/app/globals.css": "apps/smoke-next/template/**"
+  },
+  "tailwindCSS.classFunctions": ["cn", "clsx", "twMerge"],
+  // `fooClass = "…"`, `fooClass: Record<…> = { … }` 안의 문자열을 class로 본다.
+  "tailwindCSS.experimental.classRegex": [
+    ["\\b\\w+Class\\b\\s*(?::[^=;]*)?=\\s*([^;]*)", "[\"'`]([^\"'`]*)[\"'`]"]
+  ]
+}
