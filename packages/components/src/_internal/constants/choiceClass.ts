@@ -3,7 +3,7 @@
 
 /** svg가 preserve-parent-color라 흰 표시가 Canvas에 묻혀, 상자·표시만 adjust를 끄고 Token을 시스템 색으로 바꾼다. */
 const choiceInputForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-bg-canvas:Canvas] forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight] forced-colors:[--tide-outline-focus-halo:Highlight] forced-colors:[--tide-outline-danger-halo:Highlight]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-bg-canvas:Canvas] forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-accent-subtle-border:Highlight] forced-colors:[--tide-border-danger-subtle:Highlight]";
 
 /** 루트 label. 글자 크기 class와 사용자 className은 뒤에 붙인다. */
 export const choiceRootClass =

@@ -469,22 +469,35 @@ describe("포커스 표시", () => {
     }
   });
 
-  test("outline은 키보드 포커스에 테두리가 focus 색으로 바뀌고 3px halo가 보인다", async () => {
+  test.each(["success", "neutral"] as const)(
+    "outline %s는 키보드 포커스에 테두리가 그 Role의 border 색이고 같은 Role의 3px halo가 보인다",
+    async (color) => {
+      await render(
+        <div data-theme="light">
+          <Button variant="outline" color={color}>
+            저장
+          </Button>
+        </div>,
+      );
+      await userEvent.tab();
+      // border 색은 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      const button = page.getByRole("button").element();
+      expectFocusHalo(button, { tone: color });
+      if (!forcedColors()) {
+        expect(getComputedStyle(button).borderTopColor).toBe(focusBorderColor[color]);
+      }
+    },
+  );
+
+  test("solid danger는 halo도 danger 200단계다", async () => {
     await render(
       <div data-theme="light">
-        <Button variant="outline" color="success">
-          저장
-        </Button>
+        <Button color="danger">삭제</Button>
       </div>,
     );
     await userEvent.tab();
-    // border 색은 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    const button = page.getByRole("button").element();
-    expectFocusHalo(button);
-    if (!forcedColors()) {
-      expect(getComputedStyle(button).borderTopColor).toBe(focusBorderColor.focus);
-    }
+    expectFocusHalo(page.getByRole("button").element(), { tone: "danger" });
   });
 });
 

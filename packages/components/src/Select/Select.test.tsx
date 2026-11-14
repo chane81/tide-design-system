@@ -508,7 +508,7 @@ describe("모양", () => {
     expectFocusHalo(trigger());
     if (!forcedColors()) {
       expect(getComputedStyle(trigger()).borderTopColor).toBe(
-        resolve("borderTopColor", "var(--tide-outline-focus)"),
+        resolve("borderTopColor", "var(--tide-accent-border)"),
       );
     }
   });

@@ -522,7 +522,7 @@ describe("위치·표면·색", () => {
     (page.getByTestId("outside").element() as HTMLElement).focus();
     await userEvent.tab();
     expect(document.activeElement).toBe(toast);
-    expectFocusHalo(toast);
+    expectFocusHalo(toast, { tone: "info" });
   });
 
   test("forced-colors에서는 그림자 없이 경계가 시스템 색으로 보인다", async () => {

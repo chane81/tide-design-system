@@ -283,7 +283,7 @@ describe("포커스 표시와 forced-colors", () => {
     const button = page.getByRole("button").element();
     expectFocusHalo(button);
     if (!forcedColors()) {
-      expect(getComputedStyle(button).borderTopColor).toBe(focusBorderColor.focus);
+      expect(getComputedStyle(button).borderTopColor).toBe(focusBorderColor.primary);
     }
   });
 

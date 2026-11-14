@@ -203,7 +203,7 @@ describe("닫기", () => {
       </div>,
     );
     await userEvent.tab();
-    expectFocusHalo(page.getByRole("button", { name: "닫기" }).element());
+    expectFocusHalo(page.getByRole("button", { name: "닫기" }).element(), { tone: "success" });
   });
 });
 

@@ -222,7 +222,7 @@ describe("포커스 표시", () => {
 
     expect(style.borderTopWidth).toBe("1px");
     expectFocusHalo(input.element());
-    if (!forcedColors()) expect(style.borderTopColor).toBe(resolve("var(--tide-outline-focus)"));
+    if (!forcedColors()) expect(style.borderTopColor).toBe(resolve("var(--tide-accent-border)"));
   });
 
   test("클릭 직후에도 outline이 번쩍이지 않는다", async () => {
@@ -259,7 +259,7 @@ describe("포커스 표시", () => {
     expectFocusHalo(textarea.element());
     if (!forcedColors()) {
       expect(getComputedStyle(textarea.element()).borderTopColor).toBe(
-        resolve("var(--tide-outline-focus)"),
+        resolve("var(--tide-accent-border)"),
       );
     }
   });
@@ -290,7 +290,7 @@ describe("포커스 표시", () => {
       // border와 halo가 모두 오류 색이라 빨강·파랑이 섞여 보이지 않는다(ADR 0026).
       expect(focused.borderTopColor).toBe(danger);
       expect(focused.borderLeftColor).toBe(danger);
-      expect(focused.boxShadow).not.toContain(haloColor.focus);
+      expect(focused.boxShadow).not.toContain(haloColor.primary);
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));

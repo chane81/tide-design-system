@@ -472,7 +472,25 @@ describe("포커스 표시", () => {
     await settle();
     const box = page.getByRole("checkbox").element();
     expectFocusHalo(box, { adjustNone: true });
-    if (!forcedColors()) expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.focus);
+    if (!forcedColors())
+      expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.primary);
+  });
+
+  test("체크된 success 상자는 포커스 중에도 테두리가 success 색이고 halo도 success다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox color="success" defaultChecked>
+          알림
+        </Checkbox>
+      </div>,
+    );
+    await userEvent.tab();
+    await settle();
+    const box = page.getByRole("checkbox").element();
+    expectFocusHalo(box, { tone: "success", adjustNone: true });
+    if (!forcedColors()) {
+      expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.success);
+    }
   });
 
   test("오류 상태에서 키보드 포커스하면 테두리와 halo가 오류 색이다", async () => {
