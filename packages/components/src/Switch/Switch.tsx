@@ -61,7 +61,7 @@ const thumbClass =
 // forced-colors는 배경을 Canvas로 덮어 thumb·켜진 track이 사라진다. adjust를 끄고 쓰는 Token 변수를 시스템 색으로
 // 바꾼다(@theme inline이라 바로 반영). 상태 class를 다시 적지 않아 CSS 순서에 기대지 않는다.
 const trackForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus:Highlight]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-outline-focus-halo:Highlight]";
 const thumbForcedClass =
   "forced-colors:forced-color-adjust-none forced-colors:[--tide-text-muted:CanvasText] forced-colors:[--tide-accent-text:CanvasText] forced-colors:[--tide-accent-on-solid:HighlightText] forced-colors:[--tide-text-disabled:GrayText]";
 

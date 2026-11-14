@@ -31,9 +31,17 @@ export const pressableDisabledClass: Record<FillVariant, string> = {
   ghost: "cursor-not-allowed border-transparent text-disabled",
 };
 
+/** 포커스 표시. 색 있는 테두리가 보이는 outline만 테두리도 바꾸고, 나머지는 투명 border라 halo만 둔다(ADR 0032). */
+export const pressableFocusClass: Record<FillVariant, string> = {
+  solid: "focus-visible:focus-ring",
+  subtle: "focus-visible:focus-ring",
+  outline: "focus-visible:focus-field",
+  ghost: "focus-visible:focus-ring",
+};
+
 /** 모양의 공통 부분. radius는 모든 size에서 `md`다. 높이·폭·padding은 Component가 정한다. */
 export const pressableBaseClass =
-  "inline-flex shrink-0 items-center justify-center rounded-md border whitespace-nowrap select-none transition-colors focus-visible:focus-ring";
+  "inline-flex shrink-0 items-center justify-center rounded-md border whitespace-nowrap select-none transition-colors";
 
 /** 누름 축소. motion-safe:일 때만 줄이고 scale도 그때만 전환 대상에 넣는다(ADR 0010). */
 export const pressableScaleClass =

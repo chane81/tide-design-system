@@ -5,6 +5,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { Field } from "../Field/Field";
 import { Radio, type RadioProps } from "./Radio";
 import { RadioGroup } from "../RadioGroup/RadioGroup";
@@ -398,15 +400,11 @@ describe("모양", () => {
     expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
   });
 
-  test("키보드 포커스에 focus-ring이 보인다", async () => {
+  test("키보드 포커스에 focus-field(테두리 focus 색 + 3px halo)가 보인다", async () => {
     await render(<Shipping />);
     await userEvent.tab();
     await settle();
-    const style = getComputedStyle(page.getByRole("radio", { name: "일반" }).element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
+    expectFocusHalo(page.getByRole("radio", { name: "일반" }).element(), { adjustNone: true });
   });
 
   test("forced-colors에서도 선택 점이 원 배경과 다른 색으로 보인다", async () => {

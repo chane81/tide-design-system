@@ -5,6 +5,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import {
   Pagination,
   PaginationEllipsis,
@@ -248,22 +250,13 @@ describe("이전/다음", () => {
 });
 
 describe("포커스", () => {
-  test("Tab으로 번호 링크에 포커스하면 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("Tab으로 번호 링크에 포커스하면 3px halo가 보인다", async () => {
     await render(<Pages current={1} />);
     await userEvent.tab();
     const first = page.getByRole("link", { name: "1", exact: true });
     // 첫 페이지라 disabled인 이전 버튼은 건너뛴다.
     await expect.element(first).toHaveFocus();
-    // outline 색도 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    const style = getComputedStyle(first.element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(await resolve("color", "var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(first.element());
   });
 
   test("forced-colors에서는 번호의 투명 border가 경계로 보인다", async () => {

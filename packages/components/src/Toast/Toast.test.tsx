@@ -6,6 +6,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion";
 
 import { Button } from "../Button/Button";
@@ -520,8 +522,7 @@ describe("위치·표면·색", () => {
     (page.getByTestId("outside").element() as HTMLElement).focus();
     await userEvent.tab();
     expect(document.activeElement).toBe(toast);
-    await expect.poll(() => getComputedStyle(toast).outlineWidth).toBe("2px");
-    expect(getComputedStyle(toast).outlineOffset).toBe("2px");
+    expectFocusHalo(toast);
   });
 
   test("forced-colors에서는 그림자 없이 경계가 시스템 색으로 보인다", async () => {

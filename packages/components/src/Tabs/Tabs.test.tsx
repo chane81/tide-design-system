@@ -4,6 +4,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, expectNoFocusHalo } from "../../test/focus";
+
 import { captureWhen } from "../../test/motion";
 
 import {
@@ -306,22 +308,14 @@ describe("제어와 비제어", () => {
 });
 
 describe("포커스 표시와 고른 표시", () => {
-  test("Tab으로 탭에 포커스하면 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("Tab으로 탭에 포커스하면 focus-ring(3px halo)이 보인다", async () => {
     await render(<Example />);
     await tabIntoList();
     await expect.element(page.getByTestId("account")).toHaveFocus();
-    await wait(250);
-    const style = getComputedStyle(byTestId("account"));
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    expect(style.borderTopLeftRadius).toBe("6px");
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(resolve("color", "var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(byTestId("account"));
+    expect(getComputedStyle(byTestId("account")).borderTopLeftRadius).toBe("6px");
     await userEvent.click(page.getByTestId("security"));
-    expect(getComputedStyle(byTestId("security")).outlineStyle).toBe("none");
+    expectNoFocusHalo(byTestId("security"));
   });
 
   test("패널에 키보드 포커스가 오면 focus-ring이 보인다", async () => {
@@ -329,9 +323,7 @@ describe("포커스 표시와 고른 표시", () => {
     await tabIntoList();
     await userEvent.tab();
     await expect.element(page.getByRole("tabpanel")).toHaveFocus();
-    const style = getComputedStyle(panel());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
+    expectFocusHalo(panel());
   });
 
   test("고른 탭은 primary 글자와 2px 막대로, 고르지 않은 탭은 muted 글자에 막대가 없다", async () => {

@@ -3,6 +3,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, expectNoFocusHalo, haloColor } from "../../test/focus";
+
 import { Button } from "../Button/Button";
 import { Field } from "../Field/Field";
 import { Input, type InputProps } from "./Input";
@@ -202,7 +204,7 @@ describe("입력", () => {
 });
 
 describe("포커스 표시", () => {
-  test("클릭으로 포커스해도 focus-field(border focus 색, inset 1px)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
+  test("클릭으로 포커스해도 focus-field(border focus 색, 3px halo)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
     await render(
       <div data-theme="light">
         <Input aria-label="이름" />
@@ -219,19 +221,8 @@ describe("포커스 표시", () => {
     const style = getComputedStyle(input.element());
 
     expect(style.borderTopWidth).toBe("1px");
-    if (forcedColors()) {
-      // border 색과 box-shadow는 시스템 색으로 덮이고, 투명 outline이 시스템 색으로 그려져 포커스 표시가 남는다.
-      expect(style.boxShadow).toBe("none");
-      expect(style.outlineStyle).toBe("solid");
-      expect(style.outlineWidth).toBe("2px");
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      const focus = resolve("var(--tide-outline-focus)");
-      expect(style.borderTopColor).toBe(focus);
-      expect(style.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      // 평소에는 outline이 없다. 투명 outline은 forced-colors에서만 둔다.
-      expect(style.outlineStyle).toBe("none");
-    }
+    expectFocusHalo(input.element());
+    if (!forcedColors()) expect(style.borderTopColor).toBe(resolve("var(--tide-outline-focus)"));
   });
 
   test("클릭 직후에도 outline이 번쩍이지 않는다", async () => {
@@ -265,17 +256,15 @@ describe("포커스 표시", () => {
     const textarea = page.getByRole("textbox", { name: "메모" });
     await expect.element(textarea).toHaveFocus();
     await settle();
-    const style = getComputedStyle(textarea.element());
-    if (forcedColors()) {
-      expect(style.outlineWidth).toBe("2px");
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      expect(style.outlineStyle).toBe("none");
-      expect(style.boxShadow).toBe(`${resolve("var(--tide-outline-focus)")} 0px 0px 0px 1px inset`);
+    expectFocusHalo(textarea.element());
+    if (!forcedColors()) {
+      expect(getComputedStyle(textarea.element()).borderTopColor).toBe(
+        resolve("var(--tide-outline-focus)"),
+      );
     }
   });
 
-  test("오류 상태에서는 포커스 중에 오류 색 2px로 보이고, 오류 메시지는 계속 보인다", async () => {
+  test("오류 상태에서는 포커스 중에 오류 색 border와 오류 halo로 보이고, 오류 메시지는 계속 보인다", async () => {
     await render(
       <div data-theme="light">
         <Field label="이메일" error="이메일 형식이 아닙니다.">
@@ -296,24 +285,18 @@ describe("포커스 표시", () => {
     const focused = getComputedStyle(input.element());
     await expect.element(message).toBeVisible();
     await expect.element(input).toHaveAttribute("aria-invalid", "true");
-    if (forcedColors()) {
-      expect(focused.boxShadow).toBe("none");
-      expect(focused.outlineColor).not.toBe(transparent);
-    } else {
-      // border와 inset이 같은 오류 색이라 빨강·파랑이 겹쳐 보이지 않는다(ADR 0026).
+    expectFocusHalo(input.element(), { tone: "danger" });
+    if (!forcedColors()) {
+      // border와 halo가 모두 오류 색이라 빨강·파랑이 섞여 보이지 않는다(ADR 0026).
       expect(focused.borderTopColor).toBe(danger);
       expect(focused.borderLeftColor).toBe(danger);
-      expect(focused.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
-      expect(focused.outlineStyle).toBe("none");
+      expect(focused.boxShadow).not.toContain(haloColor.focus);
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));
     await settle();
-    if (!forcedColors()) {
-      const blurred = getComputedStyle(input.element());
-      expect(blurred.borderTopColor).toBe(danger);
-      expect(blurred.boxShadow).toBe("none");
-    }
+    expectNoFocusHalo(input.element());
+    if (!forcedColors()) expect(getComputedStyle(input.element()).borderTopColor).toBe(danger);
   });
 
   test("경계 색은 transition-colors(fast 150ms)로 바뀐다", async () => {

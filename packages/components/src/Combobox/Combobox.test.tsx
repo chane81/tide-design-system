@@ -6,6 +6,8 @@ import { describe, expect, test, vi } from "vitest";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { captureExit, styleSnapshot } from "../../test/motion";
 
 import { Button } from "../Button/Button";
@@ -712,21 +714,15 @@ describe("모양", () => {
     expect(chevron().getBoundingClientRect().right).toBe(box.right);
   });
 
-  test("클릭·키보드 포커스에 focus-field(border focus 색, inset 1px)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
+  test("클릭·키보드 포커스에 focus-field(border focus 색, 3px halo)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
     await render(<Fruits />);
     await tabToInput();
     await settle();
-    const style = getComputedStyle(input());
-    if (forcedColors()) {
-      expect(style.boxShadow).toBe("none");
-      expect(style.outlineStyle).toBe("solid");
-      expect(style.outlineWidth).toBe("2px");
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      const focus = resolve("borderTopColor", "var(--tide-outline-focus)");
-      expect(style.borderTopColor).toBe(focus);
-      expect(style.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      expect(style.outlineStyle).toBe("none");
+    expectFocusHalo(input());
+    if (!forcedColors()) {
+      expect(getComputedStyle(input()).borderTopColor).toBe(
+        resolve("borderTopColor", "var(--tide-outline-focus)"),
+      );
     }
   });
 

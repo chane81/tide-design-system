@@ -3,6 +3,7 @@ import type { AriaAttributes, ComponentProps, MouseEvent, ReactElement } from "r
 import {
   pressableColorClass,
   pressableDisabledClass,
+  pressableFocusClass,
   pressableInteractionClass,
   pressableScaleClass,
 } from "../constants/pressableClass";
@@ -67,6 +68,7 @@ export function pressableState({
 
   const className = [
     disabled ? pressableDisabledClass[variant] : pressableColorClass[variant],
+    pressableFocusClass[variant],
     interactive ? pressableInteractionClass[variant] : undefined,
     interactive && !noPressScale ? pressableScaleClass : undefined,
     // Tailwind 4 preflight는 button 커서를 default로 두므로 직접 붙인다.

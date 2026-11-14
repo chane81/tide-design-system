@@ -4,6 +4,8 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { captureExit, styleSnapshot } from "../../test/motion";
 
 import { Button } from "../Button/Button";
@@ -499,38 +501,27 @@ describe("모양", () => {
     expect(right).toBe(13);
   });
 
-  test("클릭·키보드 포커스에 focus-field(border focus 색, inset 1px)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
+  test("클릭·키보드 포커스에 focus-field(border focus 색, 3px halo)가 보이고, 투명 outline은 forced-colors에서만 있다", async () => {
     await render(<Fruits />);
     await tabToTrigger();
     await settle();
-    const style = getComputedStyle(trigger());
-    if (forcedColors()) {
-      expect(style.boxShadow).toBe("none");
-      expect(style.outlineStyle).toBe("solid");
-      expect(style.outlineWidth).toBe("2px");
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      const focus = resolve("borderTopColor", "var(--tide-outline-focus)");
-      expect(style.borderTopColor).toBe(focus);
-      expect(style.boxShadow).toBe(`${focus} 0px 0px 0px 1px inset`);
-      // 평소에는 outline이 없다. 투명 outline은 forced-colors에서만 둔다.
-      expect(style.outlineStyle).toBe("none");
+    expectFocusHalo(trigger());
+    if (!forcedColors()) {
+      expect(getComputedStyle(trigger()).borderTopColor).toBe(
+        resolve("borderTopColor", "var(--tide-outline-focus)"),
+      );
     }
   });
 
-  test("오류 상태에서는 포커스 중에 오류 색 2px로 보인다", async () => {
+  test("오류 상태에서는 포커스 중에 오류 색 border와 오류 halo로 보인다", async () => {
     await render(<Fruits invalid />);
     await tabToTrigger();
     await settle();
-    const style = getComputedStyle(trigger());
-    if (forcedColors()) {
-      expect(style.outlineColor).not.toBe(transparent);
-
-      return;
-    }
-    const danger = resolve("borderTopColor", "var(--tide-border-danger)");
-    expect(style.borderTopColor).toBe(danger);
-    expect(style.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
+    expectFocusHalo(trigger(), { tone: "danger" });
+    if (forcedColors()) return;
+    expect(getComputedStyle(trigger()).borderTopColor).toBe(
+      resolve("borderTopColor", "var(--tide-border-danger)"),
+    );
   });
 
   test("forced-colors에서도 트리거 경계가 보인다", async () => {
