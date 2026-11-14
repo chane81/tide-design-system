@@ -1,5 +1,11 @@
 # @tide-tds/foundation
 
+## 0.11.4
+
+### 기능 추가와 수정 (patch)
+
+- [#69](https://github.com/chane81/tide-design-system/pull/69) [`5ae6d81`](https://github.com/chane81/tide-design-system/commit/5ae6d810a0a8c884ba0928b65d133109b1d83232) [@chane81](https://github.com/chane81) - npm 검색에 걸리도록 세 패키지 `package.json`에 `keywords`를 더했다. 배포 코드 변경은 없다.
+
 ## 0.11.3
 
 ### 기능 추가와 수정 (patch)
