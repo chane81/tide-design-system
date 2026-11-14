@@ -72,12 +72,16 @@ function shapeJsx({ tag, attributes }: Shape): string {
   return `      <${tag} ${attrs} vectorEffect="non-scaling-stroke" />`;
 }
 
+// IconOwnProps의 키. test/icons.test.tsx가 IconOwnProps·IconBase JSDoc과 어긋나지 않는지 검사한다.
+const TIDE_PROPS = ["size", "strokeWidth"];
+
 function componentSource(tideName: string, shapes: Shape[]): string {
   return `// 생성 파일(scripts/generate.ts). 고치지 말고 이름표(icon-names.json)를 고친다.
 import type { ReactElement } from "react";
 
-import { IconBase, type IconProps } from "../IconBase";
+import { IconBase, type IconOwnProps, type IconProps } from "../IconBase";
 
+/** Tide props: ${TIDE_PROPS.map((name) => `\`${name}\``).join(", ")} ({@link IconOwnProps}). 나머지는 \`<svg>\` 속성. */
 export function ${tideName}(props: IconProps): ReactElement {
   return (
     <IconBase {...props}>
