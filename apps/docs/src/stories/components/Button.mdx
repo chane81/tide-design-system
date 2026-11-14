@@ -145,7 +145,7 @@ import Link from "next/link";
 
 - 역할: `button`. 이름은 텍스트입니다. `type` 기본값은 `"button"`이라 폼 안에서 뜻하지 않게 제출하지 않습니다.
 - 키보드: Tab으로 포커스하고 Enter, Space로 실행합니다. 링크로 렌더하면 Enter로 실행합니다.
-- 포커스 표시: 키보드 포커스에 2px ring이 보입니다(`focus-ring`).
+- 포커스 표시: 키보드 포커스에 3px halo가 보입니다. `outline`은 테두리도 포커스 색으로 바뀌고(`focus-field`), 나머지는 halo만 보입니다(`focus-ring`).
 - 아이콘: 장식용으로 숨겨 이름에 들어가지 않습니다.
 - 로딩: `aria-disabled="true"`가 붙고 이름 뒤에 「로딩 중」이 붙습니다(`loadingLabel`로 바꿉니다). 포커스를 잃지 않습니다.
 - 비활성: `button`은 `disabled`, 링크 등은 `aria-disabled="true"`로 알립니다. 링크는 포커스를 받지만 실행되지 않습니다.

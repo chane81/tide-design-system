@@ -111,6 +111,13 @@ export function FocusIndicators(): ReactElement {
             >
               focus-ring
             </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              className="focus-field rounded-md border bg-canvas px-4 py-2 text-primary"
+            >
+              focus-field (outline 버튼)
+            </button>
             <label className="flex flex-col gap-1">
               <span>focus-field</span>
               <input

@@ -67,7 +67,7 @@ Next.js에서는 `render={<NextLink href="/docs" />}`로 클라이언트 이동�
 - 구분자: 아이콘 패키지의 `ChevronRightIcon`이고 `aria-hidden`이라 읽히지 않습니다.
 - 링크 구분: 링크는 색뿐 아니라 밑줄로도 현재 페이지와 구분됩니다. hover에 글자가 짙어지고 밑줄이 두꺼워집니다.
 - 대비: 링크 `text-muted`, 현재 페이지 `text-default`가 표면 층 3개 위에서 4.5:1 이상입니다. 구분자는 장식용이라 대비 검사 대상이 아닙니다.
-- 포커스: 링크는 `focus-ring`(outline 2px, offset 2px)을 보입니다. 고대비 모드(forced-colors)에서도 outline·밑줄·구분자가 시스템 색으로 남습니다.
+- 포커스: 링크는 `focus-ring`(3px halo)을 보입니다. 고대비 모드(forced-colors)에서는 halo 대신 outline이 시스템 색으로 그려지고 밑줄·구분자도 남습니다.
 
 ### 앱이 할 일
 

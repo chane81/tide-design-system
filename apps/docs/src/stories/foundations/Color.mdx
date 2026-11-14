@@ -77,7 +77,7 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 | 글자      | `text-default`, `text-muted`, `text-disabled`, `text-on-solid`                                                                        |
 | 테두리    | `border-default`(장식용 구분선), `border-strong`(입력창 등 UI 경계), `border-raised`(raised 표면 경계. light는 투명, dark는 gray-800) |
 | 호버·누름 | `bg-hover`, `bg-active`(색 없는 바탕의 호버·누름. 반투명)                                                                             |
-| 기타      | `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(포커스 표시)                                                                |
+| 기타      | `bg-disabled`, `bg-overlay`(modal 뒤 막), `outline-focus`(포커스 테두리), `outline-focus-halo`·`outline-danger-halo`(포커스 halo)     |
 
 ## 색 이름으로 고르기
 
@@ -167,11 +167,11 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 실제로 함께 쓰는 Token 조합(**대비 쌍**)이 기준을 넘는지 light와 dark 모두 자동으로 검사합니다. 기준은 WCAG 2.x 대비비이고, 하한은 세 등급입니다.
 
-| 등급                    | 하한  | 대상                                                                                |
-| ----------------------- | ----- | ----------------------------------------------------------------------------------- |
-| 글자                    | 4.5:1 | 정지 상태의 글자: 표면 층, `subtle`·`faint`, 선택 유지 바탕 위 글자                 |
-| 일시 상태·solid 위 글자 | 4:1   | 호버·누름 배경(`subtle` 호버·누름, `bg-hover`·`bg-active`) 위 글자, `solid` 위 글자 |
-| UI 요소                 | 3:1   | 경계, 포커스 표시, Switch thumb                                                     |
+| 등급                    | 하한  | 대상                                                                                         |
+| ----------------------- | ----- | -------------------------------------------------------------------------------------------- |
+| 글자                    | 4.5:1 | 정지 상태의 글자: 표면 층, `subtle`·`faint`, 선택 유지 바탕 위 글자                          |
+| 일시 상태·solid 위 글자 | 4:1   | 호버·누름 배경(`subtle` 호버·누름, `bg-hover`·`bg-active`) 위 글자, `solid` 위 글자          |
+| UI 요소                 | 3:1   | 경계, 포커스 테두리, Switch thumb. 포커스 halo는 검사에서 뺍니다(아래 「검사에서 뺀 Token」) |
 
 호버·누름은 잠깐 지나가는 상태라 하한을 4:1로 둡니다. 색감을 해치지 않으려는 선택이고, WCAG 1.4.3(상태를 가리지 않고 4.5:1)을 엄격하게 읽으면 그보다 낮을 수 있습니다. 실제 값은 아래 표에서 확인합니다.
 
@@ -202,6 +202,6 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 ### 검사에서 뺀 Token
 
-아래 Token은 대비 검사 대상이 아닙니다. 비활성 상태는 색만으로 나타내지 않고, Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다. 파스텔 테두리는 꾸밈이라 뺍니다.
+아래 Token은 대비 검사 대상이 아닙니다. 비활성 상태는 색만으로 나타내지 않고, Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다. 파스텔 테두리는 꾸밈이라 뺍니다. 포커스 halo는 옅은 200단계 색이라 3:1에 못 미치는 것을 알고 고른 모양입니다.
 
 <Canvas of={ColorStories.Exclusions} sourceState="none" />
