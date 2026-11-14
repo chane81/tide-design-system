@@ -402,36 +402,56 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     expect(ruleBody(css, "shadow-none")).toContain("--tw-shadow: 0 0 #0000");
   });
 
-  it("focus-ring은 outline 2px, offset 2px이고 focus 색을 쓴다", () => {
-    const body = ruleBody(css, "focus-ring");
-    expect(body).toContain("outline: var(--tide-focus-ring-width) solid var(--tide-outline-focus)");
-    expect(body).toContain("outline-offset: var(--tide-focus-ring-offset)");
-  });
+  const haloShadow =
+    "--tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(var(--tide-focus-ring-width) + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor)";
 
-  it("focus-field는 border 색과 inset 1px를 두고, 투명 outline은 forced-colors에서만 둔다", () => {
-    const body = ruleBody(css, "focus-field");
-    expect(body).toContain("border-color: var(--tide-outline-focus)");
-    expect(body).toContain("box-shadow: inset 0 0 0 1px var(--tide-outline-focus)");
-    // 평소 투명 outline을 두면 transition-colors가 outline-color를 currentColor에서 전환해 클릭 직후 번쩍인다.
-    expect(body).toContain("outline: none");
-    expect(css).toMatch(
-      /\.focus-field\s*\{[^}]*@media \(forced-colors: active\)\s*\{\s*outline: var\(--tide-focus-ring-width\) solid transparent/,
+  it.each(["focus-ring", "focus-field"])(
+    "%s는 offset 없이 바깥 halo를 focus-halo 색으로 그리고 평소 outline을 없앤다",
+    (name) => {
+      const body = ruleBody(css, name);
+      expect(body).toContain(haloShadow);
+      expect(body).toContain("--tw-ring-color: var(--tide-outline-focus-halo)");
+      expect(body).toContain("outline: none");
+      expect(body).toContain("outline-offset: 0");
+      expect(body).not.toContain("inset 0 0 0 1px");
+    },
+  );
+
+  it("halo는 ring 합성 box-shadow라 shadow-*와 함께 써도 그림자가 남는다", () => {
+    expect(ruleBody(css, "focus-ring")).toContain(
+      "box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)",
     );
   });
 
+  it.each(["focus-ring", "focus-field"])(
+    "%s의 투명 outline은 forced-colors에서만 halo 두께로 둔다",
+    (name) => {
+      // 평소 투명 outline을 두면 transition-colors가 outline-color를 currentColor에서 전환해 클릭 직후 번쩍인다.
+      expect(css).toMatch(
+        new RegExp(
+          `\\.${name}\\s*\\{[^}]*@media \\(forced-colors: active\\)\\s*\\{\\s*outline: var\\(--tide-focus-ring-width\\) solid transparent`,
+        ),
+      );
+    },
+  );
+
+  it("focus-ring은 테두리 색을 바꾸지 않고, focus-field는 테두리를 focus 색으로 바꾼다", () => {
+    expect(ruleBody(css, "focus-ring")).not.toContain("border-color");
+    expect(ruleBody(css, "focus-field")).toContain("border-color: var(--tide-outline-focus)");
+  });
+
   it("variant와 함께 쓸 수 있다", () => {
-    expect(css).toMatch(/\.focus-visible\\:focus-ring:focus-visible\s*\{\s*outline:/);
+    expect(css).toMatch(/\.focus-visible\\:focus-ring:focus-visible\s*\{\s*--tw-ring-shadow:/);
     expect(css).toMatch(/\.focus\\:focus-field:focus\s*\{\s*border-color:/);
   });
 
-  it("error+focus 조합은 같은 2px 표시를 오류 색으로 그린다", () => {
-    // border와 inset을 둘 다 border-danger로 맞춰, 빨강 border 안쪽에 파랑 inset이 겹치지 않는다(ADR 0026).
+  it("오류 입력창 포커스는 같은 모양을 border-danger와 danger-halo로 그린다", () => {
     expect(css).toMatch(
       /\.aria-invalid\\:border-danger\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\)/,
     );
     const field = /\.focus\\:focus-field:focus\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? "";
     expect(field).toMatch(
-      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\);\s*box-shadow: inset 0 0 0 1px var\(--tide-border-danger\);/,
+      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\);\s*--tw-ring-color: var\(--tide-outline-danger-halo\);/,
     );
   });
 });

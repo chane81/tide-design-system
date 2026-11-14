@@ -92,12 +92,6 @@ export const contrastPairs: readonly ContrastPair[] = [
     surfaces,
     3,
   ),
-  // subtle 표면 안의 조작 요소(Alert 닫기 버튼)는 포커스 ring이 그 배경 위에 그려진다.
-  ...pairs(
-    ["outline-focus"],
-    allRoles.map((role) => `bg-${role}-subtle` as const),
-    3,
-  ),
   // Switch 꺼짐 누름 thumb(UI 요소). neutral thumb은 text-default라 위의 4.5 쌍이 맡는다.
   ...roles.flatMap((role) => pairs([`text-${role}`], [`bg-${role}-subtle-active`], 3)),
 ];
@@ -122,6 +116,11 @@ export const contrastExclusions: readonly ContrastExclusion[] = [
     reason: "비활성 상태는 WCAG 대비 요건 밖이다. Component가 속성과 cursor로도 표현한다.",
   },
   { token: "bg-overlay", reason: "modal 뒤를 가리는 반투명 막이다. 위에 글자를 두지 않는다." },
+  ...(["outline-focus-halo", "outline-danger-halo"] as const).map((token) => ({
+    token,
+    reason:
+      "포커스 halo는 200단계 옅은 색이라 표면과 3:1이 되지 않는다(light 흰 표면 위 약 1.5:1). 사용자가 알고 고른 모양이다. 테두리 있는 요소는 3:1 focus 테두리가 함께 그려지지만 테두리 없는 요소는 halo가 유일한 표시다(ADR 0032).",
+  })),
   ...allRoles.map((role) => ({
     token: `border-${role}-subtle` as const,
     reason:

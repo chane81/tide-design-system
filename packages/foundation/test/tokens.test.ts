@@ -55,6 +55,8 @@ const semanticClasses = [
   // 파스텔 테두리(슬롯 subtle-border). neutral도 있다.
   ...roles.map((role) => `border-${role}-subtle`),
   "outline-focus",
+  "outline-focus-halo",
+  "outline-danger-halo",
 ];
 
 // spec 「`@tide-design/foundation`」 타이포그래피. [이름, 크기 px, 행간 px, 굵기]
@@ -103,11 +105,7 @@ const shadows = [
   ["md", "0 1px 3px", 50, "0 4px 12px -2px", 100],
   ["lg", "0 2px 6px -1px", 50, "0 12px 24px -6px", 100],
 ] as const;
-const shapeVars = [
-  ...radii.map(([name]) => `--tide-rounded-${name}`),
-  "--tide-focus-ring-width",
-  "--tide-focus-ring-offset",
-];
+const shapeVars = [...radii.map(([name]) => `--tide-rounded-${name}`), "--tide-focus-ring-width"];
 const shadowVars = shadows.map(([name]) => `--tide-shadow-${name}`);
 
 // spec 「`@tide-design/foundation`」 motion·z-index. [이름, 값]
@@ -455,6 +453,8 @@ describe("tokens.css", () => {
         "border-default": ["gray-200", "gray-800"],
         "border-strong": ["gray-500", "gray-400"],
         "outline-focus": ["blue-600", "blue-400"],
+        "outline-focus-halo": ["blue-200", "blue-800"],
+        "outline-danger-halo": ["red-200", "red-800"],
       };
       for (const [name, [lightValue, darkValue]] of Object.entries(expected)) {
         expect(lightResolved.get(`--tide-${name}`), name).toBe(ref(lightValue));
@@ -503,9 +503,19 @@ describe("tokens.css", () => {
       expect(root.get(`--tide-rounded-${name}`)).toBe(value);
     });
 
-    it("포커스 ring은 2px 두께, 2px offset이다", () => {
-      expect(root.get("--tide-focus-ring-width")).toBe("2px");
-      expect(root.get("--tide-focus-ring-offset")).toBe("2px");
+    it("포커스 halo는 3px 두께이고 offset 변수가 없다", () => {
+      expect(root.get("--tide-focus-ring-width")).toBe("3px");
+      expect(css).not.toContain("--tide-focus-ring-offset");
+    });
+
+    it("halo 색은 primary 200단계(light blue-200, dark blue-800)와 red 200단계다", () => {
+      const ref = (name: string): string => `var(--tide-color-${name})`;
+      expect(lightResolved.get("--tide-outline-focus-halo")).toBe(ref("blue-200"));
+      expect(darkResolved.get("--tide-outline-focus-halo")).toBe(ref("blue-800"));
+      expect(root.get("--tide-color-blue-200")).toBe("#bfd8f7");
+      expect(root.get("--tide-color-blue-800")).toBe("#004e94");
+      expect(lightResolved.get("--tide-outline-danger-halo")).toBe(ref("red-200"));
+      expect(darkResolved.get("--tide-outline-danger-halo")).toBe(ref("red-800"));
     });
 
     it.each(shadows)("그림자 %s: %s %i% + %s %i%", (name, near, nearMix, far, farMix) => {

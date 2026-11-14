@@ -45,12 +45,11 @@ shadow satisfies Record<string, readonly [ShadowLayer, ShadowLayer]>;
 export type ShadowName = keyof typeof shadow;
 
 /**
- * 포커스 표시 ring의 두께와 offset. 공개 계약은 `--tide-focus-ring-width`, `--tide-focus-ring-offset`이다.
- * `focus-ring` utility가 쓰고, `focus-field`의 투명 outline(forced-colors 전용) 두께도 같은 값을 쓴다.
+ * 포커스 표시 halo의 두께. 공개 계약은 `--tide-focus-ring-width`다.
+ * `focus-ring`·`focus-field`의 halo와 forced-colors 전용 투명 outline이 같은 값을 쓴다.
  */
 export const focusRing = {
-  width: "2px",
-  offset: "2px",
+  width: "3px",
 } as const;
 
 /** 길이 하나를 CSS로 쓴다. 0은 단위 없이 쓴다. */

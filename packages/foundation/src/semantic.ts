@@ -273,8 +273,11 @@ const commonBorder = {
 } as const;
 
 const commonOutline = {
-  // 포커스 표시 색. 오류 상태에서도 바꾸지 않는다.
+  // 테두리 있는 요소의 포커스 테두리 색. 오류 입력창은 border-danger를 쓴다(ADR 0026).
   focus: { light: "blue-600", dark: "blue-400" },
+  // 요소 바깥 halo 색. 오류 입력창은 danger-halo를 쓴다(ADR 0032).
+  "focus-halo": { light: "blue-200", dark: "blue-800" },
+  "danger-halo": { light: "red-200", dark: "red-800" },
 } as const;
 
 export const semantic: {

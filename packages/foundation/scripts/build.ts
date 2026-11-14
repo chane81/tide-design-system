@@ -92,7 +92,6 @@ const tideRadiusVar = (name: string): string => `--tide-rounded-${name}`;
 const shapeDeclarations: string[] = [
   ...Object.entries(radius).map(([name, value]) => `  ${tideRadiusVar(name)}: ${value};`),
   `  --tide-focus-ring-width: ${focusRing.width};`,
-  `  --tide-focus-ring-offset: ${focusRing.offset};`,
 ];
 
 const durationNames = Object.keys(duration);
@@ -148,6 +147,18 @@ const tokensCss = [
   ...tideColorNames.flatMap((name) => [dataColorRule(name), ""]),
 ].join("\n");
 
+// halo를 ring utility로 그려 shadow-*와 함께 써도 그림자가 남는다(tailwindcss 4.3.5).
+// 투명 outline은 forced-colors 안에만 둔다. 평소에 두면 transition-colors가 outline 색을 전환해 클릭 직후 번쩍인다.
+const focusHalo: string[] = [
+  "  @apply ring-(length:--tide-focus-ring-width) ring-(--tide-outline-focus-halo);",
+  "  outline: none;",
+  // 브라우저 기본 :focus-visible offset(링크·체크박스 1~2px)을 지워 forced-colors outline도 요소에 붙인다.
+  "  outline-offset: 0;",
+  "  @media (forced-colors: active) {",
+  "    outline: var(--tide-focus-ring-width) solid transparent;",
+  "  }",
+];
+
 // Tailwind 변수는 --tide-*를 가리키는 내부 연결이고 공개 계약이 아니다. 기본값 제거는 tailwindcss 4.3.5 기준이다.
 const tailwindCss = [
   header,
@@ -199,22 +210,16 @@ const tailwindCss = [
   "}",
   "",
   "@utility focus-ring {",
-  "  outline: var(--tide-focus-ring-width) solid var(--tide-outline-focus);",
-  "  outline-offset: var(--tide-focus-ring-offset);",
+  ...focusHalo,
   "}",
   "",
   "@utility focus-field {",
   "  border-color: var(--tide-outline-focus);",
-  "  box-shadow: inset 0 0 0 1px var(--tide-outline-focus);",
-  "  outline: none;",
-  // 투명 outline은 forced-colors 안에만 둔다. 평소에 두면 transition-colors가 outline 색을 전환해 클릭 직후 번쩍인다.
-  "  @media (forced-colors: active) {",
-  "    outline: var(--tide-focus-ring-width) solid transparent;",
-  "  }",
-  // 오류 입력창은 border와 inset을 같은 오류 색으로 맞춰 두 색이 겹쳐 보이지 않게 한다(ADR 0026).
+  ...focusHalo,
+  // 오류 입력창은 같은 모양을 오류 색으로 그린다(ADR 0026).
   '  &[aria-invalid="true"] {',
   "    border-color: var(--tide-border-danger);",
-  "    box-shadow: inset 0 0 0 1px var(--tide-border-danger);",
+  "    @apply ring-(--tide-outline-danger-halo);",
   "  }",
   "}",
   "",

@@ -171,12 +171,9 @@ describe("Alert 대비 쌍", () => {
     expect(contrastExclusions.some((item) => item.token === `border-${role}-subtle`)).toBe(true);
   });
 
-  it.each(allRoles)(
-    "%s: 닫기 버튼 포커스 표시(outline-focus) × 같은 Role subtle이 3:1로 등록되어 있다",
-    (role) => {
-      expect(registered("outline-focus", `bg-${role}-subtle`, 3)).toBe(true);
-    },
-  );
+  it("닫기 버튼(ghost) 포커스 표시는 halo뿐이라 대비 검사에서 제외되어 있다", () => {
+    expect(contrastExclusions.some((item) => item.token === "outline-focus-halo")).toBe(true);
+  });
 
   it.each(allRoles)(
     "%s: 닫기 버튼(ghost) 글자 on-subtle × subtle(4.5:1)·subtle-hover·subtle-active(일시 상태)가 등록되어 있다",

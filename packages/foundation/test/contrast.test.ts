@@ -167,7 +167,7 @@ describe("Semantic Token 등록", () => {
     expect([...excluded].filter((token) => paired.has(token))).toEqual([]);
   });
 
-  it("제외 목록은 장식용 border, 파스텔 테두리, disabled, overlay뿐이다", () => {
+  it("제외 목록은 장식용 border, 파스텔 테두리, disabled, overlay, 포커스 halo뿐이다", () => {
     expect([...excluded].sort()).toEqual(
       [
         "bg-disabled",
@@ -175,6 +175,8 @@ describe("Semantic Token 등록", () => {
         "border-default",
         "border-raised",
         "text-disabled",
+        "outline-focus-halo",
+        "outline-danger-halo",
         // 파스텔 테두리(subtle-border)는 꾸밈이다(ADR 0022 §1).
         ...["neutral", "primary", "success", "warning", "danger", "info"].map(
           (role) => `border-${role}-subtle`,

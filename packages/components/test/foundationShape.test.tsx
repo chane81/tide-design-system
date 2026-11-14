@@ -4,6 +4,8 @@ import { describe, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, expectNoFocusHalo, focusBorderColor, haloColor } from "./focus";
+
 function rgb(hex: string): string {
   const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
 
@@ -136,9 +138,12 @@ describe("Elevation", () => {
 });
 
 describe("포커스 표시", () => {
-  test("focus-ring은 키보드 포커스에서 outline 2px, offset 2px이다", async () => {
+  test("focus-ring은 키보드 포커스에서 offset 없는 3px halo만 두고 테두리 색은 그대로다", async () => {
     await render(
-      <button type="button" className="rounded-md focus-visible:focus-ring">
+      <button
+        type="button"
+        className="rounded-md border border-transparent focus-visible:focus-ring"
+      >
         저장
       </button>,
     );
@@ -146,18 +151,23 @@ describe("포커스 표시", () => {
     await userEvent.tab();
 
     expect(document.activeElement).toBe(button);
-    const style = getComputedStyle(button);
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    if (forcedColors()) {
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      expect(style.outlineColor).toBe(rgb(color.blue[600]));
-    }
+    expectFocusHalo(button);
+    if (!forcedColors()) expect(getComputedStyle(button).borderTopColor).toBe(transparent);
   });
 
-  test("focus-field는 border를 focus 색으로 바꾸고 inset 1px를 두며, 투명 outline은 forced-colors에서만 둔다", async () => {
+  test("focus-ring halo는 shadow-*와 함께 써도 그림자를 지우지 않는다", async () => {
+    await render(
+      <div data-theme="light" data-testid="box" className={`${raisedClass} focus-ring`}>
+        표면
+      </div>,
+    );
+    if (forcedColors()) return;
+    const style = getComputedStyle(page.getByTestId("box").element());
+    expect(style.boxShadow).toContain(`${haloColor.focus} 0px 0px 0px 3px`);
+    expect(tideLayers(style.boxShadow)).toHaveLength(2);
+  });
+
+  test("focus-field는 1px border를 focus 색으로 바꾸고 바깥 3px halo를 둔다", async () => {
     await render(
       <input
         aria-label="이름"
@@ -169,21 +179,11 @@ describe("포커스 표시", () => {
     const style = getComputedStyle(input.element());
 
     expect(style.borderTopWidth).toBe("1px");
-    if (forcedColors()) {
-      // border 색과 box-shadow는 시스템 색으로 덮이고, 투명 outline이 보여서 포커스 표시가 남는다.
-      expect(style.boxShadow).toBe("none");
-      expect(style.outlineStyle).toBe("solid");
-      expect(style.outlineWidth).toBe("2px");
-      expect(style.outlineColor).not.toBe(transparent);
-    } else {
-      expect(style.borderTopColor).toBe(rgb(color.blue[600]));
-      expect(style.boxShadow).toBe(`${rgb(color.blue[600])} 0px 0px 0px 1px inset`);
-      // 평소에는 outline이 없다. 투명 outline은 forced-colors에서만 둔다.
-      expect(style.outlineStyle).toBe("none");
-    }
+    expectFocusHalo(input.element());
+    if (!forcedColors()) expect(style.borderTopColor).toBe(focusBorderColor.focus);
   });
 
-  test("오류 입력창은 포커스 중에 오류 색 2px로 두꺼워지고, 포커스가 빠지면 1px 오류 border로 돌아온다", async () => {
+  test("오류 입력창은 포커스 중에 같은 모양을 오류 색으로 그리고, 포커스가 빠지면 오류 border만 남는다", async () => {
     await render(
       <div>
         <input
@@ -195,32 +195,28 @@ describe("포커스 표시", () => {
       </div>,
     );
     const input = page.getByRole("textbox", { name: "이메일" });
-    const danger = rgb(color.red[600]);
 
-    if (!forcedColors()) expect(getComputedStyle(input.element()).borderTopColor).toBe(danger);
+    if (!forcedColors()) {
+      expect(getComputedStyle(input.element()).borderTopColor).toBe(focusBorderColor.danger);
+    }
 
     await userEvent.click(input);
-    const focused = getComputedStyle(input.element());
-    if (forcedColors()) {
-      expect(focused.boxShadow).toBe("none");
-      expect(focused.outlineColor).not.toBe(transparent);
-    } else {
-      // border와 inset이 같은 오류 색이라 빨강·파랑 두 색이 겹쳐 보이지 않는다(ADR 0026).
-      expect(focused.borderTopColor).toBe(danger);
-      expect(focused.borderLeftColor).toBe(danger);
-      expect(focused.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
-      expect(focused.outlineStyle).toBe("none");
+    expectFocusHalo(input.element(), { tone: "danger" });
+    if (!forcedColors()) {
+      const focused = getComputedStyle(input.element());
+      expect(focused.borderTopColor).toBe(focusBorderColor.danger);
+      expect(focused.borderTopWidth).toBe("1px");
+      expect(focused.boxShadow).not.toContain(haloColor.focus);
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));
+    expectNoFocusHalo(input.element());
     if (!forcedColors()) {
-      const blurred = getComputedStyle(input.element());
-      expect(blurred.borderTopColor).toBe(danger);
-      expect(blurred.boxShadow).toBe("none");
+      expect(getComputedStyle(input.element()).borderTopColor).toBe(focusBorderColor.danger);
     }
   });
 
-  test("variant 없이 쓴 focus-field도 오류 입력창에서 border와 inset이 같은 오류 색이다", async () => {
+  test("variant 없이 쓴 focus-field도 오류 입력창에서 border와 halo가 오류 색이다", async () => {
     // 문서의 포커스 표시 블록처럼 포커스 상태를 고정해서 보여 줄 때. 선택자 우선순위가 오류 border와 같아도 색이 섞이지 않는다.
     await render(
       <input
@@ -232,8 +228,21 @@ describe("포커스 표시", () => {
     );
     if (forcedColors()) return;
     const style = getComputedStyle(page.getByRole("textbox", { name: "고정" }).element());
-    const danger = rgb(color.red[600]);
-    expect(style.borderTopColor).toBe(danger);
-    expect(style.boxShadow).toBe(`${danger} 0px 0px 0px 1px inset`);
+    expect(style.borderTopColor).toBe(focusBorderColor.danger);
+    expect(style.boxShadow).toContain(`${haloColor.danger} 0px 0px 0px 3px`);
+  });
+
+  test("dark Theme halo는 primary 800·red 800 단계다", async () => {
+    await render(
+      <div data-theme="dark">
+        <input aria-label="보통" readOnly className="focus-field border" />
+        <input aria-label="오류" aria-invalid="true" readOnly className="focus-field border" />
+      </div>,
+    );
+    if (forcedColors()) return;
+    const shadow = (name: string): string =>
+      getComputedStyle(page.getByRole("textbox", { name }).element()).boxShadow;
+    expect(shadow("보통")).toContain(`${rgb(color.blue[800])} 0px 0px 0px 3px`);
+    expect(shadow("오류")).toContain(`${rgb(color.red[800])} 0px 0px 0px 3px`);
   });
 });
