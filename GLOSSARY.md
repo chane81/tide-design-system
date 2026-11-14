@@ -79,15 +79,15 @@ _Avoid_: 표면 층, z-index(겹치는 순서와 혼동)
 _Avoid_: 층(Layer와 혼동), level(표면 층과 혼동), elevation(그림자와 혼동)
 
 **포커스 표시 (Focus indicator)**:
-포커스가 어느 요소에 있는지 보여주는 시각 표시. 세 종류다. **ring**은 요소 바깥에 간격을 두고 선을 그린다. **field**는 입력창의 테두리 색과 두께를 바꾼다. **highlight**는 목록 안 항목(Menu 항목, Select 옵션)의 배경과 글자색을 바꾼다. 입력창은 field, 목록 안 항목은 highlight, 나머지는 ring을 쓴다.
-_Avoid_: focus ring(ring 한 종류만 가리킬 때만 씀), 포커스 테두리
+포커스가 어느 요소에 있는지 보여주는 시각 표시. 모양은 요소에 간격 없이 붙은 3px **halo** 하나다(ADR 0032). 색은 요소의 accent를 따른다(halo `subtle-border`, 테두리 `border` 슬롯). **ring**(`focus-ring`)은 halo만 그린다. **field**(`focus-field`)는 테두리 색을 accent `border`로 바꾸고 halo를 그린다. 오류 입력창은 같은 모양을 빨강(`border-danger`, `border-danger-subtle`)으로 그린다. **highlight**는 목록 안 항목(Menu 항목, Select 옵션)의 배경과 글자색을 바꾼다. 테두리가 있는 요소(입력창, Checkbox·Radio, outline 버튼)는 field, 목록 안 항목은 highlight, 나머지는 ring을 쓴다.
+_Avoid_: focus ring(ring 한 종류만 가리킬 때만 씀), 포커스 테두리(field가 바꾸는 테두리만 가리킬 때만 씀), offset ring
 
 **대비 쌍 (Contrast pair)**:
 실제로 함께 쓰는 전경 Token과 배경 Token의 짝. 대비 검사는 모든 조합이 아니라 등록된 대비 쌍만 대상으로 한다. 쌍마다 하한 등급이 하나 있다.
 _Avoid_: 색 조합, 컬러 페어
 
 **하한 등급 (Contrast tier)**:
-대비 쌍이 넘어야 하는 대비비 하한의 구분. **정지 상태 글자** 4.5:1, **일시 상태 글자**(hover·누름 배경 위)와 **solid 위 글자** 4.0:1, **UI 요소**(경계, 포커스 표시, thumb) 3:1 세 가지다(ADR 0023). 한 짝을 여러 쓰임이 쓰면 가장 엄한 등급을 적는다. 코드에서는 `minRatio`(`ContrastMinRatio`)다.
+대비 쌍이 넘어야 하는 대비비 하한의 구분. **정지 상태 글자** 4.5:1, **일시 상태 글자**(hover·누름 배경 위)와 **solid 위 글자** 4.0:1, **UI 요소**(경계, 포커스 테두리, thumb) 3:1 세 가지다(ADR 0023). 포커스 halo는 검사에서 뺀다(ADR 0032). 한 짝을 여러 쓰임이 쓰면 가장 엄한 등급을 적는다. 코드에서는 `minRatio`(`ContrastMinRatio`)다.
 _Avoid_: 대비 레벨, AA·AAA(WCAG 적합 수준과 혼동)
 
 **Theme**:

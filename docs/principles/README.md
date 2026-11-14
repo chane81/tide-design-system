@@ -112,3 +112,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ④ 발견할 수 있음, ③ 단순함: [ADR 0029 components 패키지의 공개 Component는 모두 폴더로 둔다](../decisions/0029-components-always-folders.md)
 - ④ 발견할 수 있음, ② 명확함: [ADR 0030 components 패키지의 공용 비공개 코드는 `src/_internal/`에 모은다](../decisions/0030-components-internal-folder.md)
 - ④ 발견할 수 있음, ② 명확함: [ADR 0031 공개 Props에서 Tide props를 `XxxOwnProps`로 나누고, Component JSDoc에 이름 목록을 적는다](../decisions/0031-own-props-split-and-jsdoc-list.md)
+- ② 명확함, ③ 단순함: [ADR 0032 포커스 표시를 간격 없는 3px halo 하나로 통일한다](../decisions/0032-unified-focus-halo.md) (① 접근성보다 앞세운 사용자 결정 예외)

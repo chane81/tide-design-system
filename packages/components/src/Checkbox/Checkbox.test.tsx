@@ -5,6 +5,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, focusBorderColor } from "../../test/focus";
+
 import { Checkbox, type CheckboxProps } from "./Checkbox";
 import { CheckboxGroup } from "../CheckboxGroup/CheckboxGroup";
 import { Field } from "../Field/Field";
@@ -460,7 +462,7 @@ describe("오류", () => {
 });
 
 describe("포커스 표시", () => {
-  test("키보드 포커스에 focus-ring(outline 2px, offset 2px)이 상자 둘레에 보인다", async () => {
+  test("키보드 포커스에 focus-field(테두리 focus 색 + 3px halo)가 상자 둘레에 보인다", async () => {
     await render(
       <div data-theme="light">
         <Checkbox>알림</Checkbox>
@@ -468,12 +470,40 @@ describe("포커스 표시", () => {
     );
     await userEvent.tab();
     await settle();
-    const style = getComputedStyle(page.getByRole("checkbox").element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    if (!forcedColors()) expect(style.outlineColor).toBe(resolve("var(--tide-outline-focus)"));
+    const box = page.getByRole("checkbox").element();
+    expectFocusHalo(box, { adjustNone: true });
+    if (!forcedColors())
+      expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.primary);
+  });
+
+  test("체크된 success 상자는 포커스 중에도 테두리가 success 색이고 halo도 success다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox color="success" defaultChecked>
+          알림
+        </Checkbox>
+      </div>,
+    );
+    await userEvent.tab();
+    await settle();
+    const box = page.getByRole("checkbox").element();
+    expectFocusHalo(box, { tone: "success", adjustNone: true });
+    if (!forcedColors()) {
+      expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.success);
+    }
+  });
+
+  test("오류 상태에서 키보드 포커스하면 테두리와 halo가 오류 색이다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox invalid>약관 동의</Checkbox>
+      </div>,
+    );
+    await userEvent.tab();
+    await settle();
+    const box = page.getByRole("checkbox").element();
+    expectFocusHalo(box, { tone: "danger", adjustNone: true });
+    if (!forcedColors()) expect(getComputedStyle(box).borderTopColor).toBe(focusBorderColor.danger);
   });
 
   test("경계·배경 색은 transition-colors(fast 150ms)로 바뀐다", async () => {

@@ -5,6 +5,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { Link, type LinkProps } from "./Link";
 
 // 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
@@ -15,7 +17,6 @@ declare module "@tide-design/foundation" {
 }
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
-const transparent = "rgba(0, 0, 0, 0)";
 
 async function resolveColor(value: string): Promise<string> {
   const probe = document.createElement("div");
@@ -146,7 +147,7 @@ describe("색 이름(data-color)", () => {
 });
 
 describe("포커스 표시", () => {
-  test("키보드 포커스에 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("키보드 포커스에 focus-ring(3px halo)이 보인다", async () => {
     await render(
       <div data-theme="light">
         <Link href="#a">안내</Link>
@@ -155,14 +156,7 @@ describe("포커스 표시", () => {
     await userEvent.tab();
     const link = page.getByRole("link");
     await expect.element(link).toHaveFocus();
-    const style = getComputedStyle(link.element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(await resolveColor("var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(link.element());
   });
 });
 

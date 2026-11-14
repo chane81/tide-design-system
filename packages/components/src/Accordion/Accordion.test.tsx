@@ -3,6 +3,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, expectNoFocusHalo } from "../../test/focus";
+
 import { captureWhen } from "../../test/motion";
 
 import {
@@ -253,23 +255,16 @@ describe("제어와 비제어", () => {
 });
 
 describe("모양과 포커스 표시", () => {
-  test("Tab으로 트리거에 포커스하면 focus-ring(outline 2px, offset 2px)이 보이고, 마우스 누름에는 없다", async () => {
+  test("Tab으로 트리거에 포커스하면 focus-ring(3px halo)이 보이고, 마우스 누름에는 없다", async () => {
     await render(<Example />);
     byTestId("before").focus();
     await userEvent.tab();
     await expect.element(page.getByTestId("shipping")).toHaveFocus();
     await wait(250);
-    const style = getComputedStyle(byTestId("shipping"));
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    expect(style.borderTopLeftRadius).toBe("6px");
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(resolve("color", "var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(byTestId("shipping"));
+    expect(getComputedStyle(byTestId("shipping")).borderTopLeftRadius).toBe("6px");
     await userEvent.click(page.getByTestId("refund"));
-    expect(getComputedStyle(byTestId("refund")).outlineStyle).toBe("none");
+    expectNoFocusHalo(byTestId("refund"));
   });
 
   test("루트는 radius lg와 1px 경계, 항목 사이 1px 선, 트리거는 label-lg 글자와 여백 12px·16px다", async () => {

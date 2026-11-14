@@ -273,7 +273,7 @@ const commonBorder = {
 } as const;
 
 const commonOutline = {
-  // 포커스 표시 색. 오류 상태에서도 바꾸지 않는다.
+  // primary 포커스 테두리와 같은 값. focus-ring·focus-field는 이 Token 대신 accent 슬롯을 쓴다(ADR 0032).
   focus: { light: "blue-600", dark: "blue-400" },
 } as const;
 

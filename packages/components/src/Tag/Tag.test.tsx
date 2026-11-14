@@ -4,6 +4,8 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { Tag, TagGroup, type TagGroupProps, type TagProps } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
@@ -326,19 +328,11 @@ describe("모양과 포커스 표시", () => {
     expect(byTestId("sales")).toHaveAttribute("data-color", "gray");
   });
 
-  test("Tab으로 태그에 포커스하면 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("Tab으로 태그에 포커스하면 focus-ring(3px halo)이 보인다", async () => {
     await render(<Example />);
     await tabIntoGroup();
     await expect.element(page.getByTestId("design")).toHaveFocus();
-    await wait(250);
-    const style = getComputedStyle(byTestId("design"));
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(resolve("color", "var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(byTestId("design"));
   });
 });
 

@@ -7,6 +7,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo, focusBorderColor } from "../../test/focus";
+
 import { IconButton, type IconButtonProps } from "./IconButton";
 
 // 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
@@ -253,7 +255,7 @@ describe("press 축소", () => {
 });
 
 describe("포커스 표시와 forced-colors", () => {
-  test("키보드 포커스에 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("ghost는 키보드 포커스에 focus-ring(3px halo)만 보인다", async () => {
     await render(
       <div data-theme="light">
         <IconButton aria-label="설정" variant="ghost">
@@ -262,15 +264,26 @@ describe("포커스 표시와 forced-colors", () => {
       </div>,
     );
     await userEvent.tab();
-    // outline 색도 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
+    const button = page.getByRole("button").element();
+    expectFocusHalo(button);
+    if (!forcedColors()) expect(getComputedStyle(button).borderTopColor).toBe(transparent);
+  });
+
+  test("outline은 키보드 포커스에 테두리가 focus 색으로 바뀌고 3px halo가 보인다", async () => {
+    await render(
+      <div data-theme="light">
+        <IconButton aria-label="설정" variant="outline">
+          <Icon />
+        </IconButton>
+      </div>,
+    );
+    await userEvent.tab();
+    // border 색은 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
     await new Promise((resolve) => setTimeout(resolve, 250));
-    const style = getComputedStyle(page.getByRole("button").element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    expect(style.outlineColor).not.toBe(transparent);
+    const button = page.getByRole("button").element();
+    expectFocusHalo(button);
     if (!forcedColors()) {
-      expect(style.outlineColor).toBe(await resolve("color", "var(--tide-outline-focus)"));
+      expect(getComputedStyle(button).borderTopColor).toBe(focusBorderColor.primary);
     }
   });
 

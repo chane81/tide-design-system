@@ -103,11 +103,7 @@ const shadows = [
   ["md", "0 1px 3px", 50, "0 4px 12px -2px", 100],
   ["lg", "0 2px 6px -1px", 50, "0 12px 24px -6px", 100],
 ] as const;
-const shapeVars = [
-  ...radii.map(([name]) => `--tide-rounded-${name}`),
-  "--tide-focus-ring-width",
-  "--tide-focus-ring-offset",
-];
+const shapeVars = [...radii.map(([name]) => `--tide-rounded-${name}`), "--tide-focus-ring-width"];
 const shadowVars = shadows.map(([name]) => `--tide-shadow-${name}`);
 
 // spec 「`@tide-design/foundation`」 motion·z-index. [이름, 값]
@@ -503,9 +499,22 @@ describe("tokens.css", () => {
       expect(root.get(`--tide-rounded-${name}`)).toBe(value);
     });
 
-    it("포커스 ring은 2px 두께, 2px offset이다", () => {
-      expect(root.get("--tide-focus-ring-width")).toBe("2px");
-      expect(root.get("--tide-focus-ring-offset")).toBe("2px");
+    it("포커스 halo는 3px 두께이고 offset 변수가 없다", () => {
+      expect(root.get("--tide-focus-ring-width")).toBe("3px");
+      expect(css).not.toContain("--tide-focus-ring-offset");
+    });
+
+    it("data-color가 없을 때 halo·테두리 색(accent subtle-border·border)은 primary 200·600단계다", () => {
+      const ref = (name: string): string => `var(--tide-color-${name})`;
+      expect(lightResolved.get("--tide-accent-subtle-border")).toBe(ref("blue-200"));
+      expect(darkResolved.get("--tide-accent-subtle-border")).toBe(ref("blue-800"));
+      expect(root.get("--tide-color-blue-200")).toBe("#bfd8f7");
+      expect(root.get("--tide-color-blue-800")).toBe("#004e94");
+      expect(lightResolved.get("--tide-accent-border")).toBe(ref("blue-600"));
+      expect(darkResolved.get("--tide-accent-border")).toBe(ref("blue-400"));
+      // 오류 입력창 halo
+      expect(lightResolved.get("--tide-border-danger-subtle")).toBe(ref("red-200"));
+      expect(darkResolved.get("--tide-border-danger-subtle")).toBe(ref("red-800"));
     });
 
     it.each(shadows)("그림자 %s: %s %i% + %s %i%", (name, near, nearMix, far, farMix) => {

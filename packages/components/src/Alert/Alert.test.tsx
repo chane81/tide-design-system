@@ -5,6 +5,8 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
+import { expectFocusHalo } from "../../test/focus";
+
 import { Alert, type AlertProps } from "./Alert";
 
 // 앱 Role(brand)을 Role 타입에 더한다(ADR 0016).
@@ -194,22 +196,14 @@ describe("닫기", () => {
       .toBe(resolve("var(--tide-bg-danger-subtle-hover)"));
   });
 
-  test("키보드 포커스에 focus-ring(outline 2px, offset 2px)이 보인다", async () => {
+  test("키보드 포커스에 focus-ring(3px halo)이 보인다", async () => {
     await render(
       <div data-theme="light">
         <Alert color="success" title="완료" onClose={() => {}} />
       </div>,
     );
     await userEvent.tab();
-    // outline 색도 transition-colors(fast 150ms) 대상이라 전환이 끝난 뒤 읽는다.
-    await new Promise((done) => setTimeout(done, 250));
-    const style = getComputedStyle(page.getByRole("button", { name: "닫기" }).element());
-    expect(style.outlineStyle).toBe("solid");
-    expect(style.outlineWidth).toBe("2px");
-    expect(style.outlineOffset).toBe("2px");
-    if (!forcedColors()) {
-      expect(style.outlineColor).toBe(resolve("var(--tide-outline-focus)"));
-    }
+    expectFocusHalo(page.getByRole("button", { name: "닫기" }).element(), { tone: "success" });
   });
 });
 
