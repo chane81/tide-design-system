@@ -4,7 +4,7 @@ import { Button, type ButtonProps } from "../../Button/Button";
 import { cn } from "../../_internal/libs/cn";
 import { itemSize, linkClass } from "../constants/paginationClass";
 
-export interface PaginationLinkProps extends Omit<ComponentProps<"a">, "color"> {
+export interface PaginationLinkOwnProps {
   /** 현재 페이지인지. `aria-current="page"`를 붙이고 subtle 채움으로 보인다. 기본값은 `false`다. */
   current?: boolean;
   /**
@@ -14,7 +14,15 @@ export interface PaginationLinkProps extends Omit<ComponentProps<"a">, "color"> 
   render?: ReactElement;
 }
 
-/** 페이지 번호 링크. 기본은 `<a>`이고 Button(ghost, 32px) 모양이다. 현재 페이지는 `current`를 준다. */
+export interface PaginationLinkProps
+  extends
+    PaginationLinkOwnProps,
+    Omit<ComponentProps<"a">, keyof PaginationLinkOwnProps | "color"> {}
+
+/**
+ * 페이지 번호 링크. 기본은 `<a>`이고 Button(ghost, 32px) 모양이다. 현재 페이지는 `current`를 준다.
+ * Tide props: `current`, `render` ({@link PaginationLinkOwnProps}). 나머지는 `<a>` 속성.
+ */
 export function PaginationLink({
   current = false,
   render,

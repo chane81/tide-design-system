@@ -5,12 +5,15 @@ import type { Size } from "../types";
 
 type SpinnerSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
 
-export interface SpinnerProps extends Omit<ComponentProps<"svg">, "children"> {
+export interface SpinnerOwnProps {
   /** `xs`·`sm` 14px, `md` 16px, `lg` 20px(같은 size Component의 텍스트 옆 아이콘 크기). 기본값 `md`. */
   size?: SpinnerSize;
   /** 접근 가능한 이름. 기본값은 `"로딩 중"`이다. 무엇을 불러오는지 적으면 더 좋다. */
   "aria-label"?: string;
 }
+
+export interface SpinnerProps
+  extends SpinnerOwnProps, Omit<ComponentProps<"svg">, keyof SpinnerOwnProps | "children"> {}
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 const sizeClass: Record<SpinnerSize, string> = {
@@ -22,6 +25,7 @@ const sizeClass: Record<SpinnerSize, string> = {
 
 /**
  * 로딩 중임을 알리는 회전 표시(`role="status"`). 색은 주변 글자색을 따르고, 움직임 줄이기에서도 멈추지 않는다.
+ * Tide props: `size`, `aria-label` ({@link SpinnerOwnProps}). 나머지는 `<svg>` 속성.
  */
 export function Spinner({
   size = "md",

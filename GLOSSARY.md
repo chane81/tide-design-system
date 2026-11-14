@@ -104,6 +104,10 @@ _Avoid_: 타이포 토큰, font style, 텍스트 크기(크기 하나만 뜻하�
 Component마다 정의되는 주된 스타일 축. 값 집합은 Component 종류마다 다르다. 예를 들어 Button은 채움 방식을, Typography는 텍스트 스타일을 값으로 쓴다. 값은 새로 만들지 않고 Foundation에 이미 있는 이름을 쓴다. 색은 Variant가 아니라 색 이름(Color)으로 고른다.
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
 
+**Tide props (OwnProps)**:
+Component가 네이티브 HTML·SVG 속성 위에 더하거나 뜻을 바꾼 props. 공개 Props마다 `XxxOwnProps`로 따로 공개하고, `XxxProps`는 그것과 네이티브 props를 합친 것이다. Component JSDoc에 이름 목록이 있다(ADR 0031).
+_Avoid_: custom props, 전용 props, htmlProps
+
 **채움 방식 (Fill)**:
 Button류 Component의 Variant 값 집합. `solid`, `subtle`, `outline`, `ghost` 네 가지다. `solid`와 `subtle`은 강도와 이름이 같고, `outline`과 `ghost`는 Component에만 있다.
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)

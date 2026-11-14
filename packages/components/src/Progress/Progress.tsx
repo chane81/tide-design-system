@@ -12,17 +12,7 @@ type ProgressName =
   | { "aria-label": string; "aria-labelledby"?: string }
   | { "aria-label"?: string; "aria-labelledby": string };
 
-interface ProgressOwnProps extends Omit<
-  ComponentProps<"div">,
-  | "color"
-  | "children"
-  | "role"
-  | "aria-label"
-  | "aria-labelledby"
-  | "aria-valuenow"
-  | "aria-valuemin"
-  | "aria-valuemax"
-> {
+export interface ProgressOwnProps {
   /** 현재 값. 0~`max`로 잘라 쓴다. 값을 모르는 진행은 Spinner를 쓴다. */
   value: number;
   /** 끝 값. 기본값 `100`. 시작 값은 항상 0이다. */
@@ -33,7 +23,19 @@ interface ProgressOwnProps extends Omit<
   color?: Role;
 }
 
-export type ProgressProps = ProgressOwnProps & ProgressName;
+export type ProgressProps = ProgressOwnProps &
+  ProgressName &
+  Omit<
+    ComponentProps<"div">,
+    | keyof ProgressOwnProps
+    | "children"
+    | "role"
+    | "aria-label"
+    | "aria-labelledby"
+    | "aria-valuenow"
+    | "aria-valuemin"
+    | "aria-valuemax"
+  >;
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 const sizeClass: Record<ProgressSize, string> = {
@@ -55,7 +57,10 @@ function clamp(value: number, max: number): number {
   return Math.min(Math.max(value, 0), max);
 }
 
-/** 작업이 얼마나 진행됐는지 막대로 보여 준다(`role="progressbar"`). 서버 컴포넌트로 쓸 수 있다. */
+/**
+ * 작업이 얼마나 진행됐는지 막대로 보여 준다(`role="progressbar"`). 서버 컴포넌트로 쓸 수 있다.
+ * Tide props: `value`, `max`, `size`, `color` ({@link ProgressOwnProps}). 나머지는 `<div>` 속성(`aria-label`이나 `aria-labelledby` 필수).
+ */
 export function Progress({
   value,
   max = 100,

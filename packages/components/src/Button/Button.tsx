@@ -13,7 +13,7 @@ import { Icon } from "./components/Icon";
 import { sizeClass } from "./constants/buttonClass";
 import type { ButtonSize, ButtonVariant } from "./types";
 
-export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
+export interface ButtonOwnProps {
   /** 채움 방식. 기본값은 `solid`다. */
   variant?: ButtonVariant;
   /** Role(Tide Role + 앱 Role). 기본값 `primary`. 색 계열 이름은 받지 않는다. */
@@ -34,7 +34,13 @@ export interface ButtonProps extends Omit<ComponentProps<"button">, "color"> {
   render?: ReactElement;
 }
 
-/** 누르면 동작을 실행하는 버튼. 링크로 렌더하려면 `render={<Link href="/x" />}`를 쓴다. */
+export interface ButtonProps
+  extends ButtonOwnProps, Omit<ComponentProps<"button">, keyof ButtonOwnProps> {}
+
+/**
+ * 누르면 동작을 실행하는 버튼. 링크로 렌더하려면 `render={<Link href="/x" />}`를 쓴다.
+ * Tide props: `variant`, `color`, `size`, `startIcon`, `endIcon`, `loading`, `loadingLabel`, `noPressScale`, `render` ({@link ButtonOwnProps}). 나머지는 `<button>` 속성.
+ */
 export function Button({
   variant = "solid",
   color = "primary",

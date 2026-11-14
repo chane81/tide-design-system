@@ -10,16 +10,22 @@ import { mergeEntries } from "./libs/mergeEntries";
 import { queueOf, type ToastQueue } from "./libs/toastQueue";
 import type { Entry } from "./types";
 
-export interface ToastRegionProps extends Omit<ComponentProps<"div">, "children" | "role"> {
+export interface ToastRegionOwnProps {
   /** 그릴 큐(`new ToastQueue()`) */
   queue: ToastQueue;
   /** 영역(랜드마크) 이름. 기본값은 React Aria 번역 「N개 알림.」(locale을 따른다). */
   "aria-label"?: string;
 }
 
+export interface ToastRegionProps
+  extends
+    ToastRegionOwnProps,
+    Omit<ComponentProps<"div">, keyof ToastRegionOwnProps | "children" | "role"> {}
+
 /**
  * `ToastQueue`의 Toast를 그리는 영역. 앱에 하나 둔다(보통 레이아웃의 client Component 안).
  * Toast가 있을 때만 `document.body`에 portal한다.
+ * Tide props: `queue`, `aria-label` ({@link ToastRegionOwnProps}). 나머지는 `<div>` 속성.
  */
 export function ToastRegion({ queue, ...props }: ToastRegionProps): ReactElement | null {
   const state = useToastQueue(queueOf(queue));

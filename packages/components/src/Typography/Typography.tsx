@@ -9,28 +9,34 @@ type TextVariant = Exclude<TextStyleName, HeadingVariant>;
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-interface TypographyBaseProps extends HTMLAttributes<HTMLElement> {
+interface TypographyElementProps extends HTMLAttributes<HTMLElement> {
   /** 루트 DOM 요소에 연결한다. */
   ref?: Ref<HTMLElement>;
+}
+
+interface TypographyRenderProps {
   /** 다른 요소로 렌더한다. 예: `render={<label htmlFor="name" />}`. 이때 `level`은 무시한다. */
   render?: ReactElement;
 }
 
-interface TypographyHeadingProps extends TypographyBaseProps {
+interface TypographyHeadingProps extends TypographyRenderProps {
   /** 텍스트 스타일 이름 */
   variant: HeadingVariant;
   /** 제목 단계. 주지 않으면 텍스트 스타일의 기본 단계를 쓴다. */
   level?: HeadingLevel;
 }
 
-interface TypographyTextProps extends TypographyBaseProps {
+interface TypographyTextProps extends TypographyRenderProps {
   /** 텍스트 스타일 이름. 기본값 `body-md`. */
   variant?: TextVariant;
   /** heading·display 텍스트 스타일에만 있다. */
   level?: never;
 }
 
-export type TypographyProps = TypographyHeadingProps | TypographyTextProps;
+export type TypographyOwnProps = TypographyHeadingProps | TypographyTextProps;
+
+export type TypographyProps = TypographyOwnProps &
+  Omit<TypographyElementProps, keyof TypographyOwnProps>;
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 const variantClass: Record<TextStyleName, string> = {
@@ -71,6 +77,7 @@ const elementByVariant: Record<HeadingVariant, HeadingLevel> & Record<TextVarian
 /**
  * 텍스트 스타일 하나로 크기·행간·굵기를 정하고 알맞은 시맨틱 요소로 렌더한다.
  * heading·display는 항상 `<h*>`다. 다른 요소는 `render`로. 서버 컴포넌트로 쓸 수 있다.
+ * Tide props: `render`, `variant`, `level` ({@link TypographyOwnProps}). 나머지는 HTML 요소 속성.
  */
 export function Typography({
   variant = "body-md",

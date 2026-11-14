@@ -13,10 +13,7 @@ type IconButtonVariant = Extract<FillVariant, "solid" | "subtle" | "outline" | "
 
 type IconButtonSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
 
-export interface IconButtonProps extends Omit<
-  ComponentProps<"button">,
-  "color" | "aria-label" | "children"
-> {
+export interface IconButtonOwnProps {
   /** 버튼 이름. 아이콘만 보이므로 필수다(예: `"설정"`). */
   "aria-label": string;
   /** 아이콘. 장식용으로 숨겨지고 size에 맞는 크기가 된다. */
@@ -37,6 +34,9 @@ export interface IconButtonProps extends Omit<
   render?: ReactElement;
 }
 
+export interface IconButtonProps
+  extends IconButtonOwnProps, Omit<ComponentProps<"button">, keyof IconButtonOwnProps> {}
+
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 
 const sizeClass: Record<IconButtonSize, string> = {
@@ -53,7 +53,10 @@ const iconSizeClass: Record<IconButtonSize, string> = {
   lg: "size-6",
 };
 
-/** 아이콘만 있는 버튼. `aria-label`이 필수다. 모양 축은 Button과 같다. */
+/**
+ * 아이콘만 있는 버튼. `aria-label`이 필수다. 모양 축은 Button과 같다.
+ * Tide props: `aria-label`, `children`, `variant`, `color`, `size`, `loading`, `loadingLabel`, `noPressScale`, `render` ({@link IconButtonOwnProps}). 나머지는 `<button>` 속성.
+ */
 export function IconButton({
   variant = "solid",
   color = "primary",

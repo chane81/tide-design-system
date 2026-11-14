@@ -13,7 +13,7 @@ import { mergeProps, mergeRefs, usePress } from "react-aria";
 import { useDialogContext } from "../../_internal/hooks/useDialogContext";
 import { renderElement } from "../../_internal/libs/renderElement";
 
-export interface DialogTriggerProps extends ComponentProps<"button"> {
+export interface DialogTriggerOwnProps {
   /**
    * 다른 요소로 렌더한다. 예: `render={<Button variant="outline" />}`, `render={<IconButton aria-label="삭제" />}`.
    * props, ref, className, 이벤트 핸들러를 그 요소에 병합한다. 기본은 class 없는 `<button type="button">`이다.
@@ -21,9 +21,13 @@ export interface DialogTriggerProps extends ComponentProps<"button"> {
   render?: ReactElement;
 }
 
+export interface DialogTriggerProps
+  extends DialogTriggerOwnProps, Omit<ComponentProps<"button">, keyof DialogTriggerOwnProps> {}
+
 /**
  * Dialog를 여는 버튼. 누르면(마우스, 터치, Enter, Space) 연다. 열린 동안은 바깥이 inert라 다시 누를 수 없다.
  * `aria-expanded`, 열렸을 때 `aria-controls`와 `data-open`이 붙는다.
+ * Tide props: `render` ({@link DialogTriggerOwnProps}). 나머지는 `<button>` 속성.
  */
 export function DialogTrigger({
   render,

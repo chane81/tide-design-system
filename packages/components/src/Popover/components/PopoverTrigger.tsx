@@ -12,7 +12,7 @@ import { mergeProps, mergeRefs, usePress } from "react-aria";
 import { renderElement } from "../../_internal/libs/renderElement";
 import { usePopoverContext } from "../hooks/usePopoverContext";
 
-export interface PopoverTriggerProps extends ComponentProps<"button"> {
+export interface PopoverTriggerOwnProps {
   /**
    * 다른 요소로 렌더한다. 예: `render={<Button variant="outline" />}`, `render={<IconButton aria-label="설정" />}`.
    * props, ref, className, 이벤트 핸들러를 그 요소에 병합한다. 기본은 class 없는 `<button type="button">`이다.
@@ -20,9 +20,13 @@ export interface PopoverTriggerProps extends ComponentProps<"button"> {
   render?: ReactElement;
 }
 
+export interface PopoverTriggerProps
+  extends PopoverTriggerOwnProps, Omit<ComponentProps<"button">, keyof PopoverTriggerOwnProps> {}
+
 /**
  * Popover를 여닫는 버튼. 누르면(마우스, 터치, Enter, Space) 열림 상태를 뒤집는다.
  * `aria-expanded`, 열렸을 때 `aria-controls`, 열렸을 때 `data-open`이 붙는다.
+ * Tide props: `render` ({@link PopoverTriggerOwnProps}). 나머지는 `<button>` 속성.
  */
 export function PopoverTrigger({
   render,

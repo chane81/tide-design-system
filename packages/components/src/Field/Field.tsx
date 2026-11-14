@@ -6,7 +6,7 @@ import { useId, type ComponentProps, type ReactElement, type ReactNode } from "r
 import { cn } from "../_internal/libs/cn";
 import { FieldContext, type FieldContextValue } from "../_internal/hooks/useFieldControl";
 
-export interface FieldProps extends ComponentProps<"div"> {
+export interface FieldOwnProps {
   /** 입력창의 이름이 되는 label. 화면에 보인다. */
   label: ReactNode;
   /** 입력창 아래에 보이는 설명. 입력창의 `aria-describedby`로 연결된다. */
@@ -27,12 +27,16 @@ export interface FieldProps extends ComponentProps<"div"> {
   children: ReactNode;
 }
 
+export interface FieldProps
+  extends FieldOwnProps, Omit<ComponentProps<"div">, keyof FieldOwnProps> {}
+
 const hasContent = (node: ReactNode): boolean =>
   node !== undefined && node !== null && node !== false && node !== "";
 
 /**
  * 입력 Component에 label, 설명, 오류 메시지를 붙이고 `id`·`aria-describedby`·`aria-invalid`·`required`·`disabled`를
  * 자동으로 연결한다. 서버 컴포넌트로 쓸 수 있다.
+ * Tide props: `label`, `description`, `error`, `invalid`, `required`, `disabled`, `htmlFor`, `group`, `children` ({@link FieldOwnProps}). 나머지는 `<div>` 속성.
  */
 export function Field({
   label,

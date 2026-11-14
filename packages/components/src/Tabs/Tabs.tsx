@@ -32,7 +32,7 @@ type TabsValueProps =
       defaultValue: string;
     };
 
-interface TabsBaseProps extends Omit<ComponentProps<"div">, "defaultValue" | "onChange"> {
+interface TabsBaseOwnProps {
   /** 고른 탭이 바뀌려 할 때 부른다. 같은 탭을 다시 누르면 부르지 않고, 준 값의 탭이 없으면 첫 활성 탭으로 부른다. */
   onValueChange?: (value: string) => void;
   /** 탭 목록의 방향. 기본값은 `horizontal`이다. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
@@ -43,11 +43,14 @@ interface TabsBaseProps extends Omit<ComponentProps<"div">, "defaultValue" | "on
   children?: ReactNode;
 }
 
-export type TabsProps = TabsBaseProps & TabsValueProps;
+export type TabsOwnProps = TabsBaseOwnProps & TabsValueProps;
+
+export type TabsProps = TabsOwnProps & Omit<ComponentProps<"div">, keyof TabsOwnProps | "onChange">;
 
 /**
  * 같은 영역의 여러 패널 중 하나를 고르는 탭 묶음. 루트는 `<div>`이고 방향이 `data-orientation`으로 붙는다.
  * 안에 `TabList` 하나와 탭마다 `TabPanel`을 둔다.
+ * Tide props: `value`, `defaultValue`, `onValueChange`, `orientation`, `activationMode`, `children` ({@link TabsOwnProps}). 나머지는 `<div>` 속성.
  */
 export function Tabs({
   value: valueProp,

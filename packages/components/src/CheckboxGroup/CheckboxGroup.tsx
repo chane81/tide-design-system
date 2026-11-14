@@ -13,7 +13,7 @@ import { orientationClass, type ChoiceOrientation } from "../_internal/constants
 
 export type { ChoiceOrientation } from "../_internal/constants/choiceGroupClass";
 
-export interface CheckboxGroupProps extends ComponentProps<"div"> {
+export interface CheckboxGroupOwnProps {
   /** 항목을 세로(`vertical`)로 쌓거나 가로(`horizontal`)로 늘어놓는다. 기본값은 `vertical`이다. */
   orientation?: ChoiceOrientation;
   /** 오류 상태. 안의 Checkbox마다 `aria-invalid="true"`, 묶음에 `data-invalid`. Field 안에서는 여기 준 값이 이긴다. */
@@ -22,9 +22,13 @@ export interface CheckboxGroupProps extends ComponentProps<"div"> {
   disabled?: boolean;
 }
 
+export interface CheckboxGroupProps
+  extends CheckboxGroupOwnProps, Omit<ComponentProps<"div">, keyof CheckboxGroupOwnProps> {}
+
 /**
  * Checkbox 여러 개를 하나의 이름으로 묶는다. 값은 각 Checkbox가 가진다(묶음은 값을 모으지 않는다).
  * `<Field label group>` 안에서는 Field label·설명이 이름·설명이 되고, 밖에서는 `aria-label`·`aria-labelledby`를 준다.
+ * Tide props: `orientation`, `invalid`, `disabled` ({@link CheckboxGroupOwnProps}). 나머지는 `<div>` 속성.
  */
 export function CheckboxGroup({
   orientation = "vertical",

@@ -22,10 +22,7 @@ type TagGroupNameProps =
       "aria-labelledby": string;
     };
 
-interface TagGroupBaseProps extends Omit<
-  ComponentProps<"div">,
-  "role" | "children" | "aria-label" | "aria-labelledby"
-> {
+export interface TagGroupOwnProps {
   /**
    * 지우기 버튼이나 Delete·Backspace로 지우려 할 때 태그의 `value`로 부른다. 주면 지우기 버튼이 생긴다.
    * 태그를 목록에서 빼는 일은 앱이 한다.
@@ -37,11 +34,14 @@ interface TagGroupBaseProps extends Omit<
   children?: ReactNode;
 }
 
-export type TagGroupProps = TagGroupBaseProps & TagGroupNameProps;
+export type TagGroupProps = TagGroupOwnProps &
+  TagGroupNameProps &
+  Omit<ComponentProps<"div">, keyof TagGroupOwnProps | "role" | "aria-label" | "aria-labelledby">;
 
 /**
  * 고르거나 입력한 값을 보여 주는 태그 묶음(`role="grid"`). ←→·Home·End로 태그를 옮긴다.
  * 이름은 `aria-label`이나 `aria-labelledby`로 꼭 준다.
+ * Tide props: `onRemove`, `removeLabel`, `children` ({@link TagGroupOwnProps}). 나머지는 `<div>` 속성.
  */
 export function TagGroup({
   onRemove,

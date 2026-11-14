@@ -10,10 +10,7 @@ import type { Role, Size } from "../types";
 /** Switch의 size. `xs`는 track이 너무 작아 받지 않는다. */
 type SwitchSize = Extract<Size, "sm" | "md" | "lg">;
 
-export interface SwitchProps extends Omit<
-  ComponentProps<"input">,
-  "type" | "size" | "color" | "role" | "children"
-> {
+export interface SwitchOwnProps {
   /** 스위치 옆에 보이는 label. 스위치의 이름이 된다. Field 안에서는 Field의 `label`을 쓰고 비워 둔다. */
   children?: ReactNode;
   /** track 크기 `sm` 28×16px, `md` 36×20px, `lg` 44×24px. label 글자 크기도 함께 바뀐다. 기본값 `md`. */
@@ -27,6 +24,9 @@ export interface SwitchProps extends Omit<
   /** 루트 `<label>`의 style */
   style?: CSSProperties;
 }
+
+export interface SwitchProps
+  extends SwitchOwnProps, Omit<ComponentProps<"input">, keyof SwitchOwnProps | "type" | "role"> {}
 
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 
@@ -68,6 +68,7 @@ const thumbForcedClass =
 /**
  * 켜고 끄는 스위치. 네이티브 체크박스(`role="switch"`)라 form 제출이 그대로 된다.
  * `children`이 label이 된다. Field 안에 두면 Field의 label·설명·오류가 연결된다.
+ * Tide props: `children`, `size`, `color`, `invalid`, `className`, `style` ({@link SwitchOwnProps}). 나머지는 `<input>` 속성.
  */
 export function Switch({
   children,

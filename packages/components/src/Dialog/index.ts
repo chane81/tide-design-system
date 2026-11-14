@@ -1,9 +1,9 @@
 export { Dialog } from "./Dialog";
 export type { DialogProps } from "./Dialog";
 export { DialogTrigger } from "./components/DialogTrigger";
-export type { DialogTriggerProps } from "./components/DialogTrigger";
+export type { DialogTriggerOwnProps, DialogTriggerProps } from "./components/DialogTrigger";
 export { DialogContent } from "./components/DialogContent";
-export type { DialogContentProps } from "./components/DialogContent";
+export type { DialogContentOwnProps, DialogContentProps } from "./components/DialogContent";
 export { DialogTitle } from "./components/DialogTitle";
 export type { DialogTitleProps } from "./components/DialogTitle";
 export { DialogDescription } from "./components/DialogDescription";
@@ -11,5 +11,5 @@ export type { DialogDescriptionProps } from "./components/DialogDescription";
 export { DialogFooter } from "./components/DialogFooter";
 export type { DialogFooterProps } from "./components/DialogFooter";
 export { DialogClose } from "./components/DialogClose";
-export type { DialogCloseProps } from "./components/DialogClose";
+export type { DialogCloseOwnProps, DialogCloseProps } from "./components/DialogClose";
 export type { DialogSize } from "./types";

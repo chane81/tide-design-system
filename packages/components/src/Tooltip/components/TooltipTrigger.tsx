@@ -6,7 +6,7 @@ import { mergeProps, mergeRefs } from "react-aria";
 import { renderElement } from "../../_internal/libs/renderElement";
 import { useTooltipContext } from "../hooks/useTooltipContext";
 
-export interface TooltipTriggerProps extends ComponentProps<"button"> {
+export interface TooltipTriggerOwnProps {
   /**
    * 다른 요소로 렌더하고 props·ref·이벤트 핸들러를 병합한다(예: `render={<IconButton aria-label="복사" />}`).
    * 기본은 class 없는 `<button type="button">`. 포커스를 받을 수 있는 요소여야 키보드 사용자도 설명을 본다.
@@ -14,9 +14,13 @@ export interface TooltipTriggerProps extends ComponentProps<"button"> {
   render?: ReactElement;
 }
 
+export interface TooltipTriggerProps
+  extends TooltipTriggerOwnProps, Omit<ComponentProps<"button">, keyof TooltipTriggerOwnProps> {}
+
 /**
  * Tooltip을 여는 요소. 마우스를 올리면 `delay` 뒤에, 키보드로 포커스하면 바로 열린다.
  * 누르면(마우스, 터치, 키) 닫힌다. 열린 동안 `aria-describedby`에 설명 id가 더해진다.
+ * Tide props: `render` ({@link TooltipTriggerOwnProps}). 나머지는 `<button>` 속성.
  */
 export function TooltipTrigger({
   render,

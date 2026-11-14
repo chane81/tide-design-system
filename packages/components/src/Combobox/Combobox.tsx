@@ -27,10 +27,7 @@ import {
   wrapperClass,
 } from "./constants/comboboxClass";
 
-export interface ComboboxProps extends Omit<
-  ComponentProps<"input">,
-  "value" | "defaultValue" | "onChange" | "type" | "size" | "children" | "name" | "form" | "list"
-> {
+export interface ComboboxOwnProps {
   /** 고른 값(제어). 고른 옵션의 `value`다. `null`이면 아무것도 고르지 않은 상태다. 주면 `onValueChange`로 바꾼다. */
   value?: string | null;
   /** 처음 고른 값(비제어). 입력에 그 옵션의 글자가 보인다. 폼을 reset하면 이 값으로 돌아간다. */
@@ -58,6 +55,11 @@ export interface ComboboxProps extends Omit<
   children?: ReactNode;
 }
 
+export interface ComboboxProps
+  extends
+    ComboboxOwnProps,
+    Omit<ComponentProps<"input">, keyof ComboboxOwnProps | "onChange" | "type" | "list"> {}
+
 // Safari는 조합을 끝내는 Enter keydown이 compositionend 뒤에 `isComposing: false`로 오지만 keyCode가 229라 둘 다 본다.
 const isComposingKey = (event: KeyboardEvent): boolean =>
   event.nativeEvent.isComposing || event.keyCode === 229;
@@ -65,6 +67,7 @@ const isComposingKey = (event: KeyboardEvent): boolean =>
 /**
  * 글자를 쳐서 옵션을 거르고 하나를 고르는 입력. 포커스가 나가면 고르지 않은 글자는 지워진다(자유 입력 없음).
  * Field 안에 두면 label·설명·오류가 연결되고, `name`을 주면 고른 옵션의 `value`가 제출된다.
+ * Tide props: `value`, `defaultValue`, `onValueChange`, `onOpenChange`, `emptyMessage`, `name`, `form`, `size`, `invalid`, `required`, `children` ({@link ComboboxOwnProps}). 나머지는 `<input>` 속성.
  */
 export function Combobox({
   value,
