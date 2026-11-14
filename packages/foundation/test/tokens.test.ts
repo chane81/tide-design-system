@@ -242,7 +242,7 @@ describe("tokens.css", () => {
     const primitive = [...root].filter(([name]) => name.startsWith("--tide-color-"));
     expect(primitive.map(([name]) => name).sort()).toEqual([...primitiveVars].sort());
     for (const [, value] of primitive) expect(value).toMatch(/^#[0-9a-f]{6}$/);
-    expect(root.get("--tide-color-blue-500")).toBe("#3183f5");
+    expect(root.get("--tide-color-blue-500")).toBe("#148cfc");
     expect(root.get("--tide-color-white")).toBe("#ffffff");
     expect(root.get("--tide-color-black")).toBe("#000000");
   });

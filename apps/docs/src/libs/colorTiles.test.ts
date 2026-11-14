@@ -29,9 +29,9 @@ describe("tileTextColor", () => {
 });
 
 describe("oklchChroma", () => {
-  it("blue-500(#3183f5)은 C 0.188", () => {
-    expect(color.blue[500]).toBe("#3183f5");
-    expect(formatChroma("#3183f5")).toBe("0.188");
+  it("blue-500(#148cfc)은 C 0.192", () => {
+    expect(color.blue[500]).toBe("#148cfc");
+    expect(formatChroma("#148cfc")).toBe("0.192");
   });
 
   it("white·black·회색은 채도가 0이다", () => {

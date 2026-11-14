@@ -172,7 +172,7 @@ declare module "@tide-design/components" {
 
 const className: string = cn("p-4", "p-2");
 const props: VisuallyHiddenProps = { children: "텍스트" };
-const anchor: "#3183f5" = color.blue[500];
+const anchor: "#148cfc" = color.blue[500];
 const buttonProps: ButtonProps = { variant: "subtle", color: "danger", size: "lg", loading: true };
 const fill: FillVariant = "ghost";
 const iconButtonProps: IconButtonProps = { "aria-label": "추가", children: null, size: "xs" };
