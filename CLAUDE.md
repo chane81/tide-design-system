@@ -1,6 +1,6 @@
 # Tide Design System
 
-`#3183f5`(blue)를 primary로 삼아 확장하는 디자인 시스템. 원칙(principles), 파운데이션(foundations), 컴포넌트(components) 세 층으로 구성한다.
+`#148cfc`(blue)를 primary로 삼아 확장하는 디자인 시스템. 원칙(principles), 파운데이션(foundations), 컴포넌트(components) 세 층으로 구성한다.
 
 - 테크 스택: vite, vitest, storybook, pnpm, typescript, oxlint, oxfmt
 - 한 번에 만들지 않는다. 리서치, 진행상황, 결정은 모두 `docs/` 아래 분류별 폴더에 md로 남긴다(구조는 `docs/agents/domain.md` 참고).

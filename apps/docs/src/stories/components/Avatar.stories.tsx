@@ -6,7 +6,7 @@ const photo = (from: string, to: string): string =>
   `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs><rect width="96" height="96" fill="url(#g)"/><circle cx="48" cy="38" r="18" fill="#fff" fill-opacity=".85"/><rect x="18" y="62" width="60" height="40" rx="30" fill="#fff" fill-opacity=".85"/></svg>`,
   )}`;
-const photoA = photo("#3183f5", "#7048e8");
+const photoA = photo("#148cfc", "#7048e8");
 const photoB = photo("#0ca678", "#1098ad");
 // 불러오지 못하는 이미지(깨진 데이터)
 const broken = "data:image/png;base64,AAAA";

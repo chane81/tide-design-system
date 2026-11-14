@@ -7,17 +7,17 @@ const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 
 const expected: Record<ColorFamily, readonly string[]> = {
   blue: [
-    "#eff4fc",
-    "#e3eefd",
-    "#c9d7eb",
-    "#a7c0e3",
-    "#65a1f9",
-    "#3183f5",
-    "#4e7aba",
-    "#2b5fa8",
-    "#184c93",
-    "#114080",
-    "#113465",
+    "#ecf5ff",
+    "#e1eeff",
+    "#bfd8f7",
+    "#97c2f4",
+    "#53a3fe",
+    "#148cfc",
+    "#1e7bd8",
+    "#0060b3",
+    "#004e94",
+    "#00427f",
+    "#003568",
   ],
   gray: [
     "#f5f5f6",
@@ -138,8 +138,8 @@ describe("Primitive 스케일", () => {
     expect(steps.map((step) => color[family][step as ColorStep])).toEqual(expected[family]);
   });
 
-  it("앵커 blue-500은 #3183f5다", () => {
-    expect(color.blue[500]).toBe("#3183f5");
+  it("앵커 blue-500은 #148cfc다", () => {
+    expect(color.blue[500]).toBe("#148cfc");
   });
 
   it.each(families)("%s는 50 → 950으로 갈수록 OKLCH L이 줄어든다", (family) => {
