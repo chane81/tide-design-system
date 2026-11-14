@@ -1,6 +1,6 @@
 {
   "name": "@tide-design/foundation",
-  "version": "0.11.5",
+  "version": "0.12.0",
   "description": "Tide 디자인 시스템의 Token과 CSS",
   "keywords": [
     "color",
