@@ -25,6 +25,7 @@ Tide의 최소 기준은 **WCAG 2.2 AA**다([W3C 권고안](https://www.w3.org/T
 - 대비 검증은 손으로 하지 않고 자동으로 한다. 기준은 WCAG 2.x 대비비 하나만 쓰고, APCA는 쓰지 않는다.
 - 검사 대상은 실제로 함께 쓰는 전경/배경 Token 쌍을 명시한 목록(대비 쌍)이다. light와 dark 모두에서 하나라도 기준에 못 미치면 CI가 실패한다.
 - 대비 쌍의 하한은 세 등급이다([ADR 0023](../decisions/0023-tiered-contrast-minimum.md)). 정지 상태 글자 4.5:1, hover·누름 같은 일시 상태 글자와 solid 위 글자 4.0:1, 경계·포커스 표시·thumb 같은 UI 요소 3:1이다. 일시 상태와 solid 위 글자의 4.0:1은 1.4.3을 엄격하게 읽은 기준(상태 구분 없이 4.5:1)보다 낮을 수 있는, 심미성을 위해 고른 Tide의 완화다.
+- 포커스 halo(primary·red 200단계)는 표면과 3:1에 못 미친다(light 흰 표면 위 약 1.5:1). 테두리가 있는 요소는 3:1 포커스 테두리가 함께 바뀌지만 테두리가 없는 요소는 halo가 유일한 표시라, 1.4.11을 엄격하게 읽으면 미달인 Tide의 예외다([ADR 0032](../decisions/0032-unified-focus-halo.md)).
 - Storybook story의 axe 검사(color-contrast)도 같은 등급을 따른다. solid 위 글자(`*-on-solid` class)와 대비 쌍 견본의 4.0:1 등급(`data-contrast-tier="4"`)은 4.0:1로, 나머지 글자는 axe 기본 4.5:1로 검사한다(`apps/docs/.storybook/preview.tsx`, [티켓 47](../progress/tide-v0-impl/issues/47-softer-solid.md)).
   - hover·누름 같은 일시 상태 글자는 axe 4.0:1 규칙에 따로 표시하지 않는다. axe는 렌더된 정지 화면만 검사해 hover·누름 상태 색을 보지 않으므로, 일시 상태의 4.0:1은 대비 쌍 검사(CI)가 맡는다([티켓 48](../progress/tide-v0-impl/issues/48-softer-solid-followup.md)).
 - 장식용 테두리(구분선 등), disabled 상태, overlay, shadow는 대비 검사에서 제외한다. disabled는 색 외에 `disabled`/`aria-disabled` 속성과 cursor로도 표현한다.
