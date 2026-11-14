@@ -406,11 +406,11 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     "--tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(var(--tide-focus-ring-width) + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor)";
 
   it.each(["focus-ring", "focus-field"])(
-    "%s는 offset 없이 바깥 halo를 focus-halo 색으로 그리고 평소 outline을 없앤다",
+    "%s는 offset 없이 바깥 halo를 accent subtle-border 색으로 그리고 평소 outline을 없앤다",
     (name) => {
       const body = ruleBody(css, name);
       expect(body).toContain(haloShadow);
-      expect(body).toContain("--tw-ring-color: var(--tide-outline-focus-halo)");
+      expect(body).toContain("--tw-ring-color: var(--tide-accent-subtle-border)");
       expect(body).toContain("outline: none");
       expect(body).toContain("outline-offset: 0");
       expect(body).not.toContain("inset 0 0 0 1px");
@@ -435,9 +435,9 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     },
   );
 
-  it("focus-ring은 테두리 색을 바꾸지 않고, focus-field는 테두리를 focus 색으로 바꾼다", () => {
+  it("focus-ring은 테두리 색을 바꾸지 않고, focus-field는 테두리를 accent border 색으로 바꾼다", () => {
     expect(ruleBody(css, "focus-ring")).not.toContain("border-color");
-    expect(ruleBody(css, "focus-field")).toContain("border-color: var(--tide-outline-focus)");
+    expect(ruleBody(css, "focus-field")).toContain("border-color: var(--tide-accent-border)");
   });
 
   it("variant와 함께 쓸 수 있다", () => {
@@ -445,13 +445,13 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     expect(css).toMatch(/\.focus\\:focus-field:focus\s*\{\s*border-color:/);
   });
 
-  it("오류 입력창 포커스는 같은 모양을 border-danger와 danger-halo로 그린다", () => {
+  it("오류 입력창 포커스는 같은 모양을 border-danger와 border-danger-subtle halo로 그린다", () => {
     expect(css).toMatch(
       /\.aria-invalid\\:border-danger\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\)/,
     );
     const field = /\.focus\\:focus-field:focus\s*\{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? "";
     expect(field).toMatch(
-      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\);\s*--tw-ring-color: var\(--tide-outline-danger-halo\);/,
+      /&\[aria-invalid="true"\]\s*\{\s*border-color: var\(--tide-border-danger\);\s*--tw-ring-color: var\(--tide-border-danger-subtle\);/,
     );
   });
 });

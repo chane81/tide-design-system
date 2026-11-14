@@ -273,11 +273,8 @@ const commonBorder = {
 } as const;
 
 const commonOutline = {
-  // 테두리 있는 요소의 포커스 테두리 색. 오류 입력창은 border-danger를 쓴다(ADR 0026).
+  // primary 포커스 테두리와 같은 값. focus-ring·focus-field는 이 Token 대신 accent 슬롯을 쓴다(ADR 0032).
   focus: { light: "blue-600", dark: "blue-400" },
-  // 요소 바깥 halo 색. 오류 입력창은 danger-halo를 쓴다(ADR 0032).
-  "focus-halo": { light: "blue-200", dark: "blue-800" },
-  "danger-halo": { light: "red-200", dark: "red-800" },
 } as const;
 
 export const semantic: {

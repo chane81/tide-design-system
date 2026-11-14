@@ -163,7 +163,7 @@ describe("포커스 표시", () => {
     );
     if (forcedColors()) return;
     const style = getComputedStyle(page.getByTestId("box").element());
-    expect(style.boxShadow).toContain(`${haloColor.focus} 0px 0px 0px 3px`);
+    expect(style.boxShadow).toContain(`${haloColor.primary} 0px 0px 0px 3px`);
     expect(tideLayers(style.boxShadow)).toHaveLength(2);
   });
 
@@ -180,7 +180,7 @@ describe("포커스 표시", () => {
 
     expect(style.borderTopWidth).toBe("1px");
     expectFocusHalo(input.element());
-    if (!forcedColors()) expect(style.borderTopColor).toBe(focusBorderColor.focus);
+    if (!forcedColors()) expect(style.borderTopColor).toBe(focusBorderColor.primary);
   });
 
   test("오류 입력창은 포커스 중에 같은 모양을 오류 색으로 그리고, 포커스가 빠지면 오류 border만 남는다", async () => {
@@ -206,7 +206,7 @@ describe("포커스 표시", () => {
       const focused = getComputedStyle(input.element());
       expect(focused.borderTopColor).toBe(focusBorderColor.danger);
       expect(focused.borderTopWidth).toBe("1px");
-      expect(focused.boxShadow).not.toContain(haloColor.focus);
+      expect(focused.boxShadow).not.toContain(haloColor.primary);
     }
 
     await userEvent.click(page.getByRole("button", { name: "다음" }));
@@ -244,5 +244,42 @@ describe("포커스 표시", () => {
       getComputedStyle(page.getByRole("textbox", { name }).element()).boxShadow;
     expect(shadow("보통")).toContain(`${rgb(color.blue[800])} 0px 0px 0px 3px`);
     expect(shadow("오류")).toContain(`${rgb(color.red[800])} 0px 0px 0px 3px`);
+  });
+
+  test("포커스 색은 data-color의 accent를 따르고, 없으면 primary다", async () => {
+    await render(
+      <div data-theme="light">
+        <input aria-label="기본" readOnly className="focus-field border" />
+        <input aria-label="성공" data-color="success" readOnly className="focus-field border" />
+        <input aria-label="회색" data-color="neutral" readOnly className="focus-field border" />
+      </div>,
+    );
+    if (forcedColors()) return;
+    const style = (name: string): CSSStyleDeclaration =>
+      getComputedStyle(page.getByRole("textbox", { name }).element());
+    for (const [name, tone] of [
+      ["기본", "primary"],
+      ["성공", "success"],
+      ["회색", "neutral"],
+    ] as const) {
+      expect(style(name).boxShadow, name).toContain(`${haloColor[tone]} 0px 0px 0px 3px`);
+      expect(style(name).borderTopColor, name).toBe(focusBorderColor[tone]);
+    }
+  });
+
+  test("오류 입력창은 data-color와 관계없이 danger로 그린다", async () => {
+    await render(
+      <input
+        aria-label="오류"
+        aria-invalid="true"
+        data-color="success"
+        readOnly
+        className="focus-field border"
+      />,
+    );
+    if (forcedColors()) return;
+    const style = getComputedStyle(page.getByRole("textbox", { name: "오류" }).element());
+    expect(style.boxShadow).toContain(`${haloColor.danger} 0px 0px 0px 3px`);
+    expect(style.borderTopColor).toBe(focusBorderColor.danger);
   });
 });

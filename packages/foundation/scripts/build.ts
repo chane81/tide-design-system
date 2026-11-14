@@ -147,10 +147,11 @@ const tokensCss = [
   ...tideColorNames.flatMap((name) => [dataColorRule(name), ""]),
 ].join("\n");
 
+// 포커스 색은 accent 슬롯을 따른다(halo subtle-border, 테두리 border. ADR 0032).
 // halo를 ring utility로 그려 shadow-*와 함께 써도 그림자가 남는다(tailwindcss 4.3.5).
 // 투명 outline은 forced-colors 안에만 둔다. 평소에 두면 transition-colors가 outline 색을 전환해 클릭 직후 번쩍인다.
 const focusHalo: string[] = [
-  "  @apply ring-(length:--tide-focus-ring-width) ring-(--tide-outline-focus-halo);",
+  "  @apply ring-(length:--tide-focus-ring-width) ring-(--tide-accent-subtle-border);",
   "  outline: none;",
   // 브라우저 기본 :focus-visible offset(링크·체크박스 1~2px)을 지워 forced-colors outline도 요소에 붙인다.
   "  outline-offset: 0;",
@@ -214,12 +215,12 @@ const tailwindCss = [
   "}",
   "",
   "@utility focus-field {",
-  "  border-color: var(--tide-outline-focus);",
+  "  border-color: var(--tide-accent-border);",
   ...focusHalo,
   // 오류 입력창은 같은 모양을 오류 색으로 그린다(ADR 0026).
   '  &[aria-invalid="true"] {',
   "    border-color: var(--tide-border-danger);",
-  "    @apply ring-(--tide-outline-danger-halo);",
+  "    @apply ring-(--tide-border-danger-subtle);",
   "  }",
   "}",
   "",

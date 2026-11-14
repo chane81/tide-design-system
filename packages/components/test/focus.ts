@@ -12,20 +12,25 @@ const rgb = (hex: string): string => {
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
 
-/** light Theme의 halo 색. 오류 입력창은 `danger`다. */
+/** light Theme의 halo 색(accent subtle-border, 200단계). data-color가 없으면 primary, 오류 입력창은 danger다. */
 export const haloColor = {
-  focus: rgb(color.blue[200]),
+  primary: rgb(color.blue[200]),
+  success: rgb(color.green[200]),
+  neutral: rgb(color.gray[200]),
+  info: rgb(color.cyan[200]),
   danger: rgb(color.red[200]),
 } as const;
 
-/** light Theme의 focus 테두리 색. 오류 입력창은 border-danger(red-600)다. */
+/** light Theme의 focus 테두리 색(accent border). neutral은 border-strong(gray-500)이다. */
 export const focusBorderColor = {
-  focus: rgb(color.blue[600]),
+  primary: rgb(color.blue[600]),
+  success: rgb(color.green[600]),
+  neutral: rgb(color.gray[500]),
   danger: rgb(color.red[600]),
 } as const;
 
 interface HaloOptions {
-  /** halo 색. 기본 `focus` */
+  /** halo 색. 기본 `primary` */
   readonly tone?: keyof typeof haloColor;
   /** forced-colors에서 `forced-color-adjust: none`을 쓰는 요소(Checkbox·Radio·Switch). halo가 시스템 색으로 남는다. */
   readonly adjustNone?: boolean;
@@ -34,7 +39,7 @@ interface HaloOptions {
 /** offset 없이 바깥 3px halo가 보이는지 본다. forced-colors에서는 halo 대신 투명 outline이 시스템 색으로 그려진다. */
 export function expectFocusHalo(
   element: Element,
-  { tone = "focus", adjustNone = false }: HaloOptions = {},
+  { tone = "primary", adjustNone = false }: HaloOptions = {},
 ): void {
   const style = getComputedStyle(element);
 
