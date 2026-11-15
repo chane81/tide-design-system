@@ -663,3 +663,36 @@ describe("Switch 대비 쌍", () => {
     familiesPass([["text", "subtle-active"]]);
   });
 });
+
+describe("포커스 링(focus-ring) 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"];
+
+  it("링(accent border, neutral은 border-strong) × 표면 층이 3:1로 등록되어 있다. solid 안쪽 canvas 틈도 이 쌍이 맡는다", () => {
+    for (const foreground of ["border-strong", ...tideRoles.map((role) => `border-${role}`)]) {
+      for (const background of surfaces) {
+        expect(registered(foreground, background, 3), `${foreground} × ${background}`).toBe(true);
+      }
+    }
+    for (const background of surfaces) expect(ruled("border", background, 3)).toBe(true);
+  });
+
+  it("subtle 바탕 위 링(Alert 안의 Link 등): border-<Role> × bg-<Role>-subtle이 3:1로 등록되어 있다", () => {
+    for (const role of tideRoles) {
+      expect(registered(`border-${role}`, `bg-${role}-subtle`, 3), role).toBe(true);
+    }
+  });
+
+  it("Alert 닫기 버튼 링은 on-subtle 색이라 on-subtle × subtle(4.5:1) 쌍이 맡는다", () => {
+    for (const role of tideRoles) {
+      expect(registered(`text-${role}-on-subtle`, `bg-${role}-subtle`, 4.5), role).toBe(true);
+    }
+    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
+  });
+
+  it("halo(subtle-border)는 꾸밈이라 대비 검사에서 제외되어 있다", () => {
+    const excluded = contrastExclusions.map((exclusion) => exclusion.token);
+    for (const role of ["neutral", ...tideRoles]) {
+      expect(excluded, role).toContain(`border-${role}-subtle`);
+    }
+  });
+});
