@@ -42,7 +42,7 @@ async function settle(): Promise<void> {
   await new Promise((done) => setTimeout(done, 250));
 }
 
-const dot = (input: Element): SVGElement =>
+const dot = (input: Element): HTMLElement =>
   input.parentElement!.querySelector('[data-mark="dot"]')!;
 const visible = (element: Element): boolean => getComputedStyle(element).display !== "none";
 
@@ -57,7 +57,7 @@ function Shipping(props: { readonly onValueChange?: (value: string) => void }): 
 }
 
 describe("역할과 이름", () => {
-  test("radiogroup 안에 radio가 있고, children이 이름이 되며 점 아이콘은 숨는다", async () => {
+  test("radiogroup 안에 radio가 있고, children이 이름이 되며 점은 숨는다", async () => {
     await render(<Shipping />);
     await expect.element(page.getByRole("radiogroup", { name: "배송" })).toBeInTheDocument();
     const normal = page.getByRole("radio", { name: "일반" });
@@ -273,6 +273,9 @@ describe("모양", () => {
     expect(input.parentElement!.getBoundingClientRect().height).toBe(24);
     expect(getComputedStyle(input.closest("label")!).fontSize).toBe(font);
     expect(getComputedStyle(input).borderTopLeftRadius).toBe("9999px");
+    // 점 지름은 원의 절반이다.
+    expect(dot(input).getBoundingClientRect().width).toBe(box / 2);
+    expect(dot(input).getBoundingClientRect().height).toBe(box / 2);
   });
 
   test("value는 필수이고, 지원하지 않는 size·color는 타입 오류다", () => {
@@ -286,7 +289,7 @@ describe("모양", () => {
     expect([missing, large, blue, brand]).toHaveLength(4);
   });
 
-  test("선택하면 accent solid 배경·경계와 on-solid 점이 된다", async () => {
+  test("선택하면 canvas 바탕에 2px accent 경계와 accent 점이 된다", async () => {
     await render(
       <div data-theme="light">
         <Radio value="a" color="success" defaultChecked>
@@ -298,9 +301,12 @@ describe("모양", () => {
     expect(input.closest("label")).toHaveAttribute("data-color", "success");
     if (forcedColors()) return;
     await settle();
-    expect(getComputedStyle(input).backgroundColor).toBe(resolve("var(--tide-bg-success-solid)"));
+    expect(getComputedStyle(input).backgroundColor).toBe(resolve("var(--tide-bg-canvas)"));
     expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-success)"));
-    expect(getComputedStyle(dot(input)).color).toBe(resolve("var(--tide-text-on-solid)"));
+    expect(getComputedStyle(input).borderTopWidth).toBe("2px");
+    expect(getComputedStyle(dot(input)).backgroundColor).toBe(
+      resolve("var(--tide-border-success)"),
+    );
   });
 
   describe("앱 Role", () => {
@@ -340,12 +346,12 @@ describe("모양", () => {
       expect(input.closest("label")).toHaveAttribute("data-color", "brand");
       if (forcedColors()) return;
       await settle();
-      expect(getComputedStyle(input).backgroundColor).toBe(resolve("#a85c81"));
       expect(getComputedStyle(input).borderTopColor).toBe(resolve("#a85c81"));
+      expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("#a85c81"));
     });
   });
 
-  test("label 글자에 올리면 선택됨은 solid-hover, 선택 전은 subtle 배경이 된다", async () => {
+  test("label 글자에 올리면 선택됨·선택 전 모두 subtle 배경이 되고 경계·점 색은 그대로다", async () => {
     await render(
       <div data-theme="light">
         <Shipping />
@@ -357,7 +363,10 @@ describe("모양", () => {
     await wait();
     expect(
       getComputedStyle(page.getByRole("radio", { name: "일반" }).element()).backgroundColor,
-    ).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
+    ).toBe(resolve("var(--tide-bg-primary-subtle)"));
+    expect(
+      getComputedStyle(page.getByRole("radio", { name: "일반" }).element()).borderTopColor,
+    ).toBe(resolve("var(--tide-border-primary)"));
     await userEvent.hover(page.getByText("빠른"));
     await wait();
     expect(
@@ -365,7 +374,7 @@ describe("모양", () => {
     ).toBe(resolve("var(--tide-bg-primary-subtle)"));
   });
 
-  test("누르면 hover보다 한 단계 진한 -active 배경이다(선택됨 solid-active, 선택 전 subtle-active)", async () => {
+  test("누르면 선택됨·선택 전 모두 hover보다 한 단계 진한 subtle-active 배경이다", async () => {
     await render(
       <div data-theme="light">
         <RadioGroup aria-label="배송" defaultValue="normal">
@@ -392,12 +401,66 @@ describe("모양", () => {
     // 일반을 눌렀다 떼도 선택은 일반 그대로라 빠른은 선택 전이다.
     const unchecked = await pressed("fast", "빠른");
     if (forcedColors()) {
-      expect([checked, unchecked]).toEqual([resolve("Highlight"), resolve("Canvas")]);
+      expect([checked, unchecked]).toEqual([resolve("Canvas"), resolve("Canvas")]);
 
       return;
     }
-    expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));
+    expect(checked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
     expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
+  });
+
+  test("오류면 선택한 원의 경계가 danger이고 점은 accent 그대로다", async () => {
+    await render(
+      <div data-theme="light">
+        <Radio value="a" invalid defaultChecked>
+          가
+        </Radio>
+      </div>,
+    );
+    if (forcedColors()) return;
+    await settle();
+    const input = page.getByRole("radio").element();
+    expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-danger)"));
+    expect(getComputedStyle(dot(input)).backgroundColor).toBe(
+      resolve("var(--tide-border-primary)"),
+    );
+  });
+
+  test("비활성이면 선택한 원도 border-default·bg-disabled이고 점은 text-disabled다", async () => {
+    await render(
+      <div data-theme="light">
+        <Radio value="a" disabled defaultChecked>
+          가
+        </Radio>
+      </div>,
+    );
+    if (forcedColors()) return;
+    const input = page.getByRole("radio").element();
+    expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-default)"));
+    expect(getComputedStyle(input).backgroundColor).toBe(resolve("var(--tide-bg-disabled)"));
+    expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("var(--tide-text-disabled)"));
+  });
+
+  test("아무것도 고르지 않은 묶음(모든 radio가 :indeterminate)은 원이 차지 않고 회색 경계다", async () => {
+    await render(
+      <div data-theme="light">
+        <RadioGroup aria-label="배송">
+          <Radio value="normal">일반</Radio>
+          <Radio value="fast">빠른</Radio>
+        </RadioGroup>
+      </div>,
+    );
+    await settle();
+    for (const name of ["일반", "빠른"]) {
+      const input = page.getByRole("radio", { name }).element();
+      expect(input.matches(":indeterminate"), name).toBe(true);
+      expect(visible(dot(input)), name).toBe(false);
+      if (forcedColors()) continue;
+      expect(getComputedStyle(input).backgroundColor, name).toBe(resolve("var(--tide-bg-canvas)"));
+      expect(getComputedStyle(input).borderTopColor, name).toBe(
+        resolve("var(--tide-border-strong)"),
+      );
+    }
   });
 
   test("키보드 포커스에 focus-field(테두리 focus 색 + 3px halo)가 보인다", async () => {
@@ -412,11 +475,14 @@ describe("모양", () => {
     await settle();
     const input = page.getByRole("radio", { name: "일반" }).element();
     expect(visible(dot(input))).toBe(true);
-    expect(getComputedStyle(dot(input)).color).not.toBe(getComputedStyle(input).backgroundColor);
+    expect(getComputedStyle(dot(input)).backgroundColor).not.toBe(
+      getComputedStyle(input).backgroundColor,
+    );
     expect(getComputedStyle(input).borderTopColor).not.toBe(transparent);
     if (forcedColors()) {
-      expect(getComputedStyle(input).backgroundColor).toBe(resolve("Highlight"));
-      expect(getComputedStyle(dot(input)).color).toBe(resolve("HighlightText"));
+      expect(getComputedStyle(input).backgroundColor).toBe(resolve("Canvas"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("Highlight"));
+      expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("Highlight"));
     }
   });
 

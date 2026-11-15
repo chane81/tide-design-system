@@ -24,6 +24,7 @@ import {
   type ChoiceSize,
 } from "../_internal/constants/choiceClass";
 import { cn } from "../_internal/libs/cn";
+import { checkboxInputStateClass, checkboxMarkClass } from "./constants/checkboxClass";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
@@ -105,20 +106,24 @@ export function Checkbox({
           {...control}
           ref={inputRef}
           type="checkbox"
-          className={cn(boxClass[size], choiceInputClass)}
+          className={cn(boxClass[size], choiceInputClass, checkboxInputStateClass)}
         />
         {/* 아이콘은 장식용이다. 상태는 input이 보조 기술에 알린다. */}
         <CheckIcon
           size={iconSize[size]}
           strokeWidth={3}
           data-mark="check"
-          className={cn(choiceMarkClass, "peer-checked:block peer-indeterminate:hidden")}
+          className={cn(
+            choiceMarkClass,
+            checkboxMarkClass,
+            "peer-checked:block peer-indeterminate:hidden",
+          )}
         />
         <MinusIcon
           size={iconSize[size]}
           strokeWidth={3}
           data-mark="indeterminate"
-          className={cn(choiceMarkClass, "peer-indeterminate:block")}
+          className={cn(choiceMarkClass, checkboxMarkClass, "peer-indeterminate:block")}
         />
       </span>
       {children === undefined || children === null ? null : <span>{children}</span>}

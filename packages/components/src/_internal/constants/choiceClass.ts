@@ -12,14 +12,14 @@ export const choiceRootClass =
 /** 상자보다 큰 24×24 조작 영역(WCAG 2.5.8). */
 export const choiceAreaClass = "grid size-6 shrink-0 place-items-center";
 
-/** 네이티브 input을 상자로 그린다. group-hover가 checked:보다 우선순위가 높아 체크 전 규칙에 not-checked를 붙인다. */
+/** 네이티브 input을 상자·원으로 그린다. 선택 상태 모양은 Checkbox·Radio가 각자 더한다. */
 export const choiceInputClass: string =
-  "peer col-start-1 row-start-1 m-0 appearance-none border border-strong bg-canvas cursor-pointer transition-colors checked:border-accent checked:bg-accent-solid enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:checked:group-hover/choice:bg-accent-solid-hover indeterminate:border-accent indeterminate:bg-accent-solid enabled:indeterminate:group-hover/choice:bg-accent-solid-hover enabled:not-checked:not-indeterminate:group-active/choice:bg-accent-subtle-active enabled:checked:group-active/choice:bg-accent-solid-active enabled:indeterminate:group-active/choice:bg-accent-solid-active aria-invalid:border-danger focus-visible:focus-field disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled " +
+  "peer col-start-1 row-start-1 m-0 appearance-none border border-strong bg-canvas cursor-pointer transition-colors aria-invalid:border-danger focus-visible:focus-field disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled " +
   choiceInputForcedClass;
 
-/** 상자 위에 겹치는 표시 아이콘. 누름은 input이 받는다. 보이는 조건 class는 Component가 붙인다. */
+/** 상자 위에 겹치는 표시. 누름은 input이 받는다. 색과 보이는 조건 class는 Component가 붙인다. */
 export const choiceMarkClass =
-  "pointer-events-none col-start-1 row-start-1 hidden text-accent-on-solid peer-disabled:text-disabled forced-colors:forced-color-adjust-none forced-colors:[--tide-accent-on-solid:HighlightText] forced-colors:[--tide-text-disabled:GrayText]";
+  "pointer-events-none col-start-1 row-start-1 hidden peer-disabled:text-disabled forced-colors:forced-color-adjust-none forced-colors:[--tide-text-disabled:GrayText]";
 
 /** Checkbox·Radio의 size. 상자 크기와 글자 크기만 바뀌고 조작 영역은 24×24로 같다. */
 export type ChoiceSize = "sm" | "md";
