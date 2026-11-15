@@ -115,4 +115,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ② 명확함, ③ 단순함: [ADR 0032 포커스 표시를 간격 없는 3px halo 하나로 통일한다](../decisions/0032-unified-focus-halo.md) (① 접근성보다 앞세운 사용자 결정 예외)
 - ① 접근성, ③ 단순함: [ADR 0033 primary solid를 흰 글자 4.5:1 이상인 `#2f6fe0`으로 바꾸고 blue-600 한 단계만 손으로 고친다](../decisions/0033-primary-blue-600-2f6fe0.md)
 - ① 접근성, ② 명확함: [ADR 0034 테두리 없는 요소의 포커스 표시에 2px 링을 더해 3:1을 지킨다](../decisions/0034-focus-ring-contrast.md)
-- ② 명확함, ① 접근성: [ADR 0035 고른 Radio는 바탕을 채우지 않고 accent 테두리와 가운데 점으로 그린다](../decisions/0035-radio-ring-and-dot.md)
+- ② 명확함, ① 접근성: [ADR 0035 고른 Radio는 accent 테두리와 가운데 점으로 그리고, 오류 Radio·Checkbox는 선택 표시까지 danger로 그린다](../decisions/0035-radio-ring-and-dot.md)

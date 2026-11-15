@@ -146,7 +146,7 @@ export const Horizontal: Story = {
   ),
 };
 
-/** 오류: Field의 error가 묶음에 연결되고 각 Checkbox 경계가 danger 색이 된다. */
+/** 오류: Field의 error가 묶음에 연결되고 각 Checkbox 경계가 danger 색이 된다. 체크·indeterminate면 채움도 danger다. */
 export const Invalid: Story = {
   name: "오류",
   render: () => (
@@ -156,8 +156,11 @@ export const Invalid: Story = {
           <Checkbox name="topic" value="design">
             디자인
           </Checkbox>
-          <Checkbox name="topic" value="dev">
+          <Checkbox name="topic" value="dev" defaultChecked>
             개발
+          </Checkbox>
+          <Checkbox name="topic" value="data" indeterminate>
+            데이터(일부)
           </Checkbox>
         </CheckboxGroup>
       </Field>
