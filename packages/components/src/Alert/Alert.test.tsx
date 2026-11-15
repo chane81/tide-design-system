@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo } from "../../test/focus";
+import { expectFocusRing } from "../../test/focus";
 
 import { Alert, type AlertProps } from "./Alert";
 
@@ -196,15 +196,23 @@ describe("닫기", () => {
       .toBe(resolve("var(--tide-bg-danger-subtle-hover)"));
   });
 
-  test("키보드 포커스에 focus-ring(3px halo)이 보인다", async () => {
-    await render(
-      <div data-theme="light">
-        <Alert color="success" title="완료" onClose={() => {}} />
-      </div>,
-    );
-    await userEvent.tab();
-    expectFocusHalo(page.getByRole("button", { name: "닫기" }).element(), { tone: "success" });
-  });
+  test.each(["success", "neutral"] as const)(
+    "%s 닫기 버튼은 키보드 포커스에 on-subtle 색 2px 링과 3px halo가 보인다",
+    async (color) => {
+      await render(
+        <div data-theme="light">
+          <Alert color={color} title="완료" onClose={() => {}} />
+        </div>,
+      );
+      await userEvent.tab();
+      expectFocusRing(page.getByRole("button", { name: "닫기" }).element(), {
+        tone: color,
+        ring: resolve(
+          color === "neutral" ? "var(--tide-text-default)" : "var(--tide-text-success-on-subtle)",
+        ),
+      });
+    },
+  );
 });
 
 describe("모양", () => {

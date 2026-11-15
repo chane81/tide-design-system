@@ -36,3 +36,5 @@
 - Alert 닫기 버튼(ghost)처럼 subtle 바탕 위 조작 요소는 이제 halo만 그려, `outline-focus × bg-*-subtle` 대비 쌍을 지웠다.
 - Checkbox·Radio는 `focus-field`라 오류 상태에서 포커스하면 테두리와 halo가 빨강이다. Switch는 `focus-ring`이라 오류 상태에서도 halo는 Switch의 accent 색이다.
 - Checkbox·Radio·Switch는 forced-colors에서 `forced-color-adjust: none`이라 halo가 지워지지 않는다. halo 변수(`--tide-accent-subtle-border`, Checkbox·Radio는 `--tide-border-danger-subtle`도)를 `Highlight`로 바꿔 시스템 색으로 남긴다.
+
+> 덧붙임(2026-11-15, [ADR 0034](0034-focus-ring-contrast.md)): `focus-ring`에 요소에 붙은 2px 링(accent `border`)을 더했다. halo는 그 바깥에 그대로 3px이다. 테두리 없는 요소도 링이 표면과 3:1 이상이라 위 「원칙 충돌」 예외는 없어졌다. solid 바탕 요소는 안쪽에 canvas 2px 틈을 둔다. `focus-field`, 포커스 색 규칙, 오류 색, forced-colors 결정은 그대로다.

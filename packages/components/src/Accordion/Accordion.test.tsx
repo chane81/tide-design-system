@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, expectNoFocusHalo } from "../../test/focus";
+import { expectFocusRing, expectNoFocusHalo } from "../../test/focus";
 
 import { captureWhen } from "../../test/motion";
 
@@ -255,13 +255,13 @@ describe("제어와 비제어", () => {
 });
 
 describe("모양과 포커스 표시", () => {
-  test("Tab으로 트리거에 포커스하면 focus-ring(3px halo)이 보이고, 마우스 누름에는 없다", async () => {
+  test("Tab으로 트리거에 포커스하면 focus-ring(2px 링 + 3px halo)이 보이고, 마우스 누름에는 없다", async () => {
     await render(<Example />);
     byTestId("before").focus();
     await userEvent.tab();
     await expect.element(page.getByTestId("shipping")).toHaveFocus();
     await wait(250);
-    expectFocusHalo(byTestId("shipping"));
+    expectFocusRing(byTestId("shipping"));
     expect(getComputedStyle(byTestId("shipping")).borderTopLeftRadius).toBe("6px");
     await userEvent.click(page.getByTestId("refund"));
     expectNoFocusHalo(byTestId("refund"));

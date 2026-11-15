@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo } from "../../test/focus";
+import { expectFocusRing } from "../../test/focus";
 
 import { Link, type LinkProps } from "./Link";
 
@@ -147,7 +147,7 @@ describe("색 이름(data-color)", () => {
 });
 
 describe("포커스 표시", () => {
-  test("키보드 포커스에 focus-ring(3px halo)이 보인다", async () => {
+  test("키보드 포커스에 focus-ring(2px 링 + 3px halo)이 보인다", async () => {
     await render(
       <div data-theme="light">
         <Link href="#a">안내</Link>
@@ -156,7 +156,7 @@ describe("포커스 표시", () => {
     await userEvent.tab();
     const link = page.getByRole("link");
     await expect.element(link).toHaveFocus();
-    expectFocusHalo(link.element());
+    expectFocusRing(link.element());
   });
 });
 

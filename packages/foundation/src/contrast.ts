@@ -92,6 +92,8 @@ export const contrastPairs: readonly ContrastPair[] = [
     surfaces,
     3,
   ),
+  // 포커스 링(accent border)이 subtle 바탕 위에 그려지는 곳(Alert 안의 Link 등). neutral은 3:1이 안 돼 뺐다(ADR 0034).
+  ...roles.flatMap((role) => pairs([`border-${role}`], [`bg-${role}-subtle`], 3)),
   // Switch 꺼짐 누름 thumb(UI 요소). neutral thumb은 text-default라 위의 4.5 쌍이 맡는다.
   ...roles.flatMap((role) => pairs([`text-${role}`], [`bg-${role}-subtle-active`], 3)),
 ];
@@ -119,7 +121,7 @@ export const contrastExclusions: readonly ContrastExclusion[] = [
   ...allRoles.map((role) => ({
     token: `border-${role}-subtle` as const,
     reason:
-      "파스텔 테두리(subtle-border)는 꾸밈이다. subtle 바탕과 on-subtle 글자만으로 알아볼 수 있어 경계 대비 의무가 없다. 포커스 halo로도 쓰며 표면과 3:1이 되지 않는다(light 약 1.5:1). 사용자가 알고 고른 모양이다(ADR 0032).",
+      "파스텔 테두리(subtle-border)는 꾸밈이다. subtle 바탕과 on-subtle 글자만으로 알아볼 수 있어 경계 대비 의무가 없다. 포커스 halo로도 쓴다. halo는 2px 포커스 링 바깥의 꾸밈이고, 3:1은 링(accent border)이 맡는다(ADR 0034).",
   })),
 ];
 

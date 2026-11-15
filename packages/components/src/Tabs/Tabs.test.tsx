@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, expectNoFocusHalo } from "../../test/focus";
+import { expectFocusRing, expectNoFocusHalo } from "../../test/focus";
 
 import { captureWhen } from "../../test/motion";
 
@@ -308,11 +308,11 @@ describe("제어와 비제어", () => {
 });
 
 describe("포커스 표시와 고른 표시", () => {
-  test("Tab으로 탭에 포커스하면 focus-ring(3px halo)이 보인다", async () => {
+  test("Tab으로 탭에 포커스하면 focus-ring(2px 링 + 3px halo)이 보인다", async () => {
     await render(<Example />);
     await tabIntoList();
     await expect.element(page.getByTestId("account")).toHaveFocus();
-    expectFocusHalo(byTestId("account"));
+    expectFocusRing(byTestId("account"));
     expect(getComputedStyle(byTestId("account")).borderTopLeftRadius).toBe("6px");
     await userEvent.click(page.getByTestId("security"));
     expectNoFocusHalo(byTestId("security"));
@@ -323,7 +323,7 @@ describe("포커스 표시와 고른 표시", () => {
     await tabIntoList();
     await userEvent.tab();
     await expect.element(page.getByRole("tabpanel")).toHaveFocus();
-    expectFocusHalo(panel());
+    expectFocusRing(panel());
   });
 
   test("고른 탭은 primary 글자와 2px 막대로, 고르지 않은 탭은 muted 글자에 막대가 없다", async () => {

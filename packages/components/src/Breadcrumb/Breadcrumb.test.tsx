@@ -5,7 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo } from "../../test/focus";
+import { expectFocusRing } from "../../test/focus";
 
 import {
   Breadcrumb,
@@ -163,12 +163,12 @@ describe("구분자", () => {
 });
 
 describe("포커스", () => {
-  test("Tab으로 링크만 차례로 포커스하고 focus-ring(3px halo)이 보인다", async () => {
+  test("Tab으로 링크만 차례로 포커스하고 focus-ring(2px 링 + 3px halo)이 보인다", async () => {
     await render(<Trail />);
     await userEvent.tab();
     const home = page.getByRole("link", { name: "홈" });
     await expect.element(home).toHaveFocus();
-    expectFocusHalo(home.element());
+    expectFocusRing(home.element());
     await userEvent.tab();
     await expect.element(page.getByRole("link", { name: "문서" })).toHaveFocus();
     await userEvent.tab();
