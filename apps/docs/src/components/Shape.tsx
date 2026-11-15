@@ -107,15 +107,22 @@ export function FocusIndicators(): ReactElement {
             <button
               type="button"
               tabIndex={-1}
-              className="focus-ring rounded-md bg-primary-solid px-4 py-2 text-on-solid"
+              className="focus-ring rounded-md bg-primary-solid px-4 py-2 text-on-solid inset-ring-2 inset-ring-(color:--tide-bg-canvas)"
             >
-              focus-ring
+              focus-ring (solid, canvas 틈)
+            </button>
+            <button
+              type="button"
+              tabIndex={-1}
+              className="focus-ring rounded-md px-4 py-2 text-primary"
+            >
+              focus-ring (ghost)
             </button>
             <button
               type="button"
               tabIndex={-1}
               data-color="success"
-              className="focus-ring rounded-md bg-accent-solid px-4 py-2 text-accent-on-solid"
+              className="focus-ring rounded-md bg-accent-solid px-4 py-2 text-accent-on-solid inset-ring-2 inset-ring-(color:--tide-bg-canvas)"
             >
               focus-ring (success)
             </button>
