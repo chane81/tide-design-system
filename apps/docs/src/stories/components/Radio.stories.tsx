@@ -108,7 +108,7 @@ export const Controlled: Story = {
   render: () => <ControlledExample />,
 };
 
-/** 선택 모양: 안 고른 원, 고른 원, 오류, 비활성. 고른 원은 canvas 바탕 + accent 테두리 + 가운데 점이다. */
+/** 선택 모양: 안 고른 원, 고른 원, 오류(테두리·점 danger), 비활성. 고른 원은 canvas 바탕 + accent 테두리 + 가운데 점이다. */
 export const States: Story = {
   name: "선택 모양",
   render: () => (
