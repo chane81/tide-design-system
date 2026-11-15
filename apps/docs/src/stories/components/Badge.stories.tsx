@@ -31,6 +31,7 @@ const meta = {
     children: "완료",
     variant: "subtle",
     size: "md",
+    shape: "rounded",
     color: "neutral",
   },
   // react-docgen이 `Extract<...>` 별칭을 풀지 못한다. 선택지와 타입을 직접 적는다.
@@ -48,6 +49,11 @@ const meta = {
       control: "inline-radio",
       options: ["sm", "md"],
       table: { type: { summary: '"sm" | "md"' }, defaultValue: { summary: '"md"' } },
+    },
+    shape: {
+      control: "inline-radio",
+      options: ["rounded", "pill"],
+      table: { type: { summary: '"rounded" | "pill"' }, defaultValue: { summary: '"rounded"' } },
     },
     color: {
       control: "select",
@@ -153,6 +159,42 @@ export const Sizes: Story = {
       <Badge size="md" color="success">
         md 완료
       </Badge>
+    </div>
+  ),
+};
+
+/** shape 2개. 한 화면에서는 하나로 맞춘다. */
+export const Shapes: Story = {
+  name: "모양(shape)",
+  render: () => (
+    <div className="flex flex-col gap-3">
+      {(["rounded", "pill"] as const).map((shape) => (
+        <div key={shape} className="flex flex-wrap items-center gap-2">
+          {(["sm", "md"] as const).map((size) => (
+            <Badge key={size} shape={shape} size={size} color="primary">
+              {shape} {size}
+            </Badge>
+          ))}
+          <Badge shape={shape} color="success" variant="solid">
+            <CheckIcon />
+            배포됨
+          </Badge>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+/** Don't: 한 화면에서 모양을 섞는다. */
+export const DontMixShapes: Story = {
+  name: "Don't: 모양을 섞어 쓰기",
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Badge color="success">정상</Badge>
+      <Badge shape="pill" color="warning">
+        지연
+      </Badge>
+      <Badge color="danger">중단</Badge>
     </div>
   ),
 };
