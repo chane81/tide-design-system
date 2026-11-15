@@ -65,6 +65,16 @@ import * as BadgeStories from "./Badge.stories";
 
 <Canvas of={BadgeStories.Sizes} />
 
+### 모양 바꾸기
+
+`shape`는 `rounded`(기본, 모서리 4px)와 `pill`(양끝이 둥근 알약 모양) 두 가지입니다. `pill`은 양끝 곡선만큼 좌우 여백이 한 단계 넓습니다(`sm` 8px, `md` 10px). 높이와 글자는 같습니다.
+
+- 대부분은 `rounded`를 씁니다. 표·목록처럼 촘촘한 곳에서 반듯하게 줄 맞춰 보입니다.
+- 둥근 요소가 많은 화면이나, 짧은 상태 하나를 부드럽게 보여 줄 때 `pill`을 씁니다.
+- 한 화면 안에서는 한 모양으로 맞춥니다. 모양이 다르면 뜻이 다른 것처럼 보입니다.
+
+<Canvas of={BadgeStories.Shapes} />
+
 ### 아이콘과 함께 쓰기
 
 아이콘은 12px로 맞춰지고 텍스트 앞에 둡니다. 아이콘만 두지 않습니다.
@@ -97,6 +107,12 @@ import * as BadgeStories from "./Badge.stories";
 
 <Canvas of={BadgeStories.DontFaintForUrgent} />
 
+### Don't: 한 화면에서 모양을 섞는다
+
+모양에는 뜻이 없습니다. 섞으면 `pill`인 Badge만 다른 종류로 읽힙니다.
+
+<Canvas of={BadgeStories.DontMixShapes} />
+
 ### Don't: 색만으로 구분한다
 
 색을 구분하기 어려운 사용자와 스크린 리더 사용자는 두 Badge가 같은 상태로 보입니다.
@@ -124,6 +140,6 @@ Badge는 포커스와 키보드 동작이 없습니다. 지울 수 있는 값은
 
 ## Props
 
-서버 컴포넌트로 쓸 수 있습니다. `span`의 props를 모두 받습니다(`color`는 색 이름 `Color`로 바뀝니다). `ref`는 `span`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `rounded-full`). 루트에는 `data-color`가 붙습니다.
+서버 컴포넌트로 쓸 수 있습니다. `span`의 props를 모두 받습니다(`color`는 색 이름 `Color`로 바뀝니다). `ref`는 `span`에 연결되고, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다(예: `px-3`). 루트에는 `data-color`가 붙습니다.
 
 <ArgTypes of={BadgeStories} />

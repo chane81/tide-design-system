@@ -113,7 +113,7 @@ Button류 Component의 Variant 값 집합. `solid`, `subtle`, `outline`, `ghost`
 _Avoid_: kind, appearance, 강도(Token 쪽 개념과 혼동)
 
 **Badge (배지)**:
-상태나 분류를 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다. 상태는 Role, 분류는 색 계열 이름으로 색을 고른다(ADR 0017).
+상태나 분류를 보여주는 짧은 라벨. 사용자와 상호작용하지 않는다. 상태는 Role, 분류는 색 계열 이름으로 색을 고른다(ADR 0017). 모양은 `shape`로 고른다: `rounded`(기본, 모서리 4px)·`pill`(양끝이 둥근 알약).
 _Avoid_: lozenge, label(텍스트 스타일 label과 혼동)
 
 **Alert (알림)**:
