@@ -4,7 +4,13 @@ import { describe, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, expectNoFocusHalo, focusBorderColor, haloColor } from "./focus";
+import {
+  expectFocusHalo,
+  expectFocusRing,
+  expectNoFocusHalo,
+  focusBorderColor,
+  haloColor,
+} from "./focus";
 
 function rgb(hex: string): string {
   const [r, g, b] = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
@@ -138,7 +144,7 @@ describe("Elevation", () => {
 });
 
 describe("포커스 표시", () => {
-  test("focus-ring은 키보드 포커스에서 offset 없는 3px halo만 두고 테두리 색은 그대로다", async () => {
+  test("focus-ring은 키보드 포커스에서 요소에 붙은 2px 링과 그 바깥 3px halo를 두고 테두리 색은 그대로다", async () => {
     await render(
       <button
         type="button"
@@ -151,8 +157,18 @@ describe("포커스 표시", () => {
     await userEvent.tab();
 
     expect(document.activeElement).toBe(button);
-    expectFocusHalo(button);
+    expectFocusRing(button);
     if (!forcedColors()) expect(getComputedStyle(button).borderTopColor).toBe(transparent);
+  });
+
+  test("focus-ring은 여러 줄로 나뉜 링크도 줄마다 링을 닫는다", async () => {
+    await render(
+      <a href="#x" className="focus-ring">
+        링크
+      </a>,
+    );
+    if (forcedColors()) return;
+    expect(getComputedStyle(page.getByRole("link").element()).boxDecorationBreak).toBe("clone");
   });
 
   test("focus-ring halo는 shadow-*와 함께 써도 그림자를 지우지 않는다", async () => {
@@ -163,7 +179,7 @@ describe("포커스 표시", () => {
     );
     if (forcedColors()) return;
     const style = getComputedStyle(page.getByTestId("box").element());
-    expect(style.boxShadow).toContain(`${haloColor.primary} 0px 0px 0px 3px`);
+    expect(style.boxShadow).toContain(`${haloColor.primary} 0px 0px 0px 5px`);
     expect(tideLayers(style.boxShadow)).toHaveLength(2);
   });
 

@@ -50,9 +50,9 @@ const thumbSizeClass: Record<SwitchSize, string> = {
 };
 
 // hover·누름은 루트 label(이름 붙인 group/switch)에서만 반응한다. label을 눌러도 토글되기 때문이다.
-// 꺼짐 누름 thumb은 3:1 UI 대비 쌍으로 등록되어 있다(ADR 0023).
+// 꺼짐 누름 thumb은 3:1 UI 대비 쌍으로 등록되어 있다(ADR 0023). 켜짐 포커스는 링이 track과 같은 색이라 canvas 틈을 둔다(ADR 0034).
 const trackClass =
-  "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-accent-subtle group-active/switch:not-checked:enabled:bg-accent-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
+  "peer m-0 shrink-0 cursor-pointer appearance-none rounded-full border border-strong bg-transparent transition-colors aria-invalid:border-danger focus-visible:focus-ring focus-visible:checked:enabled:inset-ring-2 focus-visible:checked:enabled:inset-ring-(color:--tide-bg-canvas) checked:enabled:border-accent checked:enabled:bg-accent-solid group-hover/switch:checked:enabled:bg-accent-solid-hover group-active/switch:checked:enabled:bg-accent-solid-active group-hover/switch:not-checked:enabled:bg-accent-subtle group-active/switch:not-checked:enabled:bg-accent-subtle-active disabled:cursor-not-allowed disabled:border-default disabled:bg-disabled";
 
 // hover가 없는 터치 기기에서도 맞도록 thumb 색은 active에도 붙인다.
 const thumbClass =
@@ -61,7 +61,7 @@ const thumbClass =
 // forced-colors는 배경을 Canvas로 덮어 thumb·켜진 track이 사라진다. adjust를 끄고 쓰는 Token 변수를 시스템 색으로
 // 바꾼다(@theme inline이라 바로 반영). 상태 class를 다시 적지 않아 CSS 순서에 기대지 않는다.
 const trackForcedClass =
-  "forced-colors:forced-color-adjust-none forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-accent-subtle-border:Highlight]";
+  "forced-colors:forced-color-adjust-none forced-colors:[--tide-bg-canvas:Canvas] forced-colors:[--tide-border-strong:CanvasText] forced-colors:[--tide-border-danger:CanvasText] forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-accent-solid:Highlight] forced-colors:[--tide-accent-solid-hover:Highlight] forced-colors:[--tide-accent-solid-active:Highlight] forced-colors:[--tide-accent-subtle:Canvas] forced-colors:[--tide-accent-subtle-active:Canvas] forced-colors:[--tide-border-default:GrayText] forced-colors:[--tide-bg-disabled:Canvas] forced-colors:[--tide-accent-subtle-border:Highlight]";
 const thumbForcedClass =
   "forced-colors:forced-color-adjust-none forced-colors:[--tide-text-muted:CanvasText] forced-colors:[--tide-accent-text:CanvasText] forced-colors:[--tide-accent-on-solid:HighlightText] forced-colors:[--tide-text-disabled:GrayText]";
 

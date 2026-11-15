@@ -21,6 +21,9 @@ export const alertDescriptionClass = "text-body-sm";
 /** 닫기 버튼(24px)을 음수 margin으로 겹쳐 첫 줄 높이(20px)를 늘리지 않는다. */
 export const alertCloseClass = "-my-0.5 -me-1";
 
-/** subtle 바탕 위 닫기 버튼. ghost 기본 색을 on-subtle·subtle-hover·subtle-active로 덮어쓴다(ADR 0022·0023). */
+/**
+ * subtle 바탕 위 닫기 버튼. ghost 기본 색을 on-subtle·subtle-hover·subtle-active로 덮어쓴다(ADR 0022·0023).
+ * 포커스 링도 on-subtle로 그린다. neutral border-strong은 subtle 바탕과 3:1이 안 된다(ADR 0034). focus-ring보다 이기도록 important.
+ */
 export const alertSubtleCloseClass =
-  "text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active";
+  "text-accent-on-subtle hover:bg-accent-subtle-hover active:bg-accent-subtle-active focus-visible:ring-offset-(color:--tide-accent-on-subtle)!";

@@ -7,7 +7,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, focusBorderColor } from "../../test/focus";
+import { expectFocusHalo, expectFocusRing, focusBorderColor } from "../../test/focus";
 
 import { Button, type ButtonProps } from "./Button";
 
@@ -452,7 +452,7 @@ describe("press 축소", () => {
 });
 
 describe("포커스 표시", () => {
-  test("solid·subtle·ghost는 키보드 포커스에 focus-ring(3px halo)만 보이고 테두리는 투명 그대로다", async () => {
+  test("solid·subtle·ghost는 키보드 포커스에 focus-ring(2px 링 + 3px halo)이 보이고 테두리는 투명 그대로다", async () => {
     await render(
       <div data-theme="light">
         <Button variant="solid">solid</Button>
@@ -464,7 +464,8 @@ describe("포커스 표시", () => {
       await userEvent.tab();
       const button = page.getByRole("button", { name }).element();
       expect(document.activeElement).toBe(button);
-      expectFocusHalo(button);
+      // solid는 링이 바탕과 같은 색이라 안쪽에 canvas 틈을 둔다.
+      expectFocusRing(button, { gap: name === "solid" });
       if (!forcedColors()) expect(getComputedStyle(button).borderTopColor).toBe(transparent);
     }
   });
@@ -490,14 +491,14 @@ describe("포커스 표시", () => {
     },
   );
 
-  test("solid danger는 halo도 danger 200단계다", async () => {
+  test("solid danger는 링이 danger 600단계, halo가 danger 200단계다", async () => {
     await render(
       <div data-theme="light">
         <Button color="danger">삭제</Button>
       </div>,
     );
     await userEvent.tab();
-    expectFocusHalo(page.getByRole("button").element(), { tone: "danger" });
+    expectFocusRing(page.getByRole("button").element(), { tone: "danger", gap: true });
   });
 });
 

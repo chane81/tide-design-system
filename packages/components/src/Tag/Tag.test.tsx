@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo } from "../../test/focus";
+import { expectFocusRing } from "../../test/focus";
 
 import { Tag, TagGroup, type TagGroupProps, type TagProps } from "./index";
 
@@ -328,11 +328,11 @@ describe("모양과 포커스 표시", () => {
     expect(byTestId("sales")).toHaveAttribute("data-color", "gray");
   });
 
-  test("Tab으로 태그에 포커스하면 focus-ring(3px halo)이 보인다", async () => {
+  test("Tab으로 태그에 포커스하면 focus-ring(2px 링 + 3px halo)이 보인다", async () => {
     await render(<Example />);
     await tabIntoGroup();
     await expect.element(page.getByTestId("design")).toHaveFocus();
-    expectFocusHalo(byTestId("design"));
+    expectFocusRing(byTestId("design"));
   });
 });
 

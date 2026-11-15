@@ -5,7 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo } from "../../test/focus";
+import { expectFocusRing } from "../../test/focus";
 
 import {
   Pagination,
@@ -250,13 +250,13 @@ describe("이전/다음", () => {
 });
 
 describe("포커스", () => {
-  test("Tab으로 번호 링크에 포커스하면 3px halo가 보인다", async () => {
+  test("Tab으로 번호 링크에 포커스하면 2px 링과 3px halo가 보인다", async () => {
     await render(<Pages current={1} />);
     await userEvent.tab();
     const first = page.getByRole("link", { name: "1", exact: true });
     // 첫 페이지라 disabled인 이전 버튼은 건너뛴다.
     await expect.element(first).toHaveFocus();
-    expectFocusHalo(first.element());
+    expectFocusRing(first.element());
   });
 
   test("forced-colors에서는 번호의 투명 border가 경계로 보인다", async () => {

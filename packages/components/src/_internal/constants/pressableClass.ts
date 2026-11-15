@@ -31,9 +31,13 @@ export const pressableDisabledClass: Record<FillVariant, string> = {
   ghost: "cursor-not-allowed border-transparent text-disabled",
 };
 
-/** 포커스 표시. 색 있는 테두리가 보이는 outline만 테두리도 바꾸고, 나머지는 투명 border라 halo만 둔다(ADR 0032). */
+/**
+ * 포커스 표시. 색 있는 테두리가 보이는 outline만 테두리 색을 바꾸고, 나머지는 링 + halo를 둔다(ADR 0032·0034).
+ * solid는 링이 바탕과 같은 색이라 안쪽에 canvas 2px 틈을 둔다.
+ */
 export const pressableFocusClass: Record<FillVariant, string> = {
-  solid: "focus-visible:focus-ring",
+  solid:
+    "focus-visible:focus-ring focus-visible:inset-ring-2 focus-visible:inset-ring-(color:--tide-bg-canvas)",
   subtle: "focus-visible:focus-ring",
   outline: "focus-visible:focus-field",
   ghost: "focus-visible:focus-ring",

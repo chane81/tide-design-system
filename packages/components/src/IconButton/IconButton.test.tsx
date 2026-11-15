@@ -7,7 +7,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, focusBorderColor } from "../../test/focus";
+import { expectFocusHalo, expectFocusRing, focusBorderColor } from "../../test/focus";
 
 import { IconButton, type IconButtonProps } from "./IconButton";
 
@@ -255,7 +255,7 @@ describe("press 축소", () => {
 });
 
 describe("포커스 표시와 forced-colors", () => {
-  test("ghost는 키보드 포커스에 focus-ring(3px halo)만 보인다", async () => {
+  test("ghost는 키보드 포커스에 focus-ring(2px 링 + 3px halo)이 보인다", async () => {
     await render(
       <div data-theme="light">
         <IconButton aria-label="설정" variant="ghost">
@@ -265,7 +265,7 @@ describe("포커스 표시와 forced-colors", () => {
     );
     await userEvent.tab();
     const button = page.getByRole("button").element();
-    expectFocusHalo(button);
+    expectFocusRing(button);
     if (!forcedColors()) expect(getComputedStyle(button).borderTopColor).toBe(transparent);
   });
 

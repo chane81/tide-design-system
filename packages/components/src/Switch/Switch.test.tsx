@@ -4,7 +4,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { expectFocusHalo, expectNoFocusHalo } from "../../test/focus";
+import { expectFocusRing, expectNoFocusHalo } from "../../test/focus";
 
 import { Field } from "../Field/Field";
 import { Switch, type SwitchProps } from "./Switch";
@@ -465,7 +465,7 @@ describe("색", () => {
 });
 
 describe("포커스 표시", () => {
-  test("키보드 포커스에 focus-ring(3px halo)만 보이고 track 경계 색은 그대로다", async () => {
+  test("키보드 포커스에 focus-ring(2px 링 + 3px halo)만 보이고 track 경계 색은 그대로다", async () => {
     await render(
       <div data-theme="light">
         <Switch>알림</Switch>
@@ -474,10 +474,21 @@ describe("포커스 표시", () => {
     await userEvent.tab();
     await settle();
     const { track } = parts("알림");
-    expectFocusHalo(track, { adjustNone: true });
+    expectFocusRing(track, { adjustNone: true });
     if (!forcedColors()) {
       expect(getComputedStyle(track).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
     }
+  });
+
+  test("켜진 Switch는 링이 track과 같은 색이라 안쪽에 canvas 2px 틈이 보인다", async () => {
+    await render(
+      <div data-theme="light">
+        <Switch defaultChecked>알림</Switch>
+      </div>,
+    );
+    await userEvent.tab();
+    await settle();
+    expectFocusRing(parts("알림").track, { adjustNone: true, gap: true });
   });
 
   test("마우스로 누르면 포커스 표시가 보이지 않는다", async () => {
