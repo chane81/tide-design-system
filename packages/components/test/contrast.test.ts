@@ -696,3 +696,26 @@ describe("포커스 링(focus-ring) 대비 쌍", () => {
     }
   });
 });
+
+describe("Radio 대비 쌍", () => {
+  const tideRoles = ["primary", "success", "warning", "danger", "info"];
+
+  it("고른 원의 경계·점(accent border) × 표면 층이 3:1로 등록되어 있다", () => {
+    for (const role of tideRoles) {
+      for (const background of surfaces) {
+        expect(registered(`border-${role}`, background, 3), `${role} × ${background}`).toBe(true);
+      }
+    }
+    for (const background of surfaces) expect(ruled("border", background, 3)).toBe(true);
+  });
+
+  it("hover·누름 바탕(subtle·subtle-active) 위 경계·점이 3:1로 등록되어 있다", () => {
+    for (const role of tideRoles) {
+      for (const state of ["subtle", "subtle-active"]) {
+        expect(registered(`border-${role}`, `bg-${role}-${state}`, 3), `${role} ${state}`).toBe(
+          true,
+        );
+      }
+    }
+  });
+});

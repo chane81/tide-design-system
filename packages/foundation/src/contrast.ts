@@ -93,7 +93,10 @@ export const contrastPairs: readonly ContrastPair[] = [
     3,
   ),
   // 포커스 링(accent border)이 subtle 바탕 위에 그려지는 곳(Alert 안의 Link 등). neutral은 3:1이 안 돼 뺐다(ADR 0034).
-  ...roles.flatMap((role) => pairs([`border-${role}`], [`bg-${role}-subtle`], 3)),
+  // 고른 Radio의 경계·점 × hover(subtle)·누름(subtle-active) 바탕도 3:1이다(ADR 0035).
+  ...roles.flatMap((role) =>
+    pairs([`border-${role}`], [`bg-${role}-subtle`, `bg-${role}-subtle-active`], 3),
+  ),
   // Switch 꺼짐 누름 thumb(UI 요소). neutral thumb은 text-default라 위의 4.5 쌍이 맡는다.
   ...roles.flatMap((role) => pairs([`text-${role}`], [`bg-${role}-subtle-active`], 3)),
 ];

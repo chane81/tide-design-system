@@ -73,7 +73,7 @@ describe("대비 쌍", () => {
     );
   });
 
-  it("Role 글자 × 같은 Role faint는 4.5:1(outline·ghost hover, ADR 0025), × subtle-hover 쌍은 없고, border × subtle은 포커스 링 쌍뿐이고, text × subtle-active는 thumb용 3:1뿐이다(ADR 0022·0023)", () => {
+  it("Role 글자 × 같은 Role faint는 4.5:1(outline·ghost hover, ADR 0025), × subtle-hover 쌍은 없고, border × subtle은 포커스 링·Radio 쌍뿐이고, text × subtle-active는 thumb용 3:1뿐이다(ADR 0022·0023)", () => {
     const roleText = /^text-(primary|success|warning|danger|info)$/;
     const hover = contrastPairs.filter(
       (pair) => roleText.test(pair.foreground) && pair.background.endsWith("-faint"),
@@ -92,7 +92,7 @@ describe("대비 쌍", () => {
           roleText.test(pair.foreground) && ["bg-hover", "bg-active"].includes(pair.background),
       ),
     ).toEqual([]);
-    // border × subtle은 포커스 링 쌍(3:1)뿐이다. Alert 경계(border-*-subtle)는 꾸밈이라 없다(ADR 0034).
+    // border × subtle은 포커스 링·고른 Radio 쌍(3:1)뿐이다. Alert 경계(border-*-subtle)는 꾸밈이라 없다(ADR 0034·0035).
     const ringOnSubtle = contrastPairs.filter(
       (pair) => pair.foreground.startsWith("border-") && pair.background.endsWith("-subtle"),
     );
