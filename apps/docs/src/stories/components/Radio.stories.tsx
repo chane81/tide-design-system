@@ -108,6 +108,27 @@ export const Controlled: Story = {
   render: () => <ControlledExample />,
 };
 
+/** 선택 모양: 안 고른 원, 고른 원, 오류, 비활성. 고른 원은 canvas 바탕 + accent 테두리 + 가운데 점이다. */
+export const States: Story = {
+  name: "선택 모양",
+  render: () => (
+    <div className="flex flex-col gap-2">
+      <Radio value="off" name="states-off">
+        안 고름
+      </Radio>
+      <Radio value="on" name="states-on" defaultChecked>
+        고름
+      </Radio>
+      <Radio value="invalid" name="states-invalid" invalid defaultChecked>
+        오류
+      </Radio>
+      <Radio value="disabled" name="states-disabled" disabled defaultChecked>
+        비활성
+      </Radio>
+    </div>
+  ),
+};
+
 /** 오류·필수: Field의 error·required가 묶음과 각 Radio에 연결된다. */
 export const Invalid: Story = {
   name: "오류",

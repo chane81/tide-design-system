@@ -35,6 +35,12 @@ import * as RadioStories from "./Radio.stories";
 
 <Canvas of={RadioStories.Sizes} />
 
+### 선택 모양
+
+고른 원은 바탕을 채우지 않고 canvas 바탕에 2px accent 테두리와 가운데 점(원 지름의 절반: `md` 10px, `sm` 8px)을 그립니다. 안 고른 원은 회색 테두리입니다. 마우스를 올리거나 누르면 바탕만 옅은 accent(subtle, subtle-active)가 되고 테두리·점 색은 그대로입니다. 오류면 테두리가 danger 색, 비활성이면 회색입니다. 아무것도 고르지 않은 묶음도 모두 안 고른 원으로 보입니다.
+
+<Canvas of={RadioStories.States} />
+
 ### 색 고르기
 
 `color`로 선택한 원 색을 Role 중에서 고릅니다. 기본값은 `primary`입니다.
@@ -87,7 +93,8 @@ Field의 `error`는 묶음에 연결되고 각 Radio 경계가 danger 색이 됩
 - 오류·필수: 각 Radio에 `aria-invalid="true"`, `required`가 붙고, 묶음에 `aria-required`가 붙습니다.
 - 포커스 표시: 키보드 포커스에 원 테두리가 포커스 색으로 바뀌고 바깥에 3px halo가 보입니다(`focus-field`). 오류 상태에서는 테두리와 halo가 오류 색입니다.
 - 누르는 영역: 원 크기와 상관없이 24×24px 이상입니다.
-- 고대비 모드(forced-colors): 경계와 선택 점이 시스템 색으로 보입니다.
+- 고대비 모드(forced-colors): 경계와 선택 점이 시스템 색(Highlight)으로 보입니다.
+- 대비: 고른 원의 테두리·점은 바탕과 3:1 이상입니다(primary light 4.70, hover 4.00, 누름 3.45 / dark 5.57, 4.70, 3.55).
 
 ### 앱이 할 일
 
