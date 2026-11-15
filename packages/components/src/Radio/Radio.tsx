@@ -2,7 +2,6 @@
 // 화살표 이동과 단일 선택은 같은 `name`의 네이티브 라디오가 맡는다(ADR 0004).
 // ref와 HTML 속성은 input에, className·style은 루트 label에 간다(ADR 0015).
 
-import { CircleIcon } from "@tide-design/icons";
 import {
   use,
   type ChangeEvent,
@@ -22,6 +21,7 @@ import {
   type ChoiceSize,
 } from "../_internal/constants/choiceClass";
 import { cn } from "../_internal/libs/cn";
+import { radioDotClass, radioInputStateClass, radioMarkClass } from "./constants/radioClass";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
@@ -49,9 +49,6 @@ const boxClass: Record<ChoiceSize, string> = {
   sm: "size-4 rounded-full",
   md: "size-5 rounded-full",
 };
-
-// 채운 원 아이콘이라 선 두께 2px이 더해진다.
-const dotSize: Record<ChoiceSize, number> = { sm: 6, md: 8 };
 
 /**
  * 네이티브 라디오 버튼. 보통 `RadioGroup` 안에 둔다. 묶음 밖에서는 `name`·`checked`·`onChange`를 직접 준다.
@@ -118,14 +115,13 @@ export function Radio({
           name={name ?? group?.name}
           value={value}
           onChange={handleChange}
-          className={cn(boxClass[size], choiceInputClass)}
+          className={cn(boxClass[size], choiceInputClass, radioInputStateClass)}
         />
-        {/* 장식용 점. 채운 원이라 forced-colors에서도 글자색으로 보인다. */}
-        <CircleIcon
-          size={dotSize[size]}
-          fill="currentColor"
+        {/* 장식용 점. 상태는 input이 보조 기술에 알린다. */}
+        <span
+          aria-hidden="true"
           data-mark="dot"
-          className={cn(choiceMarkClass, "peer-checked:block")}
+          className={cn(choiceMarkClass, radioMarkClass, radioDotClass[size], "peer-checked:block")}
         />
       </span>
       {children === undefined || children === null ? null : <span>{children}</span>}

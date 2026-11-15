@@ -59,7 +59,7 @@ import * as CheckboxStories from "./Checkbox.stories";
 
 ### 오류 보이기
 
-Field의 `error`를 주면 각 Checkbox 경계가 danger 색이 되고 메시지가 묶음에 연결됩니다.
+Field의 `error`를 주면 각 Checkbox 경계가 danger 색이 되고 메시지가 묶음에 연결됩니다. 체크·indeterminate 상태면 상자 채움도 Checkbox 색 대신 danger 색(표시는 흰색)이고, hover·누름도 danger 계열입니다. 비활성이면 비활성 색이 이깁니다.
 
 <Canvas of={CheckboxStories.Invalid} />
 
