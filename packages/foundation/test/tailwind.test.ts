@@ -435,6 +435,14 @@ describe("tailwind.css radius·Elevation·포커스 표시", () => {
     },
   );
 
+  it("focus-ring은 요소에 붙은 2px 링(ring-offset)을 accent border 색으로 그리고, focus-field에는 링이 없다", () => {
+    const ring = ruleBody(css, "focus-ring");
+    expect(ring).toContain("--tw-ring-offset-width: 2px");
+    expect(ring).toContain("--tw-ring-offset-color: var(--tide-accent-border)");
+    expect(ring).toContain("box-decoration-break: clone");
+    expect(ruleBody(css, "focus-field")).not.toContain("--tw-ring-offset-color");
+  });
+
   it("focus-ring은 테두리 색을 바꾸지 않고, focus-field는 테두리를 accent border 색으로 바꾼다", () => {
     expect(ruleBody(css, "focus-ring")).not.toContain("border-color");
     expect(ruleBody(css, "focus-field")).toContain("border-color: var(--tide-accent-border)");

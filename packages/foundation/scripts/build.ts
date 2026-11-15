@@ -147,17 +147,31 @@ const tokensCss = [
   ...tideColorNames.flatMap((name) => [dataColorRule(name), ""]),
 ].join("\n");
 
-// 포커스 색은 accent 슬롯을 따른다(halo subtle-border, 테두리 border. ADR 0032).
-// halo를 ring utility로 그려 shadow-*와 함께 써도 그림자가 남는다(tailwindcss 4.3.5).
+// 포커스 색은 accent 슬롯을 따른다(링·테두리 border, halo subtle-border. ADR 0032·0034).
+// 링·halo는 ring utility(box-shadow)로 그린다. shadow-*와 합성되고, transition-colors가 전환하는 outline-color를 쓰지 않는다(tailwindcss 4.3.5).
 // 투명 outline은 forced-colors 안에만 둔다. 평소에 두면 transition-colors가 outline 색을 전환해 클릭 직후 번쩍인다.
-const focusHalo: string[] = [
-  "  @apply ring-(length:--tide-focus-ring-width) ring-(--tide-accent-subtle-border);",
+const focusOutline: string[] = [
   "  outline: none;",
   // 브라우저 기본 :focus-visible offset(링크·체크박스 1~2px)을 지워 forced-colors outline도 요소에 붙인다.
   "  outline-offset: 0;",
   "  @media (forced-colors: active) {",
   "    outline: var(--tide-focus-ring-width) solid transparent;",
   "  }",
+];
+
+// 요소에 붙은 2px 링(ring-offset 자리) + 그 바깥 halo. ring 두께는 링을 포함해 재므로 halo는 링 밖으로 --tide-focus-ring-width만큼 보인다.
+const focusRingCss: string[] = [
+  "  @apply ring-offset-2 ring-offset-(color:--tide-accent-border) ring-(length:--tide-focus-ring-width) ring-(--tide-accent-subtle-border);",
+  // 여러 줄로 나뉜 링크도 줄마다 링을 닫는다.
+  "  -webkit-box-decoration-break: clone;",
+  "  box-decoration-break: clone;",
+  ...focusOutline,
+];
+
+const focusFieldCss: string[] = [
+  "  border-color: var(--tide-accent-border);",
+  "  @apply ring-(length:--tide-focus-ring-width) ring-(--tide-accent-subtle-border);",
+  ...focusOutline,
 ];
 
 // Tailwind 변수는 --tide-*를 가리키는 내부 연결이고 공개 계약이 아니다. 기본값 제거는 tailwindcss 4.3.5 기준이다.
@@ -211,12 +225,11 @@ const tailwindCss = [
   "}",
   "",
   "@utility focus-ring {",
-  ...focusHalo,
+  ...focusRingCss,
   "}",
   "",
   "@utility focus-field {",
-  "  border-color: var(--tide-accent-border);",
-  ...focusHalo,
+  ...focusFieldCss,
   // 오류 입력창은 같은 모양을 오류 색으로 그린다(ADR 0026).
   '  &[aria-invalid="true"] {',
   "    border-color: var(--tide-border-danger);",
