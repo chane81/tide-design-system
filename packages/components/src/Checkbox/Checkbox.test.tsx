@@ -461,6 +461,96 @@ describe("오류", () => {
   });
 });
 
+describe("오류 채움(ADR 0035)", () => {
+  const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
+  const bg = (element: Element): string => getComputedStyle(element).backgroundColor;
+
+  test("체크·indeterminate 오류 Checkbox는 Checkbox 색 대신 danger solid로 차고 표시는 흰색이다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox invalid defaultChecked>
+          체크
+        </Checkbox>
+        <Checkbox invalid indeterminate>
+          일부
+        </Checkbox>
+      </div>,
+    );
+    await settle();
+    const checked = page.getByRole("checkbox", { name: "체크" }).element();
+    const partial = page.getByRole("checkbox", { name: "일부" }).element();
+    if (forcedColors()) {
+      expect([bg(checked), bg(partial)]).toEqual([resolve("Highlight"), resolve("Highlight")]);
+
+      return;
+    }
+    for (const input of [checked, partial]) {
+      expect(bg(input)).toBe(resolve("var(--tide-bg-danger-solid)"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-danger)"));
+    }
+    expect(getComputedStyle(mark(checked, "check")).color).toBe(
+      resolve("var(--tide-text-on-solid)"),
+    );
+    expect(getComputedStyle(mark(partial, "indeterminate")).color).toBe(
+      resolve("var(--tide-text-on-solid)"),
+    );
+  });
+
+  test("체크된 오류 Checkbox의 hover·누름은 danger solid-hover·solid-active다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox invalid defaultChecked color="success">
+          <span data-testid="label">체크</span>
+        </Checkbox>
+      </div>,
+    );
+    const input = page.getByRole("checkbox").element();
+    await userEvent.hover(page.getByTestId("label"));
+    await wait();
+    const hovered = bg(input);
+    await commands.mouseDownOn("label");
+    await wait();
+    const pressed = bg(input);
+    await commands.mouseUp();
+    if (forcedColors()) return;
+    expect(hovered).toBe(resolve("var(--tide-bg-danger-solid-hover)"));
+    expect(pressed).toBe(resolve("var(--tide-bg-danger-solid-active)"));
+  });
+
+  test("체크 전 오류 Checkbox는 테두리만 danger이고 hover 바탕은 danger subtle이다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox invalid>
+          <span data-testid="label">동의</span>
+        </Checkbox>
+      </div>,
+    );
+    await settle();
+    const input = page.getByRole("checkbox").element();
+    if (forcedColors()) return;
+    expect(bg(input)).toBe(resolve("var(--tide-bg-canvas)"));
+    expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-danger)"));
+    await userEvent.hover(page.getByTestId("label"));
+    await wait();
+    expect(bg(input)).toBe(resolve("var(--tide-bg-danger-subtle)"));
+  });
+
+  test("비활성이면 오류여도 비활성 색이다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox invalid disabled defaultChecked>
+          체크
+        </Checkbox>
+      </div>,
+    );
+    if (forcedColors()) return;
+    const input = page.getByRole("checkbox").element();
+    expect(bg(input)).toBe(resolve("var(--tide-bg-disabled)"));
+    expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-default)"));
+    expect(getComputedStyle(mark(input, "check")).color).toBe(resolve("var(--tide-text-disabled)"));
+  });
+});
+
 describe("포커스 표시", () => {
   test("키보드 포커스에 focus-field(테두리 focus 색 + 3px halo)가 상자 둘레에 보인다", async () => {
     await render(

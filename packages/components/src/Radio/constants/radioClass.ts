@@ -3,10 +3,10 @@
 
 /**
  * 고른 원은 canvas 바탕 + 2px accent 테두리. hover·누름은 고름과 상관없이 바탕만 subtle 계열이다.
- * 오류면 hover·누름 바탕도 danger subtle이다(forced-colors는 Canvas 그대로). 다른 Role subtle 위 danger 테두리·점은 dark에서 3:1이 안 된다(ADR 0035).
+ * 오류면 accent가 danger로 바뀐다(choiceInputClass).
  */
 export const radioInputStateClass =
-  "checked:border-2 checked:border-accent enabled:group-hover/choice:bg-accent-subtle enabled:group-active/choice:bg-accent-subtle-active not-forced-colors:aria-invalid:[--tide-accent-subtle:var(--tide-bg-danger-subtle)] not-forced-colors:aria-invalid:[--tide-accent-subtle-active:var(--tide-bg-danger-subtle-active)]";
+  "checked:border-2 checked:border-accent enabled:group-hover/choice:bg-accent-subtle enabled:group-active/choice:bg-accent-subtle-active";
 
 /** 원 지름의 절반인 점(md 10px, sm 8px). forced-colors에서는 테두리와 같은 Highlight다. */
 export const radioDotClass = {

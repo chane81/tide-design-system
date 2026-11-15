@@ -727,3 +727,11 @@ describe("Radio 오류 대비 쌍", () => {
     expect(registered("border-danger", "bg-danger-subtle-active", 3)).toBe(true);
   });
 });
+
+describe("Checkbox 오류 채움 대비 쌍", () => {
+  it("흰 표시(text-on-solid) × danger solid·solid-hover·solid-active가 4:1로 등록되어 있다", () => {
+    for (const state of ["solid", "solid-hover", "solid-active"]) {
+      expect(registered("text-on-solid", `bg-danger-${state}`, 4), state).toBe(true);
+    }
+  });
+});
