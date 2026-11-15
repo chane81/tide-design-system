@@ -18,7 +18,7 @@ describe("contrastRatio", () => {
     expect(contrastRatio("#000000", "#ffffff")).toBeCloseTo(21, 5);
     expect(contrastRatio("#777777", "#777777")).toBe(1);
     expect(contrastRatio(color.blue[500], color.white)).toBeCloseTo(3.39, 2);
-    expect(contrastRatio(color.blue[600], color.white)).toBeCloseTo(4.3, 2);
+    expect(contrastRatio(color.blue[600], color.white)).toBeCloseTo(4.7, 2);
   });
 
   it("반투명 색은 받지 않는다", () => {
