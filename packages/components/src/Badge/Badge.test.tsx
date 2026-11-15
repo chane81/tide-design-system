@@ -100,6 +100,46 @@ describe("모양", () => {
     },
   );
 
+  test("shape 기본값은 rounded(rounded-sm)다", async () => {
+    await render(<Badge>초안</Badge>);
+    const element = badge("초안");
+    expect(element).toHaveClass("rounded-sm");
+    expect(element).not.toHaveClass("rounded-full");
+  });
+
+  test('shape="pill"은 rounded-full이고 높이는 그대로다', async () => {
+    await render(<Badge shape="pill">초안</Badge>);
+    const element = badge("초안");
+    expect(element).toHaveClass("rounded-full");
+    expect(element).not.toHaveClass("rounded-sm");
+    expect(Number.parseFloat(getComputedStyle(element).borderTopLeftRadius)).toBeGreaterThanOrEqual(
+      12,
+    );
+    expect(element.getBoundingClientRect().height).toBe(24);
+  });
+
+  const pillPaddings: [NonNullable<BadgeProps["size"]>, string][] = [
+    ["sm", "8px"],
+    ["md", "10px"],
+  ];
+
+  test.each(pillPaddings)("pill %s는 좌우 여백이 한 단계 넓은 %s다", async (size, padding) => {
+    await render(
+      <Badge shape="pill" size={size}>
+        {size}
+      </Badge>,
+    );
+    const style = getComputedStyle(badge(size));
+    expect(style.paddingLeft).toBe(padding);
+    expect(style.paddingRight).toBe(padding);
+  });
+
+  test("지원하지 않는 shape는 타입 오류다", () => {
+    // @ts-expect-error -- 원(circle)과 헷갈리는 round는 받지 않는다.
+    const round: BadgeProps = { children: "a", shape: "round" };
+    expect(round.shape).toBe("round");
+  });
+
   test("지원하지 않는 size·variant는 타입 오류다", () => {
     // @ts-expect-error -- size는 sm/md만 받는다.
     const large: BadgeProps = { children: "a", size: "lg" };

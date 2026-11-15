@@ -9,6 +9,8 @@ type BadgeVariant = Extract<FillVariant, "subtle" | "solid"> | "faint";
 // 조작 요소가 아니라 높이가 size 표보다 한 단계 작다.
 type BadgeSize = Extract<Size, "sm" | "md">;
 
+type BadgeShape = "rounded" | "pill";
+
 export interface BadgeOwnProps {
   /** 상태를 말하는 텍스트. 색만으로 상태를 전하지 않도록 필수다(WCAG 1.4.1). */
   children: ReactNode;
@@ -16,6 +18,8 @@ export interface BadgeOwnProps {
   variant?: BadgeVariant;
   /** `sm` 높이 20px, `md` 24px. 기본값 `md`. */
   size?: BadgeSize;
+  /** `rounded`(모서리 4px, 기본값), `pill`(양끝이 둥근 알약 모양). 한 화면에서는 하나로 맞춘다. */
+  shape?: BadgeShape;
   /** 색 이름. 상태는 Role, 뜻 없는 분류는 색 계열 이름(앱 등록 포함). 기본값 `neutral`. */
   color?: Color;
 }
@@ -33,21 +37,33 @@ const variantClass: Record<BadgeVariant, string> = {
 
 // 높이는 border 1px를 포함한다.
 const sizeClass: Record<BadgeSize, string> = {
-  sm: "h-5 gap-1 px-1.5 text-label-sm",
-  md: "h-6 gap-1 px-2 text-label-md",
+  sm: "h-5 gap-1 text-label-sm",
+  md: "h-6 gap-1 text-label-md",
+};
+
+const shapeClass: Record<BadgeShape, string> = {
+  rounded: "rounded-sm",
+  pill: "rounded-full",
+};
+
+// pill은 양끝 곡선이 글자 쪽으로 파고들어 좌우 여백을 한 단계 늘린다.
+const paddingClass: Record<BadgeShape, Record<BadgeSize, string>> = {
+  rounded: { sm: "px-1.5", md: "px-2" },
+  pill: { sm: "px-2", md: "px-2.5" },
 };
 
 // 투명 border는 forced-colors에서 CanvasText로 그려져 배경 없이도 모양이 남는다.
 const baseClass =
-  "inline-flex max-w-full shrink-0 items-center rounded-sm border border-transparent align-middle whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0";
+  "inline-flex max-w-full shrink-0 items-center border border-transparent align-middle whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0";
 
 /**
  * 상태나 분류를 짧은 텍스트로 보여 주는 라벨. 뜻은 반드시 텍스트로 적는다. 서버 컴포넌트로 쓸 수 있다.
- * Tide props: `children`, `variant`, `size`, `color` ({@link BadgeOwnProps}). 나머지는 `<span>` 속성.
+ * Tide props: `children`, `variant`, `size`, `shape`, `color` ({@link BadgeOwnProps}). 나머지는 `<span>` 속성.
  */
 export function Badge({
   variant = "subtle",
   size = "md",
+  shape = "rounded",
   color = "neutral",
   className,
   ...props
@@ -57,7 +73,14 @@ export function Badge({
       {...props}
       // 바깥 data-color를 물려받지 않게 항상 붙인다(ADR 0011).
       data-color={color}
-      className={cn(baseClass, variantClass[variant], sizeClass[size], className)}
+      className={cn(
+        baseClass,
+        variantClass[variant],
+        sizeClass[size],
+        shapeClass[shape],
+        paddingClass[shape][size],
+        className,
+      )}
     />
   );
 }
