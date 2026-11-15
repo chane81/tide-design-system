@@ -13,7 +13,7 @@ const expected: Record<ColorFamily, readonly string[]> = {
     "#97c2f4",
     "#53a3fe",
     "#148cfc",
-    "#1e7bd8",
+    "#2f6fe0",
     "#0060b3",
     "#004e94",
     "#00427f",

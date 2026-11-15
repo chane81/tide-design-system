@@ -6,7 +6,7 @@ import { mixHex, semanticHex } from "../src/internal";
 
 // [Role, 계열, subtle-hover, subtle-active, solid-hover, solid-active] (light)
 const decided = [
-  ["primary", "blue", "#dae6f7", "#d2deee", "#1a6aba", "#1862ad"],
+  ["primary", "blue", "#dae6f7", "#d2deee", "#285fc1", "#2659b3"],
   ["success", "green", "#d4edd8", "#cde5d1", "#397749", "#356e44"],
   ["warning", "amber", "#efe5c2", "#e6ddbc", "#856028", "#7c5a26"],
   ["danger", "red", "#f6dedc", "#eed7d4", "#9c4d46", "#914841"],

@@ -9,7 +9,7 @@
     .ln { fill: none; stroke: #82878e; }
     .box { fill: #ffffff; stroke: #82878e; }
     .dash { fill: none; stroke: #82878e; }
-    .group { fill: none; stroke: #1e7bd8; }
+    .group { fill: none; stroke: #2f6fe0; }
     .group-t { fill: #0060b3; }
     .purple { fill: #f0e9ff; stroke: #c4b5e4; } .purple-1 { fill: #412963; } .purple-2 { fill: #6b4e99; }
     .mint { fill: #d7f4f1; stroke: #91cbc6; } .mint-1 { fill: #11403e; } .mint-2 { fill: #116e6a; }

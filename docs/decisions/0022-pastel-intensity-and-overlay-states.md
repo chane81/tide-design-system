@@ -113,6 +113,8 @@ Button outline·ghost와 목록 항목(Menu, Table 행 등)의 호버·클릭은
 > | blue | `#1e7bd8` | 4.30         | `#1a6aba` (5.51)   | `#1862ad` (6.20)    | `#dae6f7`    | `#d2deee`     |
 >
 > light의 `text`(700) × 흰 표면 6.32:1, `on-subtle`(950) × `subtle`(100) 10.46:1이다. `border`·`outline-focus`(light 600)는 표면 위 4.30:1, `outline-focus` × subtle은 3.52:1 이상으로 3:1을 넘는다. 앵커 500의 흰 글자 대비는 3.39:1이라 앵커 위에 흰 글자를 올리지 않는 원칙은 그대로다.
+>
+> 덧붙임(2026-11-15, 사용자 결정): blue 600을 `#1e7bd8`에서 `#2f6fe0`(흰 글자 4.70:1)으로 바꿨다. 다른 단계는 그대로이고 600만 H 260.8로 스케일 색상에서 벗어난다. solid-hover `#285fc1`(6.00), solid-active `#2659b3`(6.64), light `border`·`outline-focus` × 표면 4.70:1이다. 근거와 영향은 [ADR 0033](0033-primary-blue-600-2f6fe0.md)에 적는다.
 
 ### 5. 장식 계열 추가
 
