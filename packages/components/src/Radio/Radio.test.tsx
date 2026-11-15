@@ -409,7 +409,7 @@ describe("모양", () => {
     expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
   });
 
-  test("오류면 선택한 원의 경계가 danger이고 점은 accent 그대로다", async () => {
+  test("오류면 선택한 원의 경계와 점이 모두 danger다", async () => {
     await render(
       <div data-theme="light">
         <Radio value="a" invalid defaultChecked>
@@ -417,13 +417,59 @@ describe("모양", () => {
         </Radio>
       </div>,
     );
-    if (forcedColors()) return;
     await settle();
     const input = page.getByRole("radio").element();
+    if (forcedColors()) {
+      expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("CanvasText"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("CanvasText"));
+
+      return;
+    }
     expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-danger)"));
-    expect(getComputedStyle(dot(input)).backgroundColor).toBe(
-      resolve("var(--tide-border-primary)"),
+    expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("var(--tide-border-danger)"));
+  });
+
+  test("오류면 hover·누름 바탕이 danger subtle 계열이고 경계·점은 danger 그대로다", async () => {
+    await render(
+      <div data-theme="light">
+        <Radio value="a" color="success" invalid defaultChecked>
+          <span data-testid="label">가</span>
+        </Radio>
+      </div>,
     );
+    const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
+    const input = page.getByRole("radio").element();
+    await userEvent.hover(page.getByTestId("label"));
+    await wait();
+    const hovered = getComputedStyle(input).backgroundColor;
+    await commands.mouseDownOn("label");
+    await wait();
+    const pressed = getComputedStyle(input).backgroundColor;
+    const border = getComputedStyle(input).borderTopColor;
+    const dotColor = getComputedStyle(dot(input)).backgroundColor;
+    await commands.mouseUp();
+    if (forcedColors()) {
+      expect([hovered, pressed]).toEqual([resolve("Canvas"), resolve("Canvas")]);
+
+      return;
+    }
+    expect(hovered).toBe(resolve("var(--tide-bg-danger-subtle)"));
+    expect(pressed).toBe(resolve("var(--tide-bg-danger-subtle-active)"));
+    expect(border).toBe(resolve("var(--tide-border-danger)"));
+    expect(dotColor).toBe(resolve("var(--tide-border-danger)"));
+  });
+
+  test("비활성 오류면 점은 text-disabled가 이긴다", async () => {
+    await render(
+      <div data-theme="light">
+        <Radio value="a" invalid disabled defaultChecked>
+          가
+        </Radio>
+      </div>,
+    );
+    if (forcedColors()) return;
+    const input = page.getByRole("radio").element();
+    expect(getComputedStyle(dot(input)).backgroundColor).toBe(resolve("var(--tide-text-disabled)"));
   });
 
   test("비활성이면 선택한 원도 border-default·bg-disabled이고 점은 text-disabled다", async () => {

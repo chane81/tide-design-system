@@ -719,3 +719,11 @@ describe("Radio 대비 쌍", () => {
     }
   });
 });
+
+describe("Radio 오류 대비 쌍", () => {
+  it("오류 테두리·점(border-danger) × canvas·danger subtle·subtle-active가 3:1 이상으로 등록되어 있다", () => {
+    expect(registered("border-danger", "bg-canvas", 3)).toBe(true);
+    expect(registered("border-danger", "bg-danger-subtle", 3)).toBe(true);
+    expect(registered("border-danger", "bg-danger-subtle-active", 3)).toBe(true);
+  });
+});
