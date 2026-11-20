@@ -830,6 +830,26 @@ describe("움직임(ADR 0037)", () => {
     expect((await check).has(property)).toBe(true);
     expect(visible(mark(all, "indeterminate"))).toBe(false);
   });
+
+  test("체크·indeterminate 표시는 scale이 걸린 채움 레이어보다 위에 그려진다", async () => {
+    await render(
+      <>
+        <Checkbox defaultChecked>체크</Checkbox>
+        <Checkbox indeterminate>일부</Checkbox>
+      </>,
+    );
+    for (const [name, kind] of [
+      ["체크", "check"],
+      ["일부", "indeterminate"],
+    ] as const) {
+      const input = page.getByRole("checkbox", { name }).element();
+      const layer = input.parentElement?.querySelector("[data-fill]");
+      const icon = mark(input, kind);
+      // 위치 지정이 없으면 transform·scale이 걸린 형제가 나중 단계에 그려져 덮는다.
+      expect(getComputedStyle(icon).position).not.toBe("static");
+      expect(layer?.compareDocumentPosition(icon)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    }
+  });
 });
 
 describe("forced-colors", () => {
