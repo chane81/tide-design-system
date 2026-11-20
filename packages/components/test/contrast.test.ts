@@ -436,9 +436,11 @@ describe("Tabs 대비 쌍", () => {
     }
   });
 
-  it("rounded: 고르지 않은 탭 글자(text-muted)·hover 글자(text-default) × 탭 목록 바탕(bg-neutral-subtle)이 4.5:1, 고른 탭 글자(text-primary) × 고른 표시 바탕(bg-surface)이 4.5:1로 등록되어 있다", () => {
-    expect(registered("text-muted", "bg-neutral-subtle", 4.5)).toBe(true);
-    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
+  it("rounded: 탭 글자(text-muted·text-default·이동 중 text-primary) × 탭 목록 바탕(bg-inset)이 4.5:1, 포커스 링(border-primary) × bg-inset이 3:1, 고른 탭 글자(text-primary) × 고른 표시(bg-surface)가 4.5:1로 등록되어 있다", () => {
+    for (const foreground of ["text-muted", "text-default", "text-primary"]) {
+      expect(registered(foreground, "bg-inset", 4.5), foreground).toBe(true);
+    }
+    expect(registered("border-primary", "bg-inset", 3)).toBe(true);
     expect(registered("text-primary", "bg-surface", 4.5)).toBe(true);
   });
 

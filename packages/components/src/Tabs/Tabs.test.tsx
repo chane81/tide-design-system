@@ -422,7 +422,7 @@ describe("고른 표시(indicator)", () => {
     expect(style.borderTopLeftRadius).toBe("6px");
     expectOn("account", "horizontal", "rounded");
     if (forcedColors()) return;
-    expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-neutral-subtle)"));
+    expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-inset)"));
     expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-surface)"));
     expect(style.boxShadow).not.toBe("none");
     expect(getComputedStyle(byTestId("account")).color).toBe(
@@ -451,6 +451,21 @@ describe("고른 표시(indicator)", () => {
       await expect.poll(() => onTab("security", "vertical", shape)).toBe(true);
     },
   );
+
+  test.each([
+    ["transform scale", { transform: "scale(0.5)", transformOrigin: "0 0" }],
+    ["zoom", { zoom: 2 }],
+  ] as const)("조상에 %s가 있어도 표시가 고른 탭 자리에 놓인다", async (_name, style) => {
+    await render(
+      <div style={style}>
+        <Example shape="rounded" />
+      </div>,
+    );
+    await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+    expectOn("account", "horizontal", "rounded");
+    await userEvent.click(page.getByTestId("notifications"));
+    await expect.poll(() => onTab("notifications", "horizontal", "rounded")).toBe(true);
+  });
 
   test("탭 글자가 바뀌어 폭이 달라지면 표시가 transition 없이 새 폭을 따른다", async () => {
     function Relabel(): ReactElement {

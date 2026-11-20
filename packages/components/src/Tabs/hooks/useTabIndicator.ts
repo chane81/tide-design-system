@@ -35,10 +35,15 @@ export function useTabIndicator(
       }
       const listRect = list.getBoundingClientRect();
       const rect = tab.getBoundingClientRect();
+      // 조상의 transform scale·zoom(Dialog 등장 등)이 화면 좌표를 바꾸므로 레이아웃 길이로 되돌린다.
+      const scaleX = list.offsetWidth > 0 ? listRect.width / list.offsetWidth : 1;
+      const scaleY = list.offsetHeight > 0 ? listRect.height / list.offsetHeight : 1;
       // absolute 기준은 padding box라 테두리를 빼고 스크롤을 더한다.
-      const x = rect.left - listRect.left - list.clientLeft + list.scrollLeft;
-      const y = rect.top - listRect.top - list.clientTop + list.scrollTop;
-      const geometry = `${x} ${y} ${rect.width} ${rect.height}`;
+      const x = (rect.left - listRect.left) / scaleX - list.clientLeft + list.scrollLeft;
+      const y = (rect.top - listRect.top) / scaleY - list.clientTop + list.scrollTop;
+      const width = rect.width / scaleX;
+      const height = rect.height / scaleY;
+      const geometry = `${x} ${y} ${width} ${height}`;
       const previous = placed.current;
       if (previous?.tab === tab.id && previous.geometry === geometry) return;
 
@@ -46,8 +51,8 @@ export function useTabIndicator(
       if (!slide) indicator.style.transition = "none";
       indicator.style.setProperty("--tab-indicator-x", `${x}px`);
       indicator.style.setProperty("--tab-indicator-y", `${y}px`);
-      indicator.style.setProperty("--tab-indicator-width", `${rect.width}px`);
-      indicator.style.setProperty("--tab-indicator-height", `${rect.height}px`);
+      indicator.style.setProperty("--tab-indicator-width", `${width}px`);
+      indicator.style.setProperty("--tab-indicator-height", `${height}px`);
       if (!slide) {
         // 스타일을 한 번 계산시켜 새 자리를 transition 없이 확정한 뒤 되돌린다.
         indicator.getBoundingClientRect();
