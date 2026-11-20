@@ -14,7 +14,7 @@ const pathData = { check: "M20 6 9 17l-5-5", indeterminate: "M5 12h14" } as cons
 
 const pixelSize: Record<ChoiceSize, number> = { sm: 12, md: 16 };
 
-const strokePixels = 3;
+const strokePixels = 2;
 
 /** 그려지는 체크 표시. 상태는 input이 보조 기술에 알려 장식으로 숨긴다. */
 export function CheckboxMark({ kind, size, className }: CheckboxMarkProps): ReactElement {

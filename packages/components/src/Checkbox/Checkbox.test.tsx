@@ -221,7 +221,7 @@ describe("크기", () => {
     ["sm", 16, "14px", 12],
     ["md", 20, "16px", 16],
   ] as const)(
-    "%s: 상자 %ipx, 글자 %s, 아이콘 %ipx이고 조작 영역은 24×24px이다",
+    "%s: 상자 %ipx, 글자 %s, 아이콘 %ipx(선 2px)이고 조작 영역은 24×24px이다",
     async (size, box, font, icon) => {
       await render(
         <Checkbox size={size} defaultChecked>
@@ -236,6 +236,10 @@ describe("크기", () => {
       expect(area.height).toBe(24);
       expect(getComputedStyle(input.closest("label")!).fontSize).toBe(font);
       expect(mark(input, "check").getBoundingClientRect().width).toBe(icon);
+      for (const kind of ["check", "indeterminate"] as const) {
+        const width = Number.parseFloat(getComputedStyle(mark(input, kind)).strokeWidth);
+        expect((width * icon) / 24, kind).toBe(2);
+      }
       expect(getComputedStyle(input).borderTopLeftRadius).toBe("4px");
     },
   );
