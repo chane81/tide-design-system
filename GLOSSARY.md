@@ -67,7 +67,7 @@ _Avoid_: variant(Component 스타일 축과 혼동), weight, tone
 _Avoid_: tint, shade(방향이 정해진 말과 혼동), 오버레이(`bg-overlay` 막과 혼동)
 
 **표면 층 (Surface level)**:
-요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다. 표면보다 한 단계 들어간 바탕 `inset`은 그 안에 `surface` 표시가 떠 있는 곳(rounded Tabs 탭 목록)에 쓴다.
+요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다. 표면보다 한 단계 들어간 바탕 `inset`은 그 안에 `surface` 표시가 떠 있는 곳(`box` 모양 Tabs 탭 목록)에 쓴다.
 _Avoid_: elevation(그림자 형태 Foundation과 혼동), layer(Layer와 혼동)
 
 **Elevation**:
@@ -177,7 +177,7 @@ _Avoid_: Autocomplete(자유 입력을 받는 것으로 읽힘), Typeahead(Menu�
 _Avoid_: Hint, Title 속성(브라우저 기본 툴팁), Popover
 
 **Tabs (탭)**:
-같은 영역에서 여러 패널 중 하나를 골라 보여 주는 묶음(`Tabs`, `TabList`, `Tab`, `TabPanel`). 탭 목록은 `tablist`, 탭은 `tab`, 내용은 `tabpanel` 역할이고 탭과 패널은 같은 `value`로 이어진다. 화살표로 탭을 옮기며 기본은 옮기면 바로 고른다(자동 활성화). 고른 탭은 글자색과 고른 표시로 보이고, 고른 탭의 패널만 보인다. 고른 표시의 모양(`shape`)은 밑줄(`underline`, 기본값)과 옅은 바탕 위 둥근 사각형(`rounded`)이며, 탭을 바꾸면 새 탭으로 미끄러진다. 여러 묶음을 함께 펼치는 것은 Accordion, 다른 페이지로 가는 메뉴는 링크 목록이다.
+같은 영역에서 여러 패널 중 하나를 골라 보여 주는 묶음(`Tabs`, `TabList`, `Tab`, `TabPanel`). 탭 목록은 `tablist`, 탭은 `tab`, 내용은 `tabpanel` 역할이고 탭과 패널은 같은 `value`로 이어진다. 화살표로 탭을 옮기며 기본은 옮기면 바로 고른다(자동 활성화). 고른 탭은 글자색과 고른 표시로 보이고, 고른 탭의 패널만 보인다. 고른 표시의 모양(`shape`)은 밑줄(`underline`, 기본값)과 옅은 바탕 위 둥근 사각형(`box`)이며, 탭을 바꾸면 새 탭으로 미끄러진다. 여러 묶음을 함께 펼치는 것은 Accordion, 다른 페이지로 가는 메뉴는 링크 목록이다.
 _Avoid_: Segmented control(값을 고르는 입력과 혼동), Tab bar(앱 하단 내비게이션과 혼동), 탭 순서(키보드 Tab 이동과 혼동하므로 「탭」은 이 Component, 「Tab」은 키)
 
 **Accordion (아코디언)**:

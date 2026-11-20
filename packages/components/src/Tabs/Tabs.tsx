@@ -37,7 +37,7 @@ interface TabsBaseOwnProps {
   onValueChange?: (value: string) => void;
   /** 탭 목록의 방향. 기본값은 `horizontal`이다. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
   orientation?: TabsOrientation;
-  /** 고른 표시의 모양. 기본값 `underline`(밑줄). `rounded`는 옅은 바탕 위 둥근 사각형이다. 고른 표시는 탭을 바꾸면 새 탭으로 미끄러진다. */
+  /** 고른 표시의 모양. 기본값 `underline`(밑줄). `box`는 옅은 바탕 위 둥근 사각형이다. 고른 표시는 탭을 바꾸면 새 탭으로 미끄러진다. */
   shape?: TabsShape;
   /** 키보드로 옮기면 바로 고를지(`automatic`, 기본값), Enter·Space로 고를지(`manual`). 패널이 느리면 `manual`. */
   activationMode?: TabsActivationMode;

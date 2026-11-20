@@ -2,13 +2,13 @@
 
 근거 원칙: ② 명확함이 화려함보다 우선한다, ③ 단순함이 유연함보다 우선한다
 
-rounded Tabs(ADR 0038)의 탭 목록 바탕은 처음에 `bg-neutral-subtle`(light gray-100, dark gray-900)이었다. 사용자는 light에서 한 단계 옅기를 원했다(2026-11-20, 사용자 결정). light gray-50, dark gray-900 짝을 가진 Token이 없었다. `bg-neutral-faint`는 dark가 gray-950이라 고른 표시(`bg-surface`, dark gray-950)와 같은 색이 된다. Component는 `dark:` variant를 쓰지 않는다(중첩 Theme에서 깨진다). 그래서 새 Semantic Token을 더한다.
+`box` 모양 Tabs(ADR 0038)의 탭 목록 바탕은 처음에 `bg-neutral-subtle`(light gray-100, dark gray-900)이었다. 사용자는 light에서 한 단계 옅기를 원했다(2026-11-20, 사용자 결정). light gray-50, dark gray-900 짝을 가진 Token이 없었다. `bg-neutral-faint`는 dark가 gray-950이라 고른 표시(`bg-surface`, dark gray-950)와 같은 색이 된다. Component는 `dark:` variant를 쓰지 않는다(중첩 Theme에서 깨진다). 그래서 새 Semantic Token을 더한다.
 
 ## 결정
 
-- **`bg-inset`(`--tide-bg-inset`): light gray-50, dark gray-900.** 표면 층(`canvas`·`surface`·`raised`) 옆의 공통 배경 Token이다. 표면보다 한 단계 들어간 바탕이고, 그 안에 `surface` 표시가 떠 있는 곳(rounded Tabs 탭 목록)에 쓴다.
+- **`bg-inset`(`--tide-bg-inset`): light gray-50, dark gray-900.** 표면 층(`canvas`·`surface`·`raised`) 옆의 공통 배경 Token이다. 표면보다 한 단계 들어간 바탕이고, 그 안에 `surface` 표시가 떠 있는 곳(`box` 모양 Tabs 탭 목록)에 쓴다.
 - **대비 쌍(ADR 0023):** `text-default`·`text-muted`·`text-primary` × `bg-inset`은 4.5, 포커스 링 `border-primary` × `bg-inset`은 3이다. `text-primary`는 고른 표시가 이동하는 동안 새 탭 글자가 바탕 위에 있어서 함께 등록한다.
-- **Tabs rounded만을 위해 넣었던 `text-muted` × `bg-neutral-subtle` 쌍은 지운다.** 다른 Component는 그 짝을 쓰지 않는다.
+- **Tabs `box` 모양만을 위해 넣었던 `text-muted` × `bg-neutral-subtle` 쌍은 지운다.** 다른 Component는 그 짝을 쓰지 않는다.
 
 ## 이유
 

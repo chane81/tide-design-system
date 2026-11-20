@@ -34,7 +34,7 @@ import * as TabsStories from "./Tabs.stories";
 | `shape`             | 모양                                                                      | 쓰는 곳                                    |
 | ------------------- | ------------------------------------------------------------------------- | ------------------------------------------ |
 | `underline`(기본값) | 탭 목록 아래 구분선(`border-default`) 위에 2px 밑줄(`border-primary`)     | 페이지·카드의 큰 영역을 나눌 때            |
-| `rounded`           | 옅은 탭 목록 바탕(`bg-inset`) 위에 둥근 사각형(`bg-surface`, `shadow-sm`) | 툴바·필터처럼 작은 영역에서 보기를 바꿀 때 |
+| `box`               | 옅은 탭 목록 바탕(`bg-inset`) 위에 둥근 사각형(`bg-surface`, `shadow-sm`) | 툴바·필터처럼 작은 영역에서 보기를 바꿀 때 |
 
 <Canvas of={TabsStories.Shapes} />
 
@@ -58,7 +58,7 @@ import * as TabsStories from "./Tabs.stories";
 
 <Canvas of={TabsStories.Vertical} />
 
-<Canvas of={TabsStories.VerticalRounded} />
+<Canvas of={TabsStories.VerticalBox} />
 
 ### 고를 때까지 기다리기
 
@@ -94,7 +94,7 @@ import * as TabsStories from "./Tabs.stories";
 - 오른쪽에서 왼쪽으로 쓰는 locale(아랍어 등)에서는 ←가 다음 탭입니다. React Aria `I18nProvider`의 locale을 따릅니다.
 - 포커스 표시: 키보드 포커스에 요소에 붙은 2px 링과 그 바깥 3px halo(`focus-ring`)가 보입니다. 패널도 같습니다.
 - 고른 표시: 글자색만이 아니라 밑줄이나 둥근 바탕으로도 구분됩니다. 고대비 모드(forced-colors)에서는 밑줄과 둥근 사각형의 테두리가 시스템 강조색으로 그려집니다. 고른 표시는 장식이라 보조 기술에는 숨깁니다(`aria-hidden`).
-- 대비: 탭 글자(`text-muted`, `text-primary`)는 표면 층과 4.5:1, 밑줄(`border-primary`)과 ring은 3:1 이상입니다. `rounded`는 탭 글자 × 탭 목록 바탕(`bg-inset`), 고른 탭 글자 × 고른 표시(`bg-surface`)가 4.5:1, ring × `bg-inset`이 3:1 이상입니다. 탭 목록 선은 장식용이라 대비 검사 대상이 아닙니다.
+- 대비: 탭 글자(`text-muted`, `text-primary`)는 표면 층과 4.5:1, 밑줄(`border-primary`)과 ring은 3:1 이상입니다. `box`는 탭 글자 × 탭 목록 바탕(`bg-inset`), 고른 탭 글자 × 고른 표시(`bg-surface`)가 4.5:1, ring × `bg-inset`이 3:1 이상입니다. 탭 목록 선은 장식용이라 대비 검사 대상이 아닙니다.
 - 움직임: 고른 표시는 새 탭으로 300ms 동안 미끄러집니다. 움직임 줄이기(`prefers-reduced-motion`)에서는 바로 옮겨집니다.
 
 ### 앱이 할 일
@@ -115,7 +115,7 @@ import * as TabsStories from "./Tabs.stories";
 | `Tabs`     | `defaultValue`: `string`(비제어, `value`가 없으면 필수) | 없음           |
 | `Tabs`     | `onValueChange`: `(value) => void`                      | 없음           |
 | `Tabs`     | `orientation`: `"horizontal" \| "vertical"`             | `"horizontal"` |
-| `Tabs`     | `shape`: `"underline" \| "rounded"`                     | `"underline"`  |
+| `Tabs`     | `shape`: `"underline" \| "box"`                         | `"underline"`  |
 | `Tabs`     | `activationMode`: `"automatic" \| "manual"`             | `"automatic"`  |
 | `TabList`  | `aria-label`·`aria-labelledby`: 이름                    | 없음           |
 | `TabList`  | `role` 제외(tablist)                                    |                |
@@ -126,6 +126,6 @@ import * as TabsStories from "./Tabs.stories";
 | `TabPanel` | `tabIndex`: `number`                                    | `0`            |
 | `TabPanel` | `role`·`id` 제외(tabpanel, 자동 id)                     |                |
 
-상태는 `data-orientation`(루트, `horizontal`/`vertical`), `data-shape`(루트, `underline`/`rounded`), `data-selected`(고른 탭), `:disabled`(비활성 탭)로 노출합니다.
+상태는 `data-orientation`(루트, `horizontal`/`vertical`), `data-shape`(루트, `underline`/`box`), `data-selected`(고른 탭), `:disabled`(비활성 탭)로 노출합니다.
 
 <ArgTypes of={TabsStories} />

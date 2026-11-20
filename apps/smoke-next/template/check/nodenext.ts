@@ -299,7 +299,7 @@ const roleDialog: DialogContentProps = { role: "alertdialog" };
 const dismissableDialog: DialogContentProps = { isDismissable: true };
 const tabsOrientation: TabsOrientation = "vertical";
 const tabsActivation: TabsActivationMode = "manual";
-const tabsShape: TabsShape = "rounded";
+const tabsShape: TabsShape = "box";
 const tabsProps: TabsProps = {
   defaultValue: "a",
   orientation: tabsOrientation,

@@ -82,7 +82,7 @@ const panel = (): HTMLElement => page.getByRole("tabpanel").element() as HTMLEle
 const indicator = (): HTMLElement =>
   document.querySelector<HTMLElement>("[data-indicator]") as HTMLElement;
 
-/** 표시가 탭의 자리에 있는지. 밑줄은 진행 방향의 위치·길이만, rounded는 네 값을 모두 본다. */
+/** 표시가 탭의 자리에 있는지. 밑줄은 진행 방향의 위치·길이만, box는 네 값을 모두 본다. */
 function placement(
   testId: string,
   orientation: TabsOrientation,
@@ -91,7 +91,7 @@ function placement(
   const tab = byTestId(testId).getBoundingClientRect();
   const box = indicator().getBoundingClientRect();
   const pick = (rect: DOMRect): number[] => {
-    if (shape === "rounded") return [rect.left, rect.top, rect.width, rect.height];
+    if (shape === "box") return [rect.left, rect.top, rect.width, rect.height];
 
     return orientation === "horizontal" ? [rect.left, rect.width] : [rect.top, rect.height];
   };
@@ -410,9 +410,9 @@ describe("고른 표시(indicator)", () => {
     await expect.poll(() => onTab("notifications", "horizontal", "underline")).toBe(true);
   });
 
-  test("rounded는 옅은 탭 목록 바탕 위에 고른 탭을 둥근 사각형 바탕으로 보인다", async () => {
-    await render(<Example shape="rounded" />);
-    expect(byTestId("root")).toHaveAttribute("data-shape", "rounded");
+  test("box는 옅은 탭 목록 바탕 위에 고른 탭을 둥근 사각형 바탕으로 보인다", async () => {
+    await render(<Example shape="box" />);
+    expect(byTestId("root")).toHaveAttribute("data-shape", "box");
     await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
     const list = getComputedStyle(byTestId("list"));
     expect(list.borderBottomWidth).toBe("0px");
@@ -420,7 +420,7 @@ describe("고른 표시(indicator)", () => {
     expect(list.borderTopLeftRadius).toBe("8px");
     const style = getComputedStyle(indicator());
     expect(style.borderTopLeftRadius).toBe("6px");
-    expectOn("account", "horizontal", "rounded");
+    expectOn("account", "horizontal", "box");
     if (forcedColors()) return;
     expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-inset)"));
     expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-surface)"));
@@ -429,10 +429,10 @@ describe("고른 표시(indicator)", () => {
       resolve("color", "var(--tide-text-primary)"),
     );
     await userEvent.click(page.getByTestId("security"));
-    await expect.poll(() => onTab("security", "horizontal", "rounded")).toBe(true);
+    await expect.poll(() => onTab("security", "horizontal", "box")).toBe(true);
   });
 
-  test.each(["underline", "rounded"] as const)(
+  test.each(["underline", "box"] as const)(
     "세로(%s)는 표시가 고른 탭의 세로 위치·높이를 따르고 ↓로 옮기면 따라간다",
     async (shape) => {
       await render(<Example orientation="vertical" shape={shape} />);
@@ -458,13 +458,13 @@ describe("고른 표시(indicator)", () => {
   ] as const)("조상에 %s가 있어도 표시가 고른 탭 자리에 놓인다", async (_name, style) => {
     await render(
       <div style={style}>
-        <Example shape="rounded" />
+        <Example shape="box" />
       </div>,
     );
     await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
-    expectOn("account", "horizontal", "rounded");
+    expectOn("account", "horizontal", "box");
     await userEvent.click(page.getByTestId("notifications"));
-    await expect.poll(() => onTab("notifications", "horizontal", "rounded")).toBe(true);
+    await expect.poll(() => onTab("notifications", "horizontal", "box")).toBe(true);
   });
 
   test("탭 글자가 바뀌어 폭이 달라지면 표시가 transition 없이 새 폭을 따른다", async () => {
@@ -521,7 +521,7 @@ describe("고른 표시(indicator)", () => {
     expect(getComputedStyle(byTestId("account"), "::after").opacity).toBe("0");
   });
 
-  test.each(["underline", "rounded"] as const)(
+  test.each(["underline", "box"] as const)(
     "forced-colors(%s)에서는 표시가 시스템 강조색 경계로 남아 색 없이도 구분된다",
     async (shape) => {
       await render(<Example shape={shape} />);
@@ -534,13 +534,13 @@ describe("고른 표시(indicator)", () => {
       expect(shape === "underline" ? style.borderBottomWidth : style.borderTopWidth).toBe("2px");
       expect(color).not.toBe(transparent);
       expect(color).not.toBe(getComputedStyle(byTestId("list")).backgroundColor);
-      if (shape === "rounded") expect(style.backgroundColor).toBe(transparent);
+      if (shape === "box") expect(style.backgroundColor).toBe(transparent);
     },
   );
 });
 
 describe("고른 표시 motion", () => {
-  test.each(["underline", "rounded"] as const)(
+  test.each(["underline", "box"] as const)(
     "첫 렌더(%s)에는 transition 없이 제자리에 놓인다",
     async (shape) => {
       const placed = captureWhen(
@@ -669,8 +669,8 @@ describe("ref·className·타입", () => {
     const none: TabsProps = { orientation: "horizontal" };
     // @ts-expect-error -- orientation은 horizontal·vertical이다.
     const orientation: TabsProps = { defaultValue: "a", orientation: "diagonal" };
-    // @ts-expect-error -- shape는 underline·rounded다. 원(pill) 모양은 없다.
-    const shape: TabsProps = { defaultValue: "a", shape: "pill" };
+    // @ts-expect-error -- shape는 underline·box다. Badge 값(rounded)은 받지 않는다.
+    const shape: TabsProps = { defaultValue: "a", shape: "rounded" };
     // @ts-expect-error -- React Aria 이름(keyboardActivation)은 드러내지 않는다. activationMode를 쓴다.
     const activation: TabsProps = { defaultValue: "a", keyboardActivation: "manual" };
     // @ts-expect-error -- 탭 역할은 tab으로 고정이다.

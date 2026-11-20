@@ -14,7 +14,7 @@ export const tabListClass: Record<TabsShape, Record<TabsOrientation, string>> = 
     horizontal: `relative flex shrink-0 gap-1 border-b border-default ${unmeasuredFallback}`,
     vertical: `relative flex shrink-0 flex-col gap-1 border-e border-default ${unmeasuredFallback}`,
   },
-  rounded: {
+  box: {
     horizontal: `relative flex shrink-0 gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
     vertical: `relative flex shrink-0 flex-col gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
   },
@@ -37,8 +37,8 @@ export const tabFallbackClass: Record<TabsShape, Record<TabsOrientation, string>
     vertical:
       "after:inset-y-0 after:-end-px after:border-e-2 after:border-primary forced-colors:after:forced-color-adjust-none forced-colors:after:border-[Highlight]",
   },
-  // rounded는 바탕·그림자를 TabList가 붙이고, forced-colors에서는 바탕이 사라지므로 테두리로 보인다.
-  rounded: {
+  // box는 바탕·그림자를 TabList가 붙이고, forced-colors에서는 바탕이 사라지므로 테두리로 보인다.
+  box: {
     horizontal:
       "after:inset-0 after:hidden after:rounded-md after:border-2 forced-colors:after:block forced-colors:after:forced-color-adjust-none forced-colors:after:border-[Highlight]",
     vertical:
@@ -56,7 +56,7 @@ export const tabIndicatorClass: Record<TabsShape, Record<TabsOrientation, string
     vertical: `${indicatorBaseClass} top-0 -end-px h-(--tab-indicator-height) translate-y-(--tab-indicator-y) border-e-2 border-primary forced-colors:border-[Highlight]`,
   },
   // forced-colors에서 바탕을 남기면 시스템 글자색과 대비가 깨질 수 있어 바탕을 빼고 Highlight 테두리만 남긴다.
-  rounded: {
+  box: {
     horizontal: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-raised bg-surface shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
     vertical: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-raised bg-surface shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
   },
