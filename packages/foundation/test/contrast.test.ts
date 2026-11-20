@@ -137,7 +137,7 @@ describe("대비 쌍", () => {
     for (const pair of contrastPairs) {
       if (
         pair.foreground.startsWith("text-") &&
-        /^bg-(canvas|surface|raised)$|-(subtle|faint)$/.test(pair.background)
+        /^bg-(canvas|surface|raised|inset)$|-(subtle|faint)$/.test(pair.background)
       ) {
         expect(pair.minRatio, `${pair.foreground} × ${pair.background}`).toBe(4.5);
       }

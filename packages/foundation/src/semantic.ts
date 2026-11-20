@@ -237,6 +237,8 @@ const commonBackground = {
   canvas: { light: "white", dark: "gray-950" },
   surface: { light: "white", dark: "gray-950" },
   raised: { light: "white", dark: "gray-900" },
+  // 표면보다 한 단계 들어간 바탕. 안에 surface 표시가 떠 있다(Tabs rounded 목록). dark는 표시(gray-950)보다 밝다.
+  inset: { light: "gray-50", dark: "gray-900" },
   disabled: { light: "gray-100", dark: "gray-900" },
   overlay: {
     light: { primitive: "gray-950", alpha: 0.5 },
