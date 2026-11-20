@@ -45,6 +45,10 @@ import * as CheckboxStories from "./Checkbox.stories";
 
 <Canvas of={CheckboxStories.Indeterminate} />
 
+### 체크할 때 움직임
+
+체크하면 체크 표시가 펜으로 긋듯 시작점에서 끝점으로 그려집니다(`normal` 300ms, `ease-out`). 가로줄도 왼쪽에서 오른쪽으로 같게 그려집니다. 해제하면 거꾸로 지우지 않고 `fast`(150ms) 안에 사라집니다. 처음 렌더할 때 이미 체크된 상자는 그려진 채로 나옵니다. 움직임 줄이기를 켜면 그리지 않고 opacity만 바뀝니다. 위 예시의 상자를 눌러 보세요.
+
 ### 묶어서 이름 붙이기
 
 `<Field group>` 안에 CheckboxGroup을 둡니다. Field의 label이 묶음의 이름, 설명·오류가 묶음의 설명이 됩니다.
@@ -98,6 +102,7 @@ label을 눌러도 체크됩니다. 짧은 단어보다 고른 결과를 알 수
 - 포커스 표시: 키보드 포커스에 상자 테두리가 포커스 색으로 바뀌고 바깥에 3px halo가 보입니다(`focus-field`). 오류 상태에서는 테두리와 halo가 오류 색입니다.
 - 누르는 영역: 상자 크기와 상관없이 24×24px 이상입니다.
 - 고대비 모드(forced-colors): 경계와 체크 표시가 시스템 색으로 보입니다.
+- 움직임 줄이기: 체크 표시를 그리지 않고 opacity만 바꿉니다.
 
 ### 앱이 할 일
 
