@@ -1,5 +1,32 @@
 # @tide-tds/components
 
+## 0.18.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#89](https://github.com/chane81/tide-design-system/pull/89) [`ab19d2b`](https://github.com/chane81/tide-design-system/commit/ab19d2b4ac76c4fb47e48922230019f61cb837b4) [@chane81](https://github.com/chane81) - Checkbox·Radio를 고를 때 움직임을 더했다.
+
+  - Checkbox를 체크하면 상자 채움이 0.7배에서 커지며 차고(150ms), 채움이 찬 뒤 체크 표시가 시작점에서 끝점으로 그려진다(150ms). indeterminate 가로줄도 같다. 해제하면 지연 없이 150ms 동안 거꾸로 지워지고 채움도 줄며 사라진다.
+  - Radio를 고르면 점이 가운데에서 살짝 넘쳤다가 자리 잡으며 나타나고(300ms), 앞 점은 150ms 동안 줄며 사라진다.
+  - 처음 렌더할 때 이미 선택된 상자·원은 움직이지 않는다. 누르거나 올려도 상자·원 크기는 변하지 않는다.
+  - 움직임 줄이기(`prefers-reduced-motion: reduce`)에서는 opacity만 바뀐다.
+  - Checkbox 표시는 `@tide-design/icons` 아이콘 대신 같은 모양의 전용 SVG로 그린다. 체크된 상자의 채움은 input 바탕 대신 겹친 레이어(`data-fill`)가 그린다(forced-colors 제외).
+  - Checkbox 체크·가로줄의 선 두께를 3px에서 2px로 줄였다. 아이콘 기본(1.5px)보다 한 단계 굵어 채운 상자 안에서도 보인다.
+
+- [#90](https://github.com/chane81/tide-design-system/pull/90) [`61fe005`](https://github.com/chane81/tide-design-system/commit/61fe005b46002af45a8bcced508b25034a928292) [@chane81](https://github.com/chane81) - Tabs의 고른 표시가 탭을 바꾸면 이전 탭에서 새 탭으로 미끄러진다(300ms, ease-out). 누름과 키보드(화살표, Home·End)가 같게 움직이고, 움직임 줄이기에서는 바로 옮겨진다.
+
+  - `Tabs`에 `shape` prop을 더했다. `underline`(기본값)은 지금 밑줄 모양이고, `box`는 옅은 탭 목록 바탕 위에 고른 탭을 둥근 사각형 바탕으로 보인다. 루트에 `data-shape`가 붙는다.
+  - 처음 그릴 때, 탭 글자·창 크기가 바뀔 때, 숨었다가 보일 때는 움직이지 않고 바로 놓인다.
+  - `TabList` 안에 고른 표시 요소(`aria-hidden` span) 하나가 탭 앞에 생긴다.
+  - foundation: 새 Semantic Token `bg-inset`(`--tide-bg-inset`, light gray-50 / dark gray-900)을 더했다. 표면보다 한 단계 들어간 바탕이고, 안에 표시가 떠 있는 곳(`box` 모양 Tabs 탭 목록)에 쓴다. 대비 쌍 `text-default`·`text-muted`·`text-primary` × `bg-inset`(4.5:1), `border-primary` × `bg-inset`(3:1)을 등록했다.
+  - 조상에 transform scale·zoom이 있어도(Dialog 등장 등) 고른 표시가 탭 자리에 맞게 놓인다.
+
+### 기능 추가와 수정 (patch)
+
+- 의존성 업데이트 [[`61fe005`](https://github.com/chane81/tide-design-system/commit/61fe005b46002af45a8bcced508b25034a928292)]:
+  - @tide-design/foundation@0.18.0
+  - @tide-design/icons@0.18.0
+
 ## 0.17.0
 
 ### 호환되지 않는 변경 (minor)
