@@ -67,7 +67,7 @@ _Avoid_: variant(Component 스타일 축과 혼동), weight, tone
 _Avoid_: tint, shade(방향이 정해진 말과 혼동), 오버레이(`bg-overlay` 막과 혼동)
 
 **표면 층 (Surface level)**:
-요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다.
+요소가 놓이는 바닥의 높이. `canvas`(페이지 배경), `surface`(카드, 패널), `raised`(popover, dropdown, modal) 세 가지다. 표면보다 한 단계 들어간 바탕 `inset`은 그 안에 `surface` 표시가 떠 있는 곳(rounded Tabs 탭 목록)에 쓴다.
 _Avoid_: elevation(그림자 형태 Foundation과 혼동), layer(Layer와 혼동)
 
 **Elevation**:

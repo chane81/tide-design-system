@@ -13,15 +13,15 @@
 - **움직임 줄이기에서는 바로 옮긴다.** 전환은 `motion-safe:`에만 둔다. 이동하는 표시는 opacity로 바꿀 수 없어(같은 요소가 두 자리에 있을 수 없다) 바로 옮기는 것이 이동을 빼는 방법이다.
 - **`shape?: "underline" | "rounded"`, 기본값 `underline`.** `Tabs` 루트가 받아 context로 내리고 루트에 `data-shape`로 붙인다. prop 이름은 Badge의 `shape`와 같다.
   - `underline`: 지금 모양이다. 탭 목록 구분선(`border-default`) 위 2px 밑줄(`border-primary`).
-  - `rounded`: 탭 목록에 `bg-neutral-subtle` 바탕, `p-1`, `rounded-lg`를 두고 구분선은 없앤다. 탭 목록은 탭 폭만큼만 선다(`self-start`). 고른 표시는 `rounded-md` 사각형이고 `bg-surface` + `border-raised` 1px + `shadow-sm`이다.
+  - `rounded`: 탭 목록에 `bg-inset` 바탕(light gray-50, dark gray-900, ADR 0039), `p-1`, `rounded-lg`를 두고 구분선은 없앤다. 탭 목록은 탭 폭만큼만 선다(`self-start`). 고른 표시는 `rounded-md` 사각형이고 `bg-surface` + `border-raised` 1px + `shadow-sm`이다.
 - **forced-colors에서는 두 모양 모두 `Highlight`로 그린다.** underline은 밑줄 경계색, rounded는 2px 테두리다. rounded는 바탕을 빼서(`transparent`) 시스템 글자색과의 대비를 시스템이 정하게 한다.
 
 ## 이유
 
 - 표시가 이전 탭에서 새 탭으로 옮겨 가면, 바뀐 것이 무엇이고 어디로 갔는지가 한눈에 보인다. 위치를 알리는 움직임이라 꾸밈보다 정보다(②). 300ms는 「나타날 때」 길이와 같고, 탭은 Menu 항목처럼 수백 번 반복하는 조작이 아니다.
 - 표시를 하나만 두면 어느 순간이든 고른 표시가 하나다. 탭마다 막대를 두고 opacity를 엇갈리면 전환 동안 두 막대가 함께 보인다.
-- rounded 고른 표시가 `bg-raised`가 아니라 `bg-surface`인 이유: dark에서 `bg-raised`(gray-900)는 탭 목록 바탕 `bg-neutral-subtle`(gray-900)과 같은 색이라 경계 1px로만 구분된다. `bg-surface`는 light 흰색, dark gray-950이라 두 Theme 모두 바탕 밝기로 구분된다. 경계는 raised 관례(`border-raised` + 그림자)를 따른다.
-- 대비(ADR 0023): 고르지 않은 탭 글자 `text-muted` × `bg-neutral-subtle`(5.17 / 5.58)을 정지 본문 4.5 쌍으로 새로 등록했다. hover 글자 `text-default` × `bg-neutral-subtle`, 고른 탭 글자 `text-primary` × `bg-surface`는 이미 4.5로 등록되어 있다.
+- rounded 고른 표시가 `bg-raised`가 아니라 `bg-surface`인 이유: dark에서 `bg-raised`(gray-900)는 탭 목록 바탕 `bg-inset`(gray-900)과 같은 색이라 경계 1px로만 구분된다. `bg-surface`는 light 흰색, dark gray-950이라 두 Theme 모두 바탕 밝기로 구분된다. 경계는 raised 관례(`border-raised` + 그림자)를 따른다.
+- 대비(ADR 0023): 탭 글자 `text-muted`·`text-default`·`text-primary` × `bg-inset`은 4.5, 포커스 링 `border-primary` × `bg-inset`은 3으로 등록했다(ADR 0039). 고른 탭 글자 `text-primary` × `bg-surface`는 이미 4.5로 등록되어 있다.
 
 ## 고려한 대안
 
@@ -33,6 +33,7 @@
 ## 결과
 
 - 겉모습과 움직임이 바뀌고 `shape` prop이 생기므로 `@tide-design/components` minor로 낸다. 기본값은 지금 모양이다.
-- 고른 탭이 바뀌는 300ms 동안 새 탭 글자(`text-primary`)는 아직 표시가 닿지 않은 바탕 위에 있다. rounded에서는 `bg-neutral-subtle` 위 `text-primary`인 순간이 있고, 이 짝도 5.16 / 5.45로 4.5를 넘는다. 일시 상태라 대비 쌍으로 따로 등록하지 않는다.
+- 고른 탭이 바뀌는 300ms 동안 새 탭 글자(`text-primary`)는 아직 표시가 닿지 않은 바탕 위에 있다. rounded에서는 `bg-inset` 위 `text-primary`인 순간이 있어 이 짝(5.80 / 5.45)도 4.5 쌍으로 등록했다.
 - 패널 전환(옆으로 미끄러짐, blur, 높이 애니메이션)은 범위 밖이다. 패널은 지금처럼 바로 바뀐다.
+- 조상의 transform scale·zoom(Dialog 등장 scale 등)은 화면 좌표를 바꾼다. 재는 값을 탭 목록의 레이아웃 크기 대비 비율로 나눠 레이아웃 길이로 되돌린다.
 - `TabList` 안에 탭이 아닌 요소(`aria-hidden` span)가 하나 생긴다. 앱이 `TabList` 자식 순서에 기대는 CSS(`:first-child` 등)를 쓰면 영향을 받는다.
