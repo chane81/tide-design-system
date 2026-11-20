@@ -95,7 +95,7 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ③ 단순함: [ADR 0004 접근성 동작은 React Aria hooks, 구조와 스타일은 직접 구현](../decisions/0004-react-aria-hooks-own-markup.md)
 - ③ 단순함, ④ 발견할 수 있음: [ADR 0005 variant 맵은 직접 작성하고, 조합은 `render` prop으로 한다](../decisions/0005-hand-written-variant-maps-and-render-prop.md)
 - ② 명확함: [ADR 0006 패키지는 Foundation과 Target(desktop)으로 나눈다](../decisions/0006-foundation-and-target-packages.md) (ADR 0009로 대체됨)
-- ③ 단순함, ④ 발견할 수 있음: [ADR 0007 아이콘은 Lucide를 생성 복사한 `@tide-design/icons`로 배포한다](../decisions/0007-lucide-generated-icons-package.md)
+- ③ 단순함, ④ 발견할 수 있음: [ADR 0007 아이콘은 Lucide를 생성 복사한 `@tide-design/icons`로 배포한다](../decisions/0007-lucide-generated-icons-package.md) (ADR 0036으로 일부 대체됨)
 - ③ 단순함: [ADR 0008 세 패키지는 fixed 버전으로 묶고, CI는 OIDC 직접 publish로 배포한다](../decisions/0008-fixed-versions-and-oidc-direct-publish.md)
 - ② 명확함, ③ 단순함: [ADR 0009 Component는 `@tide-design/components` 한 패키지로 두고 Target으로 나누지 않는다](../decisions/0009-single-components-package.md)
 - ③ 단순함, ④ 발견할 수 있음: [ADR 0010 press 축소를 끄는 prop은 `noPressScale`이다](../decisions/0010-press-scale-opt-out-prop-name.md)
@@ -116,3 +116,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ③ 단순함: [ADR 0033 primary solid를 흰 글자 4.5:1 이상인 `#2f6fe0`으로 바꾸고 blue-600 한 단계만 손으로 고친다](../decisions/0033-primary-blue-600-2f6fe0.md)
 - ① 접근성, ② 명확함: [ADR 0034 테두리 없는 요소의 포커스 표시에 2px 링을 더해 3:1을 지킨다](../decisions/0034-focus-ring-contrast.md)
 - ② 명확함, ① 접근성: [ADR 0035 고른 Radio는 accent 테두리와 가운데 점으로 그리고, 오류 Radio·Checkbox는 선택 표시까지 danger로 그린다](../decisions/0035-radio-ring-and-dot.md)
+- ② 명확함, ③ 단순함: [ADR 0036 아이콘 기본 선 두께를 1.5px로 바꾸고, 2px는 강조할 때 고른다](../decisions/0036-icon-stroke-1-5.md)

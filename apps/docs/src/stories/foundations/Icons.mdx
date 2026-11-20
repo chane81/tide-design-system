@@ -27,7 +27,7 @@ import { PlusIcon } from "@tide-design/icons";
 | prop          | 기본값 | 설명                                                                                                           |
 | ------------- | ------ | -------------------------------------------------------------------------------------------------------------- |
 | `size`        | `16`   | 가로·세로 크기(px)                                                                                             |
-| `strokeWidth` | `2`    | 화면에 그려지는 선 두께(px). 크기를 바꿔도 두께가 그대로입니다(`vector-effect: non-scaling-stroke`).           |
+| `strokeWidth` | `1.5`  | 화면에 그려지는 선 두께(px). 크기를 바꿔도 두께가 그대로입니다(`vector-effect: non-scaling-stroke`).           |
 | `aria-label`  | 없음   | 주면 `role="img"`인 이름 있는 이미지가 됩니다. 없으면 장식용입니다(`aria-hidden="true"`, `focusable="false"`). |
 | 나머지        | -      | `className`, `style`, `ref` 등 SVG 속성을 그대로 넘깁니다.                                                     |
 
@@ -48,7 +48,7 @@ Component 안에서는 Component의 `size`에 맞춥니다.
 
 ### 선 두께
 
-label(굵기 500) 옆에서는 기본값 2px, body(굵기 400) 옆에서는 1.5px입니다. 렌더된 두께 기준이라 크기와 상관없이 같습니다.
+기본값은 1.5px입니다. 굵은 글자(굵기 600 이상) 옆처럼 아이콘을 강조해야 할 때나 14px 이하 작은 아이콘이 흐려 보일 때는 `strokeWidth={2}`를 고릅니다. 렌더된 두께 기준이라 크기와 상관없이 같습니다.
 
 <Canvas of={IconsStories.StrokeWidths} />
 

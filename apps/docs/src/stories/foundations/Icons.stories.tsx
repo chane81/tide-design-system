@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 const row = { display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" } as const;
 const cell = { display: "flex", flexDirection: "column", alignItems: "center", gap: 8 } as const;
 
-/** 크기 규칙 표의 값(14·16·20·24px). 렌더된 선 두께는 크기와 무관하게 2px다. */
+/** 크기 규칙 표의 값(14·16·20·24px). 렌더된 선 두께는 크기와 무관하게 1.5px다. */
 export const Sizes: Story = {
   name: "크기",
   render: () => (
@@ -30,7 +30,7 @@ export const Sizes: Story = {
   ),
 };
 
-/** label(굵기 500) 옆은 2px, body(굵기 400) 옆은 1.5px. */
+/** 기본은 1.5px, 강조할 때(굵은 글자 옆 등)는 2px. */
 export const StrokeWidths: Story = {
   name: "선 두께",
   render: () => (
@@ -41,11 +41,11 @@ export const StrokeWidths: Story = {
           alignItems: "center",
           gap: 6,
           fontSize: 14,
-          fontWeight: 500,
+          fontWeight: 400,
         }}
       >
         <SearchIcon />
-        label 옆: strokeWidth 2(기본값)
+        기본: strokeWidth 1.5
       </span>
       <span
         style={{
@@ -53,11 +53,11 @@ export const StrokeWidths: Story = {
           alignItems: "center",
           gap: 6,
           fontSize: 14,
-          fontWeight: 400,
+          fontWeight: 600,
         }}
       >
-        <SearchIcon strokeWidth={1.5} />
-        body 옆: strokeWidth 1.5
+        <SearchIcon strokeWidth={2} />
+        강조(굵은 글자 옆): strokeWidth 2
       </span>
     </div>
   ),
