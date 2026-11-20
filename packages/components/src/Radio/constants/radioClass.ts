@@ -17,3 +17,7 @@ export const radioDotClass = {
 /** 점은 테두리와 같은 색이다. 오류면 danger, 비활성이면 text-disabled(choiceMarkClass)가 이긴다. */
 export const radioMarkClass =
   "rounded-full bg-current text-(--tide-accent-border) peer-enabled:peer-aria-invalid:text-(--tide-border-danger) forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-border-danger:CanvasText]";
+
+/** 고르면 보인다. 움직임이 허락되면 가운데에서 0.5배부터 커진다(fast). */
+export const radioMarkShownClass =
+  "peer-checked:opacity-100 motion-safe:scale-50 motion-safe:transition-[opacity,scale] motion-safe:peer-checked:scale-100";

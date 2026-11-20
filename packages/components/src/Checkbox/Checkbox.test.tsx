@@ -1,4 +1,5 @@
 // 두 번째 instance(forced-colors·reduced-motion)에서도 돈다.
+import { duration, easing } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -6,6 +7,7 @@ import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { expectFocusHalo, focusBorderColor } from "../../test/focus";
+import { afterChange, transitions } from "../../test/motion";
 
 import { Checkbox, type CheckboxProps } from "./Checkbox";
 import { CheckboxGroup } from "../CheckboxGroup/CheckboxGroup";
@@ -19,6 +21,8 @@ declare module "@tide-design/foundation" {
 }
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ms = (name: keyof typeof duration): number => Number.parseFloat(duration[name]);
 const transparent = "rgba(0, 0, 0, 0)";
 
 function resolve(value: string): string {
@@ -45,7 +49,12 @@ async function settle(): Promise<void> {
 const mark = (input: Element, kind: "check" | "indeterminate"): SVGElement =>
   input.parentElement!.querySelector(`[data-mark="${kind}"]`)!;
 
-const visible = (element: Element): boolean => getComputedStyle(element).display !== "none";
+/** 표시는 opacity로 숨는다. 도는 전환을 끝낸 뒤 읽는다. */
+function visible(element: Element): boolean {
+  for (const animation of element.getAnimations()) animation.finish();
+
+  return getComputedStyle(element).opacity !== "0";
+}
 
 describe("역할과 이름", () => {
   test("children이 체크박스의 이름이 되고, 아이콘은 보조 기술에서 숨는다", async () => {
@@ -601,6 +610,109 @@ describe("포커스 표시", () => {
     const style = getComputedStyle(page.getByRole("checkbox").element());
     expect(style.transitionProperty).toContain("background-color");
     expect(style.transitionDuration.split(",")[0]).toBe("0.15s");
+  });
+});
+
+describe("움직임(ADR 0037)", () => {
+  test("체크하면 체크 표시가 normal·ease-out으로 그려지고, opacity는 바로 오른다", async () => {
+    await render(<Checkbox>알림</Checkbox>);
+    const input = page.getByRole("checkbox").element();
+    const running = afterChange(input, () => transitions(mark(input, "check")));
+    await userEvent.click(page.getByRole("checkbox"));
+    const found = await running;
+
+    if (reducedMotion()) {
+      expect([...found.keys()]).toEqual(["opacity"]);
+      expect(found.get("opacity")!.duration).toBe(ms("fast"));
+      expect(getComputedStyle(mark(input, "check")).strokeDasharray).toBe("none");
+
+      return;
+    }
+    expect([...found.keys()]).toEqual(["stroke-dashoffset"]);
+    const draw = found.get("stroke-dashoffset")!;
+    expect(Number.parseFloat(String(draw.from["strokeDashoffset"]))).toBe(1);
+    expect(Number.parseFloat(String(draw.to["strokeDashoffset"]))).toBe(0);
+    expect(draw.duration).toBe(ms("normal"));
+    expect(draw.delay).toBe(0);
+    expect(draw.easing).toBe(easing.out);
+  });
+
+  test("해제하면 opacity fast로 사라지고, dash는 사라진 뒤에 되감는다", async () => {
+    await render(<Checkbox defaultChecked>알림</Checkbox>);
+    const input = page.getByRole("checkbox").element();
+    const running = afterChange(input, () => transitions(mark(input, "check")));
+    await userEvent.click(page.getByRole("checkbox"));
+    const found = await running;
+
+    expect(found.get("opacity")!.duration).toBe(ms("fast"));
+    expect(found.get("opacity")!.delay).toBe(0);
+    if (reducedMotion()) {
+      expect(found.has("stroke-dashoffset")).toBe(false);
+
+      return;
+    }
+    expect(found.get("stroke-dashoffset")!.delay).toBe(ms("fast"));
+  });
+
+  test("처음 렌더할 때 이미 선택된 표시는 움직이지 않고 그려진 채로 나온다", async () => {
+    await render(
+      <>
+        <Checkbox defaultChecked>비제어</Checkbox>
+        <Checkbox checked readOnly>
+          제어
+        </Checkbox>
+        <Checkbox indeterminate>일부</Checkbox>
+      </>,
+    );
+    for (const [name, kind] of [
+      ["비제어", "check"],
+      ["제어", "check"],
+      ["일부", "indeterminate"],
+    ] as const) {
+      const icon = mark(page.getByRole("checkbox", { name }).element(), kind);
+      expect(icon.getAnimations(), name).toHaveLength(0);
+      expect(getComputedStyle(icon).opacity, name).toBe("1");
+      if (!reducedMotion()) expect(getComputedStyle(icon).strokeDashoffset, name).toBe("0px");
+    }
+  });
+
+  test("indeterminate: 가로줄이 그려지고, 전체 선택으로 바뀌면 체크가 그려진다", async () => {
+    function SelectAll(): ReactElement {
+      const [items, setItems] = useState([true, true]);
+      const all = items.every(Boolean);
+
+      return (
+        <>
+          <Checkbox
+            checked={all}
+            indeterminate={items.some(Boolean) && !all}
+            onChange={(event) => setItems(items.map(() => event.target.checked))}
+          >
+            전체
+          </Checkbox>
+          <Checkbox
+            checked={items[0]}
+            onChange={(event) => setItems([event.target.checked, items[1]!])}
+          >
+            항목 1
+          </Checkbox>
+        </>
+      );
+    }
+    await render(<SelectAll />);
+    const all = page.getByRole("checkbox", { name: "전체" }).element();
+    const item = page.getByRole("checkbox", { name: "항목 1" }).element();
+    const property = reducedMotion() ? "opacity" : "stroke-dashoffset";
+
+    const minus = afterChange(item, () => transitions(mark(all, "indeterminate")));
+    await userEvent.click(page.getByRole("checkbox", { name: "항목 1" }));
+    expect((await minus).has(property)).toBe(true);
+    expect(visible(mark(all, "check"))).toBe(false);
+
+    const check = afterChange(all, () => transitions(mark(all, "check")));
+    await userEvent.click(page.getByRole("checkbox", { name: "전체" }));
+    expect((await check).has(property)).toBe(true);
+    expect(visible(mark(all, "indeterminate"))).toBe(false);
   });
 });
 

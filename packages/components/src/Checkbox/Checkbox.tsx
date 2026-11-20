@@ -2,7 +2,6 @@
 // context를 읽고, HTML 속성이 없는 indeterminate를 DOM으로 넣어야 해서 client다.
 // ref와 HTML 속성은 input에, className·style은 루트 label에 간다(ADR 0015).
 
-import { CheckIcon, MinusIcon } from "@tide-design/icons";
 import {
   use,
   useImperativeHandle,
@@ -24,7 +23,12 @@ import {
   type ChoiceSize,
 } from "../_internal/constants/choiceClass";
 import { cn } from "../_internal/libs/cn";
-import { checkboxInputStateClass, checkboxMarkClass } from "./constants/checkboxClass";
+import {
+  checkboxInputStateClass,
+  checkboxMarkClass,
+  checkboxMarkShownClass,
+} from "./constants/checkboxClass";
+import { CheckboxMark } from "./components/CheckboxMark";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
@@ -52,8 +56,6 @@ const boxClass: Record<ChoiceSize, string> = {
   sm: "size-4 rounded-sm",
   md: "size-5 rounded-sm",
 };
-
-const iconSize: Record<ChoiceSize, number> = { sm: 12, md: 16 };
 
 /**
  * 네이티브 체크박스. 여러 개를 묶어 이름·설명·오류를 붙이려면 `Field group` 안의 `CheckboxGroup`에 둔다.
@@ -108,22 +110,15 @@ export function Checkbox({
           type="checkbox"
           className={cn(boxClass[size], choiceInputClass, checkboxInputStateClass)}
         />
-        {/* 아이콘은 장식용이다. 상태는 input이 보조 기술에 알린다. */}
-        <CheckIcon
-          size={iconSize[size]}
-          strokeWidth={3}
-          data-mark="check"
-          className={cn(
-            choiceMarkClass,
-            checkboxMarkClass,
-            "peer-checked:block peer-indeterminate:hidden",
-          )}
+        <CheckboxMark
+          kind="check"
+          size={size}
+          className={cn(choiceMarkClass, checkboxMarkClass, checkboxMarkShownClass.check)}
         />
-        <MinusIcon
-          size={iconSize[size]}
-          strokeWidth={3}
-          data-mark="indeterminate"
-          className={cn(choiceMarkClass, checkboxMarkClass, "peer-indeterminate:block")}
+        <CheckboxMark
+          kind="indeterminate"
+          size={size}
+          className={cn(choiceMarkClass, checkboxMarkClass, checkboxMarkShownClass.indeterminate)}
         />
       </span>
       {children === undefined || children === null ? null : <span>{children}</span>}

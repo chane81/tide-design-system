@@ -1,4 +1,5 @@
 // 화살표 이동·단일 선택은 네이티브가 맡으므로 같은 name이 넘어가는지와 실제 키 동작을 본다.
+import { duration, easing } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -6,6 +7,7 @@ import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { expectFocusHalo } from "../../test/focus";
+import { afterChange, transitions } from "../../test/motion";
 
 import { Field } from "../Field/Field";
 import { Radio, type RadioProps } from "./Radio";
@@ -19,6 +21,7 @@ declare module "@tide-design/foundation" {
 }
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
 function resolve(value: string): string {
@@ -44,7 +47,12 @@ async function settle(): Promise<void> {
 
 const dot = (input: Element): HTMLElement =>
   input.parentElement!.querySelector('[data-mark="dot"]')!;
-const visible = (element: Element): boolean => getComputedStyle(element).display !== "none";
+/** 표시는 opacity로 숨는다. 도는 전환을 끝낸 뒤 읽는다. */
+function visible(element: Element): boolean {
+  for (const animation of element.getAnimations()) animation.finish();
+
+  return getComputedStyle(element).opacity !== "0";
+}
 
 function Shipping(props: { readonly onValueChange?: (value: string) => void }): ReactElement {
   return (
@@ -254,6 +262,51 @@ describe("Field와 묶음", () => {
     );
     await expect.element(page.getByRole("radio", { name: "가" })).not.toBeDisabled();
     await expect.element(page.getByRole("radio", { name: "나" })).toBeDisabled();
+  });
+});
+
+describe("움직임(ADR 0037)", () => {
+  test("고르면 점이 가운데에서 0.5배부터 커지며 나타나고(fast·ease-out), 앞 점은 사라진다", async () => {
+    await render(<Shipping />);
+    const normal = page.getByRole("radio", { name: "일반" }).element();
+    const fast = page.getByRole("radio", { name: "빠른" }).element();
+    const running = afterChange(fast, () => ({
+      shown: transitions(dot(fast)),
+      hidden: transitions(dot(normal)),
+    }));
+    await userEvent.click(page.getByRole("radio", { name: "빠른" }));
+    const { shown, hidden } = await running;
+
+    const expected = reducedMotion() ? ["opacity"] : ["opacity", "scale"];
+    expect([...shown.keys()].sort()).toEqual(expected);
+    expect([...hidden.keys()].sort()).toEqual(expected);
+    expect(Number(shown.get("opacity")!.to["opacity"])).toBe(1);
+    expect(Number(hidden.get("opacity")!.to["opacity"])).toBe(0);
+    for (const running of shown.values()) {
+      expect(running.duration).toBe(Number.parseFloat(duration.fast));
+      expect(running.easing).toBe(easing.out);
+    }
+    if (!reducedMotion()) {
+      expect(shown.get("scale")!.from["scale"]).toBe("0.5");
+      expect(shown.get("scale")!.to["scale"]).toBe("1");
+    }
+  });
+
+  test("처음 렌더할 때 이미 고른 점은 움직이지 않는다", async () => {
+    await render(
+      <>
+        <Shipping />
+        <Radio value="a" checked readOnly>
+          제어
+        </Radio>
+      </>,
+    );
+    for (const name of ["일반", "제어"]) {
+      const element = dot(page.getByRole("radio", { name }).element());
+      expect(element.getAnimations(), name).toHaveLength(0);
+      expect(getComputedStyle(element).opacity, name).toBe("1");
+      expect(getComputedStyle(element).scale, name).toMatch(/^(none|1)$/);
+    }
   });
 });
 
