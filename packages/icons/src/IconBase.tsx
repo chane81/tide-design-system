@@ -3,7 +3,7 @@ import type { ComponentProps, ReactElement } from "react";
 export interface IconOwnProps {
   /** 가로·세로 크기(px). 기본 16. */
   size?: number;
-  /** 선 두께. 기본 2. 렌더된 두께 기준이라 `size`를 바꿔도 화면에서 같은 두께로 그려진다. */
+  /** 선 두께. 기본 1.5. 렌더된 두께 기준이라 `size`를 바꿔도 화면에서 같은 두께로 그려진다. */
   strokeWidth?: number;
 }
 
@@ -16,7 +16,7 @@ export interface IconProps extends IconOwnProps, Omit<ComponentProps<"svg">, key
  */
 export function IconBase({
   size = 16,
-  strokeWidth = 2,
+  strokeWidth = 1.5,
   children,
   ...props
 }: IconProps): ReactElement {

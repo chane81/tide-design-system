@@ -1,5 +1,7 @@
 # 아이콘은 Lucide를 생성 복사한 `@tide-tds/icons`로 배포한다
 
+> **ADR 0036으로 일부 대체됨(2026-11-20)**: [아이콘 기본 선 두께를 1.5px로 바꾸고, 2px는 강조할 때 고른다](0036-icon-stroke-1-5.md). 「렌더 기준 선 두께 2px 고정」은 더 이상 맞지 않다. 렌더 기준 두께, `currentColor`, `aria-hidden`은 그대로다.
+
 근거 원칙: ③ 단순함이 유연함보다 우선한다, ④ 발견할 수 있음
 
 아이콘 세트는 Lucide다. `lucide-react`를 의존성으로 두지 않는다. 대신 `lucide-static`(ISC, 1.70.0 기준 SVG 2,322개: 정식 2,029 + alias 293)을 devDependency로 두고, 빌드 스크립트가 **Tide 이름표**를 기준으로 SVG에서 React Component를 생성해 **`@tide-tds/icons`** 로 배포한다. `@tide-tds/desktop`의 내부 아이콘(Checkbox 체크, chevron, 닫기 등)도 이 패키지에서 가져온다. 그래서 Tide의 런타임 외부 의존성은 아이콘 때문에 늘지 않는다.
