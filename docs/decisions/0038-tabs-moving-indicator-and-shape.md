@@ -37,3 +37,10 @@
 - 패널 전환(옆으로 미끄러짐, blur, 높이 애니메이션)은 범위 밖이다. 패널은 지금처럼 바로 바뀐다.
 - 조상의 transform scale·zoom(Dialog 등장 scale 등)은 화면 좌표를 바꾼다. 재는 값을 탭 목록의 레이아웃 크기 대비 비율로 나눠 레이아웃 길이로 되돌린다.
 - `TabList` 안에 탭이 아닌 요소(`aria-hidden` span)가 하나 생긴다. 앱이 `TabList` 자식 순서에 기대는 CSS(`:first-child` 등)를 쓰면 영향을 받는다.
+
+## 정정 (2026-11-20, 사용자 결정)
+
+- **`box` 탭 목록은 바탕을 투명하게 두고 `border-default` 1px 외곽선으로 두른다.** `bg-inset` 바탕을 쓰지 않는다. `p-1`, `rounded-lg`, 고른 표시(`bg-surface` + `border-raised` + `shadow-sm`)는 그대로다.
+- 탭 글자는 탭 목록 바깥의 표면 층 위에 놓이므로, underline과 같은 표면 층 대비 쌍을 따른다. 외곽선은 underline 구분선처럼 장식용이라 대비 검사 대상이 아니다.
+- 외곽선 두께는 `useTabIndicator`가 `clientLeft`·`clientTop`으로 빼므로 고른 표시 자리가 어긋나지 않는다.
+- `bg-inset` Token(ADR 0039)은 공개 계약이라 남긴다. 지금 Tide Component 중 쓰는 곳은 없다.

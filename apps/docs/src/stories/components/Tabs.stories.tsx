@@ -69,7 +69,7 @@ export const Basic: Story = {
   },
 };
 
-/** 모양: 밑줄(underline, 기본값)과 옅은 바탕 위 둥근 사각형(box). 탭을 바꾸면 고른 표시가 새 탭으로 미끄러진다. */
+/** 모양: 밑줄(underline, 기본값)과 외곽선 안 둥근 사각형(box). 탭을 바꾸면 고른 표시가 새 탭으로 미끄러진다. */
 export const Shapes: Story = {
   name: "모양",
   render: () => (

@@ -27,3 +27,7 @@
 - 공개 계약 `bg-inset`·`--tide-bg-inset`이 생긴다. Token을 더하는 것이므로 `@tide-design/foundation`은 minor다.
 - Token 목록 문서(Foundation/Color 「공통 Token」)와 GLOSSARY 표면 층 항목에 inset을 적는다.
 - light gray-50 바탕은 흰 페이지 위에서 옅다. 영역 경계가 약하다는 의견이 나오면 값을 gray-100으로 되돌리지 않고, 먼저 표시 쪽(경계·그림자)으로 보정한다.
+
+## 정정 (2026-11-20)
+
+- `box` Tabs 탭 목록이 투명 바탕 + 외곽선으로 바뀌어(ADR 0038 정정) 이 Token을 쓰는 Tide Component가 없다. 공개 계약이므로 Token과 대비 쌍은 그대로 둔다.
