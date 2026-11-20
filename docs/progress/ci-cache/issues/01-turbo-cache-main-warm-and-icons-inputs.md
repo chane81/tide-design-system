@@ -1,6 +1,6 @@
 # 01: main에서 캐시 채우기, icons task inputs 좁히기
 
-Status: ready-for-human
+Status: done
 
 ## What to build
 
@@ -18,20 +18,9 @@ Status: ready-for-human
 - [x] `ci.yml`: `push: branches: [main]`을 더해 main에서 `.turbo`·pnpm 캐시를 채운다. main은 `--affected` 없이 전체를 돌리고, changeset 검사는 PR에서만 한다.
 - [x] `packages/icons/turbo.json`: task마다 실제로 읽는 파일만 inputs에 적는다. `CHANGELOG.md`·README는 넣지 않는다.
 - [x] dry run 해시 비교: CHANGELOG 수정 → 4개 task 해시 불변(변경 전 설정은 4개 모두 바뀜), `test/icons.test.tsx` 수정 → generate·build 불변·test·typecheck 변경, `icon-names.json` 수정 → 4개 모두 변경.
-- [ ] PR 리뷰, 머지 뒤 main run이 캐시를 저장하는지 `gh cache list`로 확인
-
-## 판단한 곳
-
-- `release.yml`은 바꾸지 않는다. publish 경로에 캐시를 복원하면 cache poisoning 위험이 있어 job마다 캐시를 꺼 두었다.
-- main push는 취소하지 않는다(`cancel-in-progress`는 PR에서만). 취소된 run은 캐시를 저장하지 않고, main push는 머지와 Version PR 정도라 드물다.
-- generate inputs는 `scripts/**`에서 테스트(`*.test.ts`)만 뺐다. generate가 쓰지 않는 `init-names.ts`·`name-removal.ts`도 들어가지만, 파일을 하나씩 적으면 헬퍼를 더할 때 빠뜨리기 쉬워서 폴더 단위로 둔다.
-- build·typecheck·test는 `!src/generated/**`로 생성 결과를 뺀다. 생성 결과는 gitignore라 기본 처리에서 빠지던 파일이고, 내용은 dependsOn의 generate 해시가 대신한다.
-- lucide-static 버전은 lockfile로 해시에 들어가므로 inputs에 따로 적지 않는다.## 할 일
-
-- [x] `ci.yml`: `push: branches: [main]`을 더해 main에서 `.turbo`·pnpm 캐시를 채운다. main은 `--affected` 없이 전체를 돌리고, changeset 검사는 PR에서만 한다.
-- [x] `packages/icons/turbo.json`: task마다 실제로 읽는 파일만 inputs에 적는다. `CHANGELOG.md`·README는 넣지 않는다.
-- [x] dry run 해시 비교: CHANGELOG 수정 → 4개 task 해시 불변(변경 전 설정은 4개 모두 바뀜), `test/icons.test.tsx` 수정 → generate·build 불변·test·typecheck 변경, `icon-names.json` 수정 → 4개 모두 변경.
-- [ ] PR 리뷰, 머지 뒤 main run이 캐시를 저장하는지 `gh cache list`로 확인
+- [x] PR 리뷰(#92), 머지 뒤 main run이 캐시를 저장하는지 `gh cache list`로 확인
+- [x] 새 PR(#93)이 main 캐시를 복원하고, 다음 main run에서 task 15개가 모두 cached로 나왔다.
+- [x] main run이 쓰지 않은 turbo 캐시를 지운다(#93, `scripts/prune-turbo-cache.ts`). 복원한 캐시에 더해 저장하므로 지우지 않으면 쌓인다.
 
 ## 판단한 곳
 
