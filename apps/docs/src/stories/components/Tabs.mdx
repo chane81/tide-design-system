@@ -6,7 +6,7 @@ import * as TabsStories from "./Tabs.stories";
 
 # Tabs
 
-같은 영역에서 여러 패널 중 하나를 골라 보여 주는 탭 묶음입니다. 화살표로 탭을 옮기고, 고른 탭은 primary 글자와 아래 막대로 보입니다.
+같은 영역에서 여러 패널 중 하나를 골라 보여 주는 탭 묶음입니다. 화살표로 탭을 옮기고, 고른 탭은 primary 글자와 고른 표시(밑줄이나 둥근 바탕)로 보입니다. 탭을 바꾸면 고른 표시가 이전 탭에서 새 탭으로 미끄러집니다.
 
 <Canvas of={TabsStories.Basic} />
 
@@ -27,6 +27,25 @@ import * as TabsStories from "./Tabs.stories";
 
 `Tab`과 `TabPanel`은 같은 `value`로 이어집니다. 처음 고를 탭은 `defaultValue`로 정합니다. `value`나 `defaultValue` 중 하나는 꼭 줍니다. 그래야 서버 렌더에서도 패널이 바로 보입니다.
 
+### 모양 고르기
+
+`shape`로 고른 표시의 모양을 고릅니다. 한 화면에서는 한 모양만 씁니다.
+
+| `shape`             | 모양                                                                      | 쓰는 곳                                    |
+| ------------------- | ------------------------------------------------------------------------- | ------------------------------------------ |
+| `underline`(기본값) | 탭 목록 아래 구분선(`border-default`) 위에 2px 밑줄(`border-primary`)     | 페이지·카드의 큰 영역을 나눌 때            |
+| `box`               | 옅은 탭 목록 바탕(`bg-inset`) 위에 둥근 사각형(`bg-surface`, `shadow-sm`) | 툴바·필터처럼 작은 영역에서 보기를 바꿀 때 |
+
+<Canvas of={TabsStories.Shapes} />
+
+### 고른 표시의 움직임
+
+고른 표시는 탭 목록에 하나만 있고, 고른 탭이 바뀌면 그 탭의 위치·크기로 `normal`(300ms) `ease-out`으로 미끄러집니다. 넘치거나 흐려지지 않고, 누를 때와 키보드(화살표, Home·End)로 고를 때 같게 움직입니다.
+
+- 처음 그릴 때, 탭 글자·창 크기가 바뀔 때, 숨었다가 보일 때는 움직이지 않고 바로 그 자리에 놓입니다.
+- 위치는 탭 크기를 재어 정합니다. 재기 전(서버 렌더, 숨은 채 마운트)에는 고른 탭이 자기 막대·바탕으로 보입니다.
+- 글자색은 전환 없이 바로 바뀝니다. 패널은 움직이지 않습니다.
+
 ### 아이콘과 비활성 탭
 
 탭 안에 아이콘(장식용)과 글자를 함께 둡니다. `disabled` 탭은 흐리게 보이고 고를 수 없으며, 키보드 이동이 건너뜁니다.
@@ -35,9 +54,11 @@ import * as TabsStories from "./Tabs.stories";
 
 ### 세로로 놓기
 
-`orientation="vertical"`이면 탭 목록이 패널의 시작쪽에 서고 ↓↑로 옮깁니다. 고른 막대는 탭의 끝쪽에 그려집니다.
+`orientation="vertical"`이면 탭 목록이 패널의 시작쪽에 서고 ↓↑로 옮깁니다. 밑줄은 탭의 끝쪽에 그려지고, 고른 표시는 위아래로 미끄러집니다.
 
 <Canvas of={TabsStories.Vertical} />
+
+<Canvas of={TabsStories.VerticalBox} />
 
 ### 고를 때까지 기다리기
 
@@ -72,9 +93,9 @@ import * as TabsStories from "./Tabs.stories";
 - 탐색: →←(세로면 ↓↑)로 옮기고 끝에서 처음으로 돕니다. Home·End는 처음·마지막 탭입니다. 비활성 탭은 건너뜁니다.
 - 오른쪽에서 왼쪽으로 쓰는 locale(아랍어 등)에서는 ←가 다음 탭입니다. React Aria `I18nProvider`의 locale을 따릅니다.
 - 포커스 표시: 키보드 포커스에 요소에 붙은 2px 링과 그 바깥 3px halo(`focus-ring`)가 보입니다. 패널도 같습니다.
-- 고른 표시: 글자색만이 아니라 2px 막대로도 구분됩니다. 고대비 모드(forced-colors)에서는 막대가 시스템 강조색으로 그려집니다.
-- 대비: 탭 글자(`text-muted`, `text-primary`)는 표면 층과 4.5:1, 고른 막대(`border-primary`)와 ring은 3:1 이상입니다. 탭 목록 선은 장식용이라 대비 검사 대상이 아닙니다.
-- 움직임: 고른 막대는 가운데에서 짧게(150ms) 펼쳐집니다. 움직임 줄이기에서는 펼침 없이 흐려졌다 나타나기만 합니다.
+- 고른 표시: 글자색만이 아니라 밑줄이나 둥근 바탕으로도 구분됩니다. 고대비 모드(forced-colors)에서는 밑줄과 둥근 사각형의 테두리가 시스템 강조색으로 그려집니다. 고른 표시는 장식이라 보조 기술에는 숨깁니다(`aria-hidden`).
+- 대비: 탭 글자(`text-muted`, `text-primary`)는 표면 층과 4.5:1, 밑줄(`border-primary`)과 ring은 3:1 이상입니다. `box`는 탭 글자 × 탭 목록 바탕(`bg-inset`), 고른 탭 글자 × 고른 표시(`bg-surface`)가 4.5:1, ring × `bg-inset`이 3:1 이상입니다. 탭 목록 선은 장식용이라 대비 검사 대상이 아닙니다.
+- 움직임: 고른 표시는 새 탭으로 300ms 동안 미끄러집니다. 움직임 줄이기(`prefers-reduced-motion`)에서는 바로 옮겨집니다.
 
 ### 앱이 할 일
 
@@ -86,7 +107,7 @@ import * as TabsStories from "./Tabs.stories";
 
 ## Props
 
-모두 client Component입니다. `Tabs`·`TabList`·`TabPanel`은 `<div>`, `Tab`은 `<button type="button">`의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant`·`size` prop은 없습니다.
+모두 client Component입니다. `Tabs`·`TabList`·`TabPanel`은 `<div>`, `Tab`은 `<button type="button">`의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant`·`size` prop은 없고, 모양은 `shape`로 고릅니다.
 
 | Component  | prop                                                    | 기본값         |
 | ---------- | ------------------------------------------------------- | -------------- |
@@ -94,6 +115,7 @@ import * as TabsStories from "./Tabs.stories";
 | `Tabs`     | `defaultValue`: `string`(비제어, `value`가 없으면 필수) | 없음           |
 | `Tabs`     | `onValueChange`: `(value) => void`                      | 없음           |
 | `Tabs`     | `orientation`: `"horizontal" \| "vertical"`             | `"horizontal"` |
+| `Tabs`     | `shape`: `"underline" \| "box"`                         | `"underline"`  |
 | `Tabs`     | `activationMode`: `"automatic" \| "manual"`             | `"automatic"`  |
 | `TabList`  | `aria-label`·`aria-labelledby`: 이름                    | 없음           |
 | `TabList`  | `role` 제외(tablist)                                    |                |
@@ -104,6 +126,6 @@ import * as TabsStories from "./Tabs.stories";
 | `TabPanel` | `tabIndex`: `number`                                    | `0`            |
 | `TabPanel` | `role`·`id` 제외(tabpanel, 자동 id)                     |                |
 
-상태는 `data-orientation`(루트, `horizontal`/`vertical`), `data-selected`(고른 탭), `:disabled`(비활성 탭)로 노출합니다.
+상태는 `data-orientation`(루트, `horizontal`/`vertical`), `data-shape`(루트, `underline`/`box`), `data-selected`(고른 탭), `:disabled`(비활성 탭)로 노출합니다.
 
 <ArgTypes of={TabsStories} />

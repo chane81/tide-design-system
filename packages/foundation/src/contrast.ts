@@ -51,6 +51,8 @@ export const contrastPairs: readonly ContrastPair[] = [
     4.5,
   ),
   ...pairs(["text-default"], ["bg-neutral-subtle-hover"], 4),
+  // inset 바탕 위 글자(rounded Tabs의 고르지 않은 탭·hover·이동 중 고른 탭 글자)
+  ...pairs(["text-default", "text-muted", "text-primary"], ["bg-inset"], 4.5),
   // text × subtle은 Progress 막대, 목록 highlight, Switch 꺼짐 hover thumb이 쓴다(보통 subtle 위는 on-subtle).
   ...roles.flatMap((role) => pairs([`text-${role}`], [...surfaces, `bg-${role}-subtle`], 4.5)),
   ...roles.flatMap((role) =>
@@ -92,6 +94,8 @@ export const contrastPairs: readonly ContrastPair[] = [
     surfaces,
     3,
   ),
+  // inset 바탕 위 포커스 링(accent border, ADR 0032)
+  ...pairs(["border-primary"], ["bg-inset"], 3),
   // 포커스 링(accent border)이 subtle 바탕 위에 그려지는 곳(Alert 안의 Link 등). neutral은 3:1이 안 돼 뺐다(ADR 0034).
   // 고른 Radio의 경계·점 × hover(subtle)·누름(subtle-active) 바탕도 3:1이다(ADR 0035).
   ...roles.flatMap((role) =>

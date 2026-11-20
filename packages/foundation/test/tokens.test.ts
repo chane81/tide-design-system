@@ -25,6 +25,7 @@ const semanticClasses = [
   "bg-canvas",
   "bg-surface",
   "bg-raised",
+  "bg-inset",
   "bg-disabled",
   "bg-overlay",
   // 무채색 호버·클릭(ADR 0022 §3)
@@ -443,6 +444,7 @@ describe("tokens.css", () => {
         "bg-canvas": ["white", "gray-950"],
         "bg-surface": ["white", "gray-950"],
         "bg-raised": ["white", "gray-900"],
+        "bg-inset": ["gray-50", "gray-900"],
         "bg-disabled": ["gray-100", "gray-900"],
         "text-default": ["gray-900", "gray-50"],
         "text-muted": ["gray-700", "gray-300"],

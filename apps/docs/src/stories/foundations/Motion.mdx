@@ -47,6 +47,7 @@ import * as MotionStories from "./Motion.stories";
 - Radio 점의 overshoot 곡선(`cubic-bezier(0.34, 1.56, 0.64, 1)`)은 Radio에만 씁니다. Token이 아닙니다. 지연은 따로 Token이 없어 duration Token(`fast`)을 씁니다.
 - 상태 변화는 CSS transition으로 합니다. keyframe은 Spinner·Skeleton처럼 계속 도는 것에만 씁니다.
 - 애니메이션만으로 상태를 알리지 않습니다. 색, 아이콘, 라벨 중 하나가 함께 바뀝니다.
+- Tabs의 고른 표시는 새 탭의 위치·크기로 `normal` `ease-out`으로 미끄러지고, 움직임 줄이기에서는 바로 옮겨집니다(ADR 0038).
 
 ## 움직임 줄이기
 

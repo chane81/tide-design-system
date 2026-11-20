@@ -9,6 +9,11 @@ const twMerge = extendTailwindMerge(tailwindMergeConfig);
 describe("tailwind-merge 설정", () => {
   it("같은 namespace의 Semantic 색끼리 충돌을 푼다", () => {
     expect(twMerge("bg-canvas bg-raised")).toBe("bg-raised");
+    // inset은 위치 utility(inset-*)·inset-shadow와 다른 group이다.
+    expect(twMerge("bg-canvas bg-inset")).toBe("bg-inset");
+    expect(twMerge("inset-0 bg-inset inset-shadow-none")).toBe(
+      "inset-0 bg-inset inset-shadow-none",
+    );
     expect(twMerge("bg-primary-solid bg-danger-subtle-hover")).toBe("bg-danger-subtle-hover");
     expect(twMerge("text-default text-muted")).toBe("text-muted");
     expect(twMerge("text-on-solid text-primary")).toBe("text-primary");

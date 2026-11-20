@@ -167,6 +167,7 @@ export {
   type TabProps,
   type TabsActivationMode,
   type TabsOrientation,
+  type TabsShape,
   type TabsOwnProps,
   type TabsProps,
 } from "./Tabs/index";

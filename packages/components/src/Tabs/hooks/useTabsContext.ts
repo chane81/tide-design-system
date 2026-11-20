@@ -1,12 +1,13 @@
 "use client";
 import { createContext, use } from "react";
 
-import type { TabsActivationMode, TabsOrientation } from "../types";
+import type { TabsActivationMode, TabsOrientation, TabsShape } from "../types";
 
 export interface TabsContextValue {
   readonly value: string;
   readonly setValue: (value: string) => void;
   readonly orientation: TabsOrientation;
+  readonly shape: TabsShape;
   readonly activationMode: TabsActivationMode;
   readonly tabId: (value: string) => string;
   readonly panelId: (value: string) => string;

@@ -456,11 +456,12 @@ try {
     "Dialog 내부 class(z-modal, bg-overlay, motion-safe:starting:scale-96, motion-safe:not-data-open:scale-98, max-w-128)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
-    css.includes("motion-safe\\:data-selected\\:after\\:scale-x-100") &&
-      css.includes("data-selected\\:after\\:opacity-100") &&
+    css.includes("motion-safe\\:transition-\\[translate\\,width\\,height\\]") &&
+      css.includes("data-measured") &&
+      css.includes("--tab-indicator-width") &&
       css.includes("forced-colors\\:after\\:border-\\[Highlight\\]") &&
       css.includes("after\\:border-primary"),
-    "Tabs 내부 class(motion-safe:data-selected:after:scale-x-100, data-selected:after:opacity-100, forced-colors:after:border-[Highlight], after:border-primary)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+    "Tabs 내부 class(motion-safe:transition-[translate,width,height], [&:not([data-measured])>[data-selected]]:after:opacity-100, w-(--tab-indicator-width), forced-colors:after:border-[Highlight], after:border-primary)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes("group-aria-expanded\\:rotate-180") &&
@@ -711,6 +712,9 @@ try {
   assert(
     html?.includes('role="tablist"') === true &&
       html.includes('aria-label="프로젝트 보기"') &&
+      html.includes('data-shape="underline"') &&
+      html.includes('data-indicator=""') &&
+      !html.includes('data-measured=""') &&
       activityTab.includes('aria-selected="true"') &&
       activityTab.includes("data-selected") &&
       activityTab.includes('type="button"') &&
@@ -721,7 +725,7 @@ try {
       attribute(activityTab, "aria-controls") === attribute(activityPanel, "id") &&
       attribute(activityPanel, "aria-labelledby") === attribute(activityTab, "id") &&
       (html.match(/role="tabpanel"/g) ?? []).length === 1,
-    "Tabs가 prerender한 HTML에서 탭·패널 역할·고른 상태·연결이 기대와 다르다",
+    "Tabs가 prerender한 HTML에서 탭·패널 역할·고른 상태·연결·고른 표시(재기 전 fallback)가 기대와 다르다",
   );
 
   // Accordion prerender HTML. 접힌 패널은 hidden이다(hydration 뒤 React Aria가 until-found로 바꾼다).
