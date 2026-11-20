@@ -130,6 +130,7 @@ import {
   type TabProps,
   type TabsActivationMode,
   type TabsOrientation,
+  type TabsShape,
   type TabsProps,
   type TagGroupProps,
   type TagProps,
@@ -298,10 +299,12 @@ const roleDialog: DialogContentProps = { role: "alertdialog" };
 const dismissableDialog: DialogContentProps = { isDismissable: true };
 const tabsOrientation: TabsOrientation = "vertical";
 const tabsActivation: TabsActivationMode = "manual";
+const tabsShape: TabsShape = "rounded";
 const tabsProps: TabsProps = {
   defaultValue: "a",
   orientation: tabsOrientation,
   activationMode: tabsActivation,
+  shape: tabsShape,
   onValueChange: (value) => void value,
 };
 const tabListProps: TabListProps = { "aria-label": "보기" };
