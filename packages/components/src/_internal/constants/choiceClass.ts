@@ -24,9 +24,12 @@ export const choiceInputClass: string =
   " " +
   choiceInputForcedClass;
 
-/** 상자 위에 겹치는 표시. 누름은 input이 받는다. 색과 보이는 조건 class는 Component가 붙인다. */
+/**
+ * 상자 위에 겹치는 표시. 누름은 input이 받는다. 색과 보이는 조건 class는 Component가 붙인다.
+ * display를 바꾸지 않고 opacity로 숨긴다. display가 바뀌면 전환이 시작되지 않는다(ADR 0037).
+ */
 export const choiceMarkClass =
-  "pointer-events-none col-start-1 row-start-1 hidden peer-disabled:text-disabled forced-colors:forced-color-adjust-none forced-colors:[--tide-text-disabled:GrayText]";
+  "pointer-events-none col-start-1 row-start-1 opacity-0 transition-opacity peer-disabled:text-disabled forced-colors:forced-color-adjust-none forced-colors:[--tide-text-disabled:GrayText]";
 
 /** Checkbox·Radio의 size. 상자 크기와 글자 크기만 바뀌고 조작 영역은 24×24로 같다. */
 export type ChoiceSize = "sm" | "md";

@@ -21,7 +21,12 @@ import {
   type ChoiceSize,
 } from "../_internal/constants/choiceClass";
 import { cn } from "../_internal/libs/cn";
-import { radioDotClass, radioInputStateClass, radioMarkClass } from "./constants/radioClass";
+import {
+  radioDotClass,
+  radioInputStateClass,
+  radioMarkClass,
+  radioMarkShownClass,
+} from "./constants/radioClass";
 import { useFieldControl } from "../_internal/hooks/useFieldControl";
 import type { Role } from "../types";
 
@@ -121,7 +126,7 @@ export function Radio({
         <span
           aria-hidden="true"
           data-mark="dot"
-          className={cn(choiceMarkClass, radioMarkClass, radioDotClass[size], "peer-checked:block")}
+          className={cn(choiceMarkClass, radioMarkClass, radioDotClass[size], radioMarkShownClass)}
         />
       </span>
       {children === undefined || children === null ? null : <span>{children}</span>}

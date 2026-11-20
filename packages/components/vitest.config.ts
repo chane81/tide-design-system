@@ -5,6 +5,7 @@ import { defineConfig } from "vitest/config";
 import { maxWorkers } from "../../vitest.workers";
 
 import {
+  emulateReducedMotion,
   mouseDownAtCorner,
   mouseDownOn,
   mouseLeavePage,
@@ -37,7 +38,14 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright(),
-            commands: { mouseDownOn, mouseDownAtCorner, mouseLeavePage, mouseUp, screenshotTestId },
+            commands: {
+              emulateReducedMotion,
+              mouseDownOn,
+              mouseDownAtCorner,
+              mouseLeavePage,
+              mouseUp,
+              screenshotTestId,
+            },
             instances: [
               { browser: "chromium", name: "chromium" },
               {
