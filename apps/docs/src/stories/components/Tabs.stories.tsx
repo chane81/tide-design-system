@@ -14,6 +14,7 @@ const meta = {
     children: { control: false, table: { type: { summary: "ReactNode" } } },
     onValueChange: { control: false },
     orientation: { control: "inline-radio", options: ["horizontal", "vertical"] },
+    shape: { control: "inline-radio", options: ["underline", "rounded"] },
     activationMode: { control: "inline-radio", options: ["automatic", "manual"] },
   },
   args: { defaultValue: "overview" },
@@ -55,6 +56,46 @@ export const Basic: Story = {
   name: "기본",
   render: (args) => (
     <Tabs {...args}>
+      <TabList aria-label="프로젝트 보기">
+        <Tab value="overview">개요</Tab>
+        <Tab value="activity">활동 기록</Tab>
+        <Tab value="settings">설정</Tab>
+      </TabList>
+      <ProjectPanels />
+    </Tabs>
+  ),
+  play: async ({ canvasElement }) => {
+    await focusSelectedTab(canvasElement);
+  },
+};
+
+/** 모양: 밑줄(underline, 기본값)과 옅은 바탕 위 둥근 사각형(rounded). 탭을 바꾸면 고른 표시가 새 탭으로 미끄러진다. */
+export const Shapes: Story = {
+  name: "모양",
+  render: () => (
+    <div className="flex flex-col gap-8">
+      {(["underline", "rounded"] as const).map((shape) => (
+        <Tabs key={shape} defaultValue="overview" shape={shape}>
+          <TabList aria-label={`프로젝트 보기(${shape})`}>
+            <Tab value="overview">개요</Tab>
+            <Tab value="activity">활동 기록</Tab>
+            <Tab value="settings">설정</Tab>
+          </TabList>
+          <ProjectPanels />
+        </Tabs>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await focusSelectedTab(canvasElement);
+  },
+};
+
+/** 세로 rounded. 고른 표시가 위아래로 미끄러진다. */
+export const VerticalRounded: Story = {
+  name: "세로 rounded",
+  render: () => (
+    <Tabs defaultValue="overview" orientation="vertical" shape="rounded">
       <TabList aria-label="프로젝트 보기">
         <Tab value="overview">개요</Tab>
         <Tab value="activity">활동 기록</Tab>

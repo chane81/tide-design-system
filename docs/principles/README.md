@@ -117,3 +117,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ② 명확함: [ADR 0034 테두리 없는 요소의 포커스 표시에 2px 링을 더해 3:1을 지킨다](../decisions/0034-focus-ring-contrast.md)
 - ② 명확함, ① 접근성: [ADR 0035 고른 Radio는 accent 테두리와 가운데 점으로 그리고, 오류 Radio·Checkbox는 선택 표시까지 danger로 그린다](../decisions/0035-radio-ring-and-dot.md)
 - ② 명확함, ③ 단순함: [ADR 0036 아이콘 기본 선 두께를 1.5px로 바꾸고, 2px는 강조할 때 고른다](../decisions/0036-icon-stroke-1-5.md)
+- ② 명확함, ① 접근성: [ADR 0038 Tabs의 고른 표시는 탭 목록에 하나만 두어 새 탭으로 미끄러지게 하고, `shape`로 밑줄·둥근 바탕을 고른다](../decisions/0038-tabs-moving-indicator-and-shape.md)
