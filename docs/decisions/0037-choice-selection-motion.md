@@ -10,14 +10,14 @@
 
 | 대상                 | 나타날 때                                                                              | 사라질 때                                 | 움직임 줄이기    |
 | -------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------- |
-| Checkbox 채움        | scale 0.7→1 `normal`(300ms), opacity 0→1 `fast`(150ms), `ease-out`                     | scale·opacity 거꾸로, `fast`, `ease-out`  | opacity `fast`만 |
-| Checkbox 체크·가로줄 | `fast`(150ms) 지연 뒤 dash 그리기 + opacity 0→1 `normal`(300ms), `ease-out`            | 지연 없이 거꾸로 지우기 + opacity, `fast` | opacity `fast`만 |
+| Checkbox 채움        | scale 0.7→1 + opacity 0→1 `fast`(150ms), `ease-out`                                    | scale·opacity 거꾸로, `fast`, `ease-out`  | opacity `fast`만 |
+| Checkbox 체크·가로줄 | `fast`(150ms) 지연 뒤 dash 그리기 + opacity 0→1 `fast`(150ms), `ease-out`              | 지연 없이 거꾸로 지우기 + opacity, `fast` | opacity `fast`만 |
 | Radio 점             | scale 0→1 + opacity 0→1 `normal`(300ms), overshoot `cubic-bezier(0.34, 1.56, 0.64, 1)` | scale·opacity 1→0, `fast`, `ease-out`     | opacity `fast`만 |
 
 ### Checkbox
 
-- **채움은 별도 레이어다.** input 뒤에 같은 크기·radius의 span(`data-fill`)을 겹쳐 accent solid로 칠한다. input border-box와 같아 테두리까지 덮으므로 커지는 동안 바깥 테두리가 링처럼 남지 않는다. 진한 색은 옅을 때 거의 보이지 않아 opacity(`fast`)가 scale(`normal`)보다 먼저 찬다.
-- **체크는 채움이 거의 찬 뒤에 그린다.** `pathLength="1"`인 path에 `stroke-dasharray: 1`을 두고 `stroke-dashoffset`을 1→0으로, opacity와 함께 바꾼다. 지연은 `fast`(150ms)다. Token에 지연 값이 없어 duration Token을 지연으로 쓴다. 가로줄(indeterminate)도 같다.
+- **채움은 별도 레이어다.** input 뒤에 같은 크기·radius의 span(`data-fill`)을 겹쳐 accent solid로 칠한다. input border-box와 같아 테두리까지 덮으므로 커지는 동안 바깥 테두리가 링처럼 남지 않는다. scale과 opacity는 함께 `fast`로 바뀐다. 체크를 300ms로 그리면 하루에 수십 번 누르는 조작에서 느리게 느껴져(사용자 확인) 체크까지 300ms 안에 끝나게 줄였다.
+- **체크는 채움이 찬 뒤에 그린다.** `pathLength="1"`인 path에 `stroke-dasharray: 1`을 두고 `stroke-dashoffset`을 1→0으로, opacity와 함께 바꾼다. 지연은 `fast`(150ms)다. Token에 지연 값이 없어 duration Token을 지연으로 쓴다. 가로줄(indeterminate)도 같다.
 - **해제는 거꾸로 지운다.** 지연 없이 `fast`로 dash가 1로 돌아가며 opacity도 줄어든다. 채움도 같은 시간에 줄며 사라진다. 그리는 도중 다시 누르면 transition이 지금 값에서 되돌아간다.
 - **선 두께는 화면 2px다(전에는 3).** 아이콘 기본 1.5(ADR 0036)보다 한 단계 굵게 해 채운 상자 안에서도 보이게 한다(2026-11-20, 사용자 결정).
 - **표시는 전용 SVG다.** `@tide-design/icons`의 `CheckIcon`·`MinusIcon` 대신 `Checkbox/components/CheckboxMark.tsx`가 같은 Lucide path(`M20 6 9 17l-5-5`, `M5 12h14`)를 그린다. `vector-effect: non-scaling-stroke`를 쓰지 않고 화면 2px가 되게 두께를 viewBox 단위로 환산한다(`md` 16px → 3, `sm` 12px → 4).
