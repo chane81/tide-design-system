@@ -1,15 +1,19 @@
 # PR마다 lint, format, changeset 규칙, 바뀐 패키지의 typecheck·test·build·smoke를 돌린다.
+# main push는 캐시를 채운다. Actions cache는 default branch 것만 다른 branch가 복원할 수 있다.
 name: CI
 
 on:
   pull_request:
+  push:
+    branches: [main]
 
 permissions:
   contents: read
 
+# main push는 취소하지 않는다. 취소된 run은 캐시를 저장하지 않는다.
 concurrency:
-  group: ci-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   ci:
@@ -48,10 +52,15 @@ jobs:
       - run: pnpm lint
       - run: pnpm format:check
       # changeset 규칙은 scripts/check-changesets.ts(ADR 0020). Version PR은 changeset을 지우는 PR이라 건너뛴다.
-      - if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
+      # push에는 base_ref가 없어 PR에서만 돈다.
+      - if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
         env:
           BASE_REF: ${{ github.base_ref }}
         run: node scripts/check-changesets.ts "origin/$BASE_REF"
       # 루트 scripts/ 단위 테스트는 패키지가 아니라서 turbo 밖에서 돈다.
       - run: pnpm test:scripts
-      - run: pnpm turbo run typecheck test build smoke --affected
+      - if: ${{ github.event_name == 'pull_request' }}
+        run: pnpm turbo run typecheck test build smoke --affected
+      # main은 전체를 돌려 모든 task 결과를 캐시에 남긴다. 바뀌지 않은 task는 hit라 짧다.
+      - if: ${{ github.event_name == 'push' }}
+        run: pnpm turbo run typecheck test build smoke
