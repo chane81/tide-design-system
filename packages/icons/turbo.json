@@ -4,13 +4,53 @@
   "tasks": {
     // 이름표에서 아이콘 Component와 LICENSE를 만든다. 결과는 커밋하지 않으므로
     // 이 패키지의 build·typecheck·test가 모두 먼저 기다린다(turbo 2.11.10 Package Configurations).
-    // LICENSE 앞부분은 저장소 루트 LICENSE(Tide MIT)를 읽으므로 입력에 넣는다.
+    // inputs는 읽는 파일만 적는다. 릴리스마다 바뀌는 CHANGELOG가 하위 패키지 캐시까지 깨지 않게 한다.
+    // lucide-static 버전은 lockfile로, package.json은 turbo가 늘 해시에 넣는다.
     "generate": {
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/LICENSE"],
+      "inputs": ["scripts/**", "!scripts/**/*.test.ts", "icon-names.json", "$TURBO_ROOT$/LICENSE"],
       "outputs": ["src/generated/**", "LICENSE"]
     },
-    "build": { "dependsOn": ["^build", "generate"] },
-    "typecheck": { "dependsOn": ["^build", "generate"] },
-    "test": { "dependsOn": ["^build", "generate"] }
+    // src/generated는 generate 결과라 빼도 된다. generate 해시가 dependsOn으로 들어간다.
+    "build": {
+      "dependsOn": ["^build", "generate"],
+      "inputs": [
+        "src/**",
+        "!src/generated/**",
+        "tsdown.config.ts",
+        "tsconfig.build.json",
+        "$TURBO_ROOT$/tsconfig.base.json"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "generate"],
+      "inputs": [
+        "src/**",
+        "!src/generated/**",
+        "scripts/**",
+        "test/**",
+        "icon-names.json",
+        "tsdown.config.ts",
+        "vitest.config.ts",
+        "tsconfig.json",
+        "tsconfig.scripts.json",
+        "$TURBO_ROOT$/tsconfig.base.json",
+        "$TURBO_ROOT$/vitest.workers.ts"
+      ]
+    },
+    // ownProps 테스트가 tsconfig.json으로 tsc를 돌린다.
+    "test": {
+      "dependsOn": ["^build", "generate"],
+      "inputs": [
+        "src/**",
+        "!src/generated/**",
+        "scripts/**",
+        "test/**",
+        "icon-names.json",
+        "vitest.config.ts",
+        "tsconfig.json",
+        "$TURBO_ROOT$/tsconfig.base.json",
+        "$TURBO_ROOT$/vitest.workers.ts"
+      ]
+    }
   }
 }
