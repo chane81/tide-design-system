@@ -63,4 +63,7 @@ jobs:
         run: pnpm turbo run typecheck test build smoke --affected
       # main은 전체를 돌려 모든 task 결과를 캐시에 남긴다. 바뀌지 않은 task는 hit라 짧다.
       - if: ${{ github.event_name == 'push' }}
-        run: pnpm turbo run typecheck test build smoke
+        run: pnpm turbo run typecheck test build smoke --summarize
+      # 이번 run이 쓰지 않은 캐시를 지워 복원·저장을 거듭해도 크기가 늘지 않게 한다.
+      - if: ${{ github.event_name == 'push' }}
+        run: node scripts/prune-turbo-cache.ts
