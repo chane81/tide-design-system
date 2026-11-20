@@ -626,7 +626,7 @@ describe("포커스 표시", () => {
 });
 
 describe("움직임(ADR 0037)", () => {
-  test("체크하면 채움이 0.7배에서 커지고(opacity fast, scale normal), 체크는 fast 지연 뒤 normal로 그려진다", async () => {
+  test("체크하면 채움이 0.7배에서 fast로 커지고, 체크는 fast 지연 뒤 fast로 그려진다", async () => {
     await render(<Checkbox>알림</Checkbox>);
     const input = page.getByRole("checkbox").element();
     const running = afterChange(input, () => ({
@@ -646,7 +646,7 @@ describe("움직임(ADR 0037)", () => {
     }
     expect(moving(layer)).toEqual(["opacity", "scale"]);
     expect(layer.get("opacity")!.duration).toBe(ms("fast"));
-    expect(layer.get("scale")!.duration).toBe(ms("normal"));
+    expect(layer.get("scale")!.duration).toBe(ms("fast"));
     expect(Number.parseFloat(String(layer.get("scale")!.from["scale"]))).toBe(0.7);
     expect(layer.get("scale")!.easing).toBe(easing.out);
 
@@ -655,7 +655,7 @@ describe("움직임(ADR 0037)", () => {
     expect(Number.parseFloat(String(draw.from["strokeDashoffset"]))).toBe(1);
     expect(Number.parseFloat(String(draw.to["strokeDashoffset"]))).toBe(0);
     for (const running of check.values()) {
-      expect(running.duration).toBe(ms("normal"));
+      expect(running.duration).toBe(ms("fast"));
       expect(running.delay).toBe(ms("fast"));
       expect(running.easing).toBe(easing.out);
     }
@@ -717,7 +717,7 @@ describe("움직임(ADR 0037)", () => {
         )!;
       // 반쯤 그린 자리에 세워 두고 다시 누른다.
       draw.pause();
-      draw.currentTime = ms("fast") + ms("normal") / 2;
+      draw.currentTime = ms("fast") + ms("fast") / 2;
     });
     await userEvent.click(page.getByRole("checkbox"));
     await drawing;
