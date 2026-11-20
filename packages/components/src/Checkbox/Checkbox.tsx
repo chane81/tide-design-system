@@ -24,6 +24,7 @@ import {
 } from "../_internal/constants/choiceClass";
 import { cn } from "../_internal/libs/cn";
 import {
+  checkboxFillClass,
   checkboxInputStateClass,
   checkboxMarkClass,
   checkboxMarkShownClass,
@@ -110,6 +111,7 @@ export function Checkbox({
           type="checkbox"
           className={cn(boxClass[size], choiceInputClass, checkboxInputStateClass)}
         />
+        <span aria-hidden="true" data-fill="" className={cn(boxClass[size], checkboxFillClass)} />
         <CheckboxMark
           kind="check"
           size={size}

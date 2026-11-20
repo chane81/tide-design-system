@@ -2,7 +2,7 @@
 import { duration, easing } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
@@ -48,6 +48,24 @@ async function settle(): Promise<void> {
 
 const mark = (input: Element, kind: "check" | "indeterminate"): SVGElement =>
   input.parentElement!.querySelector(`[data-mark="${kind}"]`)!;
+
+/** background-color는 hover 색 전환이라 선택 움직임에서 뺀다. */
+const moving = (found: Map<string, unknown>): string[] =>
+  [...found.keys()].filter((key) => key !== "background-color").sort();
+
+const fillLayer = (input: Element): HTMLElement =>
+  input.parentElement!.querySelector("[data-fill]")!;
+
+/** 사용자에게 보이는 상자 바탕. 채움 레이어가 보이면 그 색, 아니면 input 바탕이다. */
+function fill(input: Element): string {
+  const layer = fillLayer(input);
+  for (const animation of layer.getAnimations()) animation.finish();
+  const style = getComputedStyle(layer);
+
+  return style.display !== "none" && style.opacity === "1"
+    ? style.backgroundColor
+    : getComputedStyle(input).backgroundColor;
+}
 
 /** 표시는 opacity로 숨는다. 도는 전환을 끝낸 뒤 읽는다. */
 function visible(element: Element): boolean {
@@ -283,9 +301,9 @@ describe("색", () => {
     expect(danger.closest("label")).toHaveAttribute("data-color", "danger");
     if (forcedColors()) return; // 시스템 색으로 바뀌므로 Token 비교는 기본 instance에서만 한다.
     await settle();
-    expect(getComputedStyle(primary).backgroundColor).toBe(resolve("var(--tide-bg-primary-solid)"));
+    expect(fill(primary)).toBe(resolve("var(--tide-bg-primary-solid)"));
     expect(getComputedStyle(primary).borderTopColor).toBe(resolve("var(--tide-border-primary)"));
-    expect(getComputedStyle(danger).backgroundColor).toBe(resolve("var(--tide-bg-danger-solid)"));
+    expect(fill(danger)).toBe(resolve("var(--tide-bg-danger-solid)"));
     expect(getComputedStyle(mark(primary, "check")).color).toBe(
       resolve("var(--tide-text-on-solid)"),
     );
@@ -340,7 +358,7 @@ describe("색", () => {
       expect(input.closest("label")).toHaveAttribute("data-color", "brand");
       if (forcedColors()) return;
       await settle();
-      expect(getComputedStyle(input).backgroundColor).toBe(resolve("#a85c81"));
+      expect(fill(input)).toBe(resolve("#a85c81"));
       expect(getComputedStyle(input).borderTopColor).toBe(resolve("#a85c81"));
     });
   });
@@ -363,27 +381,19 @@ describe("hover", () => {
 
     await userEvent.hover(page.getByText("체크됨"));
     await wait();
-    expect(getComputedStyle(box("체크됨")).backgroundColor).toBe(
-      resolve("var(--tide-bg-primary-solid-hover)"),
-    );
+    expect(fill(box("체크됨"))).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
 
     await userEvent.hover(page.getByText("체크 전"));
     await wait();
-    expect(getComputedStyle(box("체크 전")).backgroundColor).toBe(
-      resolve("var(--tide-bg-primary-subtle)"),
-    );
+    expect(fill(box("체크 전"))).toBe(resolve("var(--tide-bg-primary-subtle)"));
     expect(getComputedStyle(box("체크 전")).borderTopColor).toBe(
       resolve("var(--tide-border-strong)"),
     );
-    expect(getComputedStyle(box("체크됨")).backgroundColor).toBe(
-      resolve("var(--tide-bg-primary-solid)"),
-    );
+    expect(fill(box("체크됨"))).toBe(resolve("var(--tide-bg-primary-solid)"));
 
     await userEvent.hover(page.getByText("일부"));
     await wait();
-    expect(getComputedStyle(box("일부")).backgroundColor).toBe(
-      resolve("var(--tide-bg-primary-solid-hover)"),
-    );
+    expect(fill(box("일부"))).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
   });
 
   test("누르면 hover보다 한 단계 진한 -active 배경이다(체크됨 solid-active, 체크 전 subtle-active)", async () => {
@@ -403,9 +413,7 @@ describe("hover", () => {
     const pressed = async (testId: string, name: string): Promise<string> => {
       await commands.mouseDownOn(testId);
       await wait();
-      const value = getComputedStyle(
-        page.getByRole("checkbox", { name }).element(),
-      ).backgroundColor;
+      const value = fill(page.getByRole("checkbox", { name }).element());
       await commands.mouseUp();
 
       return value;
@@ -437,10 +445,10 @@ describe("hover", () => {
       </div>,
     );
     const box = page.getByRole("checkbox").element();
-    const before = getComputedStyle(box).backgroundColor;
+    const before = fill(box);
     await userEvent.hover(page.getByText("꺼짐"));
     await wait();
-    expect(getComputedStyle(box).backgroundColor).toBe(before);
+    expect(fill(box)).toBe(before);
   });
 
   test("forced-colors에서 hover해도 체크 전 상자는 Canvas다", async () => {
@@ -476,7 +484,7 @@ describe("오류", () => {
 
 describe("오류 채움(ADR 0035)", () => {
   const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
-  const bg = (element: Element): string => getComputedStyle(element).backgroundColor;
+  const bg = (element: Element): string => fill(element);
 
   test("체크·indeterminate 오류 Checkbox는 Checkbox 색 대신 danger solid로 차고 표시는 흰색이다", async () => {
     await render(
@@ -618,47 +626,145 @@ describe("포커스 표시", () => {
 });
 
 describe("움직임(ADR 0037)", () => {
-  test("체크하면 체크 표시가 normal·ease-out으로 그려지고, opacity는 바로 오른다", async () => {
+  test("체크하면 채움이 0.7배에서 커지고(opacity fast, scale normal), 체크는 fast 지연 뒤 normal로 그려진다", async () => {
     await render(<Checkbox>알림</Checkbox>);
     const input = page.getByRole("checkbox").element();
-    const running = afterChange(input, () => transitions(mark(input, "check")));
+    const running = afterChange(input, () => ({
+      layer: transitions(fillLayer(input)),
+      check: transitions(mark(input, "check")),
+    }));
     await userEvent.click(page.getByRole("checkbox"));
-    const found = await running;
+    const { layer, check } = await running;
 
     if (reducedMotion()) {
-      expect([...found.keys()]).toEqual(["opacity"]);
-      expect(found.get("opacity")!.duration).toBe(ms("fast"));
+      expect([...check.keys()]).toEqual(["opacity"]);
+      expect(check.get("opacity")!.duration).toBe(ms("fast"));
+      expect(check.get("opacity")!.delay).toBe(0);
       expect(getComputedStyle(mark(input, "check")).strokeDasharray).toBe("none");
 
       return;
     }
-    expect([...found.keys()]).toEqual(["stroke-dashoffset"]);
-    const draw = found.get("stroke-dashoffset")!;
+    expect(moving(layer)).toEqual(["opacity", "scale"]);
+    expect(layer.get("opacity")!.duration).toBe(ms("fast"));
+    expect(layer.get("scale")!.duration).toBe(ms("normal"));
+    expect(Number.parseFloat(String(layer.get("scale")!.from["scale"]))).toBe(0.7);
+    expect(layer.get("scale")!.easing).toBe(easing.out);
+
+    expect([...check.keys()].sort()).toEqual(["opacity", "stroke-dashoffset"]);
+    const draw = check.get("stroke-dashoffset")!;
     expect(Number.parseFloat(String(draw.from["strokeDashoffset"]))).toBe(1);
     expect(Number.parseFloat(String(draw.to["strokeDashoffset"]))).toBe(0);
-    expect(draw.duration).toBe(ms("normal"));
-    expect(draw.delay).toBe(0);
-    expect(draw.easing).toBe(easing.out);
+    for (const running of check.values()) {
+      expect(running.duration).toBe(ms("normal"));
+      expect(running.delay).toBe(ms("fast"));
+      expect(running.easing).toBe(easing.out);
+    }
   });
 
-  test("해제하면 opacity fast로 사라지고, dash는 사라진 뒤에 되감는다", async () => {
+  test("해제하면 지연 없이 체크가 fast로 거꾸로 지워지고, 채움도 fast로 줄며 사라진다", async () => {
     await render(<Checkbox defaultChecked>알림</Checkbox>);
     const input = page.getByRole("checkbox").element();
-    const running = afterChange(input, () => transitions(mark(input, "check")));
+    const running = afterChange(input, () => ({
+      layer: transitions(fillLayer(input)),
+      check: transitions(mark(input, "check")),
+    }));
     await userEvent.click(page.getByRole("checkbox"));
-    const found = await running;
+    const { layer, check } = await running;
 
-    expect(found.get("opacity")!.duration).toBe(ms("fast"));
-    expect(found.get("opacity")!.delay).toBe(0);
-    if (reducedMotion()) {
-      expect(found.has("stroke-dashoffset")).toBe(false);
-
-      return;
+    const expected = reducedMotion() ? ["opacity"] : ["opacity", "stroke-dashoffset"];
+    expect([...check.keys()].sort()).toEqual(expected);
+    for (const running of [...check.values(), ...layer.values()].filter(
+      (running) => running !== layer.get("background-color"),
+    )) {
+      expect(running.duration).toBe(ms("fast"));
+      expect(running.delay).toBe(0);
     }
-    expect(found.get("stroke-dashoffset")!.delay).toBe(ms("fast"));
+    if (!reducedMotion()) {
+      expect(moving(layer)).toEqual(["opacity", "scale"]);
+      expect(
+        Number.parseFloat(String(check.get("stroke-dashoffset")!.to["strokeDashoffset"])),
+      ).toBe(1);
+    }
   });
 
-  test("처음 렌더할 때 이미 선택된 표시는 움직이지 않고 그려진 채로 나온다", async () => {
+  test("움직임 줄이기에서 채움은 크기 변화 없이 opacity만 바뀐다", async () => {
+    // forced-colors instance에서는 채움 레이어가 숨어, 기본 instance에서 움직임 줄이기만 켠다.
+    if (forcedColors()) return;
+    await commands.emulateReducedMotion(true);
+    onTestFinished(() => commands.emulateReducedMotion(false));
+    expect(reducedMotion()).toBe(true);
+    await render(<Checkbox>알림</Checkbox>);
+    const input = page.getByRole("checkbox").element();
+    const running = afterChange(input, () => transitions(fillLayer(input)));
+    await userEvent.click(page.getByRole("checkbox"));
+    const layer = await running;
+    expect(moving(layer)).toEqual(["opacity"]);
+    expect(layer.get("opacity")!.duration).toBe(ms("fast"));
+    expect(getComputedStyle(fillLayer(input)).scale).toBe("none");
+  });
+
+  test("그리는 도중 다시 누르면 지금 위치에서 되돌아간다", async () => {
+    await render(<Checkbox>알림</Checkbox>);
+    if (reducedMotion()) return;
+    const input = page.getByRole("checkbox").element();
+    const drawing = afterChange(input, () => {
+      const draw = mark(input, "check")
+        .getAnimations()
+        .find(
+          (animation) =>
+            animation instanceof CSSTransition &&
+            animation.transitionProperty === "stroke-dashoffset",
+        )!;
+      // 반쯤 그린 자리에 세워 두고 다시 누른다.
+      draw.pause();
+      draw.currentTime = ms("fast") + ms("normal") / 2;
+    });
+    await userEvent.click(page.getByRole("checkbox"));
+    await drawing;
+
+    const back = afterChange(input, () => transitions(mark(input, "check")));
+    await userEvent.click(page.getByRole("checkbox"));
+    const from = Number.parseFloat(
+      String((await back).get("stroke-dashoffset")!.from["strokeDashoffset"]),
+    );
+    expect(from).toBeGreaterThan(0);
+    expect(from).toBeLessThan(1);
+  });
+
+  test("Space로 체크해도 같게 움직이고, 상태는 움직임을 기다리지 않고 바로 바뀐다", async () => {
+    await render(<Checkbox>알림</Checkbox>);
+    const input = page.getByRole("checkbox").element() as HTMLInputElement;
+    const running = afterChange(input, () => ({
+      checked: input.checked,
+      check: transitions(mark(input, "check")),
+    }));
+    await userEvent.tab();
+    await userEvent.keyboard(" ");
+    const { checked, check } = await running;
+    expect(checked).toBe(true);
+    expect(check.has(reducedMotion() ? "opacity" : "stroke-dashoffset")).toBe(true);
+  });
+
+  test("누르거나 올려도 루트와 상자 크기는 그대로다", async () => {
+    await render(
+      <Checkbox>
+        <span data-testid="label">알림</span>
+      </Checkbox>,
+    );
+    const input = page.getByRole("checkbox").element();
+    const before = input.getBoundingClientRect().width;
+    await userEvent.hover(page.getByTestId("label"));
+    await commands.mouseDownOn("label");
+    const pressed = {
+      box: getComputedStyle(input).scale,
+      root: getComputedStyle(input.closest("label")!).scale,
+      width: input.getBoundingClientRect().width,
+    };
+    await commands.mouseUp();
+    expect(pressed).toEqual({ box: "none", root: "none", width: before });
+  });
+
+  test("처음 렌더할 때 이미 선택된 채움·표시는 움직이지 않고 그려진 채로 나온다", async () => {
     await render(
       <>
         <Checkbox defaultChecked>비제어</Checkbox>
@@ -673,14 +779,18 @@ describe("움직임(ADR 0037)", () => {
       ["제어", "check"],
       ["일부", "indeterminate"],
     ] as const) {
-      const icon = mark(page.getByRole("checkbox", { name }).element(), kind);
+      const input = page.getByRole("checkbox", { name }).element();
+      const icon = mark(input, kind);
       expect(icon.getAnimations(), name).toHaveLength(0);
+      expect(fillLayer(input).getAnimations(), name).toHaveLength(0);
       expect(getComputedStyle(icon).opacity, name).toBe("1");
+      if (forcedColors()) continue;
+      expect(getComputedStyle(fillLayer(input)).opacity, name).toBe("1");
       if (!reducedMotion()) expect(getComputedStyle(icon).strokeDashoffset, name).toBe("0px");
     }
   });
 
-  test("indeterminate: 가로줄이 그려지고, 전체 선택으로 바뀌면 체크가 그려진다", async () => {
+  test("indeterminate: 가로줄도 fast 지연 뒤 그려지고, 전체 선택으로 바뀌면 체크가 그려진다", async () => {
     function SelectAll(): ReactElement {
       const [items, setItems] = useState([true, true]);
       const all = items.every(Boolean);
@@ -710,7 +820,9 @@ describe("움직임(ADR 0037)", () => {
 
     const minus = afterChange(item, () => transitions(mark(all, "indeterminate")));
     await userEvent.click(page.getByRole("checkbox", { name: "항목 1" }));
-    expect((await minus).has(property)).toBe(true);
+    const drawn = await minus;
+    expect(drawn.has(property)).toBe(true);
+    if (!reducedMotion()) expect(drawn.get(property)!.delay).toBe(ms("fast"));
     expect(visible(mark(all, "check"))).toBe(false);
 
     const check = afterChange(all, () => transitions(mark(all, "check")));
@@ -737,12 +849,12 @@ describe("forced-colors", () => {
       const icon = mark(input, kind);
       const box = getComputedStyle(input);
       expect(visible(icon)).toBe(true);
-      expect(getComputedStyle(icon).color).not.toBe(box.backgroundColor);
+      expect(getComputedStyle(icon).color).not.toBe(fill(input));
       expect(getComputedStyle(icon).color).not.toBe(transparent);
       expect(box.borderTopWidth).toBe("1px");
       expect(box.borderTopColor).not.toBe(transparent);
       if (forcedColors()) {
-        expect(box.backgroundColor).toBe(resolve("Highlight"));
+        expect(fill(input)).toBe(resolve("Highlight"));
         expect(getComputedStyle(icon).color).toBe(resolve("HighlightText"));
       }
     }

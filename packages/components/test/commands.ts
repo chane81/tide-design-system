@@ -49,8 +49,17 @@ export const screenshotTestId: BrowserCommand<[testId: string]> = async (context
   return buffer.toString("base64");
 };
 
+/** 움직임 줄이기만 켜고 끈다. forced-colors instance에서 숨는 요소의 reduced-motion 동작을 기본 instance에서 본다. */
+export const emulateReducedMotion: BrowserCommand<[reduce: boolean]> = async (context, reduce) => {
+  if (context.provider.name !== "playwright") {
+    throw new Error(`playwright provider만 지원한다: ${context.provider.name}`);
+  }
+  await context.page.emulateMedia({ reducedMotion: reduce ? "reduce" : "no-preference" });
+};
+
 declare module "vitest/browser" {
   interface BrowserCommands {
+    emulateReducedMotion: (reduce: boolean) => Promise<void>;
     mouseDownOn: (testId: string) => Promise<void>;
     mouseDownAtCorner: (testId: string) => Promise<void>;
     mouseLeavePage: () => Promise<void>;

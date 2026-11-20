@@ -18,6 +18,9 @@ export const radioDotClass = {
 export const radioMarkClass =
   "rounded-full bg-current text-(--tide-accent-border) peer-enabled:peer-aria-invalid:text-(--tide-border-danger) forced-colors:[--tide-accent-border:Highlight] forced-colors:[--tide-border-danger:CanvasText]";
 
-/** 고르면 보인다. 움직임이 허락되면 가운데에서 0.5배부터 커진다(fast). */
+/**
+ * 고르면 보인다. 움직임이 허락되면 점이 0에서 살짝 넘쳤다가 자리 잡고(normal), 해제되면 fast·ease-out으로 줄어든다.
+ * overshoot 곡선은 Radio만 써서 Token에 두지 않는다. 다른 Component도 쓰면 foundation easing으로 올린다(ADR 0037).
+ */
 export const radioMarkShownClass =
-  "peer-checked:opacity-100 motion-safe:scale-50 motion-safe:transition-[opacity,scale] motion-safe:peer-checked:scale-100";
+  "peer-checked:opacity-100 motion-safe:scale-0 motion-safe:transition-[opacity,scale] motion-safe:peer-checked:scale-100 motion-safe:peer-checked:duration-normal motion-safe:peer-checked:ease-[cubic-bezier(0.34,1.56,0.64,1)]";
