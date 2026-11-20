@@ -12,6 +12,7 @@ exports[`Role 회귀 > 대비 쌍 목록과 Theme별 대비비가 바뀌지 않�
   "text-default / bg-neutral-subtle ≥ 4.5: 8.2445 / 9.2592",
   "text-default / bg-neutral-subtle-active ≥ 4.5: 7.1571 / 5.8092",
   "text-default / bg-neutral-subtle-hover ≥ 4: 7.6526 / 7.6822",
+  "text-muted / bg-neutral-subtle ≥ 4.5: 5.1726 / 5.5795",
   "text-primary / bg-canvas ≥ 4.5: 6.3175 / 7.8537",
   "text-primary / bg-surface ≥ 4.5: 6.3175 / 7.8537",
   "text-primary / bg-raised ≥ 4.5: 6.3175 / 5.4471",

@@ -436,6 +436,12 @@ describe("Tabs 대비 쌍", () => {
     }
   });
 
+  it("rounded: 고르지 않은 탭 글자(text-muted)·hover 글자(text-default) × 탭 목록 바탕(bg-neutral-subtle)이 4.5:1, 고른 탭 글자(text-primary) × 고른 표시 바탕(bg-surface)이 4.5:1로 등록되어 있다", () => {
+    expect(registered("text-muted", "bg-neutral-subtle", 4.5)).toBe(true);
+    expect(registered("text-default", "bg-neutral-subtle", 4.5)).toBe(true);
+    expect(registered("text-primary", "bg-surface", 4.5)).toBe(true);
+  });
+
   it("탭 목록 선(border-default)과 비활성 글자(text-disabled)는 대비 검사에서 제외되어 있다", () => {
     for (const token of ["border-default", "text-disabled"]) {
       expect(

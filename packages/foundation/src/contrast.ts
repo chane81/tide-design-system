@@ -51,6 +51,8 @@ export const contrastPairs: readonly ContrastPair[] = [
     4.5,
   ),
   ...pairs(["text-default"], ["bg-neutral-subtle-hover"], 4),
+  // rounded Tabs의 고르지 않은 탭 글자 × 탭 목록 바탕
+  ...pairs(["text-muted"], ["bg-neutral-subtle"], 4.5),
   // text × subtle은 Progress 막대, 목록 highlight, Switch 꺼짐 hover thumb이 쓴다(보통 subtle 위는 on-subtle).
   ...roles.flatMap((role) => pairs([`text-${role}`], [...surfaces, `bg-${role}-subtle`], 4.5)),
   ...roles.flatMap((role) =>

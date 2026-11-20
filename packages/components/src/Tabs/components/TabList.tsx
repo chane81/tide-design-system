@@ -13,8 +13,10 @@ import { useTabListState } from "react-stately";
 
 import { cn } from "../../_internal/libs/cn";
 import { resolveCollectionChildren } from "../../_internal/libs/listCollection";
-import { tabListOrientationClass } from "../constants/tabsClass";
+import { tabListClass } from "../constants/tabsClass";
+import { useTabIndicator } from "../hooks/useTabIndicator";
 import { useTabsContext } from "../hooks/useTabsContext";
+import { TabIndicator } from "./TabIndicator";
 import { TabView } from "./TabView";
 
 export interface TabListOwnProps {
@@ -33,6 +35,7 @@ export interface TabListProps
 export function TabList({ ref, className, children, ...props }: TabListProps): ReactElement {
   const context = useTabsContext("TabList");
   const listRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
   const items = useMemo(() => resolveCollectionChildren(children), [children]);
   // 준 값과 같은 탭이 없으면 선택을 비워 넘긴다. useTabListState가 첫 활성 탭을 골라 onSelectionChange로 알린다.
   const known = items.some(
@@ -56,13 +59,16 @@ export function TabList({ ref, className, children, ...props }: TabListProps): R
     listRef,
   );
   const mergedRef = useMemo(() => mergeRefs(ref, listRef), [ref, listRef]);
+  useTabIndicator(listRef, indicatorRef);
 
   return (
     <div
       {...mergeProps(props, tabListProps)}
       ref={mergedRef}
-      className={cn(tabListOrientationClass[context.orientation], className)}
+      className={cn(tabListClass[context.shape][context.orientation], className)}
     >
+      {/* 탭보다 앞에 두어 탭 글자 아래에 그려진다. */}
+      <TabIndicator ref={indicatorRef} shape={context.shape} orientation={context.orientation} />
       {[...state.collection].map((node) => (
         <TabView key={node.key} node={node} state={state} context={context} />
       ))}

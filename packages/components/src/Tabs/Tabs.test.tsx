@@ -6,7 +6,7 @@ import { render } from "vitest-browser-react";
 
 import { expectFocusRing, expectNoFocusHalo } from "../../test/focus";
 
-import { captureWhen } from "../../test/motion";
+import { captureWhen, openControl, transitions } from "../../test/motion";
 
 import {
   Tab,
@@ -16,7 +16,9 @@ import {
   type TabListProps,
   type TabPanelProps,
   type TabProps,
+  type TabsOrientation,
   type TabsProps,
+  type TabsShape,
 } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
@@ -24,12 +26,12 @@ const transparent = "rgba(0, 0, 0, 0)";
 const wait = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 
 /** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
-function resolve(property: "color" | "borderTopColor", value: string): string {
+function resolve(property: "color" | "borderTopColor" | "backgroundColor", value: string): string {
   const probe = document.createElement("div");
   probe.dataset["theme"] = "light";
   probe.style.forcedColorAdjust = "none";
   if (property === "borderTopColor") probe.style.borderTop = `1px solid ${value}`;
-  else probe.style.color = value;
+  else probe.style[property] = value;
   document.body.append(probe);
   const resolved = getComputedStyle(probe)[property];
   probe.remove();
@@ -77,6 +79,37 @@ function Example({ list, ...props }: ExampleProps): ReactElement {
 
 const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).element() as HTMLElement;
 const panel = (): HTMLElement => page.getByRole("tabpanel").element() as HTMLElement;
+const indicator = (): HTMLElement =>
+  document.querySelector<HTMLElement>("[data-indicator]") as HTMLElement;
+
+/** 표시가 탭의 자리에 있는지. 밑줄은 진행 방향의 위치·길이만, rounded는 네 값을 모두 본다. */
+function placement(
+  testId: string,
+  orientation: TabsOrientation,
+  shape: TabsShape,
+): { actual: number[]; expected: number[] } {
+  const tab = byTestId(testId).getBoundingClientRect();
+  const box = indicator().getBoundingClientRect();
+  const pick = (rect: DOMRect): number[] => {
+    if (shape === "rounded") return [rect.left, rect.top, rect.width, rect.height];
+
+    return orientation === "horizontal" ? [rect.left, rect.width] : [rect.top, rect.height];
+  };
+
+  return { actual: pick(box), expected: pick(tab) };
+}
+
+const onTab = (testId: string, orientation: TabsOrientation, shape: TabsShape): boolean => {
+  const { actual, expected } = placement(testId, orientation, shape);
+
+  return actual.every((value, index) => Math.abs(value - (expected[index] ?? 0)) < 0.5);
+};
+
+function expectOn(testId: string, orientation: TabsOrientation, shape: TabsShape): void {
+  const { actual, expected } = placement(testId, orientation, shape);
+  actual.forEach((value, index) => expect(value).toBeCloseTo(expected[index] ?? 0, 0));
+}
+
 const selectedTab = (): string | null =>
   document.querySelector('[role="tab"][aria-selected="true"]')?.textContent ?? null;
 
@@ -326,28 +359,12 @@ describe("포커스 표시와 고른 표시", () => {
     expectFocusRing(panel());
   });
 
-  test("고른 탭은 primary 글자와 2px 막대로, 고르지 않은 탭은 muted 글자에 막대가 없다", async () => {
+  test("고른 탭은 primary 글자, 고르지 않은 탭은 muted 글자다. hover는 전환 없이 default 글자다", async () => {
     await render(<Example />);
-    // 앞 테스트의 마우스가 탭 위에 남아 hover 글자가 되지 않게 바깥으로 옮겨 둔다.
     await userEvent.hover(page.getByTestId("before"));
-    const selected = getComputedStyle(byTestId("account"), "::after");
-    const other = getComputedStyle(byTestId("security"), "::after");
-    expect(selected.opacity).toBe("1");
-    expect(other.opacity).toBe("0");
-    expect(selected.borderBottomWidth).toBe("2px");
-    expect(selected.position).toBe("absolute");
-    expect(selected.bottom).toBe("-1px");
-    expect(Number.parseFloat(selected.width)).toBeCloseTo(
-      byTestId("account").getBoundingClientRect().width,
-      1,
-    );
-    expect(getComputedStyle(byTestId("list")).borderBottomWidth).toBe("1px");
     expect(getComputedStyle(byTestId("account")).fontSize).toBe("14px");
     expect(getComputedStyle(byTestId("account")).height).toBe("36px");
     if (forcedColors()) return;
-    expect(selected.borderBottomColor).toBe(
-      resolve("borderTopColor", "var(--tide-border-primary)"),
-    );
     expect(getComputedStyle(byTestId("account")).color).toBe(
       resolve("color", "var(--tide-text-primary)"),
     );
@@ -360,65 +377,191 @@ describe("포커스 표시와 고른 표시", () => {
     );
     expect(getComputedStyle(byTestId("security")).transitionDuration).toBe("0s");
   });
-
-  test("세로 탭은 막대가 끝쪽(오른쪽)에 서고 탭 목록 선도 끝쪽이다", async () => {
-    await render(<Example orientation="vertical" />);
-    const selected = getComputedStyle(byTestId("account"), "::after");
-    expect(selected.borderRightWidth).toBe("2px");
-    expect(selected.borderBottomWidth).toBe("0px");
-    expect(selected.right).toBe("-1px");
-    expect(Number.parseFloat(selected.height)).toBeCloseTo(
-      byTestId("account").getBoundingClientRect().height,
-      1,
-    );
-    expect(getComputedStyle(byTestId("list")).borderRightWidth).toBe("1px");
-    expect(getComputedStyle(byTestId("root")).flexDirection).toBe("row");
-  });
-
-  test("forced-colors에서는 고른 탭의 막대가 시스템 강조색으로 남아 색 없이도 구분된다", async () => {
-    await render(<Example />);
-    if (!forcedColors()) return;
-    const selected = getComputedStyle(byTestId("account"), "::after");
-    const other = getComputedStyle(byTestId("security"), "::after");
-    expect(selected.forcedColorAdjust).toBe("none");
-    expect(selected.opacity).toBe("1");
-    expect(selected.borderBottomWidth).toBe("2px");
-    expect(selected.borderBottomColor).not.toBe(transparent);
-    expect(selected.borderBottomColor).not.toBe(
-      getComputedStyle(byTestId("account")).backgroundColor,
-    );
-    expect(other.opacity).toBe("0");
-  });
 });
 
-describe("막대 motion", () => {
-  test("고른 표시는 opacity fast(150ms)로 바뀌고, 움직임 줄이기가 아니면 가운데에서 펼쳐진다", async () => {
+describe("고른 표시(indicator)", () => {
+  test("기본(underline)은 탭 목록 안 표시 하나가 고른 탭 아래 2px 밑줄로 놓이고, 탭 자체 막대는 숨는다", async () => {
     await render(<Example />);
-    const after = getComputedStyle(byTestId("security"), "::after");
-    expect(after.transitionDuration).toBe("0.15s");
+    expect(byTestId("root")).toHaveAttribute("data-shape", "underline");
+    expect(byTestId("list").querySelectorAll("[data-indicator]")).toHaveLength(1);
+    expect(indicator()).toHaveAttribute("aria-hidden", "true");
+    await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+    const style = getComputedStyle(indicator());
+    expect(style.visibility).toBe("visible");
+    expect(style.borderBottomWidth).toBe("2px");
+    expect(style.bottom).toBe("-1px");
+    expectOn("account", "horizontal", "underline");
+    expect(getComputedStyle(byTestId("account"), "::after").opacity).toBe("0");
+    expect(getComputedStyle(byTestId("list")).borderBottomWidth).toBe("1px");
+    if (forcedColors()) return;
+    expect(style.borderBottomColor).toBe(resolve("borderTopColor", "var(--tide-border-primary)"));
+  });
+
+  test("누르거나 키보드(→, End, Home)로 고르면 표시가 새 탭의 위치·크기로 간다", async () => {
+    await render(<Example />);
+    await userEvent.click(page.getByTestId("notifications"));
+    await expect.poll(() => onTab("notifications", "horizontal", "underline")).toBe(true);
+    await tabIntoList();
+    await userEvent.keyboard("{Home}");
+    await expect.poll(() => onTab("account", "horizontal", "underline")).toBe(true);
+    await userEvent.keyboard("{ArrowRight}");
+    await expect.poll(() => onTab("security", "horizontal", "underline")).toBe(true);
+    await userEvent.keyboard("{End}");
+    await expect.poll(() => onTab("notifications", "horizontal", "underline")).toBe(true);
+  });
+
+  test("rounded는 옅은 탭 목록 바탕 위에 고른 탭을 둥근 사각형 바탕으로 보인다", async () => {
+    await render(<Example shape="rounded" />);
+    expect(byTestId("root")).toHaveAttribute("data-shape", "rounded");
+    await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+    const list = getComputedStyle(byTestId("list"));
+    expect(list.borderBottomWidth).toBe("0px");
+    expect(list.padding).toBe("4px");
+    expect(list.borderTopLeftRadius).toBe("8px");
+    const style = getComputedStyle(indicator());
+    expect(style.borderTopLeftRadius).toBe("6px");
+    expectOn("account", "horizontal", "rounded");
+    if (forcedColors()) return;
+    expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-neutral-subtle)"));
+    expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-surface)"));
+    expect(style.boxShadow).not.toBe("none");
+    expect(getComputedStyle(byTestId("account")).color).toBe(
+      resolve("color", "var(--tide-text-primary)"),
+    );
+    await userEvent.click(page.getByTestId("security"));
+    await expect.poll(() => onTab("security", "horizontal", "rounded")).toBe(true);
+  });
+
+  test.each(["underline", "rounded"] as const)(
+    "세로(%s)는 표시가 고른 탭의 세로 위치·높이를 따르고 ↓로 옮기면 따라간다",
+    async (shape) => {
+      await render(<Example orientation="vertical" shape={shape} />);
+      await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+      expectOn("account", "vertical", shape);
+      if (shape === "underline") {
+        const style = getComputedStyle(indicator());
+        expect(style.borderRightWidth).toBe("2px");
+        expect(style.borderBottomWidth).toBe("0px");
+        expect(style.right).toBe("-1px");
+        expect(getComputedStyle(byTestId("list")).borderRightWidth).toBe("1px");
+      }
+      expect(getComputedStyle(byTestId("root")).flexDirection).toBe("row");
+      await tabIntoList();
+      await userEvent.keyboard("{ArrowDown}");
+      await expect.poll(() => onTab("security", "vertical", shape)).toBe(true);
+    },
+  );
+
+  test("탭 글자가 바뀌어 폭이 달라지면 표시가 transition 없이 새 폭을 따른다", async () => {
+    function Relabel(): ReactElement {
+      const [label, setLabel] = useState("계정");
+
+      return (
+        <>
+          <button type="button" onClick={() => setLabel("계정과 프로필 설정")}>
+            이름 바꾸기
+          </button>
+          <Tabs defaultValue="a">
+            <TabList aria-label="목록" data-testid="list">
+              <Tab value="a" data-testid="a">
+                {label}
+              </Tab>
+              <Tab value="b">보안</Tab>
+            </TabList>
+          </Tabs>
+        </>
+      );
+    }
+    await render(<Relabel />);
+    await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+    const before = byTestId("a").getBoundingClientRect().width;
+    await userEvent.click(page.getByRole("button", { name: "이름 바꾸기" }));
+    await expect.poll(() => byTestId("a").getBoundingClientRect().width).toBeGreaterThan(before);
+    await expect.poll(() => onTab("a", "horizontal", "underline")).toBe(true);
+    expect(indicator().getAnimations()).toHaveLength(0);
+  });
+
+  test("숨은 채 마운트되면 재기 전까지 표시를 숨기고 고른 탭 자체 막대로 보이며, 보이게 되면 transition 없이 놓인다", async () => {
+    const control = openControl(
+      (shown) => (
+        <div hidden={!shown}>
+          <Example />
+        </div>
+      ),
+      false,
+    );
+    await render(control.element);
+    expect(byTestId("list")).not.toHaveAttribute("data-measured");
+    expect(getComputedStyle(indicator()).visibility).toBe("hidden");
+    expect(getComputedStyle(byTestId("account"), "::after").opacity).toBe("1");
+    expect(getComputedStyle(byTestId("security"), "::after").opacity).toBe("0");
+
+    const placed = captureWhen(
+      () => byTestId("list").hasAttribute("data-measured"),
+      () => indicator().getAnimations().length,
+    );
+    control.set(true);
+    expect(await placed).toBe(0);
+    expectOn("account", "horizontal", "underline");
+    expect(getComputedStyle(byTestId("account"), "::after").opacity).toBe("0");
+  });
+
+  test.each(["underline", "rounded"] as const)(
+    "forced-colors(%s)에서는 표시가 시스템 강조색 경계로 남아 색 없이도 구분된다",
+    async (shape) => {
+      await render(<Example shape={shape} />);
+      if (!forcedColors()) return;
+      await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+      const style = getComputedStyle(indicator());
+      expect(style.forcedColorAdjust).toBe("none");
+      expect(style.visibility).toBe("visible");
+      const color = shape === "underline" ? style.borderBottomColor : style.borderTopColor;
+      expect(shape === "underline" ? style.borderBottomWidth : style.borderTopWidth).toBe("2px");
+      expect(color).not.toBe(transparent);
+      expect(color).not.toBe(getComputedStyle(byTestId("list")).backgroundColor);
+      if (shape === "rounded") expect(style.backgroundColor).toBe(transparent);
+    },
+  );
+});
+
+describe("고른 표시 motion", () => {
+  test.each(["underline", "rounded"] as const)(
+    "첫 렌더(%s)에는 transition 없이 제자리에 놓인다",
+    async (shape) => {
+      const placed = captureWhen(
+        () => document.querySelector("[data-measured]") !== null,
+        () => document.querySelector("[data-indicator]")?.getAnimations().length,
+      );
+      await render(<Example shape={shape} defaultValue="notifications" />);
+      expect(await placed).toBe(0);
+      expectOn("notifications", "horizontal", shape);
+    },
+  );
+
+  test("고른 탭이 바뀌면 위치·크기가 normal(300ms) ease-out으로 미끄러진다. 움직임 줄이기에서는 바로 옮겨진다", async () => {
+    await render(<Example />);
+    await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
+    const style = getComputedStyle(indicator());
+    const sliding = captureWhen(
+      () => byTestId("notifications").getAttribute("aria-selected") === "true",
+      () => [...transitions(indicator()).keys()],
+    );
+    await userEvent.click(page.getByTestId("notifications"));
+    const running = await sliding;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      expect(after.transitionProperty).toBe("opacity");
-      expect(after.scale).toBe("none");
+      expect(style.transitionDuration).toBe("0s");
+      expect(running).toEqual([]);
+      expectOn("notifications", "horizontal", "underline");
 
       return;
     }
-    expect(after.transitionProperty).toBe("opacity, scale");
-    expect(after.scale).toBe("0 1");
-    expect(getComputedStyle(byTestId("account"), "::after").scale).toBe("1");
-
-    // click이 돌아온 뒤 읽으면 부하에 따라 전환이 끝나 있어, 고른 순간에 붙잡는다.
-    const selected = captureWhen(
-      () => byTestId("security").getAttribute("aria-selected") === "true",
-      () =>
-        byTestId("security")
-          .getAnimations({ subtree: true })
-          .map((animation) => (animation as CSSTransition).transitionProperty),
-    );
-    await userEvent.click(page.getByTestId("security"));
-    const animations = await selected;
-    expect(animations).toEqual(expect.arrayContaining(["opacity", "scale"]));
-    await wait(250);
-    expect(getComputedStyle(byTestId("security"), "::after").scale).toBe("1");
+    expect(style.transitionProperty).toBe("translate, width, height");
+    expect(style.transitionDuration).toBe("0.3s");
+    expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
+    // 예시 탭은 글자 수가 같아 폭은 그대로이고 위치만 옮겨진다.
+    expect(running).toEqual(["translate"]);
+    expect(style.opacity).toBe("1");
+    await expect.poll(() => onTab("notifications", "horizontal", "underline")).toBe(true);
   });
 });
 
@@ -511,6 +654,8 @@ describe("ref·className·타입", () => {
     const none: TabsProps = { orientation: "horizontal" };
     // @ts-expect-error -- orientation은 horizontal·vertical이다.
     const orientation: TabsProps = { defaultValue: "a", orientation: "diagonal" };
+    // @ts-expect-error -- shape는 underline·rounded다. 원(pill) 모양은 없다.
+    const shape: TabsProps = { defaultValue: "a", shape: "pill" };
     // @ts-expect-error -- React Aria 이름(keyboardActivation)은 드러내지 않는다. activationMode를 쓴다.
     const activation: TabsProps = { defaultValue: "a", keyboardActivation: "manual" };
     // @ts-expect-error -- 탭 역할은 tab으로 고정이다.
@@ -523,6 +668,16 @@ describe("ref·className·타입", () => {
     const panelId: TabPanelProps = { value: "a", id: "panel" };
     // @ts-expect-error -- 탭 목록 역할은 tablist로 고정이다.
     const listRole: TabListProps = { role: "menu" };
-    expect([none, orientation, activation, role, missing, aria, panelId, listRole]).toHaveLength(8);
+    expect([
+      none,
+      orientation,
+      shape,
+      activation,
+      role,
+      missing,
+      aria,
+      panelId,
+      listRole,
+    ]).toHaveLength(9);
   });
 });

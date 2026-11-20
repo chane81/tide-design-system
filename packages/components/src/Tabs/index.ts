@@ -6,4 +6,4 @@ export { Tab } from "./components/Tab";
 export type { TabOwnProps, TabProps } from "./components/Tab";
 export { TabPanel } from "./components/TabPanel";
 export type { TabPanelOwnProps, TabPanelProps } from "./components/TabPanel";
-export type { TabsActivationMode, TabsOrientation } from "./types";
+export type { TabsActivationMode, TabsOrientation, TabsShape } from "./types";

@@ -5,7 +5,7 @@ import { mergeProps, mergeRefs, useTab } from "react-aria";
 import type { TabListState } from "react-stately";
 
 import { cn } from "../../_internal/libs/cn";
-import { tabBaseClass, tabOrientationClass } from "../constants/tabsClass";
+import { tabBaseClass, tabFallbackClass } from "../constants/tabsClass";
 import type { TabsContextValue } from "../hooks/useTabsContext";
 import type { CollectionNode } from "../types";
 import type { TabProps } from "./Tab";
@@ -46,7 +46,7 @@ export function TabView({ node, state, context }: TabViewProps): ReactElement {
       aria-controls={isSelected ? context.panelId(value) : undefined}
       disabled={isDisabled || undefined}
       data-selected={isSelected ? "" : undefined}
-      className={cn(tabBaseClass, tabOrientationClass[context.orientation], className)}
+      className={cn(tabBaseClass, tabFallbackClass[context.shape][context.orientation], className)}
     >
       {node.rendered}
     </button>

@@ -15,7 +15,7 @@ import {
 import { cn } from "../_internal/libs/cn";
 import { tabsOrientationClass } from "./constants/tabsClass";
 import { TabsContext, type TabsContextValue } from "./hooks/useTabsContext";
-import type { TabsActivationMode, TabsOrientation } from "./types";
+import type { TabsActivationMode, TabsOrientation, TabsShape } from "./types";
 
 /** id에 쓸 수 없는 공백을 뺀다(React Aria 탭 id와 같은 규칙). */
 const idPart = (value: string): string => value.replace(/\s+/g, "");
@@ -37,6 +37,8 @@ interface TabsBaseOwnProps {
   onValueChange?: (value: string) => void;
   /** 탭 목록의 방향. 기본값은 `horizontal`이다. 세로면 ↓↑로 옮기고 탭 목록이 패널의 시작쪽에 선다. */
   orientation?: TabsOrientation;
+  /** 고른 표시의 모양. 기본값 `underline`(밑줄). `rounded`는 옅은 바탕 위 둥근 사각형이다. 고른 표시는 탭을 바꾸면 새 탭으로 미끄러진다. */
+  shape?: TabsShape;
   /** 키보드로 옮기면 바로 고를지(`automatic`, 기본값), Enter·Space로 고를지(`manual`). 패널이 느리면 `manual`. */
   activationMode?: TabsActivationMode;
   /** `TabList` 하나와 `TabPanel`들 */
@@ -48,15 +50,16 @@ export type TabsOwnProps = TabsBaseOwnProps & TabsValueProps;
 export type TabsProps = TabsOwnProps & Omit<ComponentProps<"div">, keyof TabsOwnProps | "onChange">;
 
 /**
- * 같은 영역의 여러 패널 중 하나를 고르는 탭 묶음. 루트는 `<div>`이고 방향이 `data-orientation`으로 붙는다.
+ * 같은 영역의 여러 패널 중 하나를 고르는 탭 묶음. 루트는 `<div>`이고 방향·모양이 `data-orientation`·`data-shape`로 붙는다.
  * 안에 `TabList` 하나와 탭마다 `TabPanel`을 둔다.
- * Tide props: `value`, `defaultValue`, `onValueChange`, `orientation`, `activationMode`, `children` ({@link TabsOwnProps}). 나머지는 `<div>` 속성.
+ * Tide props: `value`, `defaultValue`, `onValueChange`, `orientation`, `shape`, `activationMode`, `children` ({@link TabsOwnProps}). 나머지는 `<div>` 속성.
  */
 export function Tabs({
   value: valueProp,
   defaultValue,
   onValueChange,
   orientation = "horizontal",
+  shape = "underline",
   activationMode = "automatic",
   ref,
   className,
@@ -81,11 +84,12 @@ export function Tabs({
       value,
       setValue,
       orientation,
+      shape,
       activationMode,
       tabId: (tab) => `${baseId}-tab-${idPart(tab)}`,
       panelId: (tab) => `${baseId}-tabpanel-${idPart(tab)}`,
     }),
-    [value, setValue, orientation, activationMode, baseId],
+    [value, setValue, orientation, shape, activationMode, baseId],
   );
 
   return (
@@ -93,6 +97,7 @@ export function Tabs({
       {...props}
       ref={ref}
       data-orientation={orientation}
+      data-shape={shape}
       className={cn(tabsOrientationClass[orientation], className)}
     >
       <TabsContext value={context}>{children}</TabsContext>
