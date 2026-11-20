@@ -45,6 +45,10 @@ import * as CheckboxStories from "./Checkbox.stories";
 
 <Canvas of={CheckboxStories.Indeterminate} />
 
+### 체크 표시
+
+체크·가로줄의 선 두께는 2px입니다. 아이콘 기본 1.5px보다 한 단계 굵게 해 채운 상자 안에서도 잘 보이게 했습니다.
+
 ### 체크할 때 움직임
 
 체크하면 체크 표시가 펜으로 긋듯 시작점에서 끝점으로 그려집니다(`normal` 300ms, `ease-out`). 가로줄도 왼쪽에서 오른쪽으로 같게 그려집니다. 해제하면 거꾸로 지우지 않고 `fast`(150ms) 안에 사라집니다. 처음 렌더할 때 이미 체크된 상자는 그려진 채로 나옵니다. 움직임 줄이기를 켜면 그리지 않고 opacity만 바뀝니다. 위 예시의 상자를 눌러 보세요.

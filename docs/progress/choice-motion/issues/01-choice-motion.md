@@ -8,7 +8,7 @@ Checkbox를 체크하면 체크 표시가 시작점에서 끝점으로 그려지
 
 ## 할 일
 
-- [x] Checkbox 전용 SVG(`Checkbox/components/CheckboxMark.tsx`): Lucide `check`·`minus` path, `pathLength="1"`, 화면 두께 3px를 viewBox 단위로 환산
+- [x] Checkbox 전용 SVG(`Checkbox/components/CheckboxMark.tsx`): Lucide `check`·`minus` path, `pathLength="1"`, 화면 두께를 viewBox 단위로 환산
 - [x] 체크·가로줄: `stroke-dashoffset` 1→0, `normal`·`ease-out`. 해제는 opacity `fast`, dash는 사라진 뒤 되감기
 - [x] Radio 점: opacity + `scale` 0.5→1, `fast`·`ease-out`
 - [x] 공용 `choiceMarkClass`의 숨김을 `display:none`에서 opacity로 바꾸기
@@ -16,6 +16,7 @@ Checkbox를 체크하면 체크 표시가 시작점에서 끝점으로 그려지
 - [x] browser 테스트: 체크 시 transition, 해제 시 opacity·지연, 첫 렌더 미재생(비제어·제어·indeterminate), indeterminate↔체크 전환, reduced-motion opacity만, Radio 확대·첫 렌더
 - [x] 테스트 helper: `test/motion.ts`에 `afterChange`, `transitions`에 시간·easing
 - [x] 문서: Checkbox·Radio MDX, Motion MDX 「무엇을 움직이나」·「움직임 줄이기」, ADR 0037, 원칙 목록
+- [x] 체크·가로줄 선 두께 3→2px(추가 요청 2026-11-20)
 - [x] changeset(`@tide-design/components` minor)
 
 ## 판단한 곳
