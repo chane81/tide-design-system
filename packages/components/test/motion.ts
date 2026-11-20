@@ -24,10 +24,13 @@ export function styleSnapshot(element: Element): StyleSnapshot {
   return Object.fromEntries(styleKeys.map((key) => [key, style[key]])) as StyleSnapshot;
 }
 
-/** 도는 transition 하나의 시작(from)·끝(to) keyframe 복사본 */
+/** 도는 transition 하나의 시작(from)·끝(to) keyframe과 시간(ms)·easing 복사본 */
 export interface TransitionSnapshot {
   from: Record<string, unknown>;
   to: Record<string, unknown>;
+  duration: number;
+  delay: number;
+  easing: string;
 }
 
 /** 요소에서 도는 CSS transition을 속성 이름으로 찾아, 시작·끝 keyframe을 그 자리에서 복사해 둔다. */
@@ -35,8 +38,16 @@ export function transitions(element: Element): Map<string, TransitionSnapshot> {
   const found = new Map<string, TransitionSnapshot>();
   for (const animation of element.getAnimations()) {
     if (!(animation instanceof CSSTransition)) continue;
-    const frames = (animation.effect as KeyframeEffect | null)?.getKeyframes() ?? [];
-    found.set(animation.transitionProperty, { from: frames[0] ?? {}, to: frames.at(-1) ?? {} });
+    const effect = animation.effect as KeyframeEffect | null;
+    const frames = effect?.getKeyframes() ?? [];
+    const timing = effect?.getTiming();
+    found.set(animation.transitionProperty, {
+      from: frames[0] ?? {},
+      to: frames.at(-1) ?? {},
+      duration: Number(timing?.duration ?? 0),
+      delay: timing?.delay ?? 0,
+      easing: timing?.easing ?? "",
+    });
   }
 
   return found;
@@ -64,6 +75,26 @@ export function captureWhen<T>(condition: () => boolean, read: () => T): Promise
     observer.observe(document.body, { subtree: true, childList: true, attributes: true });
     // 조건이 끝내 참이 되지 않아도 다음 테스트로 넘어가지 않게 테스트가 끝나면 끊는다.
     onTestFinished(() => observer.disconnect());
+  });
+}
+
+/**
+ * `input`의 다음 `change` 뒤 첫 프레임에서 `read`를 돌린다. 동작 **전에** 부른다.
+ * checked·indeterminate는 속성이 아니라 DOM 값이 바뀌어 MutationObserver(`captureWhen`)가 보지 못한다.
+ */
+export function afterChange<T>(input: Element, read: () => T): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const onChange = (): void => {
+      requestAnimationFrame(() => {
+        try {
+          resolve(read());
+        } catch (error) {
+          reject(error);
+        }
+      });
+    };
+    input.addEventListener("change", onChange, { once: true });
+    onTestFinished(() => input.removeEventListener("change", onChange));
   });
 }
 

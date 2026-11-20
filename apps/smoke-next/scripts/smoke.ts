@@ -221,8 +221,10 @@ try {
     "Input 내부 class(aria-invalid:border-danger, placeholder:text-muted)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
-    /checked\\:bg-accent-solid:checked/.test(css) && css.includes(".peer-indeterminate\\:block"),
-    "Checkbox 내부 class(checked:bg-accent-solid, peer-indeterminate:block)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+    css.includes(
+      ".peer-aria-invalid\\:\\[--tide-accent-solid\\:var\\(--tide-bg-danger-solid\\)\\]",
+    ) && css.includes(".peer-indeterminate\\:opacity-100"),
+    "Checkbox 내부 class(peer-aria-invalid:[--tide-accent-solid:…], peer-indeterminate:opacity-100)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   // Button은 클릭을 막는 핸들러를 만들므로 client 경계다. 표시만 하는 Component에는 지시어가 없어야 한다.
   const componentsDist = join(consumerDir, "node_modules/@tide-design/components/dist");

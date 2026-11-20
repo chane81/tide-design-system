@@ -1,4 +1,5 @@
 // 화살표 이동·단일 선택은 네이티브가 맡으므로 같은 name이 넘어가는지와 실제 키 동작을 본다.
+import { duration, easing } from "@tide-design/foundation";
 import { colorFamilyCss, defineColorFamily } from "@tide-design/foundation/color-family";
 import { useState, type ReactElement } from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
@@ -6,6 +7,7 @@ import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
 import { expectFocusHalo } from "../../test/focus";
+import { afterChange, transitions } from "../../test/motion";
 
 import { Field } from "../Field/Field";
 import { Radio, type RadioProps } from "./Radio";
@@ -19,6 +21,7 @@ declare module "@tide-design/foundation" {
 }
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
 function resolve(value: string): string {
@@ -44,7 +47,12 @@ async function settle(): Promise<void> {
 
 const dot = (input: Element): HTMLElement =>
   input.parentElement!.querySelector('[data-mark="dot"]')!;
-const visible = (element: Element): boolean => getComputedStyle(element).display !== "none";
+/** 표시는 opacity로 숨는다. 도는 전환을 끝낸 뒤 읽는다. */
+function visible(element: Element): boolean {
+  for (const animation of element.getAnimations()) animation.finish();
+
+  return getComputedStyle(element).opacity !== "0";
+}
 
 function Shipping(props: { readonly onValueChange?: (value: string) => void }): ReactElement {
   return (
@@ -254,6 +262,160 @@ describe("Field와 묶음", () => {
     );
     await expect.element(page.getByRole("radio", { name: "가" })).not.toBeDisabled();
     await expect.element(page.getByRole("radio", { name: "나" })).toBeDisabled();
+  });
+});
+
+describe("움직임(ADR 0037)", () => {
+  const ms = (name: keyof typeof duration): number => Number.parseFloat(duration[name]);
+  const overshoot = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+  test("고르면 점이 0에서 overshoot로 커지며(normal) 나타나고, 앞 점은 fast·ease-out으로 줄어든다", async () => {
+    await render(<Shipping />);
+    const normal = page.getByRole("radio", { name: "일반" }).element();
+    const fast = page.getByRole("radio", { name: "빠른" }).element();
+    const running = afterChange(fast, () => ({
+      shown: transitions(dot(fast)),
+      hidden: transitions(dot(normal)),
+    }));
+    await userEvent.click(page.getByRole("radio", { name: "빠른" }));
+    const { shown, hidden } = await running;
+
+    const expected = reducedMotion() ? ["opacity"] : ["opacity", "scale"];
+    expect([...shown.keys()].sort()).toEqual(expected);
+    expect([...hidden.keys()].sort()).toEqual(expected);
+    expect(Number(shown.get("opacity")!.to["opacity"])).toBe(1);
+    expect(Number(hidden.get("opacity")!.to["opacity"])).toBe(0);
+    for (const running of hidden.values()) {
+      expect(running.duration).toBe(ms("fast"));
+      expect(running.easing).toBe(easing.out);
+    }
+    if (reducedMotion()) {
+      expect(shown.get("opacity")!.duration).toBe(ms("fast"));
+      expect(shown.get("opacity")!.easing).toBe(easing.out);
+
+      return;
+    }
+    for (const running of shown.values()) {
+      expect(running.duration).toBe(ms("normal"));
+      expect(running.easing).toBe(overshoot);
+    }
+    expect(shown.get("scale")!.from["scale"]).toBe("0");
+    expect(shown.get("scale")!.to["scale"]).toBe("1");
+    expect(hidden.get("scale")!.to["scale"]).toBe("0");
+  });
+
+  test.each(["sm", "md"] as const)(
+    "%s: overshoot로 가장 커져도 점이 테두리 안쪽에 닿지 않는다",
+    async (size) => {
+      await render(
+        <RadioGroup aria-label="배송">
+          <Radio value="a" size={size}>
+            가
+          </Radio>
+        </RadioGroup>,
+      );
+      if (reducedMotion()) return;
+      const input = page.getByRole("radio").element();
+      const grow = afterChange(input, () =>
+        dot(input)
+          .getAnimations()
+          .find(
+            (animation) =>
+              animation instanceof CSSTransition && animation.transitionProperty === "scale",
+          )!,
+      );
+      await userEvent.click(page.getByRole("radio"));
+      const animation = await grow;
+      animation.pause();
+      const border = Number.parseFloat(getComputedStyle(input).borderTopWidth);
+      const inner = input.getBoundingClientRect().width - border * 2;
+      let widest = 0;
+      for (let time = 0; time <= ms("normal"); time += 10) {
+        animation.currentTime = time;
+        widest = Math.max(widest, dot(input).getBoundingClientRect().width);
+      }
+      // 곡선이 1을 넘는지(overshoot가 실제로 걸리는지)도 함께 본다.
+      expect(widest).toBeGreaterThan(Number.parseFloat(getComputedStyle(dot(input)).width));
+      expect(widest).toBeLessThan(inner);
+    },
+  );
+
+  test("방향키로 골라도 클릭과 같게 움직인다", async () => {
+    await render(<Shipping />);
+    const fast = page.getByRole("radio", { name: "빠른" }).element() as HTMLInputElement;
+    const running = afterChange(fast, () => ({
+      checked: fast.checked,
+      shown: transitions(dot(fast)),
+    }));
+    await userEvent.tab();
+    await userEvent.keyboard("{ArrowDown}");
+    const { checked, shown } = await running;
+    expect(checked).toBe(true);
+    expect(shown.has(reducedMotion() ? "opacity" : "scale")).toBe(true);
+  });
+
+  test("커지는 도중 다른 것을 고르면 지금 크기에서 되돌아간다", async () => {
+    await render(<Shipping />);
+    if (reducedMotion()) return;
+    const fast = page.getByRole("radio", { name: "빠른" }).element();
+    const grow = afterChange(fast, () => {
+      const animation = dot(fast)
+        .getAnimations()
+        .find(
+          (animation) =>
+            animation instanceof CSSTransition && animation.transitionProperty === "scale",
+        )!;
+      animation.pause();
+      animation.currentTime = ms("normal") / 4;
+    });
+    await userEvent.click(page.getByRole("radio", { name: "빠른" }));
+    await grow;
+
+    const pickup = page.getByRole("radio", { name: "방문 수령" }).element();
+    const back = afterChange(pickup, () => transitions(dot(fast)));
+    await userEvent.click(page.getByRole("radio", { name: "방문 수령" }));
+    const from = Number.parseFloat(String((await back).get("scale")!.from["scale"]));
+    expect(from).toBeGreaterThan(0);
+    expect(from).toBeLessThan(1.1);
+    expect(from).not.toBe(1);
+  });
+
+  test("누르거나 올려도 루트와 원 크기는 그대로다", async () => {
+    await render(
+      <RadioGroup aria-label="배송">
+        <Radio value="a">
+          <span data-testid="label">가</span>
+        </Radio>
+      </RadioGroup>,
+    );
+    const input = page.getByRole("radio").element();
+    const before = input.getBoundingClientRect().width;
+    await userEvent.hover(page.getByTestId("label"));
+    await commands.mouseDownOn("label");
+    const pressed = {
+      box: getComputedStyle(input).scale,
+      root: getComputedStyle(input.closest("label")!).scale,
+      width: input.getBoundingClientRect().width,
+    };
+    await commands.mouseUp();
+    expect(pressed).toEqual({ box: "none", root: "none", width: before });
+  });
+
+  test("처음 렌더할 때 이미 고른 점은 움직이지 않는다", async () => {
+    await render(
+      <>
+        <Shipping />
+        <Radio value="a" checked readOnly>
+          제어
+        </Radio>
+      </>,
+    );
+    for (const name of ["일반", "제어"]) {
+      const element = dot(page.getByRole("radio", { name }).element());
+      expect(element.getAnimations(), name).toHaveLength(0);
+      expect(getComputedStyle(element).opacity, name).toBe("1");
+      expect(getComputedStyle(element).scale, name).toMatch(/^(none|1)$/);
+    }
   });
 });
 
