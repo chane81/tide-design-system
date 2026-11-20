@@ -28,7 +28,7 @@ describe("이름표와 export", () => {
 describe("대표 아이콘 서버 렌더", () => {
   const representatives = { PlusIcon, XIcon, CheckIcon, ChevronDownIcon, HouseIcon };
 
-  it.each(Object.entries(representatives))("%s: 기본값은 장식용, 16px, 선 두께 2", (_, Icon) => {
+  it.each(Object.entries(representatives))("%s: 기본값은 장식용, 16px, 선 두께 1.5", (_, Icon) => {
     const markup = renderToStaticMarkup(<Icon />);
     const tag = rootTag(markup);
     expect(tag).toContain('aria-hidden="true"');
@@ -36,7 +36,7 @@ describe("대표 아이콘 서버 렌더", () => {
     expect(tag).not.toContain("role=");
     expect(tag).toContain('width="16"');
     expect(tag).toContain('height="16"');
-    expect(tag).toContain('stroke-width="2"');
+    expect(tag).toContain('stroke-width="1.5"');
     expect(tag).toContain('stroke="currentColor"');
     // 도형마다 렌더 기준 선 두께를 유지한다.
     const shapes = markup.match(/<(path|circle|rect|line|ellipse|polyline|polygon)\b[^>]*>/g) ?? [];
@@ -57,12 +57,12 @@ describe("대표 아이콘 서버 렌더", () => {
   it("size와 strokeWidth를 바꾸고 나머지 SVG 속성은 그대로 넘긴다", () => {
     const tag = rootTag(
       renderToStaticMarkup(
-        <XIcon size={24} strokeWidth={1.5} className="text-danger" data-testid="close" />,
+        <XIcon size={24} strokeWidth={2} className="text-danger" data-testid="close" />,
       ),
     );
     expect(tag).toContain('width="24"');
     expect(tag).toContain('height="24"');
-    expect(tag).toContain('stroke-width="1.5"');
+    expect(tag).toContain('stroke-width="2"');
     expect(tag).toContain('class="text-danger"');
     expect(tag).toContain('data-testid="close"');
   });
