@@ -15,8 +15,8 @@ export const tabListClass: Record<TabsShape, Record<TabsOrientation, string>> = 
     vertical: `relative flex shrink-0 flex-col gap-1 border-e border-default ${unmeasuredFallback}`,
   },
   box: {
-    horizontal: `relative flex shrink-0 gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
-    vertical: `relative flex shrink-0 flex-col gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
+    horizontal: `relative flex shrink-0 gap-1 self-start rounded-lg border border-default p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
+    vertical: `relative flex shrink-0 flex-col gap-1 self-start rounded-lg border border-default p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
   },
 };
 

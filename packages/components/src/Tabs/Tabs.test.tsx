@@ -410,19 +410,21 @@ describe("고른 표시(indicator)", () => {
     await expect.poll(() => onTab("notifications", "horizontal", "underline")).toBe(true);
   });
 
-  test("box는 옅은 탭 목록 바탕 위에 고른 탭을 둥근 사각형 바탕으로 보인다", async () => {
+  test("box는 투명한 탭 목록을 외곽선으로 두르고 고른 탭을 둥근 사각형 바탕으로 보인다", async () => {
     await render(<Example shape="box" />);
     expect(byTestId("root")).toHaveAttribute("data-shape", "box");
     await expect.element(page.getByTestId("list")).toHaveAttribute("data-measured", "");
     const list = getComputedStyle(byTestId("list"));
-    expect(list.borderBottomWidth).toBe("0px");
+    expect(list.borderTopWidth).toBe("1px");
+    expect(list.borderBottomWidth).toBe("1px");
     expect(list.padding).toBe("4px");
     expect(list.borderTopLeftRadius).toBe("8px");
     const style = getComputedStyle(indicator());
     expect(style.borderTopLeftRadius).toBe("6px");
     expectOn("account", "horizontal", "box");
     if (forcedColors()) return;
-    expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-inset)"));
+    expect(list.backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    expect(list.borderTopColor).toBe(resolve("borderTopColor", "var(--tide-border-default)"));
     expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-surface)"));
     expect(style.boxShadow).not.toBe("none");
     expect(getComputedStyle(byTestId("account")).color).toBe(
