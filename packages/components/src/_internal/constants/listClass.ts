@@ -1,9 +1,18 @@
 // Menu·Select·Combobox 목록이 함께 쓴다. class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
 
-import { frequentMotionClass, overlaySurfaceClass } from "./overlayClass";
+import { overlaySurfaceClass } from "./overlayClass";
 
-/** 요소에 `data-open`이 있어야 한다. padding 3px는 radius 중첩 규칙(8 = 4 + 3 + 1)이다. */
-export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto p-[3px] outline-none ${overlaySurfaceClass} ${frequentMotionClass}`;
+// 「자주 씀」이라 blur 없이 opacity + 2px로 짧게 들어오고, 퇴장은 opacity만 바뀐다(ADR 0018).
+const listMotionClass = [
+  "transition-[opacity,display] transition-discrete duration-fast ease-out motion-safe:transition-[opacity,translate,display]",
+  "not-data-open:pointer-events-none not-data-open:hidden not-data-open:opacity-0",
+  "starting:opacity-0",
+  "motion-safe:data-[placement=bottom]:starting:-translate-y-0.5 motion-safe:data-[placement=top]:starting:translate-y-0.5",
+  "motion-safe:data-[placement=right]:starting:-translate-x-0.5 motion-safe:data-[placement=left]:starting:translate-x-0.5",
+].join(" ");
+
+/** 요소에 `data-open`과 `data-placement`가 있어야 한다. padding 3px는 radius 중첩 규칙(8 = 4 + 3 + 1)이다. */
+export const listPopupClass = `isolate z-popover min-w-40 max-w-80 overflow-auto p-[3px] outline-none ${overlaySurfaceClass} ${listMotionClass}`;
 
 /**
  * 상태는 boolean `data-*`로 받고 `not-data-highlighted:`로 서로 빼 CSS 순서에 기대지 않는다.
