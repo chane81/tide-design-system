@@ -153,7 +153,7 @@ _Avoid_: 레이어(Layer와 혼동), 모달(바깥을 막는 성질 하나만 �
 _Avoid_: Dropdown(Menu·Select와 혼동), Popup, Flyout
 
 **Dialog (다이얼로그)**:
-화면 가운데에 뜨는 모달 오버레이(`Dialog`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`). 내용은 `dialog` 역할이고 반투명 막(backdrop, `bg-overlay`)이 뒤를 가린다. 열린 동안 바깥은 `inert`이고 페이지 스크롤이 잠기며 Tab은 안에서 돈다. Esc·닫기 버튼·막 누름으로 닫히고 포커스는 열기 전 요소로 돌아온다. 트리거 옆에 잠깐 띄우는 내용은 Popover다.
+화면 가운데에 뜨는 모달 오버레이(`Dialog`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogHeader`, `DialogDescription`, `DialogFooter`, `DialogClose`). 내용은 `dialog` 역할이고 반투명 막(backdrop, `bg-overlay`)이 뒤를 가린다. 열린 동안 바깥은 `inert`이고 페이지 스크롤이 잠기며 Tab은 안에서 돈다. Esc·닫기 버튼·막 누름으로 닫히고 포커스는 열기 전 요소로 돌아온다. 트리거 옆에 잠깐 띄우는 내용은 Popover다.
 _Avoid_: Modal(바깥을 막는 성질 하나만 가리킴), Sheet, Lightbox
 
 **AlertDialog (알림 다이얼로그)**:

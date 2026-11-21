@@ -49,6 +49,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
   Separator,
@@ -120,6 +121,8 @@ import {
   type DialogContentProps,
   type DialogDescriptionProps,
   type DialogFooterProps,
+  type DialogHeaderAlign,
+  type DialogHeaderProps,
   type DialogProps,
   type DialogSize,
   type DialogTitleProps,
@@ -290,6 +293,8 @@ const dialogContentProps: DialogContentProps = { size: dialogSize, closeLabel: "
 const dialogTitleProps: DialogTitleProps = { id: "title" };
 const dialogDescriptionProps: DialogDescriptionProps = { id: "desc" };
 const dialogFooterProps: DialogFooterProps = { className: "justify-start" };
+const dialogHeaderAlign: DialogHeaderAlign = "center";
+const dialogHeaderProps: DialogHeaderProps = { align: dialogHeaderAlign };
 const dialogCloseProps: DialogCloseProps = { onClick: (event) => event.preventDefault() };
 // @ts-expect-error Dialog size는 sm·md·lg다.
 const xlDialog: DialogContentProps = { size: "xl" };
@@ -578,6 +583,7 @@ export const values = [
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogClose,
   dialogProps,
   alertDialogProps,
@@ -586,6 +592,7 @@ export const values = [
   dialogTitleProps,
   dialogDescriptionProps,
   dialogFooterProps,
+  dialogHeaderProps,
   dialogCloseProps,
   xlDialog,
   roleDialog,

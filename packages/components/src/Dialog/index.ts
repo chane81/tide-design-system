@@ -4,6 +4,12 @@ export { DialogTrigger } from "./components/DialogTrigger";
 export type { DialogTriggerOwnProps, DialogTriggerProps } from "./components/DialogTrigger";
 export { DialogContent } from "./components/DialogContent";
 export type { DialogContentOwnProps, DialogContentProps } from "./components/DialogContent";
+export { DialogHeader } from "./components/DialogHeader";
+export type {
+  DialogHeaderAlign,
+  DialogHeaderOwnProps,
+  DialogHeaderProps,
+} from "./components/DialogHeader";
 export { DialogTitle } from "./components/DialogTitle";
 export type { DialogTitleProps } from "./components/DialogTitle";
 export { DialogDescription } from "./components/DialogDescription";

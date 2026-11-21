@@ -15,6 +15,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
   type DialogContentProps,
@@ -621,5 +622,127 @@ describe("ref·className·타입", () => {
     // @ts-expect-error -- React Aria 이름(isDismissable)은 드러내지 않는다.
     const dismissable: DialogContentProps = { isDismissable: true };
     expect([size, role, dismissable]).toHaveLength(3);
+  });
+});
+
+describe("DialogHeader", () => {
+  const centerY = (element: Element): number => {
+    const { top, height } = element.getBoundingClientRect();
+
+    return top + height / 2;
+  };
+  const closeButton = (): HTMLElement =>
+    page.getByRole("button", { name: "닫기" }).element() as HTMLElement;
+  // 등장 전환의 scale이 끝나야 좌표가 실제 크기다.
+  const settled = async (): Promise<void> => {
+    await expect.element(page.getByRole("button", { name: "닫기" })).toBeVisible();
+    await Promise.all(
+      content()
+        .getAnimations()
+        .map((animation) => animation.finished),
+    );
+  };
+
+  test("닫기 버튼은 하나이고 머리 줄 안에 있다", async () => {
+    await render(
+      <div data-theme="light">
+        <Dialog defaultOpen>
+          <DialogContent data-testid="content">
+            <DialogHeader data-testid="header">
+              <DialogTitle>제목</DialogTitle>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>,
+    );
+    await expect.poll(() => content().querySelectorAll('button[aria-label="닫기"]').length).toBe(1);
+    expect(page.getByTestId("header").element()).toContainElement(closeButton());
+    expect(getComputedStyle(closeButton()).position).not.toBe("absolute");
+  });
+
+  test("기본 정렬은 여러 줄 제목의 첫 줄 가운데다", async () => {
+    await render(
+      <div data-theme="light">
+        <Dialog defaultOpen>
+          <DialogContent data-testid="content" size="sm">
+            <DialogHeader>
+              <DialogTitle data-testid="title">
+                아주 긴 제목이 Dialog 폭을 넘어서 두 줄 이상으로 줄바꿈되는 경우를 확인합니다
+              </DialogTitle>
+              <DialogDescription>설명</DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>,
+    );
+    await settled();
+    const title = page.getByTestId("title").element();
+    const lineHeight = Number.parseFloat(getComputedStyle(title).lineHeight);
+    expect(title.getBoundingClientRect().height).toBeGreaterThan(lineHeight);
+    const firstLine = title.getBoundingClientRect().top + lineHeight / 2;
+    expect(Math.abs(centerY(closeButton()) - firstLine)).toBeLessThanOrEqual(0.5);
+  });
+
+  test("align=center면 입력과 세로 가운데가 같고 내용 끝에 맞는다", async () => {
+    await render(
+      <div data-theme="light">
+        <Dialog defaultOpen>
+          <DialogContent data-testid="content" aria-label="검색">
+            <DialogHeader align="center">
+              <input aria-label="검색어" data-testid="input" className="h-10" />
+            </DialogHeader>
+            <p data-testid="body">본문</p>
+          </DialogContent>
+        </Dialog>
+      </div>,
+    );
+    await settled();
+    const input = page.getByTestId("input").element();
+    expect(Math.abs(centerY(closeButton()) - centerY(input))).toBeLessThanOrEqual(0.5);
+    const bodyRight = page.getByTestId("body").element().getBoundingClientRect().right;
+    expect(Math.abs(closeButton().getBoundingClientRect().right - bodyRight)).toBeLessThanOrEqual(
+      0.5,
+    );
+  });
+
+  test("머리의 닫기 버튼은 closeLabel을 쓰고 누르면 닫힌다", async () => {
+    await render(
+      <div data-theme="light">
+        <Dialog defaultOpen>
+          <DialogContent data-testid="content" closeLabel="설정 닫기">
+            <DialogHeader>
+              <DialogTitle>설정</DialogTitle>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>,
+    );
+    await userEvent.click(page.getByRole("button", { name: "설정 닫기" }));
+    await expectClosed();
+  });
+
+  test("AlertDialog의 머리에는 닫기 버튼이 없다", async () => {
+    await render(
+      <div data-theme="light">
+        <AlertDialog defaultOpen>
+          <DialogContent data-testid="content">
+            <DialogHeader>
+              <DialogTitle>삭제할까요?</DialogTitle>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose>취소</DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </AlertDialog>
+      </div>,
+    );
+    await expect.element(page.getByRole("alertdialog")).toBeVisible();
+    expect(content().querySelector('button[aria-label="닫기"]')).toBeNull();
+  });
+
+  test("DialogHeader가 없으면 기본 닫기 버튼 위치를 유지한다", async () => {
+    await render(<Example defaultOpen />);
+    await expect.element(page.getByRole("button", { name: "닫기" })).toBeVisible();
+    expect(getComputedStyle(closeButton()).position).toBe("absolute");
   });
 });
