@@ -1,5 +1,14 @@
 # @tide-tds/components
 
+## 0.18.1
+
+### 기능 추가와 수정 (patch)
+
+- [#98](https://github.com/chane81/tide-design-system/pull/98) [`efafcee`](https://github.com/chane81/tide-design-system/commit/efafcee413694e6a195d14b9be046c408e5e07b0) [@chane81](https://github.com/chane81) - `DialogHeader`를 추가합니다. 제목이나 입력과 닫기 버튼을 한 줄에 놓고 `align`(`start`·`center`)으로 세로 정렬을 고릅니다. 쓰지 않는 Dialog는 그대로입니다.
+- 의존성 업데이트 []:
+  - @tide-design/foundation@0.18.1
+  - @tide-design/icons@0.18.1
+
 ## 0.18.0
 
 ### 호환되지 않는 변경 (minor)
