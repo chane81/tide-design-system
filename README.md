@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/readme/00-logo.svg" width="96" height="96" alt="Tide 로고" />
+</p>
+
 # Tide Design System
 
 Tide는 원칙(Principle), 파운데이션(Foundation), 컴포넌트(Component) 세 층으로 이루어집니다.
