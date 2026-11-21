@@ -423,8 +423,10 @@ describe("고른 표시(indicator)", () => {
     expectOn("account", "horizontal", "box");
     if (forcedColors()) return;
     expect(list.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-inset)"));
-    expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-surface)"));
+    expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-inset-raised)"));
     expect(style.boxShadow).not.toBe("none");
+    expect(style.borderTopWidth).toBe("1px");
+    expect(style.borderTopColor).toBe(resolve("borderTopColor", "var(--tide-border-inset-raised)"));
     expect(getComputedStyle(byTestId("account")).color).toBe(
       resolve("color", "var(--tide-text-primary)"),
     );

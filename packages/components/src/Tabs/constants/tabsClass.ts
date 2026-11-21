@@ -15,8 +15,8 @@ export const tabListClass: Record<TabsShape, Record<TabsOrientation, string>> = 
     vertical: `relative flex shrink-0 flex-col gap-1 border-e border-default ${unmeasuredFallback}`,
   },
   box: {
-    horizontal: `relative flex shrink-0 gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
-    vertical: `relative flex shrink-0 flex-col gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-surface [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
+    horizontal: `relative flex shrink-0 gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-inset-raised [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
+    vertical: `relative flex shrink-0 flex-col gap-1 self-start rounded-lg bg-inset p-1 [&:not([data-measured])>[data-selected]]:bg-inset-raised [&:not([data-measured])>[data-selected]]:shadow-sm ${unmeasuredFallback}`,
   },
 };
 
@@ -57,8 +57,8 @@ export const tabIndicatorClass: Record<TabsShape, Record<TabsOrientation, string
   },
   // forced-colors에서 바탕을 남기면 시스템 글자색과 대비가 깨질 수 있어 바탕을 빼고 Highlight 테두리만 남긴다.
   box: {
-    horizontal: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-raised bg-surface shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
-    vertical: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-raised bg-surface shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
+    horizontal: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-inset-raised bg-inset-raised shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
+    vertical: `${indicatorBaseClass} top-0 left-0 h-(--tab-indicator-height) w-(--tab-indicator-width) translate-x-(--tab-indicator-x) translate-y-(--tab-indicator-y) rounded-md border border-inset-raised bg-inset-raised shadow-sm forced-colors:border-2 forced-colors:border-[Highlight] forced-colors:bg-transparent forced-colors:shadow-none`,
   },
 };
 
