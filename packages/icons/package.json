@@ -1,6 +1,6 @@
 {
   "name": "@tide-design/icons",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "Tide 디자인 시스템의 React 아이콘 Component",
   "keywords": [
     "design-system",
