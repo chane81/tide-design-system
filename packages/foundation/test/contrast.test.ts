@@ -137,7 +137,7 @@ describe("대비 쌍", () => {
     for (const pair of contrastPairs) {
       if (
         pair.foreground.startsWith("text-") &&
-        /^bg-(canvas|surface|raised|inset)$|-(subtle|faint)$/.test(pair.background)
+        /^bg-(canvas|surface|raised|inset|inset-raised)$|-(subtle|faint)$/.test(pair.background)
       ) {
         expect(pair.minRatio, `${pair.foreground} × ${pair.background}`).toBe(4.5);
       }
@@ -180,6 +180,7 @@ describe("Semantic Token 등록", () => {
         "bg-overlay",
         "border-default",
         "border-raised",
+        "border-inset-raised",
         "text-disabled",
         // 파스텔 테두리(subtle-border)는 꾸밈이다(ADR 0022 §1).
         ...["neutral", "primary", "success", "warning", "danger", "info"].map(

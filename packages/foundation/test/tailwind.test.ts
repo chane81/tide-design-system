@@ -30,7 +30,7 @@ const states = ["solid", "solid-hover", "solid-active", "subtle", "subtle-hover"
 
 // spec 「`@tide-design/foundation`」 Semantic 색. [class, CSS 속성]
 const semanticClasses: [string, string][] = [
-  ...["canvas", "surface", "raised", "inset", "disabled", "overlay"].map(
+  ...["canvas", "surface", "raised", "inset", "inset-raised", "disabled", "overlay"].map(
     (name) => [`bg-${name}`, "background-color"] as [string, string],
   ),
   ...roles.flatMap((role) =>
@@ -39,7 +39,7 @@ const semanticClasses: [string, string][] = [
   ...["default", "muted", "disabled", "on-solid", ...accentRoles].map(
     (name) => [`text-${name}`, "color"] as [string, string],
   ),
-  ...["default", "strong", "raised", ...accentRoles].map(
+  ...["default", "strong", "raised", "inset-raised", ...accentRoles].map(
     (name) => [`border-${name}`, "border-color"] as [string, string],
   ),
   ["outline-focus", "outline-color"],

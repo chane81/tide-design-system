@@ -53,6 +53,8 @@ export const contrastPairs: readonly ContrastPair[] = [
   ...pairs(["text-default"], ["bg-neutral-subtle-hover"], 4),
   // inset 바탕 위 글자(rounded Tabs의 고르지 않은 탭·hover·이동 중 고른 탭 글자)
   ...pairs(["text-default", "text-muted", "text-primary"], ["bg-inset"], 4.5),
+  // inset 안에 떠 있는 표시 위 글자(box Tabs의 고른 탭)
+  ...pairs(["text-primary"], ["bg-inset-raised"], 4.5),
   // text × subtle은 Progress 막대, 목록 highlight, Switch 꺼짐 hover thumb이 쓴다(보통 subtle 위는 on-subtle).
   ...roles.flatMap((role) => pairs([`text-${role}`], [...surfaces, `bg-${role}-subtle`], 4.5)),
   ...roles.flatMap((role) =>
@@ -115,6 +117,11 @@ export const contrastExclusions: readonly ContrastExclusion[] = [
     token: "border-raised",
     reason:
       "raised 표면의 장식용 경계다(light 투명, dark gray-800). 표면 구분은 그림자와 배경 밝기가 맡고, 대비 의무가 없다.",
+  },
+  {
+    token: "border-inset-raised",
+    reason:
+      "inset 안에 떠 있는 표시의 장식용 경계다(light 투명, dark gray-600). 고른 상태는 글자색과 표시 바탕이 함께 알린다.",
   },
   {
     token: "bg-disabled",

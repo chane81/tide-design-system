@@ -26,6 +26,7 @@ const semanticClasses = [
   "bg-surface",
   "bg-raised",
   "bg-inset",
+  "bg-inset-raised",
   "bg-disabled",
   "bg-overlay",
   // 무채색 호버·클릭(ADR 0022 §3)
@@ -52,6 +53,7 @@ const semanticClasses = [
   "border-default",
   "border-strong",
   "border-raised",
+  "border-inset-raised",
   ...roles.filter((role) => role !== "neutral").map((role) => `border-${role}`),
   // 파스텔 테두리(슬롯 subtle-border). neutral도 있다.
   ...roles.map((role) => `border-${role}-subtle`),
@@ -445,6 +447,7 @@ describe("tokens.css", () => {
         "bg-surface": ["white", "gray-950"],
         "bg-raised": ["white", "gray-900"],
         "bg-inset": ["gray-50", "gray-900"],
+        "bg-inset-raised": ["white", "gray-800"],
         "bg-disabled": ["gray-100", "gray-900"],
         "text-default": ["gray-900", "gray-50"],
         "text-muted": ["gray-700", "gray-300"],
@@ -461,6 +464,8 @@ describe("tokens.css", () => {
       // raised 표면 경계: light는 투명(키워드), dark는 gray-800
       expect(lightResolved.get("--tide-border-raised")).toBe("transparent");
       expect(darkResolved.get("--tide-border-raised")).toBe(ref("gray-800"));
+      expect(lightResolved.get("--tide-border-inset-raised")).toBe("transparent");
+      expect(darkResolved.get("--tide-border-inset-raised")).toBe(ref("gray-600"));
     });
   });
   describe("타이포그래피", () => {

@@ -11,6 +11,7 @@ describe("tailwind-merge 설정", () => {
     expect(twMerge("bg-canvas bg-raised")).toBe("bg-raised");
     // inset은 위치 utility(inset-*)·inset-shadow와 다른 group이다.
     expect(twMerge("bg-canvas bg-inset")).toBe("bg-inset");
+    expect(twMerge("bg-inset bg-inset-raised")).toBe("bg-inset-raised");
     expect(twMerge("inset-0 bg-inset inset-shadow-none")).toBe(
       "inset-0 bg-inset inset-shadow-none",
     );
