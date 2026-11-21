@@ -6,7 +6,7 @@ import { render } from "vitest-browser-react";
 
 import { expectFocusHalo } from "../../test/focus";
 
-import { captureExit, styleSnapshot } from "../../test/motion";
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion";
 
 import { Button } from "../Button/Button";
 import { Field } from "../Field/Field";
@@ -14,6 +14,7 @@ import { Input } from "../Input/Input";
 import { Select, SelectItem, SelectSection, type SelectProps } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
 /** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
@@ -552,6 +553,8 @@ describe("모양", () => {
     expect(style.position).toBe("absolute");
     expect(style.paddingTop).toBe("3px");
     expect(style.borderTopLeftRadius).toBe("8px");
+    // 등장 전환(translate)이 끝난 뒤의 자리를 본다.
+    await Promise.all(popover.getAnimations().map((animation) => animation.finished));
     const box = popover.getBoundingClientRect();
     const triggerBox = trigger().getBoundingClientRect();
     expect(box.top - triggerBox.bottom).toBeCloseTo(4, 0);
@@ -596,23 +599,43 @@ describe("모양", () => {
     expect(highlighted()).toEqual(["Grape"]);
   });
 
-  test("바로 나타나고, 닫히면 opacity만 fast(150ms)로 사라진 뒤 DOM에서 빠진다", async () => {
-    const { rerender } = await render(<Fruits open />);
-    await expect.poll(listbox).not.toBeNull();
+  test("목록은 blur 없이 opacity + 트리거 쪽 2px로 fast(150ms)에 나타나고, 닫히면 opacity만 사라진 뒤 DOM에서 빠진다", async () => {
+    const { rerender } = await render(<Fruits open={false} />);
+    // 전환 중 값은 data-open이 붙거나 빠지는 순간에 붙잡는다. 동작 뒤에 읽으면 부하에 따라 전환이 끝나 있다.
+    const entered = captureWhen(
+      () => listbox()?.parentElement?.hasAttribute("data-open") === true,
+      () => {
+        const popover = listbox()!.parentElement!;
+
+        return { style: styleSnapshot(popover), running: transitions(popover) };
+      },
+    );
+    await rerender(<Fruits open />);
+    const { style, running } = await entered;
+    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
+    expect(running.has("filter")).toBe(false);
+    if (reducedMotion()) {
+      expect(style.transitionProperty).toBe("opacity, display");
+      expect(running.has("translate")).toBe(false);
+    } else {
+      expect(style.transitionProperty).toBe("opacity, translate, display");
+      expect(running.get("translate")?.from["translate"]).toBe("0px -2px");
+    }
     const popover = listbox()!.parentElement!;
-    expect(getComputedStyle(popover).opacity).toBe("1");
-    expect(getComputedStyle(popover).transitionProperty).toBe("none");
-    // rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있어, data-open이 빠지는 순간에 붙잡는다.
+    await Promise.all(popover.getAnimations().map((animation) => animation.finished));
     const exit = captureExit(popover, () => ({
       connected: popover.isConnected,
       style: styleSnapshot(popover),
+      running: transitions(popover),
     }));
     await rerender(<Fruits open={false} />);
-    const { connected, style } = await exit;
+    const { connected, style: exitStyle, running: exitRunning } = await exit;
     expect(connected).toBe(true);
-    expect(style.transitionProperty).toBe("opacity, display");
-    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
-    expect(style.pointerEvents).toBe("none");
+    expect(exitStyle.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(exitStyle.pointerEvents).toBe("none");
+    expect(exitRunning.get("opacity")?.to["opacity"]).toBe("0");
+    expect(exitRunning.has("translate")).toBe(false);
     await expectClosed();
   });
 });

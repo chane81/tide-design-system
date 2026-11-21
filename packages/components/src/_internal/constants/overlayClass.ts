@@ -21,15 +21,6 @@ export const popoverMotionClass: string = [
   "motion-safe:data-[placement=right]:starting:-translate-x-1 motion-safe:data-[placement=left]:starting:translate-x-1",
 ].join(" ");
 
-/**
- * 「자주 씀」 오버레이 motion. 요소에 `data-open`이 있어야 한다.
- * 열린 동안 `transition-none`이라 퇴장 중에 다시 열려도 바로 불투명해진다.
- */
-export const frequentMotionClass: string = [
-  "transition-[opacity,display] transition-discrete duration-fast ease-out data-open:transition-none",
-  "not-data-open:pointer-events-none not-data-open:hidden not-data-open:opacity-0",
-].join(" ");
-
 /** Dialog류 표면. forced-colors 처리는 `overlaySurfaceClass`와 같다. */
 export const dialogSurfaceClass =
   "rounded-xl border border-raised bg-raised text-default shadow-lg";

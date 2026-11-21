@@ -4,7 +4,13 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion";
+import {
+  captureExit,
+  captureWhen,
+  openControl,
+  styleSnapshot,
+  transitions,
+} from "../../test/motion";
 
 import { Button } from "../Button/Button";
 import { listItemClass } from "../_internal/constants/listClass";
@@ -20,6 +26,7 @@ import {
 } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 const wait = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 
@@ -576,6 +583,12 @@ describe("위치와 표면", () => {
     expect(content()).toHaveAttribute("data-theme", "light");
     expect(content()).toHaveAttribute("data-placement", "bottom");
     expect(content().parentElement?.closest("[data-testid='outside']")).toBeNull();
+    // 등장 전환(translate)이 끝난 뒤의 자리를 본다.
+    await Promise.all(
+      content()
+        .getAnimations()
+        .map((animation) => animation.finished),
+    );
     const t = trigger().getBoundingClientRect();
     const c = content().getBoundingClientRect();
     expect(Math.abs(c.top - t.bottom - 4)).toBeLessThanOrEqual(1);
@@ -632,20 +645,36 @@ describe("위치와 표면", () => {
 });
 
 describe("등장과 퇴장 motion", () => {
-  test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
+  // 전환 중 값은 data-open이 붙거나 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 전환이 끝나 있다.
+  test("등장: blur 없이 opacity + 트리거 쪽 2px에서 fast(150ms)로 들어온다", async () => {
     const screen = await render(<Example open={false} />);
+    const entered = captureWhen(
+      () => document.querySelector("[data-testid='content'][data-open]") !== null,
+      () => ({ style: styleSnapshot(content()), running: transitions(content()) }),
+    );
     await screen.rerender(<Example open />);
-    const style = getComputedStyle(content());
-    expect(style.transitionProperty).toBe("none");
-    expect(style.opacity).toBe("1");
-    expect(content().getAnimations()).toHaveLength(0);
+    const { style, running } = await entered;
+    expect(style.transitionBehavior).toContain("allow-discrete");
+    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
+    expect(running.has("filter")).toBe(false);
+    if (reducedMotion()) {
+      expect(style.transitionProperty).toBe("opacity, display");
+      expect(running.has("translate")).toBe(false);
+
+      return;
+    }
+    expect(style.transitionProperty).toBe("opacity, translate, display");
+    // placement bottom: 트리거 쪽(위)으로 2px 떨어진 곳에서 시작한다.
+    expect(running.get("translate")?.from["translate"]).toBe("0px -2px");
   });
 
   test("퇴장: opacity만 fast(150ms)로 사라진 뒤 DOM에서 빠진다", async () => {
     const screen = await render(<Example open />);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
-    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
     const exit = captureExit(element, () => ({
       connected: element.isConnected,
       style: styleSnapshot(element),
@@ -655,30 +684,32 @@ describe("등장과 퇴장 motion", () => {
     const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(connected).toBe(true);
-    expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.transitionBehavior).toContain("allow-discrete");
     expect(style.pointerEvents).toBe("none");
-    expect(running.has("opacity")).toBe(true);
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
     expect(running.has("filter")).toBe(false);
     expect(running.has("translate")).toBe(false);
     await expect.poll(() => element.isConnected).toBe(false);
   });
 
-  test("퇴장 중에 다시 열면 같은 요소가 전환 없이 바로 돌아온다", async () => {
+  test("퇴장 중에 다시 열면 같은 요소가 DOM에 남아 불투명하게 돌아온다", async () => {
     const control = openControl((open) => <Example open={open} />);
     await render(control.element);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
+    // 등장 시작값(opacity 0)에서 닫으면 바뀌는 값이 없어 퇴장 전환이 생기지 않는다. 등장이 끝난 뒤 닫는다.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
     // 닫고 다시 여는 일을 한 task 안에서 해, 사이에 렌더링 단계가 없어 요소가 빠지지 않게 한다.
     control.set(false);
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(transitions(element).has("opacity")).toBe(true);
     control.set(true);
     expect(content()).toBe(element);
-    expect(getComputedStyle(element).opacity).toBe("1");
+    expect(element).toHaveAttribute("data-open", "");
     await wait(300);
     expect(element.isConnected).toBe(true);
+    expect(getComputedStyle(element).opacity).toBe("1");
   });
 });
 
