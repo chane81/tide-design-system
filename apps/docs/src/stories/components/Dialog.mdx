@@ -25,7 +25,13 @@ import * as DialogStories from "./Dialog.stories";
 
 ### 구조
 
-`Dialog`는 열림 상태만 갖습니다. 안에 `DialogTrigger`(여는 버튼, `render={<Button />}`로 Button 모양)와 `DialogContent`를 둡니다. 내용에는 `DialogTitle`(제목, 이름이 됨), `DialogDescription`(설명), `DialogFooter`(동작 버튼 줄), `DialogClose`(누르면 닫는 버튼)를 씁니다. 끝 위쪽 닫기 버튼(이름 「닫기」, `closeLabel`로 바꿈)은 자동으로 붙습니다.
+`Dialog`는 열림 상태만 갖습니다. 안에 `DialogTrigger`(여는 버튼, `render={<Button />}`로 Button 모양)와 `DialogContent`를 둡니다. 내용에는 `DialogHeader`(닫기 버튼과 한 줄에 놓는 머리), `DialogTitle`(제목, 이름이 됨), `DialogDescription`(설명), `DialogFooter`(동작 버튼 줄), `DialogClose`(누르면 닫는 버튼)를 씁니다. 끝 위쪽 닫기 버튼(이름 「닫기」, `closeLabel`로 바꿈)은 자동으로 붙습니다.
+
+### 머리
+
+`DialogHeader`는 제목이나 입력과 닫기 버튼을 한 줄에 놓습니다. 있으면 자동으로 붙는 닫기 버튼을 대신합니다. 기본(`align="start"`)은 닫기 버튼을 제목 첫 줄에 맞추고, 검색 입력처럼 한 줄 내용은 `align="center"`로 가운데에 맞춥니다. AlertDialog에서는 닫기 버튼이 없습니다.
+
+<Canvas of={DialogStories.Header} />
 
 ### 크기
 
@@ -88,7 +94,7 @@ Dialog 안에서 연 Select·Combobox·Menu 목록과 Tooltip은 Dialog 위에 �
 
 ## Props
 
-모두 client Component입니다. `Dialog`·`AlertDialog`는 DOM 요소가 없고 열림 상태만 갖습니다. 나머지는 각 요소(`DialogTrigger`·`DialogClose` `<button>`, `DialogContent` `<div>`, `DialogTitle` `<h2>`, `DialogDescription` `<p>`, `DialogFooter` `<div>`)의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant` prop은 없습니다. 버튼 색은 `render`로 준 Button의 `color`(Role)가 정합니다.
+모두 client Component입니다. `Dialog`·`AlertDialog`는 DOM 요소가 없고 열림 상태만 갖습니다. 나머지는 각 요소(`DialogTrigger`·`DialogClose` `<button>`, `DialogContent` `<div>`, `DialogTitle` `<h2>`, `DialogDescription` `<p>`, `DialogHeader`·`DialogFooter` `<div>`)의 props를 받고 `ref`는 그 요소에 연결되며, `className`은 기본 class 뒤에 붙어 충돌하면 이깁니다. 색·`variant` prop은 없습니다. 버튼 색은 `render`로 준 Button의 `color`(Role)가 정합니다.
 
 | Component                         | prop                                 | 기본값                         |
 | --------------------------------- | ------------------------------------ | ------------------------------ |
@@ -99,6 +105,7 @@ Dialog 안에서 연 Select·Combobox·Menu 목록과 Tooltip은 Dialog 위에 �
 | `DialogContent`                   | `size`: `"sm" \| "md" \| "lg"`       | `"md"`                         |
 | `DialogContent`                   | `closeLabel`: `string`(Dialog만)     | `"닫기"`                       |
 | `DialogContent`                   | `role`·`id` 제외(역할 고정, 자동 id) |                                |
+| `DialogHeader`                    | `align`: `"start" \| "center"`       | `"start"`                      |
 | `DialogClose`                     | `render`: `ReactElement`             | 없음(`<button type="button">`) |
 | `DialogTitle`·`DialogDescription` | `id`: 주면 그 id로 잇는다            | 자동 id                        |
 

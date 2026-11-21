@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
   Field,
@@ -28,6 +29,7 @@ const meta = {
   subcomponents: {
     DialogTrigger,
     DialogContent,
+    DialogHeader,
     DialogTitle,
     DialogDescription,
     DialogFooter,
@@ -84,6 +86,43 @@ export const Basic: Story = {
   ),
   play: async ({ canvasElement }) => {
     await open(canvasElement, "프로젝트 이름 바꾸기");
+  },
+};
+
+/** 머리: 닫기 버튼을 제목 첫 줄이나 한 줄 입력의 가운데에 맞춘다. */
+export const Header: Story = {
+  name: "머리",
+  render: () => (
+    <div className="flex flex-wrap gap-3">
+      <Dialog>
+        <DialogTrigger render={<Button variant="outline" />}>제목 머리</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>프로젝트 이름 바꾸기</DialogTitle>
+            <DialogDescription>새 이름은 프로젝트의 모든 멤버에게 보입니다.</DialogDescription>
+          </DialogHeader>
+          <Field label="새 이름">
+            <Input defaultValue="디자인 리뷰" />
+          </Field>
+          <DialogFooter>
+            <DialogClose render={<Button variant="ghost" color="neutral" />}>취소</DialogClose>
+            <DialogClose render={<Button />}>저장</DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog>
+        <DialogTrigger render={<Button variant="outline" />}>입력 머리</DialogTrigger>
+        <DialogContent aria-label="페이지 검색">
+          <DialogHeader align="center">
+            <Input aria-label="페이지 검색" placeholder="페이지 검색" />
+          </DialogHeader>
+          <p className="text-body-sm text-muted">검색 결과가 여기에 보입니다.</p>
+        </DialogContent>
+      </Dialog>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await open(canvasElement, "입력 머리");
   },
 };
 
