@@ -20,9 +20,9 @@ export const tabListClass: Record<TabsShape, Record<TabsOrientation, string>> = 
   },
 };
 
-// 글자색은 반복 항목이라 전환 없이 바로 바뀐다.
+// 탭은 Menu 항목처럼 연달아 훑는 목록이 아니라 혼자 있는 조작 요소처럼 글자색을 전환한다.
 export const tabBaseClass = [
-  "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-label-md whitespace-nowrap text-muted outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
+  "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-label-md whitespace-nowrap text-muted transition-colors outline-none select-none [&>svg]:size-4 [&>svg]:shrink-0",
   "hover:not-data-selected:enabled:text-default data-selected:text-primary focus-visible:focus-ring",
   "disabled:cursor-not-allowed disabled:text-disabled",
   "after:pointer-events-none after:absolute after:opacity-0",

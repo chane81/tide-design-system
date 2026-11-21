@@ -371,11 +371,13 @@ describe("포커스 표시와 고른 표시", () => {
     expect(getComputedStyle(byTestId("security")).color).toBe(
       resolve("color", "var(--tide-text-muted)"),
     );
+    const security = getComputedStyle(byTestId("security"));
+    expect(security.transitionProperty).toContain("color");
+    expect(security.transitionDuration).toBe("0.15s");
     await userEvent.hover(page.getByTestId("security"));
-    expect(getComputedStyle(byTestId("security")).color).toBe(
-      resolve("color", "var(--tide-text-default)"),
-    );
-    expect(getComputedStyle(byTestId("security")).transitionDuration).toBe("0s");
+    await expect
+      .poll(() => getComputedStyle(byTestId("security")).color)
+      .toBe(resolve("color", "var(--tide-text-default)"));
   });
 });
 
