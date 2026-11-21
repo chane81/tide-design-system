@@ -1,5 +1,4 @@
 "use client";
-import { XIcon } from "@tide-design/icons";
 import { useEffect, useMemo, useRef, useState, type ReactElement, type RefObject } from "react";
 // 루트 entry에서 import한다(Popover.tsx 참고: Vite 사전 번들 목록이 바뀌지 않는다).
 import { mergeProps, mergeRefs, useDialog, useFocusManager, useModalOverlay } from "react-aria";
@@ -7,9 +6,9 @@ import { mergeProps, mergeRefs, useDialog, useFocusManager, useModalOverlay } fr
 import type { DialogContextValue } from "../../_internal/hooks/useDialogContext";
 import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
 import { cn } from "../../_internal/libs/cn";
-import { IconButton } from "../../IconButton/IconButton";
 import { backdropClass, contentClass, sizeClass } from "../constants/dialogClass";
 import { DialogPartsContext, type DialogPartsContextValue } from "../hooks/useDialogPartsContext";
+import { DialogCloseButton } from "./DialogCloseButton";
 import type { DialogContentProps } from "./DialogContent";
 
 export interface DialogContentInnerProps extends DialogContentProps {
@@ -32,6 +31,7 @@ export function DialogContentInner({
   const dialogRef = useRef<HTMLDivElement>(null);
   const [titleId, setTitleId] = useState<string | null>(null);
   const [descriptionId, setDescriptionId] = useState<string | null>(null);
+  const [hasHeader, setHasHeader] = useState(false);
   useOverlayTheme(triggerRef, backdropRef);
   // Esc로 닫기, 바깥(막) 누름으로 닫기(AlertDialog는 아님), 바깥 inert, 스크롤 잠금, 포커스 가두기 요청.
   const { modalProps, underlayProps } = useModalOverlay(
@@ -64,8 +64,8 @@ export function DialogContentInner({
   }, []);
   const mergedRef = useMemo(() => mergeRefs(ref, dialogRef), [ref]);
   const parts = useMemo<DialogPartsContextValue>(
-    () => ({ alert, setTitleId, setDescriptionId }),
-    [alert],
+    () => ({ alert, closeLabel, hasHeader, setHasHeader, setTitleId, setDescriptionId }),
+    [alert, closeLabel, hasHeader],
   );
   const open = state.isOpen ? "" : undefined;
 
@@ -79,17 +79,8 @@ export function DialogContentInner({
         className={cn(contentClass, sizeClass[size], className)}
       >
         <DialogPartsContext value={parts}>{children}</DialogPartsContext>
-        {!alert && (
-          <IconButton
-            aria-label={closeLabel}
-            variant="ghost"
-            color="neutral"
-            size="sm"
-            onClick={state.close}
-            className="absolute end-5 top-5"
-          >
-            <XIcon />
-          </IconButton>
+        {!alert && !hasHeader && (
+          <DialogCloseButton label={closeLabel} className="absolute end-5 top-5" />
         )}
       </div>
     </div>
