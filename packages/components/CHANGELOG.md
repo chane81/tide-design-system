@@ -1,5 +1,20 @@
 # @tide-tds/components
 
+## 0.18.2
+
+### 기능 추가와 수정 (patch)
+
+- [#100](https://github.com/chane81/tide-design-system/pull/100) [`2731166`](https://github.com/chane81/tide-design-system/commit/27311668ecea44f76d9f9e72ac829fa3b142be05) [@chane81](https://github.com/chane81) - Menu 항목, Select·Combobox 옵션에 마우스를 올리거나 키보드로 옮길 때 위치 표시(highlight)의 글자·배경 색이 짧게(150ms) 바뀐다. 움직임 줄이기에서도 같다.
+
+- [#100](https://github.com/chane81/tide-design-system/pull/100) [`f045a52`](https://github.com/chane81/tide-design-system/commit/f045a524c23f5357028a848476a8adc0c9f1e6a6) [@chane81](https://github.com/chane81) - Menu·Select·Combobox 목록의 항목 사이를 2px 띄워 위치(highlight) 배경과 선택 배경이 맞닿지 않게 했다. 구분선과 항목 사이는 전과 같이 4px다.
+
+- [#100](https://github.com/chane81/tide-design-system/pull/100) [`1a6606f`](https://github.com/chane81/tide-design-system/commit/1a6606f8e5d9084297bf53fcbff5c5aba577180a) [@chane81](https://github.com/chane81) - Menu·Select·Combobox 목록이 열릴 때 짧게(150ms) 나타난다. opacity가 0에서 1로 바뀌고 트리거 쪽 2px에서 미끄러져 들어온다(blur 없음). 움직임 줄이기에서는 이동 없이 opacity만 바뀐다. Tooltip은 그대로다.
+
+- [#100](https://github.com/chane81/tide-design-system/pull/100) [`4035aaa`](https://github.com/chane81/tide-design-system/commit/4035aaa22384f824dde473d94cdfcd6b49e75e02) [@chane81](https://github.com/chane81) - Select 트리거에 마우스를 올리면 손모양 커서(`cursor-pointer`)가 나온다. 비활성일 때는 그대로 `not-allowed`다.
+- 의존성 업데이트 []:
+  - @tide-design/foundation@0.18.2
+  - @tide-design/icons@0.18.2
+
 ## 0.18.1
 
 ### 기능 추가와 수정 (patch)
