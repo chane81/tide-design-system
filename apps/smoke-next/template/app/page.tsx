@@ -72,7 +72,6 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  Typography,
   VisuallyHidden,
 } from "@tide-design/components";
 import { PlusIcon } from "@tide-design/icons";
@@ -86,11 +85,8 @@ export default function Page() {
     <main>
       <h1 className={cn("p-4", "bg-primary-solid")}>Tide smoke</h1>
       <VisuallyHidden>스크린리더 전용 텍스트</VisuallyHidden>
-      {/* 서버 컴포넌트에서 render 병합까지 쓴다. */}
-      <Typography variant="heading-lg">제목</Typography>
-      <Typography variant="caption" render={<small />}>
-        보조 설명
-      </Typography>
+      <h2 className="text-heading-lg">제목</h2>
+      <small className="text-caption">보조 설명</small>
       {/* radius·Elevation·포커스 표시 Utility class를 앱 코드에서 직접 쓴다. */}
       <section className="rounded-lg border border-raised bg-raised shadow-md">
         <button type="button" className="rounded-md focus-visible:focus-ring">

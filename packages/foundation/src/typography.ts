@@ -99,7 +99,7 @@ export const textStyle = {
 // isolatedDeclarations(oxc d.ts)가 `as const satisfies`를 추론하지 못해서 검사는 따로 둔다.
 textStyle satisfies Record<string, TextStyleValue>;
 
-/** 텍스트 스타일 이름. Typography의 `variant` 값이다. */
+/** 텍스트 스타일 이름. `text-<이름>` class로 쓴다. */
 export type TextStyleName = keyof typeof textStyle;
 
 /**
