@@ -1,6 +1,8 @@
 # variant 맵은 직접 작성하고, 조합은 `render` prop으로 한다
 
 > **ADR 0011로 일부 정정됨(2026-11-10)**: [`color`는 열린 색 이름이고, `data-color`로 accent 슬롯에 꽂는다](0011-open-color-names-data-color-accent.md). 아래 「정정 (2026-11-10)」을 본다.
+>
+> **ADR 0041로 일부 대체됨(2026-11-22)**: [공개 Component `Typography`를 제거하고 시맨틱 태그와 `text-*` class로 쓴다](0041-remove-typography-component.md). 「정정 (2026-11-09)」의 Typography 근거는 과거 기록이고, `render` 적용 범위는 그대로다.
 
 근거 원칙: ③ 단순함이 유연함보다 우선한다, ④ 발견할 수 있음이 외워야 함보다 우선한다
 

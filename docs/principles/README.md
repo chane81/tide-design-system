@@ -120,3 +120,4 @@ Tide의 모든 결정은 아래 네 원칙을 따른다. 원칙 번호가 곧 �
 - ① 접근성, ② 명확함, ③ 단순함: [ADR 0037 Checkbox는 채움 뒤에 체크를 그리고, Radio는 점을 튀어 나오게 하며, 첫 렌더에서는 움직이지 않는다](../decisions/0037-choice-selection-motion.md)
 - ② 명확함, ① 접근성: [ADR 0038 Tabs의 고른 표시는 탭 목록에 하나만 두어 새 탭으로 미끄러지게 하고, `shape`로 밑줄·둥근 바탕을 고른다](../decisions/0038-tabs-moving-indicator-and-shape.md)
 - ② 명확함, ③ 단순함: [ADR 0039 안에 표시가 떠 있는 움푹한 바탕으로 `bg-inset` Token을 더한다](../decisions/0039-bg-inset-token.md)
+- ③ 단순함, ① 접근성: [ADR 0041 공개 Component `Typography`를 제거하고 시맨틱 태그와 `text-*` class로 쓴다](../decisions/0041-remove-typography-component.md)

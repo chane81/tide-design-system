@@ -4,7 +4,6 @@ import {
   BreadcrumbCurrent,
   BreadcrumbItem,
   BreadcrumbLink,
-  Typography,
 } from "@tide-design/components";
 
 const meta = {
@@ -90,9 +89,7 @@ export const DoAboveTitle: Story = {
           <BreadcrumbCurrent>Tide</BreadcrumbCurrent>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Typography variant="heading-lg" level={2}>
-        Tide
-      </Typography>
+      <h2 className="text-heading-lg">Tide</h2>
     </div>
   ),
 };

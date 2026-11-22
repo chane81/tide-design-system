@@ -146,7 +146,7 @@ try {
   assert(!css.includes("--color-red-500"), "Tailwind 기본 팔레트가 남아 있다");
   assert(
     css.includes(".text-heading-lg") && css.includes("--tide-text-heading-lg"),
-    "Typography의 텍스트 스타일 class(text-heading-lg)가 없다",
+    "앱이 쓴 텍스트 스타일 class(text-heading-lg)가 없다",
   );
   assert(/word-break:\s*keep-all/.test(css), "base CSS의 word-break: keep-all이 없다");
   assert(css.includes("--tide-font-sans"), "기본 글꼴이 Tide sans 스택을 쓰지 않는다");

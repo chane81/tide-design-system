@@ -1,6 +1,5 @@
 export { cn } from "./_internal/libs/cn";
 export { VisuallyHidden, type VisuallyHiddenProps } from "./VisuallyHidden/index";
-export { Typography, type TypographyOwnProps, type TypographyProps } from "./Typography/index";
 export { Spinner, type SpinnerOwnProps, type SpinnerProps } from "./Spinner/index";
 export { Button, type ButtonOwnProps, type ButtonProps } from "./Button/index";
 export { IconButton, type IconButtonOwnProps, type IconButtonProps } from "./IconButton/index";
