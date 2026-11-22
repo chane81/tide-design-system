@@ -29,4 +29,8 @@ export const listItemClass = [
 /** 항목과 같은 가로 여백이라 글자 시작이 맞는다. */
 export const listHeadingClass = "px-2 pt-1.5 pb-1 text-label-sm text-muted select-none";
 
-export const listSeparatorClass = "my-1 h-0 border-t border-default";
+/** 항목을 바로 담는 요소(목록·묶음)에 붙인다. 2px 간격이 highlight·선택 배경이 맞닿지 않게 한다. */
+export const listItemsClass = "flex flex-col gap-0.5";
+
+/** 양옆 간격(`gap-0.5`)과 더해 항목에서 4px 떨어진다. */
+export const listSeparatorClass = "my-0.5 h-0 border-t border-default";

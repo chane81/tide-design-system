@@ -80,6 +80,9 @@ function Example({ content, onRename, onDelete, ...props }: ExampleProps): React
 const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).element() as HTMLElement;
 const content = (): HTMLElement => byTestId("content");
 const trigger = (): HTMLElement => byTestId("trigger");
+/** 위 요소의 아래 끝에서 아래 요소의 위 끝까지 세로 간격(px) */
+const spaceBetween = (upper: Element, lower: Element): number =>
+  lower.getBoundingClientRect().top - upper.getBoundingClientRect().bottom;
 const highlighted = (): string[] =>
   [...document.querySelectorAll("[data-highlighted]")].map((item) => item.textContent ?? "");
 
@@ -414,6 +417,15 @@ describe("묶음", () => {
         .map((item) => item.textContent),
     ).toEqual(["이름순", "날짜순"]);
     expect(content().querySelectorAll("[role='separator']")).toHaveLength(2);
+    // 묶음 안 항목도 2px, 구분선은 간격 2px + 여백 2px로 양쪽 4px 떨어진다.
+    const [none, separator] = [...content().children];
+    const [byName, byDate] = page
+      .getByRole("group", { name: "정렬" })
+      .getByRole("menuitem")
+      .elements();
+    expect(spaceBetween(byName!, byDate!)).toBeCloseTo(2, 1);
+    expect(spaceBetween(none!, separator!)).toBeCloseTo(4, 1);
+    expect(spaceBetween(separator!, separator!.nextElementSibling!)).toBeCloseTo(4, 1);
     const heading = page.getByText("정렬").element();
     expect(heading).toHaveAttribute("role", "presentation");
     if (!forcedColors()) {
@@ -593,6 +605,13 @@ describe("위치와 표면", () => {
     const c = content().getBoundingClientRect();
     expect(Math.abs(c.top - t.bottom - 4)).toBeLessThanOrEqual(1);
     expect(Math.abs(c.left - t.left)).toBeLessThanOrEqual(1);
+  });
+
+  test("항목 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
+    await render(<Example defaultOpen />);
+    await expect.element(page.getByRole("menu")).toBeVisible();
+    expect(spaceBetween(byTestId("rename"), byTestId("copy"))).toBeCloseTo(2, 1);
+    expect(spaceBetween(byTestId("copy"), byTestId("archive"))).toBeCloseTo(2, 1);
   });
 
   test("raised 표면, shadow-md, radius lg, 1px 경계, 여백 3px이고 항목은 radius sm이다", async () => {

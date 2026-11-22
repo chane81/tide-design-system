@@ -70,6 +70,9 @@ function Fruits(props: Partial<SelectProps>): ReactElement {
 
 const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).element() as HTMLElement;
 const trigger = (): HTMLElement => byTestId("trigger");
+/** 위 요소의 아래 끝에서 아래 요소의 위 끝까지 세로 간격(px) */
+const spaceBetween = (upper: Element, lower: Element): number =>
+  lower.getBoundingClientRect().top - upper.getBoundingClientRect().bottom;
 const listbox = (): HTMLElement | null => document.querySelector('[role="listbox"]');
 const highlighted = (): string[] =>
   [...document.querySelectorAll("[data-highlighted]")].map((item) => item.textContent ?? "");
@@ -591,6 +594,13 @@ describe("모양", () => {
     expect(getComputedStyle(byTestId("apple")).backgroundColor).toBe(transparent);
   });
 
+  test("옵션 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
+    await render(<Fruits open />);
+    await expect.poll(listbox).not.toBeNull();
+    expect(spaceBetween(byTestId("apple"), byTestId("banana"))).toBeCloseTo(2, 1);
+    expect(spaceBetween(byTestId("banana"), byTestId("cherry"))).toBeCloseTo(2, 1);
+  });
+
   test("마우스를 올린 옵션이 위치가 된다", async () => {
     await render(<Fruits />);
     await userEvent.click(page.getByTestId("trigger"));
@@ -662,6 +672,16 @@ describe("옵션 묶음과 모으기", () => {
     expect(listbox()!.querySelectorAll('[role="presentation"][aria-hidden="true"]')).toHaveLength(
       2,
     );
+    // 묶음 안 옵션도 2px, 구분선은 간격 2px + 여백 2px로 양쪽 4px 떨어진다.
+    const [none, separator] = [...listbox()!.children];
+    expect(
+      spaceBetween(
+        page.getByRole("option", { name: "Seoul" }).element(),
+        page.getByRole("option", { name: "Busan" }).element(),
+      ),
+    ).toBeCloseTo(2, 1);
+    expect(spaceBetween(none!, separator!)).toBeCloseTo(4, 1);
+    expect(spaceBetween(separator!, separator!.nextElementSibling!)).toBeCloseTo(4, 1);
     await userEvent.click(page.getByRole("option", { name: "Busan" }));
     expect(onValueChange).toHaveBeenCalledExactlyOnceWith("busan");
     expect(document.querySelector<HTMLSelectElement>("select")!.value).toBe("busan");

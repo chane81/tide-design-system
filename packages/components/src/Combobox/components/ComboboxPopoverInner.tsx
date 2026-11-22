@@ -4,7 +4,7 @@ import { useLayoutEffect, type ReactElement } from "react";
 import { useListBox } from "react-aria";
 
 import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes";
-import { listPopupClass } from "../../_internal/constants/listClass";
+import { listItemsClass, listPopupClass } from "../../_internal/constants/listClass";
 import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
 import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
 import { emptyClass } from "../constants/comboboxClass";
@@ -41,7 +41,7 @@ export function ComboboxPopoverInner({
       data-open={state.isOpen ? "" : undefined}
       className={listPopupClass}
     >
-      <div {...listProps} ref={listBoxRef} className="outline-none">
+      <div {...listProps} ref={listBoxRef} className={`${listItemsClass} outline-none`}>
         <ListBoxNodes state={state} />
       </div>
       {empty && <div className={emptyClass}>{emptyMessage}</div>}

@@ -2,7 +2,7 @@
 import type { ReactElement } from "react";
 import { useListBoxSection } from "react-aria";
 
-import { listHeadingClass } from "../../../constants/listClass";
+import { listHeadingClass, listItemsClass } from "../../../constants/listClass";
 import type { ListBoxSectionProps, ViewProps } from "../types";
 import { ListBoxOptionView } from "./ListBoxOptionView";
 
@@ -21,7 +21,7 @@ export function ListBoxSectionView({ node, state }: ViewProps): ReactElement {
           {node.rendered}
         </div>
       )}
-      <div {...groupProps}>
+      <div {...groupProps} className={listItemsClass}>
         {[...node.childNodes].map((child) => (
           <ListBoxOptionView key={child.key} node={child} state={state} />
         ))}

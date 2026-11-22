@@ -78,6 +78,9 @@ const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).eleme
 const input = (): HTMLInputElement => byTestId("input") as HTMLInputElement;
 const chevron = (): HTMLButtonElement => input().nextElementSibling as HTMLButtonElement;
 const listbox = (): HTMLElement | null => document.querySelector('[role="listbox"]');
+/** 위 요소의 아래 끝에서 아래 요소의 위 끝까지 세로 간격(px) */
+const spaceBetween = (upper: Element, lower: Element): number =>
+  lower.getBoundingClientRect().top - upper.getBoundingClientRect().bottom;
 const optionNames = (): string[] =>
   [...document.querySelectorAll('[role="option"]')].map((option) => option.textContent ?? "");
 const highlighted = (): string[] =>
@@ -247,6 +250,16 @@ describe("입력 필터링", () => {
     expect(listbox()!.querySelectorAll('[role="presentation"][aria-hidden="true"]')).toHaveLength(
       2,
     );
+    // 묶음 안 옵션도 2px, 구분선은 간격 2px + 여백 2px로 양쪽 4px 떨어진다.
+    const [none, separator] = [...listbox()!.children];
+    expect(
+      spaceBetween(
+        page.getByRole("option", { name: "서울" }).element(),
+        page.getByRole("option", { name: "부산" }).element(),
+      ),
+    ).toBeCloseTo(2, 1);
+    expect(spaceBetween(none!, separator!)).toBeCloseTo(4, 1);
+    expect(spaceBetween(separator!, separator!.nextElementSibling!)).toBeCloseTo(4, 1);
     await userEvent.keyboard("부");
     await expect.poll(optionNames).toEqual(["부산"]);
     expect(page.getByRole("group", { name: "해외" }).elements()).toHaveLength(0);
@@ -563,6 +576,15 @@ describe("Field와 폼", () => {
         resolve("borderTopColor", "var(--tide-border-danger)"),
       );
     }
+  });
+
+  test("옵션 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
+    await render(<Fruits />);
+    await tabToInput();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect.poll(listbox).not.toBeNull();
+    expect(spaceBetween(byTestId("apple"), byTestId("banana"))).toBeCloseTo(2, 1);
+    expect(spaceBetween(byTestId("banana"), byTestId("pear"))).toBeCloseTo(2, 1);
   });
 
   test("Field의 disabled는 입력·버튼 모두 :disabled라 열리지 않고 폼에 제출되지 않는다", async () => {
