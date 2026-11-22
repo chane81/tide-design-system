@@ -8,7 +8,7 @@ import { render } from "vitest-browser-react";
 
 import { expectFocusHalo } from "../../test/focus";
 
-import { captureExit, styleSnapshot } from "../../test/motion";
+import { captureExit, captureWhen, styleSnapshot, transitions } from "../../test/motion";
 
 import { Button } from "../Button/Button";
 import { Combobox, ComboboxItem, ComboboxSection, type ComboboxProps } from "./index";
@@ -17,6 +17,7 @@ import { Input } from "../Input/Input";
 import { Select, SelectItem } from "../Select/index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 
 /** CSS 값 하나를 실제로 계산한 결과. Token 변수를 계산값과 비교할 때 쓴다. */
@@ -77,6 +78,9 @@ const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).eleme
 const input = (): HTMLInputElement => byTestId("input") as HTMLInputElement;
 const chevron = (): HTMLButtonElement => input().nextElementSibling as HTMLButtonElement;
 const listbox = (): HTMLElement | null => document.querySelector('[role="listbox"]');
+/** 위 요소의 아래 끝에서 아래 요소의 위 끝까지 세로 간격(px) */
+const spaceBetween = (upper: Element, lower: Element): number =>
+  lower.getBoundingClientRect().top - upper.getBoundingClientRect().bottom;
 const optionNames = (): string[] =>
   [...document.querySelectorAll('[role="option"]')].map((option) => option.textContent ?? "");
 const highlighted = (): string[] =>
@@ -246,6 +250,16 @@ describe("입력 필터링", () => {
     expect(listbox()!.querySelectorAll('[role="presentation"][aria-hidden="true"]')).toHaveLength(
       2,
     );
+    // 묶음 안 옵션도 2px, 구분선은 간격 2px + 여백 2px로 양쪽 4px 떨어진다.
+    const [none, separator] = [...listbox()!.children];
+    expect(
+      spaceBetween(
+        page.getByRole("option", { name: "서울" }).element(),
+        page.getByRole("option", { name: "부산" }).element(),
+      ),
+    ).toBeCloseTo(2, 1);
+    expect(spaceBetween(none!, separator!)).toBeCloseTo(4, 1);
+    expect(spaceBetween(separator!, separator!.nextElementSibling!)).toBeCloseTo(4, 1);
     await userEvent.keyboard("부");
     await expect.poll(optionNames).toEqual(["부산"]);
     expect(page.getByRole("group", { name: "해외" }).elements()).toHaveLength(0);
@@ -564,6 +578,21 @@ describe("Field와 폼", () => {
     }
   });
 
+  test("열기 버튼에 마우스를 올리면 cursor가 pointer다", async () => {
+    await render(<Fruits />);
+    await userEvent.hover(chevron());
+    expect(getComputedStyle(chevron()).cursor).toBe("pointer");
+  });
+
+  test("옵션 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
+    await render(<Fruits />);
+    await tabToInput();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect.poll(listbox).not.toBeNull();
+    expect(spaceBetween(byTestId("apple"), byTestId("banana"))).toBeCloseTo(2, 1);
+    expect(spaceBetween(byTestId("banana"), byTestId("pear"))).toBeCloseTo(2, 1);
+  });
+
   test("Field의 disabled는 입력·버튼 모두 :disabled라 열리지 않고 폼에 제출되지 않는다", async () => {
     await render(
       <form data-testid="form">
@@ -758,6 +787,8 @@ describe("모양", () => {
     expect(style.position).toBe("absolute");
     expect(style.paddingTop).toBe("3px");
     expect(style.borderTopLeftRadius).toBe("8px");
+    // 등장 전환(translate)이 끝난 뒤의 자리를 본다.
+    await Promise.all(popover.getAnimations().map((animation) => animation.finished));
     const box = popover.getBoundingClientRect();
     const inputBox = input().getBoundingClientRect();
     expect(box.top - inputBox.bottom).toBeCloseTo(4, 0);
@@ -773,8 +804,11 @@ describe("모양", () => {
     await expect.poll(activeOption).toBe(byTestId("banana"));
     const banana = byTestId("banana");
     const highlight = resolve("backgroundColor", "var(--tide-bg-primary-subtle)");
-    if (!forcedColors()) expect(getComputedStyle(banana).backgroundColor).toBe(highlight);
-    expect(getComputedStyle(banana).outlineStyle).toBe("solid");
+    const style = getComputedStyle(banana);
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    if (!forcedColors()) await expect.poll(() => style.backgroundColor).toBe(highlight);
+    expect(style.outlineStyle).toBe("solid");
 
     await userEvent.keyboard("{ArrowDown}");
     await expect.poll(highlighted).toEqual(["배"]);
@@ -783,10 +817,10 @@ describe("모양", () => {
 
       return;
     }
-    expect(getComputedStyle(banana).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"),
-    );
-    expect(getComputedStyle(byTestId("pear")).backgroundColor).toBe(highlight);
+    await expect
+      .poll(() => style.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"));
+    await expect.poll(() => getComputedStyle(byTestId("pear")).backgroundColor).toBe(highlight);
     expect(getComputedStyle(byTestId("apple")).backgroundColor).toBe(transparent);
   });
 
@@ -802,25 +836,44 @@ describe("모양", () => {
     }
   });
 
-  test("바로 나타나고, 닫히면 opacity만 fast(150ms)로 사라진 뒤 DOM에서 빠진다", async () => {
+  test("목록은 blur 없이 opacity + 입력 쪽 2px로 fast(150ms)에 나타나고, 닫히면 opacity만 사라진 뒤 DOM에서 빠진다", async () => {
     await render(<Fruits />);
     await tabToInput();
+    // 전환 중 값은 data-open이 붙거나 빠지는 순간에 붙잡는다. 동작 뒤에 읽으면 부하에 따라 전환이 끝나 있다.
+    const entered = captureWhen(
+      () => listbox()?.parentElement?.hasAttribute("data-open") === true,
+      () => {
+        const popover = listbox()!.parentElement!;
+
+        return { style: styleSnapshot(popover), running: transitions(popover) };
+      },
+    );
     await userEvent.keyboard("{ArrowDown}");
-    await expect.poll(listbox).not.toBeNull();
+    const { style, running } = await entered;
+    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
+    expect(running.has("filter")).toBe(false);
+    if (reducedMotion()) {
+      expect(style.transitionProperty).toBe("opacity, display");
+      expect(running.has("translate")).toBe(false);
+    } else {
+      expect(style.transitionProperty).toBe("opacity, translate, display");
+      expect(running.get("translate")?.from["translate"]).toBe("0px -2px");
+    }
     const popover = listbox()!.parentElement!;
-    expect(getComputedStyle(popover).opacity).toBe("1");
-    expect(getComputedStyle(popover).transitionProperty).toBe("none");
-    // 퇴장 전환 중 값은 닫힌 순간에 붙잡는다. Escape 명령 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
+    await Promise.all(popover.getAnimations().map((animation) => animation.finished));
     const exit = captureExit(popover, () => ({
       connected: popover.isConnected,
       style: styleSnapshot(popover),
+      running: transitions(popover),
     }));
     await userEvent.keyboard("{Escape}");
-    const { connected, style } = await exit;
+    const { connected, style: exitStyle, running: exitRunning } = await exit;
     expect(connected).toBe(true);
-    expect(style.transitionProperty).toBe("opacity, display");
-    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
-    expect(style.pointerEvents).toBe("none");
+    expect(exitStyle.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(exitStyle.pointerEvents).toBe("none");
+    expect(exitRunning.get("opacity")?.to["opacity"]).toBe("0");
+    expect(exitRunning.has("translate")).toBe(false);
     await expectClosed();
   });
 });

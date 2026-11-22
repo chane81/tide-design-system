@@ -70,3 +70,9 @@ Popover·Tooltip·Menu·Select·Combobox·Dialog·Toast는 모두 「트리거�
 > - **motion은 `popoverMotionClass` 그대로**: 아래에서 떠오르도록 `data-placement="top"`(트리거 위에 뜨는 Popover와 같은 방향: 4px 아래에서 올라오고 퇴장은 2px 아래로)을 붙인다. 표면은 `overlaySurfaceClass`, 쌓임은 `z-toast`(400)다.
 > - **열린 모달 위(티켓 26·30 메모의 확인)**: `useToastRegion`의 `regionProps`에 `data-react-aria-top-layer`가 있어(react-aria 3.53.1 소스), 열린 Dialog가 연 뒤 body에 붙은 영역도 `inert`·`aria-hidden`이 되지 않고 눌러도 Dialog가 닫히지 않는다(테스트로 확인). 공통 모듈로 옮길 것은 생기지 않았다.
 > - **Theme**: 트리거가 없어 `useOverlayTheme`을 쓰지 않는다. 영역은 문서(`<html>`)의 Theme을 따른다.
+
+> 덧붙임(2026-11-21): 「자주 씀」 목록(Menu·Select·Combobox)에 짧은 등장 전환을 더했다. 열릴 때 바로 불투명하게 나타나 갑자기 튀어나와 보인다는 피드백(Dialog 안 Select 목록)이 있었다. Tooltip은 그대로 등장 없이 둔다.
+>
+> - **목록 motion `listMotionClass`(`_internal/constants/listClass.ts`)**: 등장은 `starting:opacity-0`에서 `fast` out으로 들어오고, `motion-safe`일 때만 `data-placement` 쪽(트리거·입력 쪽)으로 2px(`0.5`) 떨어진 곳에서 미끄러진다. blur는 없다. 「가끔 씀」(blur 4px + 4px, `normal`)보다 짧고 가볍게 해 자주 열어도 거슬리지 않게 했다. 퇴장은 전과 같이 opacity만 `fast`로 사라진다. 움직임 줄이기에서는 이동 없이 opacity만 바뀐다.
+> - **`data-open:transition-none`을 뺐다**: 열린 동안에도 전환이 있으므로 퇴장 중에 다시 열면 바로 불투명해지지 않고 그 자리에서 opacity가 1로 돌아온다. 같은 요소가 DOM에 남는 것은 `useOverlayPresence`가 그대로 맡는다(Popover와 같다).
+> - **`frequentMotionClass`는 Tooltip으로 내렸다**: 쓰는 곳이 Tooltip 하나로 줄어 `Tooltip/constants/tooltipClass.ts`에 둔다. 동작은 바뀌지 않는다.

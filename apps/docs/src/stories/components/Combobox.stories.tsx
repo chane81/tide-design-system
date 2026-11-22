@@ -43,6 +43,9 @@ async function open(canvasElement: HTMLElement, text = "", index = 0): Promise<v
   if (text) await userEvent.keyboard(text);
   await userEvent.keyboard("{ArrowDown}");
   const listbox = await body.findByRole("listbox");
+  // 등장 전환(opacity 0에서 시작)은 listbox를 감싼 목록 요소에서 돈다. 끝난 뒤 본다.
+  const popup = listbox.parentElement as HTMLElement;
+  await Promise.all(popup.getAnimations().map((animation) => animation.finished));
   await expect(listbox).toBeVisible();
 }
 
@@ -120,7 +123,11 @@ export const Empty: Story = {
     canvasElement.querySelector<HTMLInputElement>('[role="combobox"]')?.focus();
     await userEvent.keyboard("없는나라");
     const body = within(canvasElement.ownerDocument.body);
-    await expect(await body.findByText("일치하는 국가가 없습니다")).toBeVisible();
+    const message = await body.findByText("일치하는 국가가 없습니다");
+    // 등장 전환(opacity 0에서 시작)은 문구를 감싼 목록 요소에서 돈다. 끝난 뒤 본다.
+    const popup = message.parentElement as HTMLElement;
+    await Promise.all(popup.getAnimations().map((animation) => animation.finished));
+    await expect(message).toBeVisible();
   },
 };
 

@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 // 서브패스 말고 루트 entry에서 import한다. Vite 사전 번들 목록이 바뀌지 않게 한다.
 import { useMenuSection } from "react-aria";
 
-import { listHeadingClass } from "../../_internal/constants/listClass";
+import { listHeadingClass, listItemsClass } from "../../_internal/constants/listClass";
 import type { ViewProps } from "../types";
 import type { MenuSectionProps } from "./MenuSection";
 import { MenuItemView } from "./MenuItemView";
@@ -23,7 +23,7 @@ export function MenuSectionView({ node, tree }: ViewProps): ReactElement {
           {node.rendered}
         </div>
       )}
-      <div {...groupProps}>
+      <div {...groupProps} className={listItemsClass}>
         {[...node.childNodes].map((child) => (
           <MenuItemView key={child.key} node={child} tree={tree} />
         ))}

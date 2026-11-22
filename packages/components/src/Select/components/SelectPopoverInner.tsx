@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, type ReactElement, type RefObject } from "reac
 import { DismissButton, useListBox } from "react-aria";
 
 import { ListBoxNodes } from "../../_internal/components/ListBoxNodes/ListBoxNodes";
-import { listPopupClass } from "../../_internal/constants/listClass";
+import { listItemsClass, listPopupClass } from "../../_internal/constants/listClass";
 import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab";
 import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
 import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
@@ -45,7 +45,7 @@ export function SelectPopoverInner({
     >
       {/* 스크린리더 사용자가 Esc 없이 닫을 수 있는 숨은 버튼. Tab 순서에는 없다. */}
       <DismissButton onDismiss={state.close} />
-      <div {...listBoxProps} ref={listRef} className="outline-none">
+      <div {...listBoxProps} ref={listRef} className={`${listItemsClass} outline-none`}>
         <ListBoxNodes state={state} />
       </div>
       <DismissButton onDismiss={state.close} />

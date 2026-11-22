@@ -38,7 +38,7 @@ import * as ComboboxStories from "./Combobox.stories";
 
 ### 묶음·비활성 옵션
 
-`ComboboxSection`으로 옵션을 묶고 `heading`으로 제목을 붙입니다. 거른 뒤 남은 옵션이 없는 묶음은 제목까지 빠집니다. `disabled` 옵션은 흐리게 보이고 고를 수 없으며 키보드 위치가 건너뜁니다. 고른 옵션은 회색 배경과 끝의 체크 아이콘으로 보입니다.
+`ComboboxSection`으로 옵션을 묶고 `heading`으로 제목을 붙입니다. 거른 뒤 남은 옵션이 없는 묶음은 제목까지 빠집니다. `disabled` 옵션은 흐리게 보이고 고를 수 없으며 키보드 위치가 건너뜁니다. 고른 옵션은 회색 배경과 끝의 체크 아이콘으로 보입니다. 옵션 사이는 2px 띄워 고른 배경과 위치 배경이 맞닿지 않습니다.
 
 <Canvas of={ComboboxStories.Sections} />
 
@@ -82,7 +82,7 @@ import * as ComboboxStories from "./Combobox.stories";
 - 포커스 표시: 입력은 field 표시(경계가 포커스 색, 바깥에 3px halo)이고 클릭으로 포커스해도 보입니다. 오류 상태에서는 포커스 중에 경계와 halo가 오류 색입니다. 목록의 위치는 highlight(primary subtle 배경, primary 글자)이고 고대비 모드에서는 옵션 안쪽 2px 테두리가 시스템 색으로 그려집니다.
 - 쌓임: 목록은 `z-popover`라 Dialog(`z-modal`) 안에서 열어도 위에 보입니다.
 - 대비: 입력·옵션 글자(`text-default`), placeholder·chevron·결과 없음 글자(`text-muted`), 입력 경계(`border-strong`)·오류 경계(`border-danger`)·포커스 색은 각 배경과 기준(글자 4.5:1, 경계 3:1) 이상입니다.
-- 움직임: 목록은 바로 나타나고 사라질 때만 opacity가 짧게(150ms) 흐려집니다.
+- 움직임: 목록은 열릴 때 입력 쪽 2px에서 짧게(150ms) 미끄러지며 나타나고, 사라질 때는 opacity만 짧게(150ms) 흐려집니다. blur는 없고, 움직임 줄이기에서는 이동 없이 opacity만 바뀝니다.
 
 ### 앱이 할 일
 

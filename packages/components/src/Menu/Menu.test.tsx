@@ -4,7 +4,13 @@ import { describe, expect, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 
-import { captureExit, openControl, styleSnapshot, transitions } from "../../test/motion";
+import {
+  captureExit,
+  captureWhen,
+  openControl,
+  styleSnapshot,
+  transitions,
+} from "../../test/motion";
 
 import { Button } from "../Button/Button";
 import { listItemClass } from "../_internal/constants/listClass";
@@ -20,6 +26,7 @@ import {
 } from "./index";
 
 const forcedColors = (): boolean => matchMedia("(forced-colors: active)").matches;
+const reducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 const transparent = "rgba(0, 0, 0, 0)";
 const wait = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 
@@ -73,6 +80,9 @@ function Example({ content, onRename, onDelete, ...props }: ExampleProps): React
 const byTestId = (testId: string): HTMLElement => page.getByTestId(testId).element() as HTMLElement;
 const content = (): HTMLElement => byTestId("content");
 const trigger = (): HTMLElement => byTestId("trigger");
+/** 위 요소의 아래 끝에서 아래 요소의 위 끝까지 세로 간격(px) */
+const spaceBetween = (upper: Element, lower: Element): number =>
+  lower.getBoundingClientRect().top - upper.getBoundingClientRect().bottom;
 const highlighted = (): string[] =>
   [...document.querySelectorAll("[data-highlighted]")].map((item) => item.textContent ?? "");
 
@@ -267,7 +277,7 @@ describe("실행", () => {
 });
 
 describe("highlight(키보드 위치와 hover)", () => {
-  test("키보드 위치는 primary subtle 배경·primary 글자·투명 outline이고 transition 없이 바로 바뀐다", async () => {
+  test("키보드 위치는 primary subtle 배경·primary 글자·투명 outline이고 글자·배경 색만 fast(150ms)로 바뀐다", async () => {
     await render(<Example />);
     // 앞 테스트의 마우스가 항목 자리에 남아 hover 배경이 생기지 않게 바깥으로 옮겨 둔다.
     await userEvent.hover(page.getByTestId("outside"));
@@ -279,25 +289,29 @@ describe("highlight(키보드 위치와 hover)", () => {
     const style = getComputedStyle(item);
     expect(item).toHaveAttribute("data-highlighted", "");
     expect(other).not.toHaveAttribute("data-highlighted");
-    expect(style.transitionDuration).toBe("0s");
+    // outline 색이 전환에 들어가면 highlight마다 번쩍인다. 색 전환이라 움직임 줄이기에서도 같다.
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
     expect(getComputedStyle(other).outlineStyle).toBe("none");
     expect(style.outlineStyle).toBe("solid");
     expect(style.outlineWidth).toBe("2px");
     expect(style.outlineOffset).toBe("-2px");
     expect(style.borderTopLeftRadius).toBe("4px");
     if (forcedColors()) return;
-    expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
-    expect(style.color).toBe(resolve("color", "var(--tide-text-primary)"));
+    await expect
+      .poll(() => style.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
+    await expect.poll(() => style.color).toBe(resolve("color", "var(--tide-text-primary)"));
     expect(style.outlineColor).toBe(transparent);
     expect(getComputedStyle(other).backgroundColor).toBe(transparent);
 
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("copy")).toHaveFocus();
-    expect(getComputedStyle(item).backgroundColor).toBe(transparent);
-    expect(item.getAnimations()).toHaveLength(0);
-    expect(getComputedStyle(other).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
-    );
+    await expect.poll(() => getComputedStyle(item).backgroundColor).toBe(transparent);
+    await expect
+      .poll(() => getComputedStyle(other).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
   });
 
   test("마우스를 올린 항목이 위치가 되어 같은 highlight로 보인다", async () => {
@@ -309,9 +323,9 @@ describe("highlight(키보드 위치와 hover)", () => {
     await userEvent.hover(page.getByTestId("archive"));
     expect(highlighted()).toEqual(["PDF로 내보내기"]);
     if (forcedColors()) return;
-    expect(getComputedStyle(byTestId("share")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("share")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
     expect(getComputedStyle(byTestId("archive")).backgroundColor).toBe(transparent);
   });
 
@@ -371,9 +385,9 @@ describe("highlight(키보드 위치와 hover)", () => {
     );
     await userEvent.hover(page.getByTestId("plain"));
     if (forcedColors()) return;
-    expect(getComputedStyle(byTestId("plain")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-hover)"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("plain")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-hover)"));
     await userEvent.hover(page.getByTestId("disabled"));
     expect(getComputedStyle(byTestId("disabled")).backgroundColor).toBe(transparent);
   });
@@ -407,6 +421,15 @@ describe("묶음", () => {
         .map((item) => item.textContent),
     ).toEqual(["이름순", "날짜순"]);
     expect(content().querySelectorAll("[role='separator']")).toHaveLength(2);
+    // 묶음 안 항목도 2px, 구분선은 간격 2px + 여백 2px로 양쪽 4px 떨어진다.
+    const [none, separator] = [...content().children];
+    const [byName, byDate] = page
+      .getByRole("group", { name: "정렬" })
+      .getByRole("menuitem")
+      .elements();
+    expect(spaceBetween(byName!, byDate!)).toBeCloseTo(2, 1);
+    expect(spaceBetween(none!, separator!)).toBeCloseTo(4, 1);
+    expect(spaceBetween(separator!, separator!.nextElementSibling!)).toBeCloseTo(4, 1);
     const heading = page.getByText("정렬").element();
     expect(heading).toHaveAttribute("role", "presentation");
     if (!forcedColors()) {
@@ -576,10 +599,23 @@ describe("위치와 표면", () => {
     expect(content()).toHaveAttribute("data-theme", "light");
     expect(content()).toHaveAttribute("data-placement", "bottom");
     expect(content().parentElement?.closest("[data-testid='outside']")).toBeNull();
+    // 등장 전환(translate)이 끝난 뒤의 자리를 본다.
+    await Promise.all(
+      content()
+        .getAnimations()
+        .map((animation) => animation.finished),
+    );
     const t = trigger().getBoundingClientRect();
     const c = content().getBoundingClientRect();
     expect(Math.abs(c.top - t.bottom - 4)).toBeLessThanOrEqual(1);
     expect(Math.abs(c.left - t.left)).toBeLessThanOrEqual(1);
+  });
+
+  test("항목 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
+    await render(<Example defaultOpen />);
+    await expect.element(page.getByRole("menu")).toBeVisible();
+    expect(spaceBetween(byTestId("rename"), byTestId("copy"))).toBeCloseTo(2, 1);
+    expect(spaceBetween(byTestId("copy"), byTestId("archive"))).toBeCloseTo(2, 1);
   });
 
   test("raised 표면, shadow-md, radius lg, 1px 경계, 여백 3px이고 항목은 radius sm이다", async () => {
@@ -625,27 +661,43 @@ describe("위치와 표면", () => {
     expect(getComputedStyle(content()).backgroundColor).toBe(
       resolve("backgroundColor", "var(--tide-bg-raised)", "dark"),
     );
-    expect(getComputedStyle(byTestId("first")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)", "dark"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("first")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)", "dark"));
   });
 });
 
 describe("등장과 퇴장 motion", () => {
-  test("등장: 전환 없이 바로 불투명하게 나타난다", async () => {
+  // 전환 중 값은 data-open이 붙거나 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 전환이 끝나 있다.
+  test("등장: blur 없이 opacity + 트리거 쪽 2px에서 fast(150ms)로 들어온다", async () => {
     const screen = await render(<Example open={false} />);
+    const entered = captureWhen(
+      () => document.querySelector("[data-testid='content'][data-open]") !== null,
+      () => ({ style: styleSnapshot(content()), running: transitions(content()) }),
+    );
     await screen.rerender(<Example open />);
-    const style = getComputedStyle(content());
-    expect(style.transitionProperty).toBe("none");
-    expect(style.opacity).toBe("1");
-    expect(content().getAnimations()).toHaveLength(0);
+    const { style, running } = await entered;
+    expect(style.transitionBehavior).toContain("allow-discrete");
+    expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
+    expect(style.transitionTimingFunction.startsWith("cubic-bezier(0, 0, 0.2, 1)")).toBe(true);
+    expect(running.get("opacity")?.from["opacity"]).toBe("0");
+    expect(running.has("filter")).toBe(false);
+    if (reducedMotion()) {
+      expect(style.transitionProperty).toBe("opacity, display");
+      expect(running.has("translate")).toBe(false);
+
+      return;
+    }
+    expect(style.transitionProperty).toBe("opacity, translate, display");
+    // placement bottom: 트리거 쪽(위)으로 2px 떨어진 곳에서 시작한다.
+    expect(running.get("translate")?.from["translate"]).toBe("0px -2px");
   });
 
   test("퇴장: opacity만 fast(150ms)로 사라진 뒤 DOM에서 빠진다", async () => {
     const screen = await render(<Example open />);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
-    // 전환 중 값은 data-open이 빠지는 순간에 붙잡는다. rerender 뒤에 읽으면 부하에 따라 퇴장이 끝나 있다.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
     const exit = captureExit(element, () => ({
       connected: element.isConnected,
       style: styleSnapshot(element),
@@ -655,30 +707,32 @@ describe("등장과 퇴장 motion", () => {
     const { connected, style, running } = await exit;
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(connected).toBe(true);
-    expect(style.transitionProperty).toBe("opacity, display");
     expect(style.transitionDuration.split(", ")[0]).toBe("0.15s");
     expect(style.transitionBehavior).toContain("allow-discrete");
     expect(style.pointerEvents).toBe("none");
-    expect(running.has("opacity")).toBe(true);
+    expect(running.get("opacity")?.to["opacity"]).toBe("0");
     expect(running.has("filter")).toBe(false);
     expect(running.has("translate")).toBe(false);
     await expect.poll(() => element.isConnected).toBe(false);
   });
 
-  test("퇴장 중에 다시 열면 같은 요소가 전환 없이 바로 돌아온다", async () => {
+  test("퇴장 중에 다시 열면 같은 요소가 DOM에 남아 불투명하게 돌아온다", async () => {
     const control = openControl((open) => <Example open={open} />);
     await render(control.element);
     await expect.element(page.getByRole("menu")).toBeVisible();
     const element = content();
+    // 등장 시작값(opacity 0)에서 닫으면 바뀌는 값이 없어 퇴장 전환이 생기지 않는다. 등장이 끝난 뒤 닫는다.
+    await Promise.all(element.getAnimations().map((animation) => animation.finished));
     // 닫고 다시 여는 일을 한 task 안에서 해, 사이에 렌더링 단계가 없어 요소가 빠지지 않게 한다.
     control.set(false);
     expect(element.hasAttribute("data-open")).toBe(false);
     expect(transitions(element).has("opacity")).toBe(true);
     control.set(true);
     expect(content()).toBe(element);
-    expect(getComputedStyle(element).opacity).toBe("1");
+    expect(element).toHaveAttribute("data-open", "");
     await wait(300);
     expect(element.isConnected).toBe(true);
+    expect(getComputedStyle(element).opacity).toBe("1");
   });
 });
 

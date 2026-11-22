@@ -4,7 +4,11 @@ import { useMemo, type ReactElement, type RefObject } from "react";
 import { mergeProps, mergeRefs, useMenu } from "react-aria";
 import { useTreeState } from "react-stately";
 
-import { listPopupClass, listSeparatorClass } from "../../_internal/constants/listClass";
+import {
+  listItemsClass,
+  listPopupClass,
+  listSeparatorClass,
+} from "../../_internal/constants/listClass";
 import { useCloseOnTab } from "../../_internal/hooks/useCloseOnTab";
 import { useOverlayTheme } from "../../_internal/hooks/useOverlayTheme";
 import { usePopoverOverlay } from "../../_internal/hooks/usePopoverOverlay";
@@ -57,7 +61,7 @@ export function MenuContentInner({
       {...rest}
       ref={mergedRef}
       data-open={state.isOpen ? "" : undefined}
-      className={cn(listPopupClass, className)}
+      className={cn(listPopupClass, listItemsClass, className)}
       style={{ ...overlayProps.style, ...props.style }}
     >
       {nodes.map((node, index) => {
