@@ -369,6 +369,12 @@ describe("Field와 폼", () => {
     }
   });
 
+  test("트리거에 마우스를 올리면 cursor가 pointer다", async () => {
+    await render(<Fruits />);
+    await userEvent.hover(trigger());
+    expect(getComputedStyle(trigger()).cursor).toBe("pointer");
+  });
+
   test("Field의 disabled는 네이티브 :disabled라 열리지 않고 폼에 제출되지 않는다", async () => {
     await render(
       <form data-testid="form">

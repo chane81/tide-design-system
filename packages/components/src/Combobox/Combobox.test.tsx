@@ -578,6 +578,12 @@ describe("Field와 폼", () => {
     }
   });
 
+  test("열기 버튼에 마우스를 올리면 cursor가 pointer다", async () => {
+    await render(<Fruits />);
+    await userEvent.hover(chevron());
+    expect(getComputedStyle(chevron()).cursor).toBe("pointer");
+  });
+
   test("옵션 사이는 2px 띄워 highlight·선택 배경이 맞닿지 않는다", async () => {
     await render(<Fruits />);
     await tabToInput();
