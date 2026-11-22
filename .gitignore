@@ -6,3 +6,6 @@ coverage/
 *.log
 .turbo/
 .vitest/
+
+# Claude Code 에이전트 worktree. 안의 .oxlintrc.json을 oxlint가 중첩 설정으로 읽는다.
+.claude/worktrees/
