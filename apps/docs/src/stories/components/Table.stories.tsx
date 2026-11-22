@@ -29,7 +29,7 @@ const members = [
   { name: "박구름", role: "보기 전용", joined: "2026-09-30" },
 ];
 
-/** 기본: 머리 행과 본문 행. 본문 행에 마우스를 올리면 배경이 바로 바뀐다. */
+/** 기본: 머리 행과 본문 행. 본문 행에 마우스를 올리면 배경이 짧게 바뀐다. */
 export const Basic: Story = {
   name: "기본",
   render: (args) => (

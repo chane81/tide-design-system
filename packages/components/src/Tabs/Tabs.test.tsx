@@ -359,7 +359,7 @@ describe("포커스 표시와 고른 표시", () => {
     expectFocusRing(panel());
   });
 
-  test("고른 탭은 primary 글자, 고르지 않은 탭은 muted 글자다. hover는 전환 없이 default 글자다", async () => {
+  test("고른 탭은 primary 글자, 고르지 않은 탭은 muted 글자다. hover는 글자·배경 색만 fast(150ms)로 default 글자가 된다", async () => {
     await render(<Example />);
     await userEvent.hover(page.getByTestId("before"));
     expect(getComputedStyle(byTestId("account")).fontSize).toBe("14px");
@@ -368,14 +368,31 @@ describe("포커스 표시와 고른 표시", () => {
     expect(getComputedStyle(byTestId("account")).color).toBe(
       resolve("color", "var(--tide-text-primary)"),
     );
-    expect(getComputedStyle(byTestId("security")).color).toBe(
-      resolve("color", "var(--tide-text-muted)"),
-    );
+    // 앞 테스트의 마우스가 이 탭 자리에 있었다면 hover가 풀리며 전환 중일 수 있다.
+    await expect
+      .poll(() => getComputedStyle(byTestId("security")).color)
+      .toBe(resolve("color", "var(--tide-text-muted)"));
     await userEvent.hover(page.getByTestId("security"));
-    expect(getComputedStyle(byTestId("security")).color).toBe(
-      resolve("color", "var(--tide-text-default)"),
-    );
-    expect(getComputedStyle(byTestId("security")).transitionDuration).toBe("0s");
+    await expect
+      .poll(() => getComputedStyle(byTestId("security")).color)
+      .toBe(resolve("color", "var(--tide-text-default)"));
+  });
+
+  test("탭은 글자·배경 색만 fast(150ms)로 바뀌고, focus halo·outline은 전환하지 않는다", async () => {
+    await render(<Example />);
+    const style = getComputedStyle(byTestId("security"));
+    // outline·box-shadow가 전환에 들어가면 포커스마다 번쩍인다. 색 전환이라 움직임 줄이기에서도 같다.
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
+    if (forcedColors()) return;
+    await userEvent.click(page.getByTestId("security"));
+    await expect
+      .poll(() => getComputedStyle(byTestId("security")).color)
+      .toBe(resolve("color", "var(--tide-text-primary)"));
+    await expect
+      .poll(() => getComputedStyle(byTestId("account")).color)
+      .toBe(resolve("color", "var(--tide-text-muted)"));
   });
 });
 
