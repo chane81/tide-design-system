@@ -6,7 +6,8 @@ import { expect, within } from "storybook/test";
 import { ColorNameContrast, ColorNames, ColorSlotRules } from "../../components/ColorNames";
 import { ColorScale } from "../../components/ColorScale";
 import { colorTileGroups } from "../../libs/colorTiles";
-import { ContrastExclusions, ContrastPairs } from "../../components/ContrastPairs";
+import { ContrastExclusions } from "../../components/ContrastExclusions/index";
+import { ContrastPairs } from "../../components/ContrastPairs";
 
 const meta = {
   title: "Foundation/컬러",
