@@ -291,7 +291,7 @@ describe("모양과 포커스 표시", () => {
     expect(getComputedStyle(byTestId("panel-refund")).paddingBottom).toBe("0px");
   });
 
-  test("chevron은 장식용 16px muted 아이콘이고, hover 배경은 전환 없이 바로 바뀐다", async () => {
+  test("chevron은 장식용 16px muted 아이콘이고, hover 배경·chevron 색은 fast(150ms)로 바뀐다", async () => {
     await render(<Example />);
     const chevron = byTestId("shipping").querySelector("svg") as SVGElement;
     expect(chevron).toHaveAttribute("aria-hidden", "true");
@@ -312,13 +312,22 @@ describe("모양과 포커스 표시", () => {
     expect(getComputedStyle(byTestId("archive")).color).toBe(
       resolve("color", "var(--tide-text-disabled)"),
     );
+    // 색 전환이라 움직임 줄이기에서도 같다.
+    const trigger = getComputedStyle(byTestId("shipping"));
+    expect(trigger.transitionProperty).toBe("color, background-color");
+    expect(trigger.transitionDuration).toBe("0.15s");
+    expect(trigger.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
+    const chevronStyle = getComputedStyle(chevron);
+    expect(chevronStyle.transitionProperty).toBe(reducedMotion() ? "color" : "color, rotate");
+    expect(chevronStyle.transitionDuration).toBe("0.15s");
     await userEvent.hover(page.getByTestId("shipping"));
-    expect(getComputedStyle(byTestId("shipping")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-hover)"),
-    );
-    expect(getComputedStyle(byTestId("shipping")).transitionDuration).toBe("0s");
-    expect(getComputedStyle(chevron).color).toBe(resolve("color", "var(--tide-text-default)"));
+    await expect
+      .poll(() => trigger.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-hover)"));
+    await expect.poll(() => chevronStyle.color).toBe(resolve("color", "var(--tide-text-default)"));
     await userEvent.hover(page.getByTestId("archive"), { force: true });
+    await expect.poll(() => trigger.backgroundColor).toBe(transparent);
+    await expect.poll(() => chevronStyle.color).toBe(resolve("color", "var(--tide-text-muted)"));
     expect(getComputedStyle(byTestId("archive")).backgroundColor).toBe(transparent);
     expect(getComputedStyle(byTestId("archive").querySelector("svg") as SVGElement).color).toBe(
       resolve("color", "var(--tide-text-disabled)"),
@@ -332,15 +341,18 @@ describe("chevron motion", () => {
     const chevron = (): SVGElement => byTestId("shipping").querySelector("svg") as SVGElement;
     expect(getComputedStyle(chevron()).rotate).toBe("none");
     expect(getComputedStyle(byTestId("panel-shipping")).transitionDuration).toBe("0s");
+    // hover 색 전환이 click 중에 섞이지 않게 먼저 올려 두고 끝나길 기다린다.
+    await userEvent.hover(page.getByTestId("shipping"));
+    await expect.poll(() => byTestId("shipping").getAnimations({ subtree: true })).toHaveLength(0);
     if (reducedMotion()) {
-      expect(getComputedStyle(chevron()).transitionDuration).toBe("0s");
+      expect(getComputedStyle(chevron()).transitionProperty).toBe("color");
       await userEvent.click(page.getByTestId("shipping"));
       expect(chevron().getAnimations()).toHaveLength(0);
       expect(getComputedStyle(chevron()).rotate).toBe("180deg");
 
       return;
     }
-    expect(getComputedStyle(chevron()).transitionProperty).toBe("rotate");
+    expect(getComputedStyle(chevron()).transitionProperty).toBe("color, rotate");
     expect(getComputedStyle(chevron()).transitionDuration).toBe("0.15s");
     // click이 돌아온 뒤 읽으면 부하에 따라 전환이 끝나 있어, 펼친 순간에 붙잡는다.
     const expanded = captureWhen(
