@@ -202,6 +202,11 @@ Role 6개(`neutral`, `primary`, `success`, `warning`, `danger`, `info`)와 **강
 
 ### 검사에서 뺀 Token
 
-아래 Token은 대비 검사 대상이 아닙니다. 비활성 상태는 색만으로 나타내지 않고, Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다. 파스텔 테두리는 꾸밈이라 뺍니다. 파스텔 테두리는 포커스 halo로도 쓰며, 3:1에 못 미치는 것을 알고 고른 모양입니다.
+아래 Token은 대비 검사 대상이 아닙니다.
+
+- 비활성: 색만으로 나타내지 않습니다. Component가 `disabled`/`aria-disabled` 속성과 cursor로도 표현합니다.
+- `border-raised`: 표면 구분은 그림자와 배경 밝기가 맡습니다.
+- `bg-overlay`: 위에 글자를 두지 않습니다.
+- 파스텔 테두리: subtle 바탕과 on-subtle 글자만으로 알아볼 수 있습니다. 포커스 halo로도 씁니다. halo는 2px 포커스 링 바깥의 꾸밈이고, 3:1은 링(accent `border`)이 맡습니다(ADR 0034).
 
 <Canvas of={ColorStories.Exclusions} sourceState="none" />
