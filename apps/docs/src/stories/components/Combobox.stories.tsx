@@ -43,6 +43,9 @@ async function open(canvasElement: HTMLElement, text = "", index = 0): Promise<v
   if (text) await userEvent.keyboard(text);
   await userEvent.keyboard("{ArrowDown}");
   const listbox = await body.findByRole("listbox");
+  // 등장 전환(opacity 0에서 시작)은 listbox를 감싼 목록 요소에서 돈다. 끝난 뒤 본다.
+  const popup = listbox.parentElement as HTMLElement;
+  await Promise.all(popup.getAnimations().map((animation) => animation.finished));
   await expect(listbox).toBeVisible();
 }
 

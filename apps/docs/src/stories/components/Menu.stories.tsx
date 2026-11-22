@@ -46,6 +46,8 @@ async function open(canvasElement: HTMLElement, name: string): Promise<void> {
   within(canvasElement).getByRole("button", { name }).focus();
   await userEvent.keyboard("{Enter}");
   const menu = await body.findByRole("menu");
+  // 등장 전환(opacity 0에서 시작)이 끝난 뒤 본다.
+  await Promise.all(menu.getAnimations().map((animation) => animation.finished));
   await expect(menu).toBeVisible();
   await expect(menu.querySelector("[data-highlighted]")).not.toBeNull();
 }
