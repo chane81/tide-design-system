@@ -1,5 +1,13 @@
 # @tide-tds/docs
 
+## 0.11.4
+
+### 수정 (patch)
+
+- [#109](https://github.com/chane81/tide-design-system/pull/109) [`d3c34d4`](https://github.com/chane81/tide-design-system/commit/d3c34d448757ade473c1d061ae77e6312be8f9d4) [@chane81](https://github.com/chane81) - 컬러 문서 「검사에서 뺀 Token」에 견본 카드가 보여 주지 않는 이유(포커스 halo의 3:1은 링이 맡는다 등)를 불릿으로 남겼습니다.
+
+- [#106](https://github.com/chane81/tide-design-system/pull/106) [`3a41c87`](https://github.com/chane81/tide-design-system/commit/3a41c8798f418e354e2e60b38391690d34db9ed6) [@chane81](https://github.com/chane81) - 그림자 문서의 CSS 원문 목록을 레이어별 견본(가까운·먼·합침)으로, 대비 검사 제외 Token 목록을 이유별 light·dark 견본 카드로 바꿨습니다.
+
 ## 0.11.3
 
 ### 수정 (patch)
