@@ -5,11 +5,7 @@ import {
   type ThemeName,
 } from "@tide-design/foundation";
 // 내부 서브패스(앱 개발자용 아님).
-import {
-  contrastExclusions,
-  contrastPairRatio,
-  opaqueSemanticHex,
-} from "@tide-design/foundation/internal";
+import { contrastPairRatio, opaqueSemanticHex } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // light와 dark 표를 한 화면에 보이려고 현재 Theme과 무관하게 원본 hex로 칠한다.
@@ -103,21 +99,6 @@ export function ContrastPairs({ theme }: { theme: ThemeName }): ReactElement {
           })}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-/** 대비 검사에서 뺀 Token과 이유 */
-export function ContrastExclusions(): ReactElement {
-  return (
-    <div className="bg-canvas p-4 text-default">
-      <ul className="flex flex-col gap-1">
-        {contrastExclusions.map((exclusion) => (
-          <li key={exclusion.token}>
-            <code className="font-mono">{exclusion.token}</code>: {exclusion.reason}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
