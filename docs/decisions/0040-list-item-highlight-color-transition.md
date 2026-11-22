@@ -11,6 +11,8 @@ Menu 항목, Select·Combobox 옵션의 위치 표시(hover·키보드 highlight
 - **움직임 줄이기에서도 유지한다.** 이동이 아니라 색 변화라서, hover 색 변화를 유지하는 motion 규칙(티켓 21)과 같다.
 - Table 행의 hover는 그대로 바로 바뀐다.
 
+> 덧붙임(2026-11-22): Table 본문 행의 hover와 Tabs 항목의 hover·선택 글자색도 목록과 똑같이 맞춘다(사용자 결정). `rowClass`·`tabBaseClass`에 `transition-[color,background-color]`를 두고 duration·easing은 기본값(`fast`·`out`)이다. Tabs는 포커스 표시가 box-shadow halo와 투명 outline이라 같은 이유로 `transition-colors`를 쓰지 않는다. 고른 표시(`TabIndicator`)의 이동 전환(ADR 0038)은 그대로이고, 행 경계·탭 목록 선은 상태로 바뀌지 않아 전환에 넣지 않는다. Accordion 트리거는 아직 바로 바뀐다.
+
 ## 이유
 
 - `transition-colors`는 `outline-color`를 포함한다. highlight는 forced-colors용 투명 outline을 함께 켜므로, outline 색이 currentColor에서 투명으로 전환되며 번쩍인다(ADR 0032·0034와 같은 문제). 그래서 글자·배경만 고른다. 체크 아이콘은 `currentColor`라 글자색을 따라간다.

@@ -39,6 +39,11 @@ async function hoverAway(): Promise<void> {
   away.remove();
 }
 
+/** 요소에서 도는 색 전환이 끝나길 기다린다. 전환 중 값은 시작 색이라 「바뀌지 않음」을 잘못 통과시킨다. */
+async function settled(element: Element): Promise<void> {
+  await Promise.all(element.getAnimations().map((animation) => animation.finished));
+}
+
 const byTestId = (id: string): HTMLElement => page.getByTestId(id).element() as HTMLElement;
 
 /** 요금 표. 열 머리 3개, 행 머리 1개 + 데이터 칸 2개인 본문 행 2개, 합계 바닥 행 1개 */
@@ -179,22 +184,23 @@ describe("역할과 헤더 연결", () => {
 });
 
 describe("행 hover", () => {
-  test("본문 행은 transition 없이 바로 무채색 bg-hover 배경이 된다", async () => {
+  test("본문 행은 글자·배경 색만 fast(150ms)로 바뀌어 무채색 bg-hover 배경이 된다", async () => {
     await render(<PlanTable />);
     const row = byTestId("body-row");
-    // 반복되는 목록 항목 규칙: transition이 없다(움직임 줄이기와 상관없이 0s).
-    expect(getComputedStyle(row).transitionDuration).toBe("0s");
-    expect(getComputedStyle(row).transitionProperty).toBe("all");
+    const style = getComputedStyle(row);
+    // 색 전환이라 움직임 줄이기에서도 같다.
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
     await hoverAway();
-    if (!forcedColors()) expect(getComputedStyle(row).backgroundColor).toBe(transparent);
+    if (!forcedColors()) await expect.poll(() => style.backgroundColor).toBe(transparent);
 
     await userEvent.hover(byTestId("cell"));
-    // 기다리지 않고 바로 읽는다. transition이 있으면 중간 색이 나온다.
     if (!forcedColors()) {
-      expect(getComputedStyle(row).backgroundColor).toBe(resolve("var(--tide-bg-hover)"));
+      await expect.poll(() => style.backgroundColor).toBe(resolve("var(--tide-bg-hover)"));
     }
     await hoverAway();
-    if (!forcedColors()) expect(getComputedStyle(row).backgroundColor).toBe(transparent);
+    if (!forcedColors()) await expect.poll(() => style.backgroundColor).toBe(transparent);
   });
 
   test("dark Theme에서도 무채색 bg-hover다", async () => {
@@ -211,17 +217,19 @@ describe("행 hover", () => {
     );
     await userEvent.hover(byTestId("cell"));
     if (forcedColors()) return;
-    expect(getComputedStyle(byTestId("row")).backgroundColor).toBe(
-      resolve("var(--tide-bg-hover)", "dark"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("row")).backgroundColor)
+      .toBe(resolve("var(--tide-bg-hover)", "dark"));
   });
 
   test("머리 행(thead)과 바닥 행(tfoot)은 hover로 바뀌지 않는다", async () => {
     await render(<PlanTable />);
     if (forcedColors()) return;
     await userEvent.hover(byTestId("plan-header"));
+    await settled(byTestId("head-row"));
     expect(getComputedStyle(byTestId("head-row")).backgroundColor).toBe(transparent);
     await userEvent.hover(page.getByRole("cell", { name: "25명" }));
+    await settled(byTestId("foot-row"));
     expect(getComputedStyle(byTestId("foot-row")).backgroundColor).toBe(transparent);
   });
 
@@ -229,6 +237,7 @@ describe("행 hover", () => {
     await render(<PlanTable rowProps={{ className: "hover:bg-transparent" }} />);
     await userEvent.hover(byTestId("cell"));
     if (forcedColors()) return;
+    await settled(byTestId("body-row"));
     expect(getComputedStyle(byTestId("body-row")).backgroundColor).toBe(transparent);
   });
 });

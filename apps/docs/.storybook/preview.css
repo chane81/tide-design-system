@@ -15,17 +15,18 @@
 }
 
 /* Storybook dark theme의 짝수 행 배경과 링크 색은 대비가 3.1에 그쳐 Tide Token으로 덮는다. */
-.sbdocs.sbdocs-content table tr {
+/* 예시(.docs-story) 안의 Tide Table은 빼야 Table 자체 스타일(hover 등)이 보인다. */
+.sbdocs.sbdocs-content table:not(.docs-story *) tr {
   border-color: var(--tide-border-default);
   background-color: var(--tide-bg-canvas);
 }
 
-.sbdocs.sbdocs-content table tr:nth-of-type(2n) {
+.sbdocs.sbdocs-content table:not(.docs-story *) tr:nth-of-type(2n) {
   background-color: var(--tide-bg-neutral-subtle);
 }
 
-.sbdocs.sbdocs-content table th,
-.sbdocs.sbdocs-content table td {
+.sbdocs.sbdocs-content table:not(.docs-story *) th,
+.sbdocs.sbdocs-content table:not(.docs-story *) td {
   border-color: var(--tide-border-default);
 }
 
