@@ -804,8 +804,11 @@ describe("모양", () => {
     await expect.poll(activeOption).toBe(byTestId("banana"));
     const banana = byTestId("banana");
     const highlight = resolve("backgroundColor", "var(--tide-bg-primary-subtle)");
-    if (!forcedColors()) expect(getComputedStyle(banana).backgroundColor).toBe(highlight);
-    expect(getComputedStyle(banana).outlineStyle).toBe("solid");
+    const style = getComputedStyle(banana);
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    if (!forcedColors()) await expect.poll(() => style.backgroundColor).toBe(highlight);
+    expect(style.outlineStyle).toBe("solid");
 
     await userEvent.keyboard("{ArrowDown}");
     await expect.poll(highlighted).toEqual(["배"]);
@@ -814,10 +817,10 @@ describe("모양", () => {
 
       return;
     }
-    expect(getComputedStyle(banana).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"),
-    );
-    expect(getComputedStyle(byTestId("pear")).backgroundColor).toBe(highlight);
+    await expect
+      .poll(() => style.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"));
+    await expect.poll(() => getComputedStyle(byTestId("pear")).backgroundColor).toBe(highlight);
     expect(getComputedStyle(byTestId("apple")).backgroundColor).toBe(transparent);
   });
 

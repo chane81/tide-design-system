@@ -582,8 +582,11 @@ describe("모양", () => {
     expect(banana.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     expect(byTestId("apple").querySelector("svg")).toBeNull();
     const highlight = resolve("backgroundColor", "var(--tide-bg-primary-subtle)");
-    if (!forcedColors()) expect(getComputedStyle(banana).backgroundColor).toBe(highlight);
-    expect(getComputedStyle(banana).outlineStyle).toBe("solid");
+    const style = getComputedStyle(banana);
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    if (!forcedColors()) await expect.poll(() => style.backgroundColor).toBe(highlight);
+    expect(style.outlineStyle).toBe("solid");
 
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("grape")).toHaveFocus();
@@ -593,10 +596,10 @@ describe("모양", () => {
 
       return;
     }
-    expect(getComputedStyle(banana).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"),
-    );
-    expect(getComputedStyle(byTestId("grape")).backgroundColor).toBe(highlight);
+    await expect
+      .poll(() => style.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-neutral-subtle-active)"));
+    await expect.poll(() => getComputedStyle(byTestId("grape")).backgroundColor).toBe(highlight);
     expect(getComputedStyle(byTestId("apple")).backgroundColor).toBe(transparent);
   });
 

@@ -277,7 +277,7 @@ describe("실행", () => {
 });
 
 describe("highlight(키보드 위치와 hover)", () => {
-  test("키보드 위치는 primary subtle 배경·primary 글자·투명 outline이고 transition 없이 바로 바뀐다", async () => {
+  test("키보드 위치는 primary subtle 배경·primary 글자·투명 outline이고 글자·배경 색만 fast(150ms)로 바뀐다", async () => {
     await render(<Example />);
     // 앞 테스트의 마우스가 항목 자리에 남아 hover 배경이 생기지 않게 바깥으로 옮겨 둔다.
     await userEvent.hover(page.getByTestId("outside"));
@@ -289,25 +289,29 @@ describe("highlight(키보드 위치와 hover)", () => {
     const style = getComputedStyle(item);
     expect(item).toHaveAttribute("data-highlighted", "");
     expect(other).not.toHaveAttribute("data-highlighted");
-    expect(style.transitionDuration).toBe("0s");
+    // outline 색이 전환에 들어가면 highlight마다 번쩍인다. 색 전환이라 움직임 줄이기에서도 같다.
+    expect(style.transitionProperty).toBe("color, background-color");
+    expect(style.transitionDuration).toBe("0.15s");
+    expect(style.transitionTimingFunction).toBe("cubic-bezier(0, 0, 0.2, 1)");
     expect(getComputedStyle(other).outlineStyle).toBe("none");
     expect(style.outlineStyle).toBe("solid");
     expect(style.outlineWidth).toBe("2px");
     expect(style.outlineOffset).toBe("-2px");
     expect(style.borderTopLeftRadius).toBe("4px");
     if (forcedColors()) return;
-    expect(style.backgroundColor).toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
-    expect(style.color).toBe(resolve("color", "var(--tide-text-primary)"));
+    await expect
+      .poll(() => style.backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
+    await expect.poll(() => style.color).toBe(resolve("color", "var(--tide-text-primary)"));
     expect(style.outlineColor).toBe(transparent);
     expect(getComputedStyle(other).backgroundColor).toBe(transparent);
 
     await userEvent.keyboard("{ArrowDown}");
     await expect.element(page.getByTestId("copy")).toHaveFocus();
-    expect(getComputedStyle(item).backgroundColor).toBe(transparent);
-    expect(item.getAnimations()).toHaveLength(0);
-    expect(getComputedStyle(other).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
-    );
+    await expect.poll(() => getComputedStyle(item).backgroundColor).toBe(transparent);
+    await expect
+      .poll(() => getComputedStyle(other).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
   });
 
   test("마우스를 올린 항목이 위치가 되어 같은 highlight로 보인다", async () => {
@@ -319,9 +323,9 @@ describe("highlight(키보드 위치와 hover)", () => {
     await userEvent.hover(page.getByTestId("archive"));
     expect(highlighted()).toEqual(["PDF로 내보내기"]);
     if (forcedColors()) return;
-    expect(getComputedStyle(byTestId("share")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("share")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)"));
     expect(getComputedStyle(byTestId("archive")).backgroundColor).toBe(transparent);
   });
 
@@ -381,9 +385,9 @@ describe("highlight(키보드 위치와 hover)", () => {
     );
     await userEvent.hover(page.getByTestId("plain"));
     if (forcedColors()) return;
-    expect(getComputedStyle(byTestId("plain")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-hover)"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("plain")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-hover)"));
     await userEvent.hover(page.getByTestId("disabled"));
     expect(getComputedStyle(byTestId("disabled")).backgroundColor).toBe(transparent);
   });
@@ -657,9 +661,9 @@ describe("위치와 표면", () => {
     expect(getComputedStyle(content()).backgroundColor).toBe(
       resolve("backgroundColor", "var(--tide-bg-raised)", "dark"),
     );
-    expect(getComputedStyle(byTestId("first")).backgroundColor).toBe(
-      resolve("backgroundColor", "var(--tide-bg-primary-subtle)", "dark"),
-    );
+    await expect
+      .poll(() => getComputedStyle(byTestId("first")).backgroundColor)
+      .toBe(resolve("backgroundColor", "var(--tide-bg-primary-subtle)", "dark"));
   });
 });
 
