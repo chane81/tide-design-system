@@ -1,6 +1,4 @@
 import { radius, shadow, type RadiusName, type ShadowName } from "@tide-design/foundation";
-// 내부 서브패스(앱 개발자용 아님).
-import { shadowCss } from "@tide-design/foundation/internal";
 import type { ReactElement } from "react";
 
 // Tailwind는 소스에 그대로 적힌 class만 만들므로 class를 조합하지 않고 변수(--tide-*)를 inline style로 쓴다.
@@ -51,20 +49,38 @@ export function Radii(): ReactElement {
   );
 }
 
-/** 한 Theme의 그림자 3단계. raised 표면(bg-raised + border-raised 1px) 위에 그린다. */
+/** 그림자 레이어 하나를 box-shadow 값으로 쓴다. 합친 값은 `--tide-shadow-<단계>`를 쓴다. */
+const layerCss = ({ x, y, blur, spread, mix }: (typeof shadow)[ShadowName][number]): string =>
+  `${x}px ${y}px ${blur}px ${spread}px color-mix(in srgb, var(--tide-shadow-color) ${mix}%, transparent)`;
+
+const shadowParts = [
+  { label: "가까운", style: (name: ShadowName) => layerCss(shadow[name][0]) },
+  { label: "먼", style: (name: ShadowName) => layerCss(shadow[name][1]) },
+  { label: "합침", style: (name: ShadowName) => `var(--tide-shadow-${name})` },
+] as const;
+
+/** 한 Theme의 그림자 3단계. 단계마다 두 레이어를 따로, 그리고 합쳐 raised 표면 위에 그린다. */
 function ShadowPanel({ theme }: { theme: "light" | "dark" }): ReactElement {
   return (
     <section data-theme={theme} className="flex-1 bg-canvas p-6 text-default">
       <h3 className="mb-4 font-mono">{theme}</h3>
       <ul className="flex flex-col gap-6">
         {shadowNames.map((name) => (
-          <li key={name}>
-            <div
-              className="rounded-lg border border-raised bg-raised p-4"
-              style={{ boxShadow: `var(--tide-shadow-${name})` }}
-            >
+          <li key={name} className="flex flex-col gap-3">
+            <div>
               <span className="font-mono">shadow-{name}</span>
-              <span className="block text-muted">{shadowUsage[name]}</span>
+              <span className="ml-2 text-muted">{shadowUsage[name]}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {shadowParts.map((part) => (
+                <div
+                  key={part.label}
+                  className="flex h-14 items-center justify-center rounded-lg border border-raised bg-raised text-muted"
+                  style={{ boxShadow: part.style(name) }}
+                >
+                  {part.label}
+                </div>
+              ))}
             </div>
           </li>
         ))}
@@ -76,21 +92,9 @@ function ShadowPanel({ theme }: { theme: "light" | "dark" }): ReactElement {
 /** 그림자 3단계를 light와 dark에서 나란히 그린다 */
 export function Shadows(): ReactElement {
   return (
-    <div className="flex flex-col">
-      <div className="flex">
-        <ShadowPanel theme="light" />
-        <ShadowPanel theme="dark" />
-      </div>
-      <div className="bg-canvas p-4 text-default">
-        <ul className="flex flex-col gap-1">
-          {shadowNames.map((name) => (
-            <li key={name}>
-              <code className="font-mono">shadow-{name}</code>
-              <code className="block font-mono text-muted">{shadowCss(name)}</code>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="flex">
+      <ShadowPanel theme="light" />
+      <ShadowPanel theme="dark" />
     </div>
   );
 }
