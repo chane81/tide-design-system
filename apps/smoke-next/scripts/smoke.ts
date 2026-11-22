@@ -465,10 +465,10 @@ try {
   );
   assert(
     css.includes("group-aria-expanded\\:rotate-180") &&
-      css.includes("motion-safe\\:transition-\\[rotate\\]") &&
+      css.includes("motion-safe\\:transition-\\[color\\,rotate\\]") &&
       css.includes("\\[\\&\\[hidden\\]\\]\\:p-0") &&
       css.includes("forced-colors\\:text-current"),
-    "Accordion 내부 class(group-aria-expanded:rotate-180, motion-safe:transition-[rotate], [&[hidden]]:p-0, forced-colors:text-current)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
+    "Accordion 내부 class(group-aria-expanded:rotate-180, motion-safe:transition-[color,rotate], [&[hidden]]:p-0, forced-colors:text-current)가 없다. 패키지 CSS의 @source가 동작하지 않았다",
   );
   assert(
     css.includes("hover\\:bg-\\(--tag-remove-hover\\)") &&
