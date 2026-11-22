@@ -1,5 +1,16 @@
 # @tide-tds/components
 
+## 0.18.3
+
+### 기능 추가와 수정 (patch)
+
+- [#105](https://github.com/chane81/tide-design-system/pull/105) [`d293816`](https://github.com/chane81/tide-design-system/commit/d2938162fff6c28b75a62a3cc3ea3a32d1fa6bc0) [@chane81](https://github.com/chane81) - Accordion 트리거에 마우스를 올릴 때 배경 색과 chevron 색이 목록 항목처럼 짧게(150ms) 바뀐다. 움직임 줄이기에서도 같다.
+
+- [#103](https://github.com/chane81/tide-design-system/pull/103) [`d5a864f`](https://github.com/chane81/tide-design-system/commit/d5a864fc4441f65f5b0077aadd82d2549821f788) [@chane81](https://github.com/chane81) - Table 본문 행에 마우스를 올릴 때 배경 색이, Tabs 탭에 마우스를 올리거나 탭을 고를 때 글자 색이 목록 항목처럼 짧게(150ms) 바뀐다. 움직임 줄이기에서도 같다.
+- 의존성 업데이트 []:
+  - @tide-design/foundation@0.18.3
+  - @tide-design/icons@0.18.3
+
 ## 0.18.2
 
 ### 기능 추가와 수정 (patch)
