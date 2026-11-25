@@ -47,7 +47,7 @@ async function settle(): Promise<void> {
 }
 
 const mark = (input: Element, kind: "check" | "indeterminate"): SVGElement =>
-  input.parentElement!.querySelector(`[data-mark="${kind}"]`)!;
+  input.parentElement!.querySelector(`[data-mark="${kind}"]:not([data-idle])`)!;
 
 /** background-color는 hover 색 전환이라 선택 움직임에서 뺀다. */
 const moving = (found: Map<string, unknown>): string[] =>
@@ -291,6 +291,64 @@ describe("크기", () => {
   });
 });
 
+describe("모양", () => {
+  const idleMark = (input: Element): SVGElement | null =>
+    input.parentElement!.querySelector("[data-idle]");
+
+  test("기본 square는 모서리 4px이고 체크 전 회색 체크가 없다", async () => {
+    await render(<Checkbox>알림</Checkbox>);
+    const input = page.getByRole("checkbox").element();
+    expect(getComputedStyle(input).borderTopLeftRadius).toBe("4px");
+    expect(idleMark(input)).toBeNull();
+  });
+
+  test("circle은 원이고, 체크 전에는 회색 체크가 보이다가 체크하면 사라진다", async () => {
+    await render(<Checkbox shape="circle">알림</Checkbox>);
+    const checkbox = page.getByRole("checkbox");
+    const input = checkbox.element();
+    const box = input.getBoundingClientRect();
+    expect(Number.parseFloat(getComputedStyle(input).borderTopLeftRadius)).toBeGreaterThanOrEqual(
+      box.width / 2,
+    );
+    expect(
+      Number.parseFloat(getComputedStyle(fillLayer(input)).borderTopLeftRadius),
+    ).toBeGreaterThanOrEqual(box.width / 2);
+
+    const idle = idleMark(input)!;
+    expect(visible(idle)).toBe(true);
+    if (!forcedColors()) {
+      expect(getComputedStyle(idle).color).toBe(resolve("var(--tide-text-disabled)"));
+      expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-strong)"));
+    }
+    expect(visible(mark(input, "check"))).toBe(false);
+
+    await userEvent.click(checkbox);
+    await expect.element(checkbox).toBeChecked();
+    expect(visible(idle)).toBe(false);
+    expect(visible(mark(input, "check"))).toBe(true);
+  });
+
+  test("circle이 비활성이면 회색 체크를 숨긴다", async () => {
+    await render(
+      <Checkbox shape="circle" disabled>
+        알림
+      </Checkbox>,
+    );
+    expect(visible(idleMark(page.getByRole("checkbox").element())!)).toBe(false);
+  });
+
+  test("circle도 indeterminate면 회색 체크 대신 가로줄이 보인다", async () => {
+    await render(
+      <Checkbox shape="circle" indeterminate>
+        알림
+      </Checkbox>,
+    );
+    const input = page.getByRole("checkbox").element();
+    expect(visible(idleMark(input)!)).toBe(false);
+    expect(visible(mark(input, "indeterminate"))).toBe(true);
+  });
+});
+
 describe("색", () => {
   test("루트에 data-color(기본 primary)가 붙고, 체크하면 accent solid 배경과 accent 경계가 된다", async () => {
     await render(
@@ -400,6 +458,28 @@ describe("hover", () => {
     await userEvent.hover(page.getByText("일부"));
     await wait();
     expect(fill(box("일부"))).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
+  });
+
+  test("circle은 체크 전에 올리거나 눌러도 바탕을 칠하지 않는다", async () => {
+    await render(
+      <div data-theme="light">
+        <Checkbox shape="circle">
+          <span data-testid="circle">원</span>
+        </Checkbox>
+      </div>,
+    );
+    if (forcedColors()) return;
+    const box = page.getByRole("checkbox").element();
+    const canvas = resolve("var(--tide-bg-canvas)");
+
+    await userEvent.hover(page.getByText("원"));
+    await wait();
+    expect(fill(box)).toBe(canvas);
+
+    await commands.mouseDownOn("circle");
+    await wait();
+    expect(fill(box)).toBe(canvas);
+    await commands.mouseUp();
   });
 
   test("누르면 체크됨은 solid-active 배경이고, 체크 전은 바탕을 칠하지 않는다", async () => {

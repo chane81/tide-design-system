@@ -6,6 +6,8 @@ export interface CheckboxMarkProps {
   /** 체크 표시(`check`) 또는 가로줄(`indeterminate`) */
   kind: "check" | "indeterminate";
   size: ChoiceSize;
+  /** 체크 전에 보이는 회색 표시(circle 모양) */
+  idle?: boolean;
   className: string;
 }
 
@@ -17,7 +19,7 @@ const pixelSize: Record<ChoiceSize, number> = { sm: 12, md: 16 };
 const strokePixels = 2;
 
 /** 그려지는 체크 표시. 상태는 input이 보조 기술에 알려 장식으로 숨긴다. */
-export function CheckboxMark({ kind, size, className }: CheckboxMarkProps): ReactElement {
+export function CheckboxMark({ kind, size, idle, className }: CheckboxMarkProps): ReactElement {
   const px = pixelSize[size];
 
   // non-scaling-stroke는 pathLength와 함께 쓰면 dash가 화면 픽셀로 계산되어, 두께를 viewBox 단위로 환산한다(ADR 0037).
@@ -26,6 +28,7 @@ export function CheckboxMark({ kind, size, className }: CheckboxMarkProps): Reac
       aria-hidden="true"
       focusable="false"
       data-mark={kind}
+      data-idle={idle ? "" : undefined}
       width={px}
       height={px}
       viewBox="0 0 24 24"

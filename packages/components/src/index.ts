@@ -7,7 +7,12 @@ export { Link, type LinkOwnProps, type LinkProps } from "./Link/index";
 export { Field, type FieldOwnProps, type FieldProps } from "./Field/index";
 export { Input, type InputOwnProps, type InputProps } from "./Input/index";
 export { Textarea, type TextareaOwnProps, type TextareaProps } from "./Textarea/index";
-export { Checkbox, type CheckboxOwnProps, type CheckboxProps } from "./Checkbox/index";
+export {
+  Checkbox,
+  type CheckboxOwnProps,
+  type CheckboxProps,
+  type CheckboxShape,
+} from "./Checkbox/index";
 export {
   CheckboxGroup,
   type CheckboxGroupOwnProps,
