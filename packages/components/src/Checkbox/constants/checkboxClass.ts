@@ -1,9 +1,8 @@
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
-// group-hover가 checked:보다 우선순위가 높아 체크 전 규칙에 not-checked를 붙인다(tailwindcss 4.3.5).
 
-/** 체크 전 hover·누름은 subtle 바탕이다. 체크·indeterminate 채움은 채움 레이어가 맡고, forced-colors에서만 input이 칠한다. */
+/** 체크 전에는 hover·누름에도 바탕을 칠하지 않는다. 체크·indeterminate 채움은 채움 레이어가 맡고, forced-colors에서만 input이 칠한다. */
 export const checkboxInputStateClass =
-  "checked:border-accent indeterminate:border-accent enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:not-checked:not-indeterminate:group-active/choice:bg-accent-subtle-active forced-colors:enabled:checked:bg-accent-solid forced-colors:enabled:indeterminate:bg-accent-solid";
+  "checked:border-accent indeterminate:border-accent forced-colors:enabled:checked:bg-accent-solid forced-colors:enabled:indeterminate:bg-accent-solid";
 
 /**
  * 체크·indeterminate 채움. input과 같은 크기라 테두리까지 덮는다. opacity와 scale이 함께 fast로 바뀐다.

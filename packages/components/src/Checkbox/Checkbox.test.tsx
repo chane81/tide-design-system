@@ -373,7 +373,7 @@ describe("색", () => {
 describe("hover", () => {
   const wait = (): Promise<void> => new Promise((done) => setTimeout(done, 250));
 
-  test("label 글자에 올리면 체크됨은 solid-hover, 체크 전은 subtle 배경이 되고 경계는 그대로다", async () => {
+  test("label 글자에 올리면 체크됨은 solid-hover가 되고, 체크 전은 바탕·경계가 그대로다", async () => {
     await render(
       <div data-theme="light" className="flex flex-col gap-4">
         <Checkbox defaultChecked>체크됨</Checkbox>
@@ -391,7 +391,7 @@ describe("hover", () => {
 
     await userEvent.hover(page.getByText("체크 전"));
     await wait();
-    expect(fill(box("체크 전"))).toBe(resolve("var(--tide-bg-primary-subtle)"));
+    expect(fill(box("체크 전"))).toBe(resolve("var(--tide-bg-canvas)"));
     expect(getComputedStyle(box("체크 전")).borderTopColor).toBe(
       resolve("var(--tide-border-strong)"),
     );
@@ -402,7 +402,7 @@ describe("hover", () => {
     expect(fill(box("일부"))).toBe(resolve("var(--tide-bg-primary-solid-hover)"));
   });
 
-  test("누르면 hover보다 한 단계 진한 -active 배경이다(체크됨 solid-active, 체크 전 subtle-active)", async () => {
+  test("누르면 체크됨은 solid-active 배경이고, 체크 전은 바탕을 칠하지 않는다", async () => {
     await render(
       <div data-theme="light" className="flex flex-col gap-4">
         <Checkbox defaultChecked>
@@ -438,7 +438,7 @@ describe("hover", () => {
       return;
     }
     expect(checked).toBe(resolve("var(--tide-bg-primary-solid-active)"));
-    expect(unchecked).toBe(resolve("var(--tide-bg-primary-subtle-active)"));
+    expect(unchecked).toBe(resolve("var(--tide-bg-canvas)"));
     expect(indeterminate).toBe(resolve("var(--tide-bg-primary-solid-active)"));
   });
 
@@ -544,7 +544,7 @@ describe("오류 채움(ADR 0035)", () => {
     expect(pressed).toBe(resolve("var(--tide-bg-danger-solid-active)"));
   });
 
-  test("체크 전 오류 Checkbox는 테두리만 danger이고 hover 바탕은 danger subtle이다", async () => {
+  test("체크 전 오류 Checkbox는 테두리만 danger이고 hover에도 바탕을 칠하지 않는다", async () => {
     await render(
       <div data-theme="light">
         <Checkbox invalid>
@@ -559,7 +559,7 @@ describe("오류 채움(ADR 0035)", () => {
     expect(getComputedStyle(input).borderTopColor).toBe(resolve("var(--tide-border-danger)"));
     await userEvent.hover(page.getByTestId("label"));
     await wait();
-    expect(bg(input)).toBe(resolve("var(--tide-bg-danger-subtle)"));
+    expect(bg(input)).toBe(resolve("var(--tide-bg-canvas)"));
   });
 
   test("비활성이면 오류여도 비활성 색이다", async () => {
