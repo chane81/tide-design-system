@@ -88,6 +88,12 @@ describe("역할과 이름", () => {
     await render(<Checkbox aria-label="행 선택" />);
     await expect.element(page.getByRole("checkbox", { name: "행 선택" })).toBeInTheDocument();
   });
+
+  test("label을 두 번 눌러도 글자가 선택되지 않는다", async () => {
+    await render(<Checkbox>약관에 동의합니다</Checkbox>);
+    await userEvent.dblClick(page.getByText("약관에 동의합니다"));
+    expect(document.getSelection()?.toString()).toBe("");
+  });
 });
 
 describe("체크", () => {
