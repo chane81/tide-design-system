@@ -1,6 +1,6 @@
 {
   "name": "@tide-design/components",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "Tide 디자인 시스템의 React Component",
   "keywords": [
     "accessibility",

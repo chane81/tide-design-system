@@ -1,5 +1,11 @@
 # @tide-tds/docs
 
+## 0.11.5
+
+### 수정 (patch)
+
+- [#111](https://github.com/chane81/tide-design-system/pull/111) [`b430aab`](https://github.com/chane81/tide-design-system/commit/b430aab60e5fe02fa32be06d3e583f268aad7054) [@chane81](https://github.com/chane81) - Checkbox 문서에 `shape` 예시(square·circle)를 더했습니다.
+
 ## 0.11.4
 
 ### 수정 (patch)

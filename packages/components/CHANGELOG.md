@@ -1,5 +1,20 @@
 # @tide-tds/components
 
+## 0.20.0
+
+### 호환되지 않는 변경 (minor)
+
+- [#111](https://github.com/chane81/tide-design-system/pull/111) [`9eefe16`](https://github.com/chane81/tide-design-system/commit/9eefe169c0e802491d1c91d3d17b5c2e147e52c7) [@chane81](https://github.com/chane81) - Checkbox에 `shape` prop을 추가했습니다. `circle`은 원 모양이고 체크 전에도 회색 체크가 보입니다. 기본값은 `square`입니다.
+
+### 기능 추가와 수정 (patch)
+
+- [#111](https://github.com/chane81/tide-design-system/pull/111) [`6e73fdf`](https://github.com/chane81/tide-design-system/commit/6e73fdf6d050f4bc9696f13439bb09fbbc128d8b) [@chane81](https://github.com/chane81) - Checkbox 체크 전 상자에 hover·누름 바탕을 칠하지 않습니다. 체크·indeterminate 상자의 hover·누름 색은 그대로입니다.
+
+- [#111](https://github.com/chane81/tide-design-system/pull/111) [`9396db4`](https://github.com/chane81/tide-design-system/commit/9396db4d62bcf84e71ecf7ed8debfc68269b2da4) [@chane81](https://github.com/chane81) - Checkbox·Radio label을 두 번 눌러도 글자가 선택되지 않습니다.
+- 의존성 업데이트 []:
+  - @tide-design/foundation@0.20.0
+  - @tide-design/icons@0.20.0
+
 ## 0.19.0
 
 ### 호환되지 않는 변경 (minor)
