@@ -1,9 +1,8 @@
 // class는 문자열 그대로 적는다. Tailwind가 빌드 결과를 스캔한다.
-// group-hover가 checked:보다 우선순위가 높아 체크 전 규칙에 not-checked를 붙인다(tailwindcss 4.3.5).
 
-/** 체크 전 hover·누름은 subtle 바탕이다. 체크·indeterminate 채움은 채움 레이어가 맡고, forced-colors에서만 input이 칠한다. */
+/** 체크 전에는 hover·누름에도 바탕을 칠하지 않는다. 체크·indeterminate 채움은 채움 레이어가 맡고, forced-colors에서만 input이 칠한다. */
 export const checkboxInputStateClass =
-  "checked:border-accent indeterminate:border-accent enabled:not-checked:not-indeterminate:group-hover/choice:bg-accent-subtle enabled:not-checked:not-indeterminate:group-active/choice:bg-accent-subtle-active forced-colors:enabled:checked:bg-accent-solid forced-colors:enabled:indeterminate:bg-accent-solid";
+  "checked:border-accent indeterminate:border-accent forced-colors:enabled:checked:bg-accent-solid forced-colors:enabled:indeterminate:bg-accent-solid";
 
 /**
  * 체크·indeterminate 채움. input과 같은 크기라 테두리까지 덮는다. opacity와 scale이 함께 fast로 바뀐다.
@@ -11,6 +10,11 @@ export const checkboxInputStateClass =
  */
 export const checkboxFillClass =
   "pointer-events-none col-start-1 row-start-1 bg-accent-solid opacity-0 transition-[opacity,background-color] group-hover/choice:bg-accent-solid-hover group-active/choice:bg-accent-solid-active peer-checked:opacity-100 peer-indeterminate:opacity-100 motion-safe:scale-70 motion-safe:transition-[opacity,scale,background-color] motion-safe:peer-checked:scale-100 motion-safe:peer-indeterminate:scale-100 peer-aria-invalid:[--tide-accent-solid:var(--tide-bg-danger-solid)] peer-aria-invalid:[--tide-accent-solid-hover:var(--tide-bg-danger-solid-hover)] peer-aria-invalid:[--tide-accent-solid-active:var(--tide-bg-danger-solid-active)] peer-disabled:hidden forced-colors:hidden";
+
+/** circle의 체크 전 회색 체크. 비활성에서는 체크된 것처럼 보여 숨긴다. */
+// 채움 레이어보다 앞 순서라 체크하면 채움에 덮인다.
+export const checkboxIdleMarkClass =
+  "text-disabled peer-enabled:peer-not-checked:peer-not-indeterminate:opacity-100";
 
 /** solid 위 흰 표시. 숨을 때는 지연 없이 fast로 거꾸로 지워지며 사라진다. dash는 svg에 두고 path가 물려받는다. */
 // relative가 없으면 scale이 걸린 채움 레이어가 나중 순서로 그려져 표시를 덮는다.

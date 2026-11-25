@@ -25,6 +25,7 @@ import {
 import { cn } from "../_internal/libs/cn";
 import {
   checkboxFillClass,
+  checkboxIdleMarkClass,
   checkboxInputStateClass,
   checkboxMarkClass,
   checkboxMarkShownClass,
@@ -38,6 +39,8 @@ export interface CheckboxOwnProps {
   children?: ReactNode;
   /** 상자 16px(`sm`) 또는 20px(`md`). 누르는 영역은 둘 다 24×24px. 기본값 `md`. */
   size?: ChoiceSize;
+  /** 상자 모양. `circle`은 원이고 체크 전에도 회색 체크가 보인다. 기본값 `square`. */
+  shape?: CheckboxShape;
   /** 체크했을 때 상자 색(Role). 기본값 `primary`. */
   color?: Role;
   /** 일부만 선택된 상태(가로줄). 누르면 브라우저가 지우므로 앱이 다시 계산해 넘긴다. */
@@ -50,21 +53,26 @@ export interface CheckboxOwnProps {
   style?: CSSProperties;
 }
 
+export type CheckboxShape = "square" | "circle";
+
 export interface CheckboxProps
   extends CheckboxOwnProps, Omit<ComponentProps<"input">, keyof CheckboxOwnProps | "type"> {}
 
-const boxClass: Record<ChoiceSize, string> = {
-  sm: "size-4 rounded-sm",
-  md: "size-5 rounded-sm",
+const boxSizeClass: Record<ChoiceSize, string> = { sm: "size-4", md: "size-5" };
+
+const boxShapeClass: Record<CheckboxShape, string> = {
+  square: "rounded-sm",
+  circle: "rounded-full",
 };
 
 /**
  * 네이티브 체크박스. 여러 개를 묶어 이름·설명·오류를 붙이려면 `Field group` 안의 `CheckboxGroup`에 둔다.
- * Tide props: `children`, `size`, `color`, `indeterminate`, `invalid`, `className`, `style` ({@link CheckboxOwnProps}). 나머지는 `<input>` 속성.
+ * Tide props: `children`, `size`, `shape`, `color`, `indeterminate`, `invalid`, `className`, `style` ({@link CheckboxOwnProps}). 나머지는 `<input>` 속성.
  */
 export function Checkbox({
   children,
   size = "md",
+  shape = "square",
   color = "primary",
   indeterminate = false,
   invalid,
@@ -95,6 +103,8 @@ export function Checkbox({
     if (inputRef.current) inputRef.current.indeterminate = indeterminate;
   });
 
+  const boxClass = cn(boxSizeClass[size], boxShapeClass[shape]);
+
   return (
     <label
       data-color={color}
@@ -109,9 +119,17 @@ export function Checkbox({
           {...control}
           ref={inputRef}
           type="checkbox"
-          className={cn(boxClass[size], choiceInputClass, checkboxInputStateClass)}
+          className={cn(boxClass, choiceInputClass, checkboxInputStateClass)}
         />
-        <span aria-hidden="true" data-fill="" className={cn(boxClass[size], checkboxFillClass)} />
+        {shape === "circle" ? (
+          <CheckboxMark
+            kind="check"
+            size={size}
+            idle
+            className={cn(choiceMarkClass, checkboxIdleMarkClass)}
+          />
+        ) : null}
+        <span aria-hidden="true" data-fill="" className={cn(boxClass, checkboxFillClass)} />
         <CheckboxMark
           kind="check"
           size={size}

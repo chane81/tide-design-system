@@ -8,7 +8,7 @@ const choiceInputForcedClass =
 
 /** 루트 label. 글자 크기 class와 사용자 className은 뒤에 붙인다. */
 export const choiceRootClass =
-  "group/choice inline-flex items-start gap-2 align-top text-default cursor-pointer has-disabled:cursor-not-allowed has-disabled:text-disabled";
+  "group/choice inline-flex items-start gap-2 align-top text-default cursor-pointer select-none has-disabled:cursor-not-allowed has-disabled:text-disabled";
 
 /** 상자보다 큰 24×24 조작 영역(WCAG 2.5.8). */
 export const choiceAreaClass = "grid size-6 shrink-0 place-items-center";

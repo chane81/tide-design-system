@@ -82,6 +82,12 @@ describe("역할과 이름", () => {
     expect(names[0]).not.toBe("");
     expect(new Set(names).size).toBe(1);
   });
+
+  test("label을 두 번 눌러도 글자가 선택되지 않는다", async () => {
+    await render(<Shipping />);
+    await userEvent.dblClick(page.getByText("일반"));
+    expect(document.getSelection()?.toString()).toBe("");
+  });
 });
 
 describe("선택", () => {

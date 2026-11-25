@@ -3,6 +3,7 @@ import { Checkbox, CheckboxGroup, Field } from "@tide-design/components";
 import { useState, type ReactElement } from "react";
 
 const sizes = ["sm", "md"] as const;
+const shapes = ["square", "circle"] as const;
 const roles = ["primary", "neutral", "success", "warning", "danger", "info"] as const;
 
 const meta = {
@@ -20,6 +21,11 @@ const meta = {
       control: "inline-radio",
       options: sizes,
       table: { type: { summary: '"sm" | "md"' }, defaultValue: { summary: '"md"' } },
+    },
+    shape: {
+      control: "inline-radio",
+      options: shapes,
+      table: { type: { summary: '"square" | "circle"' }, defaultValue: { summary: '"square"' } },
     },
     color: {
       control: "select",
@@ -51,6 +57,23 @@ export const Sizes: Story = {
         <Checkbox key={size} size={size} defaultChecked>
           {`${size} 체크박스`}
         </Checkbox>
+      ))}
+    </div>
+  ),
+};
+
+/** circle은 원 모양이고, 체크 전에도 회색 체크가 보인다. */
+export const Shapes: Story = {
+  name: "shape",
+  render: () => (
+    <div className="flex flex-col gap-2">
+      {shapes.map((shape) => (
+        <div key={shape} className="flex gap-4">
+          <Checkbox shape={shape}>{`${shape} 체크 전`}</Checkbox>
+          <Checkbox shape={shape} defaultChecked>
+            {`${shape} 체크`}
+          </Checkbox>
+        </div>
       ))}
     </div>
   ),
